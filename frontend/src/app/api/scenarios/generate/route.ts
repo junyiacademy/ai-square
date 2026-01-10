@@ -74,7 +74,9 @@ export async function POST(
 
     // Call Vertex AI
     const startTime = Date.now();
-    const response = await vertexAI.sendMessage(prompt);
+    const response = await vertexAI.sendMessage(prompt, {
+      feature: "scenario-generate",
+    });
     const processingTime = Date.now() - startTime;
 
     // Extract YAML from response (remove any markdown code blocks)

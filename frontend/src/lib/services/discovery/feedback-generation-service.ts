@@ -236,7 +236,9 @@ Write in language code: ${language} with an encouraging but professional tone th
       model: "gemini-2.5-flash",
     });
 
-    const aiResponse = await aiService.sendMessage(comprehensivePrompt);
+    const aiResponse = await aiService.sendMessage(comprehensivePrompt, {
+      feature: "discovery-feedback-generation-service",
+    });
     let comprehensiveFeedback = aiResponse.content;
 
     if (userAttempts > 1) {

@@ -97,7 +97,9 @@ Return JSON:
   "skillsImproved": ["Actually demonstrated relevant skills"]
 }`;
 
-    const aiResponse = await aiService.sendMessage(evaluationPrompt);
+    const aiResponse = await aiService.sendMessage(evaluationPrompt, {
+      feature: "discovery-task-evaluation-service",
+    });
 
     try {
       const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);

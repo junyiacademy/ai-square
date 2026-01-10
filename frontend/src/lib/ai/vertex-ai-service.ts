@@ -1,6 +1,7 @@
 import { GoogleAuth } from "google-auth-library";
 import { VertexAI } from "@google-cloud/vertexai";
 import { AIModule, ConversationTurn, ProcessLog } from "@/types/pbl";
+import { aiUsageTracker } from "@/lib/ai/usage-tracker";
 
 export interface VertexAIConfig {
   model?: string;
@@ -225,15 +226,43 @@ export class VertexAIService {
       });
 
       const processingTime = Math.max(1, Date.now() - this.startTime);
+      const tokensUsed =
+        (response.usageMetadata as { totalTokenCount?: number } | undefined)
+          ?.totalTokenCount ||
+        Math.ceil((message.length + aiResponse.length) / 4);
+
+      const trackingEnabled = process.env.AI_USAGE_TRACKING_ENABLED !== "false";
+      if (trackingEnabled) {
+        try {
+          const userKey =
+            String(
+              context?.userId ||
+                context?.userEmail ||
+                context?.email ||
+                "anonymous",
+            ) || "anonymous";
+          const feature = String(context?.feature || "unknown");
+          const requestId = context?.requestId
+            ? String(context?.requestId)
+            : undefined;
+
+          aiUsageTracker.recordUsage({
+            userKey,
+            feature,
+            model: this.model,
+            tokensUsed,
+            metadata: requestId ? { requestId } : undefined,
+          });
+        } catch (trackingError) {
+          console.warn("[AI Usage] Tracking failed:", trackingError);
+        }
+      }
 
       return {
         content: aiResponse,
         processingTime,
         // Token usage from API response if available
-        tokensUsed:
-          (response.usageMetadata as { totalTokenCount?: number } | undefined)
-            ?.totalTokenCount ||
-          Math.ceil((message.length + aiResponse.length) / 4),
+        tokensUsed,
       };
     } catch (error) {
       console.error("Vertex AI error:", error);
