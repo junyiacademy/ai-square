@@ -21,7 +21,6 @@ import {
   Play,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import DiscoveryPageLayout from "@/components/discovery/DiscoveryPageLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -122,9 +121,12 @@ interface ProgramData {
   };
 }
 
-export default function DiscoveryScenarioDetailPage() {
+export default function DiscoveryScenarioDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
-  const params = useParams();
   const { t, i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
 
@@ -134,9 +136,7 @@ export default function DiscoveryScenarioDetailPage() {
   const [loadingPrograms, setLoadingPrograms] = useState(true);
   const [creatingProgram, setCreatingProgram] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Get scenario ID (UUID) from params
-  const scenarioId = params.id as string;
+  const [scenarioId, setScenarioId] = useState<string>("");
 
   const loadPrograms = useCallback(async () => {
     try {
@@ -164,9 +164,16 @@ export default function DiscoveryScenarioDetailPage() {
     }
   }, [scenarioId, i18n.language]);
 
+  // Unwrap the params Promise
   useEffect(() => {
-    // Wait for auth check to complete
-    if (authLoading) {
+    params.then((p) => {
+      setScenarioId(p.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    // Wait for params and auth check to complete
+    if (!scenarioId || authLoading) {
       return;
     }
 

@@ -48,7 +48,7 @@ export function useGraphDimensions(
 
     // Cleanup
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty deps - only run on mount/unmount
+  }, [containerRef]); // Include containerRef for proper dependency tracking
 
   return dimensions;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { PBLLearningContentSkeleton } from "@/components/pbl/loading-skeletons";
@@ -125,15 +125,27 @@ function getLocalizedField<T extends Record<string, unknown>>(
 //   return Array.isArray(value) ? value.map(String) : [];
 // }
 
-export default function ProgramLearningPage() {
-  const params = useParams();
+export default function ProgramLearningPage({
+  params,
+}: {
+  params: Promise<{ id: string; programId: string; taskId: string }>;
+}) {
   const router = useRouter();
   // Note: searchParams removed as it was unused
   const { t, i18n } = useTranslation(["pbl", "common"]);
 
-  const [programId, setProgramId] = useState(params.programId as string);
-  const scenarioId = params.id as string;
-  const taskId = params.taskId as string;
+  const [programId, setProgramId] = useState<string>("");
+  const [scenarioId, setScenarioId] = useState<string>("");
+  const [taskId, setTaskId] = useState<string>("");
+
+  // Unwrap the params Promise
+  useEffect(() => {
+    params.then((p) => {
+      setScenarioId(p.id);
+      setProgramId(p.programId);
+      setTaskId(p.taskId);
+    });
+  }, [params]);
   // const isNewProgram = searchParams.get('isNew') === 'true';
 
   // States
@@ -166,9 +178,13 @@ export default function ProgramLearningPage() {
 
   // Load program and scenario data
   useEffect(() => {
+    // Don't proceed until params are loaded
+    if (!programId || !scenarioId || !taskId) {
+      return;
+    }
     loadProgramData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programId, scenarioId, i18n.language]);
+  }, [programId, scenarioId, taskId, i18n.language]);
 
   // Load task data when taskId or language changes
   useEffect(() => {

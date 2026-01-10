@@ -20,7 +20,6 @@ import {
   Lock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import DiscoveryPageLayout from "@/components/discovery/DiscoveryPageLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -52,20 +51,30 @@ interface ProgramData {
   scenarioTitle?: string;
 }
 
-export default function ProgramDetailPage() {
+export default function ProgramDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string; programId: string }>;
+}) {
   const router = useRouter();
-  const params = useParams();
   const { i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [programData, setProgramData] = useState<ProgramData | null>(null);
+  const [scenarioId, setScenarioId] = useState<string>("");
+  const [programId, setProgramId] = useState<string>("");
 
-  const scenarioId = params.id as string;
-  const programId = params.programId as string;
+  // Unwrap the params Promise
+  useEffect(() => {
+    params.then((p) => {
+      setScenarioId(p.id);
+      setProgramId(p.programId);
+    });
+  }, [params]);
 
   useEffect(() => {
-    // Don't redirect while auth is still loading
-    if (authLoading) {
+    // Don't proceed until params are loaded
+    if (!scenarioId || !programId || authLoading) {
       return;
     }
 

@@ -34,6 +34,35 @@ export function useHybridScenarios() {
   // 預載下一個可能的語言
   const preloadLanguages = useRef<Set<string>>(new Set());
 
+  // Use a ref to avoid circular dependency between loadScenarios and preloadNextLanguages
+  const loadScenariosRef = useRef<
+    ((language: string, isPreload?: boolean) => Promise<Scenario[] | null>) | undefined
+  >(undefined);
+
+  // 預載策略
+  const preloadNextLanguages = useCallback((currentLang: string) => {
+    // 預載常用語言組合
+    const preloadMap: Record<string, string[]> = {
+      en: ["zhTW", "zhCN"],
+      zhTW: ["en", "zhCN"],
+      zhCN: ["en", "zhTW"],
+      ja: ["en"],
+      ko: ["en"],
+    };
+
+    const toPreload = preloadMap[currentLang] || ["en"];
+
+    toPreload.forEach((lang) => {
+      if (!preloadLanguages.current.has(lang)) {
+        preloadLanguages.current.add(lang);
+        // 延遲預載，避免影響主要請求
+        setTimeout(() => {
+          loadScenariosRef.current?.(lang, true);
+        }, 1000);
+      }
+    });
+  }, []);
+
   const loadScenarios = useCallback(
     async (language: string, isPreload = false) => {
       // 檢查快取
@@ -84,35 +113,11 @@ export function useHybridScenarios() {
         if (!isPreload) setLoading(false);
       }
     },
-    [CACHE_TTL],
+    [CACHE_TTL, preloadNextLanguages],
   );
 
-  // 預載策略
-  const preloadNextLanguages = useCallback(
-    (currentLang: string) => {
-      // 預載常用語言組合
-      const preloadMap: Record<string, string[]> = {
-        en: ["zhTW", "zhCN"],
-        zhTW: ["en", "zhCN"],
-        zhCN: ["en", "zhTW"],
-        ja: ["en"],
-        ko: ["en"],
-      };
-
-      const toPreload = preloadMap[currentLang] || ["en"];
-
-      toPreload.forEach((lang) => {
-        if (!preloadLanguages.current.has(lang)) {
-          preloadLanguages.current.add(lang);
-          // 延遲預載，避免影響主要請求
-          setTimeout(() => {
-            loadScenarios(lang, true);
-          }, 1000);
-        }
-      });
-    },
-    [loadScenarios],
-  );
+  // Update ref to latest loadScenarios function
+  loadScenariosRef.current = loadScenarios;
 
   // 語言變更時載入
   useEffect(() => {
