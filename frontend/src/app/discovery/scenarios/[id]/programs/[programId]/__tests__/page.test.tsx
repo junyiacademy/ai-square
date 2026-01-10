@@ -4,13 +4,18 @@ import {
   waitFor,
 } from "@/test-utils/helpers/render";
 import userEvent from "@testing-library/user-event";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ProgramDetailPage from "../page";
+
+// Helper to create mock params Promise
+const createMockParams = (
+  id: string = "scenario-1",
+  programId: string = "program-1",
+) => Promise.resolve({ id, programId });
 
 // Mock dependencies
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
-  useParams: jest.fn(),
   usePathname: jest.fn(
     () => "/discovery/scenarios/scenario-1/programs/program-1",
   ),
@@ -56,7 +61,6 @@ const mockRouter = {
 };
 
 const mockUseRouter = useRouter as jest.Mock;
-const mockUseParams = useParams as jest.Mock;
 
 // Import and mock useAuth after the mock is set up
 import { useAuth } from "@/contexts/AuthContext";
@@ -103,10 +107,6 @@ describe("ProgramDetailPage", () => {
     jest.clearAllMocks();
 
     mockUseRouter.mockReturnValue(mockRouter);
-    mockUseParams.mockReturnValue({
-      id: "scenario-1",
-      programId: "program-1",
-    });
 
     mockUseAuth.mockReturnValue({
       user: { email: "test@example.com" },
@@ -133,7 +133,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Rendering", () => {
     it("should render program details correctly", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -149,7 +149,7 @@ describe("ProgramDetailPage", () => {
     });
 
     it("should show loading state initially", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
       expect(screen.getByText("載入中...")).toBeInTheDocument();
     });
 
@@ -160,7 +160,7 @@ describe("ProgramDetailPage", () => {
         isLoading: false,
       } as any);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       expect(mockRouter.push).toHaveBeenCalledWith(
         "/login?redirect=/discovery/scenarios",
@@ -173,7 +173,7 @@ describe("ProgramDetailPage", () => {
         status: 404,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -187,7 +187,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Career Information", () => {
     it("should display correct career information for content creator", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -214,7 +214,7 @@ describe("ProgramDetailPage", () => {
         json: async () => youtuberProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -239,7 +239,7 @@ describe("ProgramDetailPage", () => {
         json: async () => unknownCareerData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -253,7 +253,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Task List", () => {
     it("should render all tasks with correct status", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -275,7 +275,7 @@ describe("ProgramDetailPage", () => {
     });
 
     it("should show correct buttons for different task statuses", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -289,7 +289,7 @@ describe("ProgramDetailPage", () => {
     });
 
     it("should show completion date for completed tasks", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -317,7 +317,7 @@ describe("ProgramDetailPage", () => {
         json: async () => completedTaskData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -333,7 +333,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Task Navigation", () => {
     it("should navigate to active task when clicked", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -347,7 +347,7 @@ describe("ProgramDetailPage", () => {
     });
 
     it("should navigate to completed task for viewing", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -361,7 +361,7 @@ describe("ProgramDetailPage", () => {
     });
 
     it("should not allow navigation to locked tasks", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -377,7 +377,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Progress Tracking", () => {
     it("should display correct progress percentage", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(() => {
         expect(screen.getByText("33%")).toBeInTheDocument(); // 1/3 = 33%
@@ -398,7 +398,7 @@ describe("ProgramDetailPage", () => {
         json: async () => noProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -429,7 +429,7 @@ describe("ProgramDetailPage", () => {
         json: async () => completedProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -462,7 +462,7 @@ describe("ProgramDetailPage", () => {
         json: async () => completedProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -491,7 +491,7 @@ describe("ProgramDetailPage", () => {
         json: async () => completedProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -507,7 +507,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Navigation", () => {
     it("should have back button to scenario details", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -523,7 +523,7 @@ describe("ProgramDetailPage", () => {
 
   describe("Status Display", () => {
     it("should show correct status for active program", async () => {
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -545,7 +545,7 @@ describe("ProgramDetailPage", () => {
         json: async () => completedProgramData,
       } as Response);
 
-      renderWithProviders(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {

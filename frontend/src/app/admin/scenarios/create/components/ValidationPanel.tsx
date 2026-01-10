@@ -5,7 +5,7 @@
  * Real-time validation feedback panel
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type {
   ValidateScenarioResponse,
   ValidationError,
@@ -21,16 +21,7 @@ export function ValidationPanel({ yaml, mode }: ValidationPanelProps) {
     useState<ValidateScenarioResponse | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
-  useEffect(() => {
-    // Debounce validation
-    const timer = setTimeout(() => {
-      validateYAML();
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [yaml, mode]);
-
-  const validateYAML = async () => {
+  const validateYAML = useCallback(async () => {
     if (!yaml.trim()) {
       setValidationResult(null);
       return;
@@ -66,7 +57,16 @@ export function ValidationPanel({ yaml, mode }: ValidationPanelProps) {
     } finally {
       setIsValidating(false);
     }
-  };
+  }, [yaml, mode]);
+
+  useEffect(() => {
+    // Debounce validation
+    const timer = setTimeout(() => {
+      validateYAML();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [validateYAML]);
 
   if (!yaml.trim()) {
     return (

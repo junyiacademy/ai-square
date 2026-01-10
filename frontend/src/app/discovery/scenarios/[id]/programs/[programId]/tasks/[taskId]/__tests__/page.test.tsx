@@ -4,8 +4,15 @@ import {
   waitFor,
 } from "@/test-utils/helpers/render";
 import userEvent from "@testing-library/user-event";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import TaskDetailPage from "../page";
+
+// Helper to create mock params Promise
+const createMockParams = (
+  id: string = "scenario-1",
+  programId: string = "program-1",
+  taskId: string = "task-1",
+) => Promise.resolve({ id, programId, taskId });
 
 // Mock dependencies
 const mockRouter = {
@@ -19,7 +26,6 @@ const mockRouter = {
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => mockRouter),
-  useParams: jest.fn(),
   usePathname: jest.fn(
     () => "/discovery/scenarios/scenario-1/programs/program-1/tasks/task-1",
   ),
@@ -41,8 +47,6 @@ jest.mock("react-i18next", () => ({
 
 // Mock fetch globally
 global.fetch = jest.fn();
-
-const mockUseParams = useParams as jest.MockedFunction<typeof useParams>;
 
 // Import useAuth after the mock is set up
 import { useAuth } from "@/contexts/AuthContext";
@@ -71,12 +75,6 @@ describe("TaskDetailPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mockUseParams.mockReturnValue({
-      id: "scenario-1",
-      programId: "program-1",
-      taskId: "task-1",
-    });
-
     mockUseAuth.mockReturnValue({
       user: { email: "test@example.com" },
       isLoggedIn: true,
@@ -102,7 +100,7 @@ describe("TaskDetailPage", () => {
 
   describe("Rendering", () => {
     it("should render task details correctly", async () => {
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -116,7 +114,7 @@ describe("TaskDetailPage", () => {
     });
 
     it("should show loading state initially", async () => {
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
       const loading =
         screen.queryByText("載入中...") ||
         screen.queryByText(/loading|Loading/);
@@ -130,7 +128,7 @@ describe("TaskDetailPage", () => {
         isLoading: false,
       } as any);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       expect(mockRouter.push).toHaveBeenCalledWith(
         "/login?redirect=/discovery/scenarios",
@@ -143,7 +141,7 @@ describe("TaskDetailPage", () => {
         status: 404,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -157,7 +155,7 @@ describe("TaskDetailPage", () => {
 
   describe("Task Submission", () => {
     it("should allow user to submit answer", async () => {
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -171,7 +169,7 @@ describe("TaskDetailPage", () => {
     });
 
     it("should disable submit button when textarea is empty", async () => {
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -206,7 +204,7 @@ describe("TaskDetailPage", () => {
           () => new Promise((resolve) => setTimeout(resolve, 1000)),
         );
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -270,7 +268,7 @@ describe("TaskDetailPage", () => {
         json: async () => completedTaskData,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -289,7 +287,7 @@ describe("TaskDetailPage", () => {
         json: async () => completedTaskData,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -311,7 +309,7 @@ describe("TaskDetailPage", () => {
         json: async () => completedTaskData,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -368,7 +366,7 @@ describe("TaskDetailPage", () => {
         json: async () => taskWithHistory,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -387,7 +385,7 @@ describe("TaskDetailPage", () => {
         json: async () => taskWithHistory,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -406,7 +404,7 @@ describe("TaskDetailPage", () => {
         json: async () => taskWithHistory,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -422,7 +420,7 @@ describe("TaskDetailPage", () => {
 
   describe("Hints Feature", () => {
     it("should toggle hints visibility", async () => {
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -452,7 +450,7 @@ describe("TaskDetailPage", () => {
         json: async () => taskWithoutHints,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -488,7 +486,7 @@ describe("TaskDetailPage", () => {
         json: async () => passedTaskData,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
@@ -507,7 +505,7 @@ describe("TaskDetailPage", () => {
         json: async () => passedTaskData,
       } as Response);
 
-      renderWithProviders(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
       await waitFor(
         () => {
