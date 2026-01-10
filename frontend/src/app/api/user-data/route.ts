@@ -3,7 +3,7 @@ import {
   getUnifiedAuth,
   createUnauthorizedResponse,
 } from "@/lib/auth/unified-auth";
-import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { createUserDataStorage } from "@/lib/services/user-data-storage";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
       return createUnauthorizedResponse();
     }
 
-    const userRepo = repositoryFactory.getUserRepository();
-    const userData = await userRepo.getUserData(auth.user.email);
+    const storage = createUserDataStorage();
+    const userData = await storage.getUserData(auth.user.email);
 
     return NextResponse.json({
       success: true,
@@ -42,8 +42,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { data } = body;
 
-    const userRepo = repositoryFactory.getUserRepository();
-    const savedData = await userRepo.saveUserData(auth.user.email, data);
+    const storage = createUserDataStorage();
+    const savedData = await storage.saveUserData(auth.user.email, data);
 
     return NextResponse.json({
       success: true,
@@ -66,8 +66,8 @@ export async function DELETE(request: NextRequest) {
       return createUnauthorizedResponse();
     }
 
-    const userRepo = repositoryFactory.getUserRepository();
-    const success = await userRepo.deleteUserData(auth.user.email);
+    const storage = createUserDataStorage();
+    const success = await storage.deleteUserData(auth.user.email);
 
     return NextResponse.json({
       success,
