@@ -2,8 +2,91 @@ import { Storage } from "@google-cloud/storage";
 import {
   UserDataInput,
   UserDataResponse,
+  UserBadge,
 } from "@/lib/repositories/interfaces";
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+
+type StoredAssessmentSession = UserDataResponse["assessmentSessions"][number] & {
+  results?: UserDataInput["assessmentSessions"][number]["results"];
+};
+
+type StoredUserBadge = UserBadge & {
+  metadata?: Record<string, unknown>;
+};
+
+function normalizeAssessmentSession(
+  session:
+    | UserDataInput["assessmentSessions"][number]
+    | UserDataResponse["assessmentSessions"][number],
+): StoredAssessmentSession {
+  if ("sessionKey" in session) {
+    const results =
+      "results" in session
+        ? session.results
+        : {
+            tech: session.techScore,
+            creative: session.creativeScore,
+            business: session.businessScore,
+          };
+    return { ...session, results };
+  }
+
+  return {
+    id: session.id,
+    userId: "gcs",
+    sessionKey: session.id,
+    techScore: session.results.tech,
+    creativeScore: session.results.creative,
+    businessScore: session.results.business,
+    answers: session.answers ?? {},
+    generatedPaths: session.generatedPaths ?? [],
+    createdAt: new Date(session.createdAt),
+    results: session.results,
+  };
+}
+
+function normalizeUserBadge(
+  badge:
+    | UserDataInput["achievements"]["badges"][number]
+    | UserBadge,
+): StoredUserBadge {
+  if ("badgeId" in badge) {
+    return badge;
+  }
+
+  return {
+    id: badge.id,
+    userId: "gcs",
+    badgeId: badge.id,
+    name: badge.name,
+    description: badge.description,
+    imageUrl: badge.imageUrl,
+    category: badge.category,
+    xpReward: badge.xpReward,
+    unlockedAt: new Date(badge.unlockedAt),
+  };
+}
+
+function normalizeUserData(
+  data: UserDataInput | UserDataResponse,
+): UserDataResponse {
+  return {
+    assessmentResults: data.assessmentResults ?? null,
+    achievements: {
+      badges: (data.achievements?.badges ?? []).map(normalizeUserBadge),
+      totalXp: data.achievements?.totalXp ?? 0,
+      level: data.achievements?.level ?? 1,
+      completedTasks: data.achievements?.completedTasks ?? [],
+      achievements: data.achievements?.achievements ?? [],
+    },
+    assessmentSessions: (data.assessmentSessions ?? []).map(
+      normalizeAssessmentSession,
+    ),
+    currentView: data.currentView,
+    lastUpdated: data.lastUpdated ?? new Date().toISOString(),
+    version: data.version ?? "gcs",
+  };
+}
 
 export interface UserDataStorage {
   getUserData(userEmail: string): Promise<UserDataResponse | null>;
@@ -68,8 +151,10 @@ class GCSUserDataStorage implements UserDataStorage {
     }
 
     const [contents] = await file.download();
-    const data = JSON.parse(contents.toString("utf-8")) as UserDataResponse;
-    return data;
+    const rawData = JSON.parse(contents.toString("utf-8")) as
+      | UserDataInput
+      | UserDataResponse;
+    return normalizeUserData(rawData);
   }
 
   async saveUserData(
@@ -79,15 +164,13 @@ class GCSUserDataStorage implements UserDataStorage {
     const bucket = this.storage.bucket(this.bucketName);
     const file = bucket.file(this.getObjectPath(userEmail));
 
-    const payload = JSON.stringify(data);
+    const normalized = normalizeUserData(data);
+    const payload = JSON.stringify(normalized);
     await file.save(payload, {
       contentType: "application/json",
     });
 
-    return {
-      ...data,
-      version: "gcs",
-    } as UserDataResponse;
+    return normalized;
   }
 
   async deleteUserData(userEmail: string): Promise<boolean> {
