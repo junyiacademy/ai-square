@@ -324,3 +324,4 @@ export default function LoginPage() {
     </Suspense>
   );
 }
+// Issue #39 preview trigger - 2026年 1月10日 週六 13時07分08秒 CST
