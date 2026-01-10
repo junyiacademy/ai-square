@@ -47,16 +47,16 @@
     "viewDetails": "查看詳情",
     "items": {
       "engaging": {
-        "name": "與 AI 互動"
+        "name": "與 AI 互動（問AI）"
       },
       "creating": {
-        "name": "與 AI 共創"
+        "name": "與 AI 共創（用AI）"
       },
       "managing": {
-        "name": "管理 AI"
+        "name": "管理 AI（管AI）"
       },
       "designing": {
-        "name": "設計 AI"
+        "name": "設計 AI（造AI）"
       }
     }
   },

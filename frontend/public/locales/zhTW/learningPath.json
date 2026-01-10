@@ -20,10 +20,10 @@
     "button": "進行評估"
   },
   "domains": {
-    "Engaging_with_AI": "與 AI 互動",
-    "Creating_with_AI": "利用 AI 創作",
-    "Managing_AI": "管理 AI",
-    "Designing_AI": "設計 AI"
+    "Engaging_with_AI": "與 AI 互動（問AI）",
+    "Creating_with_AI": "利用 AI 創作（用AI）",
+    "Managing_AI": "管理 AI（管AI）",
+    "Designing_AI": "設計 AI（造AI）"
   },
   "weakDomainReason": "這是您最薄弱的領域，分數為 {{score}}%",
   "strongDomainReason": "提升您在 {{domain}} 的技能（目前：{{score}}%）",
