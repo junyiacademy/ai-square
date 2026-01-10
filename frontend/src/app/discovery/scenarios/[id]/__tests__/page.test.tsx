@@ -2,10 +2,13 @@ import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import Page from "../page";
 
+// Helper to create mock params Promise
+const createMockParams = (id: string = "test-scenario-id") =>
+  Promise.resolve({ id });
+
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
   useSearchParams: () => new URLSearchParams(),
-  useParams: () => ({ id: "test-scenario-id" }),
   usePathname: () => "/discovery/scenarios/test-scenario-id",
 }));
 
@@ -57,14 +60,14 @@ describe("Discovery Scenario Detail Page", () => {
   });
 
   it("should render without errors", async () => {
-    const { container } = render(<Page />);
+    const { container } = render(<Page params={createMockParams()} />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });
   });
 
   it("should fetch scenario data", async () => {
-    render(<Page />);
+    render(<Page params={createMockParams()} />);
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
@@ -72,7 +75,7 @@ describe("Discovery Scenario Detail Page", () => {
 
   it("should handle API errors", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("API Error"));
-    const { container } = render(<Page />);
+    const { container } = render(<Page params={createMockParams()} />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });

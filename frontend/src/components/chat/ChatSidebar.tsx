@@ -78,9 +78,11 @@ export function ChatSidebar({
                     : ""
                 }`}
               >
-                <div
+                <button
+                  type="button"
                   onClick={() => onLoadSession(session.id)}
-                  className="cursor-pointer pr-8"
+                  className="cursor-pointer pr-8 text-left w-full bg-transparent border-none p-0"
+                  aria-label={`Load chat: ${session.title}`}
                 >
                   <div className="font-medium text-gray-900">
                     {session.title}
@@ -91,7 +93,7 @@ export function ChatSidebar({
                   <div className="text-xs text-gray-400 mt-1">
                     {formatDateWithLocale(new Date(session.updated_at), "en")}
                   </div>
-                </div>
+                </button>
 
                 <div className="absolute top-2 right-2">
                   <button
