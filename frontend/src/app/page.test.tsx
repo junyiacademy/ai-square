@@ -2,72 +2,57 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "./page";
 
-// Mock next/dynamic to return the mocked component immediately
-jest.mock("next/dynamic", () => ({
-  __esModule: true,
-  default: (
-    fn: () => Promise<{ default: React.ComponentType }>,
-    options?: { loading?: () => React.ReactElement },
-  ) => {
-    // Return a component that renders the mock directly
-    const MockedComponent = () => {
-      const [Component, setComponent] =
-        React.useState<React.ComponentType | null>(null);
-      React.useEffect(() => {
-        fn().then((mod) => setComponent(() => mod.default));
-      }, []);
-      if (!Component && options?.loading) return options.loading();
-      if (!Component) return null;
-      return <Component />;
-    };
-    return MockedComponent;
-  },
+// Mock the new landing page components
+jest.mock("@/components/navigation/Navbar", () => ({
+  Navbar: () => <nav data-testid="navbar">Navbar</nav>,
 }));
 
-// Mock the components as default exports
-jest.mock("@/components/homepage/HeroSection", () => ({
-  __esModule: true,
-  default: () => <div data-testid="hero-section">Hero Section</div>,
+jest.mock("@/components/navigation/Footer", () => ({
+  Footer: () => <footer data-testid="footer">Footer</footer>,
 }));
 
-jest.mock("@/components/homepage/FeaturesSection", () => ({
-  __esModule: true,
-  default: () => <div data-testid="features-section">Features Section</div>,
+jest.mock("@/components/landing/HeroSection", () => ({
+  HeroSection: () => <section data-testid="hero-section">Hero Section</section>,
 }));
 
-jest.mock("@/components/homepage/KnowledgeGraph", () => ({
-  __esModule: true,
-  default: () => <div data-testid="knowledge-graph">Knowledge Graph</div>,
+jest.mock("@/components/landing/ValueProposition", () => ({
+  ValueProposition: () => (
+    <section data-testid="value-proposition">Value Proposition</section>
+  ),
 }));
 
-jest.mock("@/components/homepage/HowItWorksSection", () => ({
-  __esModule: true,
-  default: () => <div data-testid="how-it-works">How It Works</div>,
+jest.mock("@/components/landing/FeatureHighlights", () => ({
+  FeatureHighlights: () => (
+    <section data-testid="feature-highlights">Feature Highlights</section>
+  ),
 }));
 
-jest.mock("@/components/homepage/TargetAudienceSection", () => ({
-  __esModule: true,
-  default: () => <div data-testid="target-audience">Target Audience</div>,
+jest.mock("@/components/landing/HowItWorks", () => ({
+  HowItWorks: () => <section data-testid="how-it-works">How It Works</section>,
 }));
 
-jest.mock("@/components/homepage/CTASection", () => ({
-  __esModule: true,
-  default: () => <div data-testid="cta-section">CTA Section</div>,
+jest.mock("@/components/landing/TargetAudience", () => ({
+  TargetAudience: () => (
+    <section data-testid="target-audience">Target Audience</section>
+  ),
 }));
 
-describe("HomePage", () => {
-  it("should render all homepage sections", async () => {
+describe("HomePage - Landing Page Redesign", () => {
+  it("should render navigation components", () => {
+    render(<HomePage />);
+
+    expect(screen.getByTestId("navbar")).toBeInTheDocument();
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
+  });
+
+  it("should render all landing page sections", () => {
     render(<HomePage />);
 
     expect(screen.getByTestId("hero-section")).toBeInTheDocument();
-    expect(screen.getByTestId("features-section")).toBeInTheDocument();
-    expect(screen.getByTestId("knowledge-graph-section")).toBeInTheDocument();
-    // KnowledgeGraph is dynamically imported, so it may take a moment to appear
-    await screen.findByTestId("knowledge-graph");
-    expect(screen.getByTestId("knowledge-graph")).toBeInTheDocument();
+    expect(screen.getByTestId("value-proposition")).toBeInTheDocument();
+    expect(screen.getByTestId("feature-highlights")).toBeInTheDocument();
     expect(screen.getByTestId("how-it-works")).toBeInTheDocument();
     expect(screen.getByTestId("target-audience")).toBeInTheDocument();
-    expect(screen.getByTestId("cta-section")).toBeInTheDocument();
   });
 
   it("should have proper structure", () => {
@@ -78,23 +63,18 @@ describe("HomePage", () => {
     expect(mainElement).toHaveClass("min-h-screen");
   });
 
-  it("should render sections in correct order", async () => {
+  it("should render sections in correct order", () => {
     const { container } = render(<HomePage />);
-
-    // Wait for dynamic component to load
-    await screen.findByTestId("knowledge-graph");
 
     const sections = container.querySelectorAll("[data-testid]");
 
-    expect(sections[0]).toHaveAttribute("data-testid", "hero-section");
-    expect(sections[1]).toHaveAttribute("data-testid", "features-section");
-    expect(sections[2]).toHaveAttribute(
-      "data-testid",
-      "knowledge-graph-section",
-    );
-    expect(sections[3]).toHaveAttribute("data-testid", "knowledge-graph");
+    // Check order: Navbar → HeroSection → ValueProposition → FeatureHighlights → HowItWorks → TargetAudience → Footer
+    expect(sections[0]).toHaveAttribute("data-testid", "navbar");
+    expect(sections[1]).toHaveAttribute("data-testid", "hero-section");
+    expect(sections[2]).toHaveAttribute("data-testid", "value-proposition");
+    expect(sections[3]).toHaveAttribute("data-testid", "feature-highlights");
     expect(sections[4]).toHaveAttribute("data-testid", "how-it-works");
     expect(sections[5]).toHaveAttribute("data-testid", "target-audience");
-    expect(sections[6]).toHaveAttribute("data-testid", "cta-section");
+    expect(sections[6]).toHaveAttribute("data-testid", "footer");
   });
 });
