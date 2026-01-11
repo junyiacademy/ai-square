@@ -1,3 +1,4 @@
+// Force rebuild: 2026-01-12 01:45 UTC+8
 import type { Config } from "tailwindcss";
 
 const config: Config = {
