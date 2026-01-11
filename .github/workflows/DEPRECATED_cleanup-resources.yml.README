@@ -1,0 +1,71 @@
+# DEPRECATED: cleanup-resources.yml
+
+## Status: SUPERSEDED
+
+This workflow (`cleanup-resources.yml`) has been **superseded** by the new comprehensive cleanup system.
+
+## Migration
+
+The old single `cleanup-resources.yml` workflow has been replaced by **5 specialized workflows**:
+
+| Old Functionality | New Workflow | Benefits |
+|-------------------|--------------|----------|
+| GCR images cleanup | `cleanup-container-images.yml` | Better filtering, dry-run mode, tracking |
+| Cloud Run revisions | `cleanup-container-images.yml` | Integrated with preview cleanup |
+| - | `cleanup-preview-services.yml` | Orphaned services detection |
+| - | `cleanup-github-artifacts.yml` | GitHub artifacts cleanup |
+| - | `cleanup-stale-branches.yml` | Branch management |
+| - | `cleanup-stale-prs.yml` | PR lifecycle management |
+
+## Why Deprecated?
+
+1. **Limited functionality** - Only cleaned GCR images and Cloud Run revisions
+2. **No dry-run mode** - Risky to test
+3. **No reporting** - No tracking of what was deleted
+4. **No safety checks** - Could delete protected resources
+5. **Daily schedule unnecessary** - Weekly is sufficient for most resources
+
+## Recommended Action
+
+**Disable the old workflow:**
+```bash
+gh workflow disable cleanup-resources.yml
+```
+
+**Enable new workflows if not already active:**
+```bash
+gh workflow enable cleanup-preview-services.yml
+gh workflow enable cleanup-container-images.yml
+gh workflow enable cleanup-github-artifacts.yml
+gh workflow enable cleanup-stale-branches.yml
+gh workflow enable cleanup-stale-prs.yml
+```
+
+## Can I Delete It?
+
+**Not recommended yet.** Keep the file but disabled for:
+- Historical reference
+- Rollback option if new system has issues
+- Comparison of cleanup approaches
+
+**Safe to delete after**: 2-3 months of successful new cleanup system operation
+
+## Migration Checklist
+
+- [ ] Verify new cleanup workflows are enabled
+- [ ] Run new workflows in dry-run mode
+- [ ] Disable old `cleanup-resources.yml` workflow
+- [ ] Monitor new system for 1 month
+- [ ] Compare cleanup reports between old and new
+- [ ] Remove old workflow file after confidence established
+
+## Documentation
+
+See comprehensive cleanup documentation:
+- **Full Guide**: `docs/deployment/CLEANUP_SYSTEM.md`
+- **Quick Reference**: `docs/deployment/CLEANUP_QUICK_REFERENCE.md`
+
+---
+
+**Created**: 2026-01-11
+**Deprecated in favor of**: Comprehensive cleanup system (5 workflows)

@@ -1,0 +1,257 @@
+name: Cleanup Preview Services
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC (10 AM Taiwan time)
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      max_age_days:
+        description: 'Maximum age in days for unused services'
+        required: false
+        default: '7'
+        type: string
+      dry_run:
+        description: 'Dry run mode (do not actually delete)'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  MAX_AGE_DAYS: ${{ github.event.inputs.max_age_days || '7' }}
+  DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+
+jobs:
+  cleanup-orphaned-services:
+    name: Cleanup Orphaned Preview Services
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history to check all branches
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Find and cleanup orphaned preview services
+        id: cleanup
+        run: |
+          echo "🔍 Finding orphaned preview services..."
+
+          # Get all Cloud Run services matching preview pattern
+          SERVICES=$(gcloud run services list \
+            --region=${{ env.REGION }} \
+            --format="value(metadata.name)" \
+            --filter="metadata.name:ai-square-preview-issue-*" || echo "")
+
+          if [ -z "$SERVICES" ]; then
+            echo "No preview services found"
+            echo "deleted_count=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Found preview services:"
+          echo "$SERVICES"
+
+          DELETED_COUNT=0
+          DELETED_SERVICES=""
+          KEPT_SERVICES=""
+
+          # Get all active branches
+          ACTIVE_BRANCHES=$(git branch -r | grep -oP '(?<=origin/)(fix|feat)/issue-\d+' || echo "")
+          echo "Active branches:"
+          echo "$ACTIVE_BRANCHES"
+
+          # Get all open PRs
+          OPEN_PRS=$(gh pr list --state open --json headRefName --jq '.[].headRefName' || echo "")
+          echo "Open PRs:"
+          echo "$OPEN_PRS"
+
+          while IFS= read -r service; do
+            if [ -z "$service" ]; then
+              continue
+            fi
+
+            # Extract issue number from service name
+            ISSUE_NUM=$(echo "$service" | grep -oP '(?<=issue-)\d+')
+
+            if [ -z "$ISSUE_NUM" ]; then
+              echo "⚠️ Could not extract issue number from: $service"
+              continue
+            fi
+
+            # Check if corresponding branch exists
+            BRANCH_EXISTS=false
+            if echo "$ACTIVE_BRANCHES" | grep -q "issue-${ISSUE_NUM}"; then
+              BRANCH_EXISTS=true
+            fi
+
+            # Check if PR is still open
+            PR_OPEN=false
+            if echo "$OPEN_PRS" | grep -q "issue-${ISSUE_NUM}"; then
+              PR_OPEN=true
+            fi
+
+            # Check service age
+            LAST_UPDATED=$(gcloud run services describe "$service" \
+              --region=${{ env.REGION }} \
+              --format='value(metadata.creationTimestamp)')
+
+            CURRENT_TIME=$(date +%s)
+            LAST_UPDATED_TIME=$(date -d "$LAST_UPDATED" +%s 2>/dev/null || date -jf "%Y-%m-%dT%H:%M:%S" "$LAST_UPDATED" +%s 2>/dev/null || echo "0")
+
+            if [ "$LAST_UPDATED_TIME" = "0" ]; then
+              echo "⚠️ Could not parse timestamp for $service"
+              DAYS_OLD=0
+            else
+              DAYS_OLD=$(( ($CURRENT_TIME - $LAST_UPDATED_TIME) / 86400 ))
+            fi
+
+            SHOULD_DELETE=false
+            REASON=""
+
+            # Decision logic
+            if [ "$BRANCH_EXISTS" = false ] && [ "$PR_OPEN" = false ]; then
+              SHOULD_DELETE=true
+              REASON="No active branch or PR for issue-${ISSUE_NUM}"
+            elif [ "$DAYS_OLD" -gt "${{ env.MAX_AGE_DAYS }}" ]; then
+              SHOULD_DELETE=true
+              REASON="Service older than ${{ env.MAX_AGE_DAYS }} days (${DAYS_OLD} days)"
+            fi
+
+            if [ "$SHOULD_DELETE" = true ]; then
+              echo "🗑️  Will delete: $service (${REASON})"
+
+              if [ "${{ env.DRY_RUN }}" = "false" ]; then
+                if gcloud run services delete "$service" \
+                  --region=${{ env.REGION }} \
+                  --quiet; then
+                  echo "✅ Deleted: $service"
+                  DELETED_COUNT=$((DELETED_COUNT + 1))
+                  DELETED_SERVICES="${DELETED_SERVICES}- ${service} (${REASON})\n"
+
+                  # Delete associated container images
+                  echo "🧹 Cleaning up images for $service..."
+                  gcloud container images list \
+                    --repository=gcr.io/${{ env.PROJECT_ID }} \
+                    --filter="name:${service}" \
+                    --format="value(name)" | while read img; do
+                    echo "Deleting image: $img"
+                    gcloud container images delete "$img" --quiet || true
+                  done
+                else
+                  echo "❌ Failed to delete: $service"
+                fi
+              else
+                echo "[DRY RUN] Would delete: $service"
+                DELETED_COUNT=$((DELETED_COUNT + 1))
+                DELETED_SERVICES="${DELETED_SERVICES}- ${service} (${REASON})\n"
+              fi
+            else
+              echo "✅ Keeping: $service (Issue #${ISSUE_NUM} - Branch exists or PR open)"
+              KEPT_SERVICES="${KEPT_SERVICES}- ${service} (Issue #${ISSUE_NUM})\n"
+            fi
+          done <<< "$SERVICES"
+
+          echo "deleted_count=$DELETED_COUNT" >> $GITHUB_OUTPUT
+          echo "deleted_services<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$DELETED_SERVICES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "kept_services<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$KEPT_SERVICES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo ""
+          echo "📊 Summary:"
+          echo "- Services deleted: $DELETED_COUNT"
+          echo "- Dry run mode: ${{ env.DRY_RUN }}"
+
+      - name: Create summary issue comment
+        if: steps.cleanup.outputs.deleted_count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deletedCount = ${{ steps.cleanup.outputs.deleted_count }};
+            const dryRun = '${{ env.DRY_RUN }}' === 'true';
+            const deletedServices = `${{ steps.cleanup.outputs.deleted_services }}`;
+            const keptServices = `${{ steps.cleanup.outputs.kept_services }}`;
+
+            const actionText = dryRun ? 'Would delete' : 'Deleted';
+            const emoji = dryRun ? '🔍' : '🧹';
+
+            let comment = `## ${emoji} Preview Services Cleanup Report\n\n`;
+
+            if (dryRun) {
+              comment += `**Mode**: 🔍 Dry Run (no actual deletion)\n\n`;
+            }
+
+            comment += `**${actionText}**: ${deletedCount} orphaned preview service(s)\n\n`;
+
+            if (deletedServices.trim()) {
+              comment += `### ${actionText} Services\n\n${deletedServices}\n`;
+            }
+
+            if (keptServices.trim()) {
+              comment += `### ✅ Active Services (Kept)\n\n${keptServices}\n`;
+            }
+
+            comment += `\n---\n*🤖 Automated cleanup • Triggered: ${new Date().toISOString()}*`;
+
+            // Find or create a tracking issue for cleanup reports
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['automated-cleanup', 'infrastructure'],
+              state: 'open'
+            });
+
+            let trackingIssue = issues.data.find(i => i.title.includes('Preview Services Cleanup'));
+
+            if (!trackingIssue) {
+              // Create tracking issue if not exists
+              const newIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🧹 Preview Services Cleanup Tracking',
+                body: 'This issue tracks automated preview services cleanup operations.\n\nCleanup reports will be posted as comments below.',
+                labels: ['automated-cleanup', 'infrastructure']
+              });
+              trackingIssue = newIssue.data;
+            }
+
+            // Post comment to tracking issue
+            await github.rest.issues.createComment({
+              issue_number: trackingIssue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Summary
+        run: |
+          echo "## Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deleted services**: ${{ steps.cleanup.outputs.deleted_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry run mode**: ${{ env.DRY_RUN }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Max age days**: ${{ env.MAX_AGE_DAYS }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.cleanup.outputs.deleted_count }}" -gt 0 ]; then
+            echo "### Deleted Services" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.cleanup.outputs.deleted_services }}" >> $GITHUB_STEP_SUMMARY
+          fi

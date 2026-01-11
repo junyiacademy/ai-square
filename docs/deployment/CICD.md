@@ -7,6 +7,7 @@
 - PM（產品視角）：`docs/handbook/PRD.md`
 - RD（技術架構）：`docs/technical/infrastructure/unified-learning-architecture.md`
 - **CI/CD 配置**：`.github/workflows/` 目錄
+- **🆕 自動清理系統**：`docs/deployment/CLEANUP_SYSTEM.md`
 
 ## 🚨🚨🚨 部署監控與驗證流程 - 每次推送後必須執行！！！ 🚨🚨🚨
 
