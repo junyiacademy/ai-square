@@ -130,8 +130,14 @@ describe("TaskDetailPage", () => {
 
       renderWithProviders(<TaskDetailPage params={createMockParams()} />);
 
-      expect(mockRouter.push).toHaveBeenCalledWith(
-        "/login?redirect=/discovery/scenarios",
+      // Wait for params to be unwrapped before redirect happens
+      await waitFor(
+        () => {
+          expect(mockRouter.push).toHaveBeenCalledWith(
+            "/login?redirect=/discovery/scenarios",
+          );
+        },
+        { timeout: 1000 },
       );
     });
 

@@ -4,14 +4,33 @@ import { middleware, config } from "../middleware";
 // Unmock AuthManager to test the actual middleware functionality
 jest.unmock("@/lib/auth/auth-manager");
 
-// Mock NextResponse methods
+// Mock NextResponse methods with proper headers support
 jest.mock("next/server", () => ({
   NextRequest: jest.requireActual("next/server").NextRequest,
   NextResponse: {
-    next: jest.fn(() => ({ type: "next" })),
+    next: jest.fn(() => ({
+      type: "next",
+      headers: {
+        set: jest.fn(),
+        get: jest.fn(),
+        has: jest.fn(),
+        delete: jest.fn(),
+      },
+    })),
     redirect: jest.fn((url: URL) => ({
       type: "redirect",
       url: url.toString(),
+    })),
+    json: jest.fn((data: unknown, init?: ResponseInit) => ({
+      type: "json",
+      data,
+      status: init?.status || 200,
+      headers: {
+        set: jest.fn(),
+        get: jest.fn(),
+        has: jest.fn(),
+        delete: jest.fn(),
+      },
     })),
   },
 }));
@@ -27,7 +46,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
 
     it("should allow access to login page", () => {
@@ -35,7 +54,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
 
     it("should allow access to register page", () => {
@@ -43,7 +62,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
   });
 
@@ -88,7 +107,7 @@ describe("middleware", () => {
 
         // /admin is explicitly allowed without auth (for development/testing)
         expect(NextResponse.redirect).not.toHaveBeenCalled();
-        expect(response).toEqual({
+        expect(response).toMatchObject({
           type: "next",
         });
       });
@@ -129,7 +148,7 @@ describe("middleware", () => {
         const response = middleware(request);
 
         expect(NextResponse.next).toHaveBeenCalled();
-        expect(response).toEqual({ type: "next" });
+        expect(response).toMatchObject({ type: "next" });
       });
 
       it("should redirect if sessionToken is missing", () => {
@@ -166,7 +185,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
 
     it("should skip static files", () => {
@@ -174,7 +193,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
 
     it("should skip _next internal routes", () => {
@@ -184,7 +203,7 @@ describe("middleware", () => {
       const response = middleware(request);
 
       expect(NextResponse.next).toHaveBeenCalled();
-      expect(response).toEqual({ type: "next" });
+      expect(response).toMatchObject({ type: "next" });
     });
   });
 });
