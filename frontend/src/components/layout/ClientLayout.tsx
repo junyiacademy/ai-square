@@ -15,6 +15,7 @@ interface ClientLayoutProps {
 export function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
   const isChat = pathname === "/chat";
+  const isLandingPage = pathname === "/";
 
   return (
     <I18nProvider>
@@ -22,13 +23,13 @@ export function ClientLayout({ children }: ClientLayoutProps) {
         <ThemeProvider>
           <AuthProvider>
             <div className="flex flex-col min-h-screen">
-              {!isChat && <Header />}
+              {!isChat && !isLandingPage && <Header />}
               <main
                 className={`flex-1 bg-white dark:bg-slate-900 text-gray-900 dark:text-white ${isChat ? "h-screen" : ""}`}
               >
                 {children}
               </main>
-              {!isChat && <Footer />}
+              {!isChat && !isLandingPage && <Footer />}
             </div>
           </AuthProvider>
         </ThemeProvider>
