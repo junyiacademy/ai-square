@@ -37,6 +37,49 @@
   animation: beam-reverse 15s linear infinite;
 }
 
+/* Dark mode - more prominent beams */
+@media (prefers-color-scheme: dark) {
+  .beamBlue {
+    background: linear-gradient(
+      135deg,
+      rgba(3, 99, 167, 0.25) 0%,
+      rgba(3, 99, 167, 0.1) 30%,
+      transparent 60%
+    );
+    opacity: 0.5;
+  }
+
+  .beamOrange {
+    background: linear-gradient(
+      135deg,
+      transparent 40%,
+      rgba(236, 108, 31, 0.1) 70%,
+      rgba(236, 108, 31, 0.25) 100%
+    );
+    opacity: 0.5;
+  }
+}
+
+:global(.dark) .beamBlue {
+  background: linear-gradient(
+    135deg,
+    rgba(3, 99, 167, 0.25) 0%,
+    rgba(3, 99, 167, 0.1) 30%,
+    transparent 60%
+  );
+  opacity: 0.5;
+}
+
+:global(.dark) .beamOrange {
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    rgba(236, 108, 31, 0.1) 70%,
+    rgba(236, 108, 31, 0.25) 100%
+  );
+  opacity: 0.5;
+}
+
 .content {
   position: relative;
   z-index: 1;

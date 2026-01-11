@@ -26,13 +26,13 @@ export function TargetAudience() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-20 px-4 bg-white dark:bg-dark-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
             Who We Serve
           </h2>
-          <p className="text-body text-neutral-textSecondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
             AI Square is designed for learners at every stage of their AI
             journey.
           </p>
@@ -42,12 +42,12 @@ export function TargetAudience() {
           {personas.map((persona, index) => (
             <div
               key={index}
-              className="bg-neutral-cardBg rounded-card overflow-hidden transition-transform hover:scale-105 hover:shadow-cardHover"
+              className="bg-neutral-cardBg dark:bg-dark-background-elevated rounded-card overflow-hidden transition-transform hover:scale-105 hover:shadow-cardHover"
             >
               {/* Image Placeholder */}
-              <div className="aspect-[4/3] bg-gradient-blue-radial flex items-center justify-center">
+              <div className="aspect-[4/3] bg-gradient-blue-radial dark:bg-gradient-to-br dark:from-primary-blue-900/30 dark:to-transparent flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto bg-white/20 backdrop-blur rounded-full flex items-center justify-center mb-4">
+                  <div className="w-20 h-20 mx-auto bg-white/20 dark:bg-black/20 backdrop-blur rounded-full flex items-center justify-center mb-4">
                     <svg
                       className="w-10 h-10 text-primary-blue-500"
                       fill="none"
@@ -74,10 +74,10 @@ export function TargetAudience() {
                     {persona.title}
                   </span>
                 </div>
-                <p className="text-body text-neutral-textSecondary">
+                <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary">
                   {persona.description}
                 </p>
-                <p className="text-small text-neutral-textSecondary italic border-l-4 border-primary-blue-500 pl-4">
+                <p className="text-small text-neutral-textSecondary dark:text-dark-text-secondary italic border-l-4 border-primary-blue-500 pl-4">
                   &quot;{persona.quote}&quot;
                 </p>
               </div>

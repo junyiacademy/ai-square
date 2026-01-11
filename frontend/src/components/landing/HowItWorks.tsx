@@ -26,13 +26,13 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-blue-radial bg-neutral-cardBg">
+    <section className="py-20 px-4 bg-gradient-blue-radial dark:bg-dark-background-card bg-neutral-cardBg">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
             How It Works
           </h2>
-          <p className="text-body text-neutral-textSecondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
             A simple three-step journey from assessment to mastery.
           </p>
         </div>
@@ -56,10 +56,10 @@ export function HowItWorks() {
 
                 {/* Content */}
                 <div className="flex-1 pt-2">
-                  <h3 className="text-h2 font-bold text-neutral-textPrimary mb-3">
+                  <h3 className="text-h2 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-body text-neutral-textSecondary max-w-xl">
+                  <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-xl">
                     {step.description}
                   </p>
                 </div>

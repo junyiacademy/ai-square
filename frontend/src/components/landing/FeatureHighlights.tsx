@@ -37,13 +37,13 @@ export function FeatureHighlights() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-20 px-4 bg-white dark:bg-dark-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
             Features That Empower
           </h2>
-          <p className="text-body text-neutral-textSecondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
             Everything you need to master AI literacy in one integrated
             platform.
           </p>
@@ -51,15 +51,22 @@ export function FeatureHighlights() {
 
         {/* 2x2 Bento Grid with X pattern */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className={`${feature.bgColor} ${feature.textColor} rounded-card p-8 transition-transform hover:scale-105`}
-            >
-              <h3 className="text-h3 font-semibold mb-4">{feature.title}</h3>
-              <p className="text-body opacity-90">{feature.description}</p>
-            </div>
-          ))}
+          {features.map((feature, index) => {
+            const isDarkBgFeature = feature.bgColor === "bg-primary-blue-500" || feature.bgColor === "bg-secondary-orange-500";
+            const cardClasses = isDarkBgFeature
+              ? `${feature.bgColor} ${feature.textColor}`
+              : `${feature.bgColor} dark:bg-dark-background-elevated ${feature.textColor} dark:text-dark-text-primary`;
+
+            return (
+              <div
+                key={index}
+                className={`${cardClasses} rounded-card p-8 transition-transform hover:scale-105`}
+              >
+                <h3 className="text-h3 font-semibold mb-4">{feature.title}</h3>
+                <p className="text-body opacity-90">{feature.description}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

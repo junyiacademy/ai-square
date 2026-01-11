@@ -16,6 +16,33 @@
   border-color: rgba(3, 99, 167, 0.3);
 }
 
+/* Dark mode glassmorphism */
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .card.hover:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(3, 99, 167, 0.5);
+  }
+}
+
+:global(.dark) .card {
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark) .card.hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  border-color: rgba(3, 99, 167, 0.5);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition: none;

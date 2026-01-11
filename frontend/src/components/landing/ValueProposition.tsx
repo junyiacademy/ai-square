@@ -70,13 +70,13 @@ export function ValueProposition() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-neutral-white">
+    <section className="py-20 px-4 bg-neutral-white dark:bg-dark-background-card">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
             Why AI Square?
           </h2>
-          <p className="text-body text-neutral-textSecondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
             A unique learning platform that balances technical excellence with
             human-centered design.
           </p>
@@ -90,10 +90,10 @@ export function ValueProposition() {
               >
                 {value.icon}
               </div>
-              <h3 className="text-h3 font-semibold text-neutral-textPrimary">
+              <h3 className="text-h3 font-semibold text-neutral-textPrimary dark:text-dark-text-primary">
                 {value.title}
               </h3>
-              <p className="text-body text-neutral-textSecondary">
+              <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary">
                 {value.description}
               </p>
             </GlassCard>
