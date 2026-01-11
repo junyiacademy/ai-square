@@ -62,37 +62,35 @@ describe("TranslationService", () => {
     it("translates feedback to Traditional Chinese (zhTW)", async () => {
       const result = await service.translateFeedback(originalFeedback, "zhTW");
 
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining("Traditional Chinese (繁體中文)"),
-      );
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining(originalFeedback),
-      );
+      expect(mockSendMessage).toHaveBeenCalled();
+      const callArg = mockSendMessage.mock.calls[0][0];
+      expect(callArg).toContain("Traditional Chinese (繁體中文)");
+      expect(callArg).toContain(originalFeedback);
       expect(result).toBe("做得好！您展現了對 AI 概念的優秀理解。");
     });
 
     it("handles zh-TW format correctly", async () => {
       await service.translateFeedback(originalFeedback, "zh-TW");
 
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining("Traditional Chinese (繁體中文)"),
-      );
+      expect(mockSendMessage).toHaveBeenCalled();
+      const callArg = mockSendMessage.mock.calls[0][0];
+      expect(callArg).toContain("Traditional Chinese (繁體中文)");
     });
 
     it("translates feedback to Simplified Chinese (zhCN)", async () => {
       await service.translateFeedback(originalFeedback, "zhCN");
 
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining("Simplified Chinese (简体中文)"),
-      );
+      expect(mockSendMessage).toHaveBeenCalled();
+      const callArg = mockSendMessage.mock.calls[0][0];
+      expect(callArg).toContain("Simplified Chinese (简体中文)");
     });
 
     it("handles zh-CN format correctly", async () => {
       await service.translateFeedback(originalFeedback, "zh-CN");
 
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining("Simplified Chinese (简体中文)"),
-      );
+      expect(mockSendMessage).toHaveBeenCalled();
+      const callArg = mockSendMessage.mock.calls[0][0];
+      expect(callArg).toContain("Simplified Chinese (简体中文)");
     });
 
     it("includes career field context when provided", async () => {
@@ -115,9 +113,9 @@ describe("TranslationService", () => {
     it("handles unsupported language codes", async () => {
       await service.translateFeedback(originalFeedback, "unknown-lang");
 
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        expect.stringContaining("unknown-lang"),
-      );
+      expect(mockSendMessage).toHaveBeenCalled();
+      const callArg = mockSendMessage.mock.calls[0][0];
+      expect(callArg).toContain("unknown-lang");
     });
 
     it("supports all documented languages", async () => {
@@ -139,9 +137,9 @@ describe("TranslationService", () => {
       for (const [code, name] of languages) {
         mockSendMessage.mockClear();
         await service.translateFeedback(originalFeedback, code);
-        expect(mockSendMessage).toHaveBeenCalledWith(
-          expect.stringContaining(name),
-        );
+        expect(mockSendMessage).toHaveBeenCalled();
+        const callArg = mockSendMessage.mock.calls[0][0];
+        expect(callArg).toContain(name);
       }
     });
 

@@ -66,7 +66,9 @@ ${careerField ? `- Use appropriate terminology for the ${careerField} field` : "
 Translate now:`;
 
     try {
-      const response = await this.aiService.sendMessage(prompt);
+      const response = await this.aiService.sendMessage(prompt, {
+        feature: "translation-service",
+      });
 
       // Clean up the response - remove any translation labels
       let content = response.content;

@@ -204,7 +204,11 @@ Return your response in JSON format:
   "nextSteps": ["...", "..."]
 }`;
 
-      const aiResponse = await aiService.sendMessage(feedbackPrompt);
+      const aiResponse = await aiService.sendMessage(feedbackPrompt, {
+        userEmail: session.user.email,
+        feature: "discovery-program-regenerate",
+        requestId: programId,
+      });
 
       try {
         const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);

@@ -178,7 +178,7 @@ describe("ChatPage - Scroll and Session Features", () => {
     render(<ChatPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Header")).toHaveLength(2);
+      expect(screen.getByText("Header")).toBeInTheDocument();
     });
 
     // The scroll button should not be visible initially
@@ -189,11 +189,11 @@ describe("ChatPage - Scroll and Session Features", () => {
     render(<ChatPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Previous Chat")).toHaveLength(2);
+      expect(screen.getByText("Previous Chat")).toBeInTheDocument();
     });
 
     // Click on a previous chat session
-    fireEvent.click(screen.getAllByText("Previous Chat")[0]);
+    fireEvent.click(screen.getByText("Previous Chat"));
 
     await waitFor(() => {
       expect(window.history.pushState).toHaveBeenCalledWith(
@@ -214,7 +214,7 @@ describe("ChatPage - Scroll and Session Features", () => {
 
     // Wait for authentication and then session to load
     await waitFor(() => {
-      expect(screen.getAllByText("Header")).toHaveLength(2);
+      expect(screen.getByText("Header")).toBeInTheDocument();
     });
 
     // The session load happens after user is authenticated
@@ -234,11 +234,11 @@ describe("ChatPage - Scroll and Session Features", () => {
     render(<ChatPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("New Chat")).toHaveLength(2);
+      expect(screen.getByText("New Chat")).toBeInTheDocument();
     });
 
     // Click new chat button
-    fireEvent.click(screen.getAllByText("New Chat")[0]);
+    fireEvent.click(screen.getByText("New Chat"));
 
     expect(window.history.pushState).toHaveBeenCalledWith({}, "", "/chat");
   });
@@ -298,18 +298,18 @@ describe("ChatPage - Scroll and Session Features", () => {
     render(<ChatPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Previous Chat")).toHaveLength(2);
+      expect(screen.getByText("Previous Chat")).toBeInTheDocument();
     });
 
     // Initially, delete button should not be visible
     expect(screen.queryByText("Delete")).not.toBeInTheDocument();
 
     // Find the three dots button using test ID
-    const moreButton = screen.getAllByTestId("more-button-session-123")[0];
+    const moreButton = screen.getByTestId("more-button-session-123");
     fireEvent.click(moreButton);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Delete")).toHaveLength(2); // Both mobile and desktop versions
+      expect(screen.getByText("Delete")).toBeInTheDocument();
     });
   });
 
@@ -320,15 +320,15 @@ describe("ChatPage - Scroll and Session Features", () => {
     render(<ChatPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Previous Chat")).toHaveLength(2);
+      expect(screen.getByText("Previous Chat")).toBeInTheDocument();
     });
 
     // Find and click the more button
-    const moreButton = screen.getAllByTestId("more-button-session-123")[0];
+    const moreButton = screen.getByTestId("more-button-session-123");
     fireEvent.click(moreButton);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Delete")).toHaveLength(2); // Both mobile and desktop versions
+      expect(screen.getByText("Delete")).toBeInTheDocument();
     });
 
     // Mock successful delete response after the dropdown is shown
@@ -347,8 +347,8 @@ describe("ChatPage - Scroll and Session Features", () => {
       return originalFetch(url, options);
     });
 
-    // Click delete (use the first Delete button)
-    fireEvent.click(screen.getAllByText("Delete")[0]);
+    // Click delete
+    fireEvent.click(screen.getByText("Delete"));
 
     // Verify confirmation was shown
     expect(window.confirm).toHaveBeenCalledWith(

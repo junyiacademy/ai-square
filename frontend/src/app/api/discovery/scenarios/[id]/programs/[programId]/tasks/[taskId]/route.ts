@@ -540,7 +540,11 @@ Return JSON:
 }`;
 
       try {
-        const aiResponse = await aiService.sendMessage(evaluationPrompt);
+        const aiResponse = await aiService.sendMessage(evaluationPrompt, {
+          userEmail: session.user.email,
+          feature: "discovery-task-evaluation",
+          requestId: taskId,
+        });
 
         // Parse JSON from AI response
         let evaluationResult;
@@ -818,7 +822,11 @@ Return JSON:
           model: "gemini-2.5-flash",
         });
 
-        const aiResponse = await aiService.sendMessage(comprehensivePrompt);
+        const aiResponse = await aiService.sendMessage(comprehensivePrompt, {
+          userEmail: session.user.email,
+          feature: "discovery-feedback-generation",
+          requestId: taskId,
+        });
         comprehensiveFeedback = aiResponse.content;
 
         // Debug log AI response (confirm-complete)
@@ -1247,7 +1255,11 @@ Return JSON:
           model: "gemini-2.5-flash",
         });
 
-        const aiResponse = await aiService.sendMessage(comprehensivePrompt);
+        const aiResponse = await aiService.sendMessage(comprehensivePrompt, {
+          userEmail: session.user.email,
+          feature: "discovery-feedback-regenerate",
+          requestId: taskId,
+        });
         comprehensiveFeedback = aiResponse.content;
 
         // Debug log AI response (regenerate-evaluation)

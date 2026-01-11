@@ -162,8 +162,13 @@ describe("ProgramDetailPage", () => {
 
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
-      expect(mockRouter.push).toHaveBeenCalledWith(
-        "/login?redirect=/discovery/scenarios",
+      await waitFor(
+        () => {
+          expect(mockRouter.push).toHaveBeenCalledWith(
+            "/login?redirect=/discovery/scenarios",
+          );
+        },
+        { timeout: 1000 },
       );
     });
 
@@ -189,18 +194,25 @@ describe("ProgramDetailPage", () => {
     it("should display correct career information for content creator", async () => {
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
+      // Wait for loading to finish
       await waitFor(
         () => {
-          const element = screen.queryByText("數位魔法師 - 內容創作者");
-          if (element) expect(element).toBeInTheDocument();
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
         },
-        { timeout: 1000 },
+        { timeout: 3000 },
       );
 
-      expect(screen.getByText("內容魔法")).toBeInTheDocument();
-      expect(screen.getByText("視覺咒語")).toBeInTheDocument();
-      expect(screen.getByText("文字煉金術")).toBeInTheDocument();
-      expect(screen.getByText("社群召喚術")).toBeInTheDocument();
+      // Check all career-related content
+      await waitFor(
+        () => {
+          expect(screen.getByText("數位魔法師 - 內容創作者")).toBeInTheDocument();
+          expect(screen.getByText("內容魔法")).toBeInTheDocument();
+          expect(screen.getByText("視覺咒語")).toBeInTheDocument();
+          expect(screen.getByText("文字煉金術")).toBeInTheDocument();
+          expect(screen.getByText("社群召喚術")).toBeInTheDocument();
+        },
+        { timeout: 2000 },
+      );
     });
 
     it("should display correct career information for different career types", async () => {
@@ -216,16 +228,23 @@ describe("ProgramDetailPage", () => {
 
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
+      // Wait for loading to finish
       await waitFor(
         () => {
-          const element = screen.queryByText("星際廣播員 - YouTuber");
-          if (element) expect(element).toBeInTheDocument();
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
         },
-        { timeout: 1000 },
+        { timeout: 3000 },
       );
 
-      expect(screen.getByText("星際剪輯術")).toBeInTheDocument();
-      expect(screen.getByText("觀眾心理學")).toBeInTheDocument();
+      // Check all YouTuber career content
+      await waitFor(
+        () => {
+          expect(screen.getByText("星際廣播員 - YouTuber")).toBeInTheDocument();
+          expect(screen.getByText("星際剪輯術")).toBeInTheDocument();
+          expect(screen.getByText("觀眾心理學")).toBeInTheDocument();
+        },
+        { timeout: 2000 },
+      );
     });
 
     it("should handle unknown career types", async () => {
@@ -255,23 +274,30 @@ describe("ProgramDetailPage", () => {
     it("should render all tasks with correct status", async () => {
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
+      // Wait for loading to finish
       await waitFor(
         () => {
-          const element = screen.queryByText(
-            "discovery:task 1: understand_algorithms",
-          );
-          if (element) expect(element).toBeInTheDocument();
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
         },
-        { timeout: 1000 },
+        { timeout: 3000 },
       );
 
-      expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
-      expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
+      // Check all tasks and XP values
+      await waitFor(
+        () => {
+          // Tasks are rendered as "任務 1: <title>", "任務 2: <title>", etc.
+          expect(screen.getByText(/任務 1:/)).toBeInTheDocument();
+          expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
+          expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
+          expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
 
-      // Check XP values - use getAllByText for multiple occurrences
-      expect(screen.getAllByText("95 XP")[0]).toBeInTheDocument();
-      expect(screen.getByText("100 XP")).toBeInTheDocument();
-      expect(screen.getByText("120 XP")).toBeInTheDocument();
+          // Check XP values - use getAllByText for multiple occurrences
+          expect(screen.getAllByText("95 XP")[0]).toBeInTheDocument();
+          expect(screen.getByText("100 XP")).toBeInTheDocument();
+          expect(screen.getByText("120 XP")).toBeInTheDocument();
+        },
+        { timeout: 2000 },
+      );
     });
 
     it("should show correct buttons for different task statuses", async () => {

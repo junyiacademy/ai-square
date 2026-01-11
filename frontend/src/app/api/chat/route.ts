@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Storage } from "@google-cloud/storage";
 import { VertexAI } from "@google-cloud/vertexai";
+import { aiUsageTracker } from "@/lib/ai/usage-tracker";
 import { v4 as uuidv4 } from "uuid";
 
 // Initialize storage and AI services only when needed
@@ -398,6 +399,23 @@ Guidelines:
     const aiResponse =
       response.candidates?.[0]?.content?.parts?.[0]?.text ||
       "I apologize, but I was unable to generate a response.";
+    const tokensUsed =
+      (response.usageMetadata as { totalTokenCount?: number } | undefined)
+        ?.totalTokenCount || Math.ceil((message.length + aiResponse.length) / 4);
+
+    if (process.env.AI_USAGE_TRACKING_ENABLED !== "false") {
+      try {
+        aiUsageTracker.recordUsage({
+          userKey: userEmail,
+          feature: "assessment-chat",
+          model: "gemini-2.5-flash",
+          tokensUsed,
+          metadata: { sessionId },
+        });
+      } catch (trackingError) {
+        console.warn("[AI Usage] Chat tracking failed:", trackingError);
+      }
+    }
 
     // Create or use session ID
     const currentSessionId = sessionId || uuidv4();

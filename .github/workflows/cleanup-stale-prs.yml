@@ -1,0 +1,292 @@
+name: Cleanup Stale PRs
+
+on:
+  schedule:
+    # Run daily at 9 AM UTC (5 PM Taiwan time)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      stale_days:
+        description: 'Days of inactivity before marking as stale'
+        required: false
+        default: '14'
+        type: string
+      close_days:
+        description: 'Days of inactivity before closing stale PR'
+        required: false
+        default: '30'
+        type: string
+      dry_run:
+        description: 'Dry run mode (do not actually label or close)'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  STALE_DAYS: ${{ github.event.inputs.stale_days || '14' }}
+  CLOSE_DAYS: ${{ github.event.inputs.close_days || '30' }}
+  DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+
+jobs:
+  stale-prs:
+    name: Mark and Close Stale PRs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Process stale PRs
+        id: stale
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const staleDays = parseInt('${{ env.STALE_DAYS }}');
+            const closeDays = parseInt('${{ env.CLOSE_DAYS }}');
+            const dryRun = '${{ env.DRY_RUN }}' === 'true';
+
+            console.log(`🔍 Processing stale PRs...`);
+            console.log(`Stale after: ${staleDays} days`);
+            console.log(`Close after: ${closeDays} days`);
+            console.log(`Dry run: ${dryRun}`);
+
+            const now = new Date();
+            const staleDate = new Date(now.getTime() - staleDays * 24 * 60 * 60 * 1000);
+            const closeDate = new Date(now.getTime() - closeDays * 24 * 60 * 60 * 1000);
+
+            // Get all open PRs
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            let markedStale = 0;
+            let closed = 0;
+            let kept = 0;
+            const markedStaleList = [];
+            const closedList = [];
+            const keptList = [];
+
+            for (const pr of prs.data) {
+              const updatedAt = new Date(pr.updated_at);
+              const daysSinceUpdate = Math.floor((now - updatedAt) / (1000 * 60 * 60 * 24));
+
+              // Skip draft PRs
+              if (pr.draft) {
+                console.log(`⏭️  Skipping draft PR #${pr.number}: ${pr.title}`);
+                keptList.push(`- #${pr.number}: ${pr.title} (draft PR)`);
+                kept++;
+                continue;
+              }
+
+              // Get PR labels
+              const labels = pr.labels.map(l => l.name);
+              const hasStaleLabel = labels.includes('stale');
+              const hasKeepLabel = labels.includes('keep-open') || labels.includes('in-progress');
+
+              // Skip PRs with keep-open or in-progress labels
+              if (hasKeepLabel) {
+                console.log(`⏭️  Skipping PR #${pr.number}: ${pr.title} (has keep-open/in-progress label)`);
+                keptList.push(`- #${pr.number}: ${pr.title} (protected by label)`);
+                kept++;
+                continue;
+              }
+
+              // Get PR comments to check for recent activity
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 1,
+                sort: 'created',
+                direction: 'desc'
+              });
+
+              const lastActivityDate = comments.data.length > 0
+                ? new Date(comments.data[0].created_at)
+                : updatedAt;
+
+              const daysSinceActivity = Math.floor((now - lastActivityDate) / (1000 * 60 * 60 * 24));
+
+              // Decision logic
+              if (updatedAt < closeDate && hasStaleLabel) {
+                // Close stale PRs
+                console.log(`🗑️  Will close stale PR #${pr.number}: ${pr.title} (${daysSinceActivity} days inactive)`);
+                closedList.push(`- #${pr.number}: ${pr.title} (${daysSinceActivity} days inactive)`);
+
+                if (!dryRun) {
+                  // Add closing comment
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body: `## 🗑️ Auto-closing Stale PR\n\nThis PR has been inactive for ${daysSinceActivity} days and was marked as stale.\n\n**If this PR is still needed:**\n1. Reopen the PR\n2. Add the \`keep-open\` or \`in-progress\` label\n3. Update the PR with recent changes\n\n---\n*🤖 Automated by GitHub Actions*`
+                  });
+
+                  // Close the PR
+                  await github.rest.pulls.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: pr.number,
+                    state: 'closed'
+                  });
+
+                  console.log(`  ✅ Closed PR #${pr.number}`);
+                  closed++;
+                } else {
+                  console.log(`  [DRY RUN] Would close PR #${pr.number}`);
+                  closed++;
+                }
+              } else if (updatedAt < staleDate && !hasStaleLabel) {
+                // Mark as stale
+                console.log(`⚠️  Will mark as stale: PR #${pr.number}: ${pr.title} (${daysSinceActivity} days inactive)`);
+                markedStaleList.push(`- #${pr.number}: ${pr.title} (${daysSinceActivity} days inactive)`);
+
+                if (!dryRun) {
+                  // Add stale label
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    labels: ['stale']
+                  });
+
+                  // Add stale comment
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body: `## ⚠️ Stale PR Warning\n\nThis PR has been inactive for ${daysSinceActivity} days and will be automatically closed in ${closeDays - staleDays} days if no further activity occurs.\n\n**To keep this PR active:**\n1. Add recent updates or comments\n2. Add the \`keep-open\` or \`in-progress\` label\n\n**To prevent auto-closure:**\n- Label this PR with \`keep-open\` or \`in-progress\`\n\n---\n*🤖 Automated by GitHub Actions*`
+                  });
+
+                  console.log(`  ✅ Marked stale: PR #${pr.number}`);
+                  markedStale++;
+                } else {
+                  console.log(`  [DRY RUN] Would mark stale: PR #${pr.number}`);
+                  markedStale++;
+                }
+              } else {
+                console.log(`✅ Active PR #${pr.number}: ${pr.title} (${daysSinceActivity} days since activity)`);
+                keptList.push(`- #${pr.number}: ${pr.title} (active, ${daysSinceActivity} days)`);
+                kept++;
+              }
+            }
+
+            console.log('\n📊 Summary:');
+            console.log(`- PRs marked stale: ${markedStale}`);
+            console.log(`- PRs closed: ${closed}`);
+            console.log(`- PRs kept active: ${kept}`);
+
+            core.setOutput('marked_stale', markedStale);
+            core.setOutput('closed', closed);
+            core.setOutput('kept', kept);
+            core.setOutput('marked_stale_list', markedStaleList.join('\n'));
+            core.setOutput('closed_list', closedList.join('\n'));
+            core.setOutput('kept_list', keptList.join('\n'));
+
+            return {
+              markedStale,
+              closed,
+              kept,
+              markedStaleList,
+              closedList,
+              keptList
+            };
+
+      - name: Create stale PR report
+        if: steps.stale.outputs.marked_stale > 0 || steps.stale.outputs.closed > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const markedStale = parseInt('${{ steps.stale.outputs.marked_stale }}');
+            const closed = parseInt('${{ steps.stale.outputs.closed }}');
+            const kept = parseInt('${{ steps.stale.outputs.kept }}');
+            const dryRun = '${{ env.DRY_RUN }}' === 'true';
+            const markedStaleList = `${{ steps.stale.outputs.marked_stale_list }}`;
+            const closedList = `${{ steps.stale.outputs.closed_list }}`;
+            const keptList = `${{ steps.stale.outputs.kept_list }}`;
+
+            const actionText = dryRun ? 'Would process' : 'Processed';
+            const emoji = dryRun ? '🔍' : '⚠️';
+
+            let comment = `## ${emoji} Stale PRs Report\n\n`;
+
+            if (dryRun) {
+              comment += `**Mode**: 🔍 Dry Run (no actual changes)\n\n`;
+            }
+
+            comment += `### Summary\n\n`;
+            comment += `- **PRs marked stale**: ${markedStale}\n`;
+            comment += `- **PRs closed**: ${closed}\n`;
+            comment += `- **PRs kept active**: ${kept}\n`;
+            comment += `- **Stale threshold**: ${{ env.STALE_DAYS }} days\n`;
+            comment += `- **Close threshold**: ${{ env.CLOSE_DAYS }} days\n\n`;
+
+            if (markedStaleList.trim()) {
+              comment += `### ⚠️ Newly Marked Stale\n\n${markedStaleList}\n\n`;
+            }
+
+            if (closedList.trim()) {
+              comment += `### 🗑️ Closed Stale PRs\n\n${closedList}\n\n`;
+            }
+
+            if (keptList.trim() && kept <= 10) {
+              comment += `### ✅ Active PRs\n\n${keptList}\n\n`;
+            } else if (kept > 10) {
+              comment += `### ✅ Active PRs\n\n${kept} active PRs (too many to list)\n\n`;
+            }
+
+            comment += `### Policy\n\n`;
+            comment += `- **Mark stale**: After ${{ env.STALE_DAYS }} days of inactivity\n`;
+            comment += `- **Auto-close**: After ${{ env.CLOSE_DAYS }} days of inactivity\n`;
+            comment += `- **Protected**: PRs with \`keep-open\` or \`in-progress\` labels\n`;
+            comment += `- **Excluded**: Draft PRs\n\n`;
+
+            comment += `\n---\n*🤖 Automated by GitHub Actions • Triggered: ${new Date().toISOString()}*`;
+
+            // Find or create tracking issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['automated-cleanup', 'infrastructure'],
+              state: 'open'
+            });
+
+            let trackingIssue = issues.data.find(i => i.title.includes('Stale PRs'));
+
+            if (!trackingIssue) {
+              const newIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🧹 Stale PRs Tracking',
+                body: 'This issue tracks automated stale PR management.\n\nReports will be posted as comments below.',
+                labels: ['automated-cleanup', 'infrastructure']
+              });
+              trackingIssue = newIssue.data;
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: trackingIssue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Summary
+        run: |
+          echo "## Stale PRs Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **PRs marked stale**: ${{ steps.stale.outputs.marked_stale }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **PRs closed**: ${{ steps.stale.outputs.closed }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **PRs kept active**: ${{ steps.stale.outputs.kept }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry run mode**: ${{ env.DRY_RUN }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Thresholds" >> $GITHUB_STEP_SUMMARY
+          echo "- Stale after: ${{ env.STALE_DAYS }} days" >> $GITHUB_STEP_SUMMARY
+          echo "- Close after: ${{ env.CLOSE_DAYS }} days" >> $GITHUB_STEP_SUMMARY
