@@ -2,15 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "./page";
 
-// Mock the new landing page components
-jest.mock("@/components/navigation/Navbar", () => ({
-  Navbar: () => <nav data-testid="navbar">Navbar</nav>,
-}));
-
-jest.mock("@/components/navigation/Footer", () => ({
-  Footer: () => <footer data-testid="footer">Footer</footer>,
-}));
-
+// Mock the landing page section components
 jest.mock("@/components/landing/HeroSection", () => ({
   HeroSection: () => <section data-testid="hero-section">Hero Section</section>,
 }));
@@ -38,13 +30,6 @@ jest.mock("@/components/landing/TargetAudience", () => ({
 }));
 
 describe("HomePage - Landing Page Redesign", () => {
-  it("should render navigation components", () => {
-    render(<HomePage />);
-
-    expect(screen.getByTestId("navbar")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
-  });
-
   it("should render all landing page sections", () => {
     render(<HomePage />);
 
@@ -68,13 +53,11 @@ describe("HomePage - Landing Page Redesign", () => {
 
     const sections = container.querySelectorAll("[data-testid]");
 
-    // Check order: Navbar → HeroSection → ValueProposition → FeatureHighlights → HowItWorks → TargetAudience → Footer
-    expect(sections[0]).toHaveAttribute("data-testid", "navbar");
-    expect(sections[1]).toHaveAttribute("data-testid", "hero-section");
-    expect(sections[2]).toHaveAttribute("data-testid", "value-proposition");
-    expect(sections[3]).toHaveAttribute("data-testid", "feature-highlights");
-    expect(sections[4]).toHaveAttribute("data-testid", "how-it-works");
-    expect(sections[5]).toHaveAttribute("data-testid", "target-audience");
-    expect(sections[6]).toHaveAttribute("data-testid", "footer");
+    // Check order: HeroSection → ValueProposition → FeatureHighlights → HowItWorks → TargetAudience
+    expect(sections[0]).toHaveAttribute("data-testid", "hero-section");
+    expect(sections[1]).toHaveAttribute("data-testid", "value-proposition");
+    expect(sections[2]).toHaveAttribute("data-testid", "feature-highlights");
+    expect(sections[3]).toHaveAttribute("data-testid", "how-it-works");
+    expect(sections[4]).toHaveAttribute("data-testid", "target-audience");
   });
 });
