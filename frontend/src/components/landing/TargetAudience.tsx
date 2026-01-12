@@ -29,10 +29,10 @@ export function TargetAudience() {
     <section className="py-20 px-4 bg-white dark:bg-dark-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-white mb-4">
             Who We Serve
           </h2>
-          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-neutral-white/70 max-w-2xl mx-auto">
             AI Square is designed for learners at every stage of their AI
             journey.
           </p>
@@ -74,10 +74,10 @@ export function TargetAudience() {
                     {persona.title}
                   </span>
                 </div>
-                <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary">
+                <p className="text-body text-neutral-textSecondary dark:text-neutral-white/80">
                   {persona.description}
                 </p>
-                <p className="text-small text-neutral-textSecondary dark:text-dark-text-secondary italic border-l-4 border-primary-blue-500 pl-4">
+                <p className="text-small text-neutral-textSecondary dark:text-neutral-white/70 italic border-l-4 border-primary-blue-500 pl-4">
                   &quot;{persona.quote}&quot;
                 </p>
               </div>

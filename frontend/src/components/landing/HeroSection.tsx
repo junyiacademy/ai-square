@@ -17,7 +17,7 @@ export function HeroSection() {
                   AI Square
                 </span>
               </h1>
-              <p className="text-h3 text-neutral-textSecondary dark:text-dark-text-secondary">
+              <p className="text-h3 text-neutral-textSecondary dark:text-neutral-white/80">
                 Where{" "}
                 <span className="text-primary-blue-500 dark:text-primary-blue-400 font-semibold">
                   Technology
@@ -27,7 +27,7 @@ export function HeroSection() {
                   Humanity
                 </span>
               </p>
-              <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-xl">
+              <p className="text-body text-neutral-textSecondary dark:text-neutral-white/80 max-w-xl">
                 Build AI literacy through structured learning, hands-on
                 practice, and community collaboration. Join educators,
                 engineers, and students in shaping the future of AI education.

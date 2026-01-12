@@ -40,10 +40,10 @@ export function FeatureHighlights() {
     <section className="py-20 px-4 bg-white dark:bg-dark-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-dark-text-primary mb-4">
+          <h2 className="text-h1 font-bold text-neutral-textPrimary dark:text-white mb-4">
             Features That Empower
           </h2>
-          <p className="text-body text-neutral-textSecondary dark:text-dark-text-secondary max-w-2xl mx-auto">
+          <p className="text-body text-neutral-textSecondary dark:text-neutral-white/80 max-w-2xl mx-auto">
             Everything you need to master AI literacy in one integrated
             platform.
           </p>
