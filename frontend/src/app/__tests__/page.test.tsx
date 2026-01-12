@@ -1,58 +1,77 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Home from "../page";
 
-// Mock the new landing page components
-jest.mock("@/components/navigation/Navbar", () => ({
-  Navbar: () => <nav data-testid="navbar">Navbar</nav>,
+// Mock next/dynamic to handle dynamic imports in tests
+jest.mock("next/dynamic", () => ({
+  __esModule: true,
+  default: (fn: () => Promise<{ default: React.ComponentType }>) => {
+    const MockedComponent = () => {
+      const [Component, setComponent] =
+        React.useState<React.ComponentType | null>(null);
+      React.useEffect(() => {
+        fn().then((mod) => setComponent(() => mod.default));
+      }, []);
+      if (!Component) return null;
+      return <Component />;
+    };
+    return MockedComponent;
+  },
 }));
 
-jest.mock("@/components/navigation/Footer", () => ({
-  Footer: () => <footer data-testid="footer">Footer</footer>,
-}));
+// Mock all the components
+jest.mock("@/components/homepage/HeroSection", () => {
+  return function MockHeroSection() {
+    return <div data-testid="hero-section">Hero Section</div>;
+  };
+});
 
-jest.mock("@/components/landing/HeroSection", () => ({
-  HeroSection: () => <section data-testid="hero-section">Hero Section</section>,
-}));
+jest.mock("@/components/homepage/FeaturesSection", () => {
+  return function MockFeaturesSection() {
+    return <div data-testid="features-section">Features Section</div>;
+  };
+});
 
-jest.mock("@/components/landing/ValueProposition", () => ({
-  ValueProposition: () => (
-    <section data-testid="value-proposition">Value Proposition</section>
-  ),
-}));
+jest.mock("@/components/homepage/KnowledgeGraph", () => {
+  return function MockKnowledgeGraph() {
+    return <div data-testid="knowledge-graph">Knowledge Graph</div>;
+  };
+});
 
-jest.mock("@/components/landing/FeatureHighlights", () => ({
-  FeatureHighlights: () => (
-    <section data-testid="feature-highlights">Feature Highlights</section>
-  ),
-}));
+jest.mock("@/components/homepage/HowItWorksSection", () => {
+  return function MockHowItWorksSection() {
+    return <div data-testid="how-it-works-section">How It Works Section</div>;
+  };
+});
 
-jest.mock("@/components/landing/HowItWorks", () => ({
-  HowItWorks: () => <section data-testid="how-it-works">How It Works</section>,
-}));
+jest.mock("@/components/homepage/TargetAudienceSection", () => {
+  return function MockTargetAudienceSection() {
+    return (
+      <div data-testid="target-audience-section">Target Audience Section</div>
+    );
+  };
+});
 
-jest.mock("@/components/landing/TargetAudience", () => ({
-  TargetAudience: () => (
-    <section data-testid="target-audience">Target Audience</section>
-  ),
-}));
+jest.mock("@/components/homepage/CTASection", () => {
+  return function MockCTASection() {
+    return <div data-testid="cta-section">CTA Section</div>;
+  };
+});
 
-describe("Home Page - Landing Page Redesign", () => {
-  it("renders navigation components", () => {
+describe("Home Page", () => {
+  it("renders all homepage sections", async () => {
     render(<Home />);
 
-    expect(screen.getByTestId("navbar")).toBeInTheDocument();
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
-  });
-
-  it("renders all landing page sections", () => {
-    render(<Home />);
-
+    // Check that all sections are rendered
     expect(screen.getByTestId("hero-section")).toBeInTheDocument();
-    expect(screen.getByTestId("value-proposition")).toBeInTheDocument();
-    expect(screen.getByTestId("feature-highlights")).toBeInTheDocument();
-    expect(screen.getByTestId("how-it-works")).toBeInTheDocument();
-    expect(screen.getByTestId("target-audience")).toBeInTheDocument();
+    expect(screen.getByTestId("features-section")).toBeInTheDocument();
+    // KnowledgeGraph is dynamically imported, wait for it
+    await waitFor(() => {
+      expect(screen.getByTestId("knowledge-graph")).toBeInTheDocument();
+    });
+    expect(screen.getByTestId("how-it-works-section")).toBeInTheDocument();
+    expect(screen.getByTestId("target-audience-section")).toBeInTheDocument();
+    expect(screen.getByTestId("cta-section")).toBeInTheDocument();
   });
 
   it("renders with correct layout structure", () => {
@@ -61,20 +80,37 @@ describe("Home Page - Landing Page Redesign", () => {
     // Check main element
     const main = container.querySelector("main");
     expect(main).toHaveClass("min-h-screen");
+
+    // Check knowledge graph section has proper styling
+    const knowledgeGraphSection = container.querySelector("section.bg-gray-50");
+    expect(knowledgeGraphSection).toHaveClass("py-20", "bg-gray-50");
+
+    // Check container div
+    const containerDiv = knowledgeGraphSection?.querySelector("div");
+    expect(containerDiv).toHaveClass(
+      "max-w-7xl",
+      "mx-auto",
+      "px-4",
+      "sm:px-6",
+      "lg:px-8",
+    );
   });
 
   it("renders sections in the correct order", () => {
-    const { container } = render(<Home />);
+    render(<Home />);
 
-    const sections = container.querySelectorAll("[data-testid]");
+    const sections = screen.getAllByTestId(/section$/);
+    const sectionIds = sections.map((section) =>
+      section.getAttribute("data-testid"),
+    );
 
-    // Check order: Navbar → HeroSection → ValueProposition → FeatureHighlights → HowItWorks → TargetAudience → Footer
-    expect(sections[0]).toHaveAttribute("data-testid", "navbar");
-    expect(sections[1]).toHaveAttribute("data-testid", "hero-section");
-    expect(sections[2]).toHaveAttribute("data-testid", "value-proposition");
-    expect(sections[3]).toHaveAttribute("data-testid", "feature-highlights");
-    expect(sections[4]).toHaveAttribute("data-testid", "how-it-works");
-    expect(sections[5]).toHaveAttribute("data-testid", "target-audience");
-    expect(sections[6]).toHaveAttribute("data-testid", "footer");
+    expect(sectionIds).toEqual([
+      "hero-section",
+      "features-section",
+      "knowledge-graph-section",
+      "how-it-works-section",
+      "target-audience-section",
+      "cta-section",
+    ]);
   });
 });
