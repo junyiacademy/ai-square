@@ -2,7 +2,7 @@
  * Format weekly statistics into Slack-friendly markdown report
  */
 
-import type { WeeklyStats, GCPCostStats } from "./db-queries";
+import type { WeeklyStats } from "./db-queries";
 
 interface AIInsight {
   summary: string;
@@ -12,56 +12,25 @@ interface AIInsight {
 }
 
 /**
- * Format currency with appropriate precision
- * Note: currency parameter reserved for future multi-currency support
+ * Format system health section for the report
  */
-function formatCurrency(amount: number, _currency: string = "USD"): string {
-  if (amount === 0) return "$0.00";
-  if (amount < 0.01) return `<$0.01`;
-  if (amount < 1) return `$${amount.toFixed(2)}`;
-  if (amount < 100) return `$${amount.toFixed(2)}`;
-  return `$${amount.toFixed(0)}`;
-}
-
-/**
- * Format GCP cost section for the report
- */
-function formatGCPCostSection(costs: GCPCostStats | undefined): string {
-  if (!costs || costs.dataSource === "unavailable") {
+function formatSystemHealthSection(
+  health: WeeklyStats["systemHealth"],
+): string {
+  if (!health) {
     return `
-**💰 GCP 花費**
-• Vertex AI 花費: 尚未設定帳單資料匯出
-• _設定說明: 需要配置 GCP_BILLING_DATASET 和 GCP_BILLING_TABLE 環境變數_
+**🚀 系統健康**
+• 監控數據: 尚未整合 Cloud Monitoring
+• _說明: 需要整合 Cloud Logging/Monitoring API 以提供即時監控數據_
 `;
   }
-
-  const weekOverWeekSign = costs.vertexAI.weekOverWeekChange >= 0 ? "+" : "";
-
-  // Build breakdown section if available
-  let breakdownSection = "";
-  if (costs.vertexAI.breakdown.length > 0) {
-    breakdownSection = `  • 模型明細:
-${costs.vertexAI.breakdown
-  .slice(0, 3)
-  .map((item) => `    - ${item.model}: ${formatCurrency(item.cost)}`)
-  .join("\n")}
-`;
-  }
-
-  // Data source indicator
-  const sourceIndicator =
-    costs.dataSource === "estimated"
-      ? " _(估算值)_"
-      : costs.dataSource === "bigquery"
-        ? ""
-        : " _(資料來源: " + costs.dataSource + ")_";
 
   return `
-**💰 GCP 花費**${sourceIndicator}
-• Vertex AI 本週: ${formatCurrency(costs.vertexAI.costThisWeek, costs.vertexAI.currency)} (${weekOverWeekSign}${costs.vertexAI.weekOverWeekChange.toFixed(1)}% vs 上週)
-${breakdownSection}• Cloud Run 本週: ${formatCurrency(costs.cloudRun.costThisWeek)}
-• Cloud SQL 本週: ${formatCurrency(costs.cloudSQL.costThisWeek)}
-• **本週總計: ${formatCurrency(costs.vertexAI.costThisWeek + costs.cloudRun.costThisWeek + costs.cloudSQL.costThisWeek)}**
+**🚀 系統健康**
+• API 成功率: ${health.apiSuccessRate.toFixed(1)}%
+• 平均響應時間: ${health.avgResponseTime}ms
+• 系統可用性: ${health.uptime.toFixed(2)}%
+• 資料庫連線: ${health.dbStatus === "normal" ? "正常" : health.dbStatus}
 `;
 }
 
@@ -147,8 +116,8 @@ ${aiInsights.recommendations.map((r) => `• ${r}`).join("\n")}
 ${aiInsights.concerns.length > 0 ? `⚠️ **關注點**\n${aiInsights.concerns.map((c) => `• ${c}`).join("\n")}\n` : ""}`;
   }
 
-  // Build GCP cost section
-  const gcpCostSection = formatGCPCostSection(stats.gcpCosts);
+  // Build system health section
+  const systemHealthSection = formatSystemHealthSection(stats.systemHealth);
 
   const report = `📊 **AI Square 週報** (${dateRange})
 
@@ -169,13 +138,7 @@ ${aiInsights.concerns.length > 0 ? `⚠️ **關注點**\n${aiInsights.concerns.
 • PBL 完成: ${stats.learning.pblCompletions} 次
 • Discovery 完成: ${stats.learning.discoveryCompletions} 次
 • 總完成率: ${stats.learning.completionRate.toFixed(1)}%
-${topContentSection}${gcpCostSection}
-**🚀 系統健康**
-• API 成功率: ${stats.systemHealth.apiSuccessRate.toFixed(1)}%
-• 平均響應時間: ${stats.systemHealth.avgResponseTime}ms
-• 系統可用性: ${stats.systemHealth.uptime.toFixed(2)}%
-• 資料庫連線: ${stats.systemHealth.dbStatus === "normal" ? "正常" : stats.systemHealth.dbStatus}
-${aiInsightsSection}
+${topContentSection}${systemHealthSection}${aiInsightsSection}
 ---
 🤖 自動生成 | 每週一 09:00`;
 

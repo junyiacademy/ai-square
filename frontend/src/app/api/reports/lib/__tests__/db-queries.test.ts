@@ -320,10 +320,8 @@ describe("Weekly Report Database Queries", () => {
       const result = await getWeeklyStats(mockPool);
 
       // Assert
-      expect(result.systemHealth).toBeDefined();
-      expect(result.systemHealth.apiSuccessRate).toBe(99.8);
-      expect(result.systemHealth.avgResponseTime).toBe(245);
-      expect(result.systemHealth.uptime).toBe(99.95);
+      // systemHealth should be undefined - real monitoring not yet integrated
+      expect(result.systemHealth).toBeUndefined();
     });
 
     it("should handle database errors gracefully", async () => {

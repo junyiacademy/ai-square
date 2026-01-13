@@ -66,12 +66,7 @@ describe("Weekly Report API Route", () => {
       completionRate: 78.5,
       topContent: [],
     },
-    systemHealth: {
-      apiSuccessRate: 99.8,
-      avgResponseTime: 245,
-      uptime: 99.95,
-      dbStatus: "normal",
-    },
+    // systemHealth: undefined - real monitoring not yet integrated
   };
 
   beforeEach(() => {

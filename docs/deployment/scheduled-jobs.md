@@ -1,6 +1,6 @@
 # Scheduled Jobs - 自動化任務
 
-> **Updated**: 2025-12-09
+> **Updated**: 2026-01-13
 >
 > **管理方式**: GitHub Actions Scheduled Workflows
 
@@ -172,11 +172,18 @@ curl -X POST [WEBHOOK_URL] \
 - 總完成率
 - 最受歡迎內容 Top 3
 
-#### 🚀 系統健康
-- API 成功率
-- 平均響應時間
-- 系統可用性
-- 資料庫連線狀態
+#### 🚀 系統健康 ⚠️ 尚未整合
+> **Status**: 數據來源尚未配置
+>
+> **說明**: 系統健康監控需要整合 Cloud Logging/Monitoring API。目前週報會顯示「尚未整合 Cloud Monitoring」訊息。
+>
+> **未來實作**:
+> - API 成功率 (需整合 Cloud Logging)
+> - 平均響應時間 (需整合 Cloud Run Metrics)
+> - 系統可用性 (需整合 Cloud Monitoring)
+> - 資料庫連線狀態 (需整合 Cloud SQL Metrics)
+>
+> **參考**: `frontend/src/app/api/reports/lib/db-queries.ts` (Line 368-373)
 
 ### 失敗處理
 
@@ -410,5 +417,5 @@ gh run list --limit 10 | grep -E "(Weekly|Daily|Monthly)"
 
 ---
 
-**最後更新**: 2025-12-09
+**最後更新**: 2026-01-13
 **維護者**: AI Square DevOps Team

@@ -108,10 +108,14 @@ function buildPrompt(stats: WeeklyStats): string {
 - 完成率：${stats.learning.completionRate.toFixed(1)}%
 
 **系統健康：**
-- API 成功率：${stats.systemHealth.apiSuccessRate.toFixed(2)}%
+${
+  stats.systemHealth
+    ? `- API 成功率：${stats.systemHealth.apiSuccessRate.toFixed(2)}%
 - 平均回應時間：${stats.systemHealth.avgResponseTime}ms
 - 運行時間：${stats.systemHealth.uptime.toFixed(2)}%
-- 資料庫狀態：${stats.systemHealth.dbStatus}
+- 資料庫狀態：${stats.systemHealth.dbStatus}`
+    : "- 尚未整合 Cloud Monitoring"
+}
 
 請以以下 JSON 格式提供洞察（**重要：JSON 欄位名稱保持英文，但內容必須使用繁體中文**）：
 {

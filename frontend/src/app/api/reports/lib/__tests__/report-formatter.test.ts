@@ -4,7 +4,7 @@
  */
 
 import { formatWeeklyReport } from "../report-formatter";
-import type { WeeklyStats, GCPCostStats } from "../db-queries";
+import type { WeeklyStats } from "../db-queries";
 
 describe("Weekly Report Formatter", () => {
   const mockStats: WeeklyStats = {
@@ -117,12 +117,26 @@ describe("Weekly Report Formatter", () => {
       expect(result).toContain("3. Data Science Discovery - 32 次");
     });
 
-    it("should include system health statistics", () => {
+    it("should include system health statistics when available", () => {
       const result = formatWeeklyReport(mockStats);
 
+      expect(result).toContain("**🚀 系統健康**");
       expect(result).toContain("API 成功率: 99.8%");
       expect(result).toContain("平均響應時間: 245ms");
       expect(result).toContain("系統可用性: 99.95%");
+    });
+
+    it("should show unavailable message when system health is not configured", () => {
+      const statsWithoutHealth: WeeklyStats = {
+        ...mockStats,
+        systemHealth: undefined,
+      };
+
+      const result = formatWeeklyReport(statsWithoutHealth);
+
+      expect(result).toContain("**🚀 系統健康**");
+      expect(result).toContain("尚未整合 Cloud Monitoring");
+      expect(result).not.toContain("API 成功率");
     });
 
     it("should include footer with generation info", () => {
@@ -191,122 +205,6 @@ describe("Weekly Report Formatter", () => {
       // Whole numbers should not have decimals
       expect(result).toContain("142 人");
       expect(result).toContain("394 人");
-    });
-
-    describe("GCP Cost Section", () => {
-      const mockGCPCosts: GCPCostStats = {
-        vertexAI: {
-          totalCost: 50.25,
-          costThisWeek: 12.50,
-          costLastWeek: 10.00,
-          weekOverWeekChange: 25.0,
-          breakdown: [
-            { model: "gemini-2.5-flash", inputTokens: 100000, outputTokens: 50000, cost: 10.25 },
-            { model: "gemini-2.5-pro", inputTokens: 50000, outputTokens: 25000, cost: 2.25 },
-          ],
-          currency: "USD",
-        },
-        cloudRun: {
-          totalCost: 15.00,
-          costThisWeek: 3.50,
-        },
-        cloudSQL: {
-          totalCost: 25.00,
-          costThisWeek: 5.00,
-        },
-        totalGCPCost: 90.25,
-        dataSource: "bigquery",
-        lastUpdated: new Date().toISOString(),
-      };
-
-      it("should include GCP cost section header", () => {
-        const statsWithCosts = { ...mockStats, gcpCosts: mockGCPCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("**💰 GCP 花費**");
-      });
-
-      it("should display Vertex AI cost with week-over-week change", () => {
-        const statsWithCosts = { ...mockStats, gcpCosts: mockGCPCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("Vertex AI 本週: $12.50");
-        expect(result).toContain("+25.0%");
-      });
-
-      it("should display Cloud Run and Cloud SQL costs", () => {
-        const statsWithCosts = { ...mockStats, gcpCosts: mockGCPCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("Cloud Run 本週: $3.50");
-        expect(result).toContain("Cloud SQL 本週: $5.00");
-      });
-
-      it("should display total weekly cost", () => {
-        const statsWithCosts = { ...mockStats, gcpCosts: mockGCPCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("本週總計: $21.00");
-      });
-
-      it("should display model breakdown when available", () => {
-        const statsWithCosts = { ...mockStats, gcpCosts: mockGCPCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("模型明細:");
-        expect(result).toContain("gemini-2.5-flash");
-        expect(result).toContain("gemini-2.5-pro");
-      });
-
-      it("should show unavailable message when costs are not configured", () => {
-        const unavailableCosts: GCPCostStats = {
-          ...mockGCPCosts,
-          dataSource: "unavailable",
-          vertexAI: { ...mockGCPCosts.vertexAI, costThisWeek: 0, breakdown: [] },
-          cloudRun: { ...mockGCPCosts.cloudRun, costThisWeek: 0 },
-          cloudSQL: { ...mockGCPCosts.cloudSQL, costThisWeek: 0 },
-        };
-        const statsWithCosts = { ...mockStats, gcpCosts: unavailableCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("尚未設定帳單資料匯出");
-      });
-
-      it("should show estimated indicator when data source is estimated", () => {
-        const estimatedCosts: GCPCostStats = {
-          ...mockGCPCosts,
-          dataSource: "estimated",
-        };
-        const statsWithCosts = { ...mockStats, gcpCosts: estimatedCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("估算值");
-      });
-
-      it("should format zero costs correctly", () => {
-        const zeroCosts: GCPCostStats = {
-          ...mockGCPCosts,
-          vertexAI: { ...mockGCPCosts.vertexAI, costThisWeek: 0, costLastWeek: 0, weekOverWeekChange: 0 },
-          cloudRun: { ...mockGCPCosts.cloudRun, costThisWeek: 0 },
-          cloudSQL: { ...mockGCPCosts.cloudSQL, costThisWeek: 0 },
-        };
-        const statsWithCosts = { ...mockStats, gcpCosts: zeroCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("$0.00");
-      });
-
-      it("should handle negative week-over-week change", () => {
-        const decreasedCosts: GCPCostStats = {
-          ...mockGCPCosts,
-          vertexAI: { ...mockGCPCosts.vertexAI, weekOverWeekChange: -15.5 },
-        };
-        const statsWithCosts = { ...mockStats, gcpCosts: decreasedCosts };
-        const result = formatWeeklyReport(statsWithCosts);
-
-        expect(result).toContain("-15.5%");
-        expect(result).not.toContain("+-15.5%");
-      });
     });
   });
 });
