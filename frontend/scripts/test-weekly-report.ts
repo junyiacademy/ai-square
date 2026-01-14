@@ -67,11 +67,15 @@ async function main() {
     console.log("");
 
     console.log("🚀 System Health:");
-    console.log(
-      `   API Success Rate: ${stats.systemHealth.apiSuccessRate.toFixed(1)}%`,
-    );
-    console.log(`   Avg Response: ${stats.systemHealth.avgResponseTime}ms`);
-    console.log(`   Uptime: ${stats.systemHealth.uptime.toFixed(2)}%\n`);
+    if (stats.systemHealth) {
+      console.log(
+        `   API Success Rate: ${stats.systemHealth.apiSuccessRate.toFixed(1)}%`,
+      );
+      console.log(`   Avg Response: ${stats.systemHealth.avgResponseTime}ms`);
+      console.log(`   Uptime: ${stats.systemHealth.uptime.toFixed(2)}%\n`);
+    } else {
+      console.log("   Not configured - Cloud Monitoring integration pending\n");
+    }
 
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     console.log("📄 FORMATTED REPORT (Slack Format):");

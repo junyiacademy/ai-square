@@ -9,35 +9,6 @@ export interface WeeklyTrendData {
   value: number;
 }
 
-export interface VertexAICostBreakdown {
-  model: string;
-  inputTokens: number;
-  outputTokens: number;
-  cost: number;
-}
-
-export interface GCPCostStats {
-  vertexAI: {
-    totalCost: number;
-    costThisWeek: number;
-    costLastWeek: number;
-    weekOverWeekChange: number; // percentage
-    breakdown: VertexAICostBreakdown[];
-    currency: string;
-  };
-  cloudRun: {
-    totalCost: number;
-    costThisWeek: number;
-  };
-  cloudSQL: {
-    totalCost: number;
-    costThisWeek: number;
-  };
-  totalGCPCost: number;
-  dataSource: "bigquery" | "api" | "estimated" | "unavailable";
-  lastUpdated: string;
-}
-
 export interface WeeklyStats {
   userGrowth: {
     totalUsers: number;
@@ -63,13 +34,14 @@ export interface WeeklyStats {
     completionRate: number;
     topContent: Array<{ name: string; count: number }>;
   };
-  systemHealth: {
+  systemHealth?: {
+    // Optional: Real monitoring integration pending
+    // TODO: Integrate with Cloud Logging/Monitoring for real metrics
     apiSuccessRate: number;
     avgResponseTime: number;
     uptime: number;
     dbStatus: string;
   };
-  gcpCosts?: GCPCostStats; // Optional: GCP cost statistics
 }
 
 /**
@@ -363,13 +335,12 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
     count: parseInt(row.count),
   }));
 
-  // Query 4: System health (placeholder for now)
-  const healthStats = {
-    apiSuccessRate: 99.8,
-    avgResponseTime: 245,
-    uptime: 99.95,
-    dbStatus: "normal",
-  };
+  // System health metrics removed - real monitoring integration pending
+  // TODO: Integrate with Cloud Logging/Monitoring API for actual metrics:
+  //   - API success rate from Cloud Logging
+  //   - Response times from Cloud Run metrics
+  //   - Uptime from Cloud Monitoring
+  //   - Database status from Cloud SQL metrics
 
   return {
     userGrowth: {
@@ -396,6 +367,6 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
       completionRate,
       topContent,
     },
-    systemHealth: healthStats,
+    // systemHealth: omitted - real monitoring integration pending
   };
 }

@@ -3,7 +3,6 @@
  * POST /api/reports/weekly
  *
  * Generates and sends weekly statistics report to Slack with chart visualizations
- * Includes GCP cost tracking (Vertex AI, Cloud Run, Cloud SQL)
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -13,26 +12,19 @@ import { formatWeeklyReport } from "../lib/report-formatter";
 import { sendToSlackWithCharts } from "../lib/slack-client";
 import { generateAIInsights } from "../lib/ai-insights";
 import { generateWeeklyCharts } from "../lib/chart-generator";
-import { getGCPCostStats } from "../lib/gcp-cost-queries";
 
 export async function POST(_request: NextRequest) {
   try {
     // Get database connection
     const pool = getPool();
 
-    // Fetch weekly statistics and GCP costs in parallel
-    const [stats, gcpCosts] = await Promise.all([
-      getWeeklyStats(pool),
-      getGCPCostStats(),
-    ]);
-
-    // Add GCP costs to stats
-    stats.gcpCosts = gcpCosts;
+    // Fetch weekly statistics
+    const stats = await getWeeklyStats(pool);
 
     // Generate AI insights (non-blocking, graceful degradation)
     const aiInsights = await generateAIInsights(stats);
 
-    // Format report (with optional AI insights and GCP costs)
+    // Format report (with optional AI insights)
     const report = formatWeeklyReport(stats, aiInsights);
 
     // Generate chart visualizations
