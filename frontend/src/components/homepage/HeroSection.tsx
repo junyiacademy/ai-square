@@ -38,7 +38,7 @@ export default function HeroSection() {
               href="/pbl"
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
-              開始你的旅程
+              {t("hero.cta.getStarted")}
               <svg
                 className="ml-2 w-5 h-5"
                 fill="none"
@@ -80,13 +80,21 @@ export default function HeroSection() {
         <div className="mt-16 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent z-10"></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {["🎯", "🎨", "🎮", "🏗️"].map((emoji, index) => (
+            {[
+              { emoji: "🎯", key: "engaging" },
+              { emoji: "🎨", key: "creating" },
+              { emoji: "🎮", key: "managing" },
+              { emoji: "🏗️", key: "designing" },
+            ].map((item, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200"
               >
-                <div className="text-4xl mb-2">{emoji}</div>
-                <div className="h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
+                <div className="text-4xl mb-2">{item.emoji}</div>
+                <p className="text-sm font-medium text-gray-700 mt-2">
+                  {t(`domains.items.${item.key}.name`)}
+                </p>
+                <div className="h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mt-2"></div>
               </div>
             ))}
           </div>

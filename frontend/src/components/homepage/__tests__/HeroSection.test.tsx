@@ -43,7 +43,7 @@ describe("HeroSection", () => {
   it("should render journey link to PBL", () => {
     render(<HeroSection />);
 
-    const journeyLink = screen.getByText("開始你的旅程").closest("a");
+    const journeyLink = screen.getByText("hero.cta.getStarted").closest("a");
     expect(journeyLink).toHaveAttribute("href", "/pbl");
   });
 
@@ -91,9 +91,19 @@ describe("HeroSection", () => {
   it("should apply hover effects to links", () => {
     render(<HeroSection />);
 
-    const journeyLink = screen.getByText("開始你的旅程").closest("a");
+    const journeyLink = screen.getByText("hero.cta.getStarted").closest("a");
     expect(journeyLink).toHaveClass("hover:from-blue-700");
     expect(journeyLink).toHaveClass("transform");
     expect(journeyLink).toHaveClass("hover:scale-105");
+  });
+
+  it("should render domain names with emojis", () => {
+    render(<HeroSection />);
+
+    // Verify all four domain names are displayed
+    expect(screen.getByText("domains.items.engaging.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.creating.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.managing.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.designing.name")).toBeInTheDocument();
   });
 });
