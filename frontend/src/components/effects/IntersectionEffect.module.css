@@ -1,0 +1,114 @@
+.intersectionContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Blue beam from top-left to bottom-right */
+.beamBlue {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #0363a7 30%,
+    #0363a7 70%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  transform-origin: top left;
+  opacity: 0.6;
+  animation: pulseBlue 3s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+/* Orange beam from bottom-right to top-left */
+.beamOrange {
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 120%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #ec6c1f 30%,
+    #ec6c1f 70%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  transform-origin: bottom right;
+  opacity: 0.6;
+  animation: pulseOrange 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+  filter: blur(2px);
+}
+
+/* Intersection glow at center where beams meet */
+.intersectionGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(3, 99, 167, 0.3) 0%,
+    rgba(236, 108, 31, 0.2) 50%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: glowPulse 4s ease-in-out infinite;
+  filter: blur(40px);
+}
+
+@keyframes pulseBlue {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: rotate(45deg) translateY(-5px);
+  }
+}
+
+@keyframes pulseOrange {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: rotate(45deg) translateY(5px);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .beamBlue,
+  .beamOrange,
+  .intersectionGlow {
+    animation: none;
+    opacity: 0.5;
+  }
+}
