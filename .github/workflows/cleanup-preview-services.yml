@@ -30,7 +30,6 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-      issues: write
 
     steps:
       - name: Checkout code
@@ -180,66 +179,17 @@ jobs:
           echo "- Services deleted: $DELETED_COUNT"
           echo "- Dry run mode: ${{ env.DRY_RUN }}"
 
-      - name: Create summary issue comment
+      - name: Log cleanup summary
         if: steps.cleanup.outputs.deleted_count > 0
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const deletedCount = ${{ steps.cleanup.outputs.deleted_count }};
-            const dryRun = '${{ env.DRY_RUN }}' === 'true';
-            const deletedServices = `${{ steps.cleanup.outputs.deleted_services }}`;
-            const keptServices = `${{ steps.cleanup.outputs.kept_services }}`;
-
-            const actionText = dryRun ? 'Would delete' : 'Deleted';
-            const emoji = dryRun ? '🔍' : '🧹';
-
-            let comment = `## ${emoji} Preview Services Cleanup Report\n\n`;
-
-            if (dryRun) {
-              comment += `**Mode**: 🔍 Dry Run (no actual deletion)\n\n`;
-            }
-
-            comment += `**${actionText}**: ${deletedCount} orphaned preview service(s)\n\n`;
-
-            if (deletedServices.trim()) {
-              comment += `### ${actionText} Services\n\n${deletedServices}\n`;
-            }
-
-            if (keptServices.trim()) {
-              comment += `### ✅ Active Services (Kept)\n\n${keptServices}\n`;
-            }
-
-            comment += `\n---\n*🤖 Automated cleanup • Triggered: ${new Date().toISOString()}*`;
-
-            // Find or create a tracking issue for cleanup reports
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['automated-cleanup', 'infrastructure'],
-              state: 'open'
-            });
-
-            let trackingIssue = issues.data.find(i => i.title.includes('Preview Services Cleanup'));
-
-            if (!trackingIssue) {
-              // Create tracking issue if not exists
-              const newIssue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: '🧹 Preview Services Cleanup Tracking',
-                body: 'This issue tracks automated preview services cleanup operations.\n\nCleanup reports will be posted as comments below.',
-                labels: ['automated-cleanup', 'infrastructure']
-              });
-              trackingIssue = newIssue.data;
-            }
-
-            // Post comment to tracking issue
-            await github.rest.issues.createComment({
-              issue_number: trackingIssue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+        run: |
+          echo "🧹 Preview Services Cleanup Report"
+          echo ""
+          echo "Deleted services: ${{ steps.cleanup.outputs.deleted_count }}"
+          echo "Max age days: ${{ env.MAX_AGE_DAYS }}"
+          echo "Dry run: ${{ env.DRY_RUN }}"
+          echo ""
+          echo "See full details in GitHub Actions logs:"
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Summary
         run: |

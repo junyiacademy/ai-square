@@ -28,7 +28,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-      issues: write
 
     steps:
       - name: Checkout code
@@ -190,76 +189,18 @@ jobs:
               keptList
             };
 
-      - name: Create cleanup report
+      - name: Log cleanup report
         if: steps.cleanup.outputs.deleted_count > 0 || steps.cleanup.outputs.kept_count > 0
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const deletedCount = parseInt('${{ steps.cleanup.outputs.deleted_count }}');
-            const keptCount = parseInt('${{ steps.cleanup.outputs.kept_count }}');
-            const dryRun = '${{ env.DRY_RUN }}' === 'true';
-            const deletedList = `${{ steps.cleanup.outputs.deleted_list }}`;
-            const keptList = `${{ steps.cleanup.outputs.kept_list }}`;
-
-            const actionText = dryRun ? 'Would delete' : 'Deleted';
-            const emoji = dryRun ? '🔍' : '🧹';
-
-            let comment = `## ${emoji} Stale Branches Cleanup Report\n\n`;
-
-            if (dryRun) {
-              comment += `**Mode**: 🔍 Dry Run (no actual deletion)\n\n`;
-            }
-
-            comment += `### Summary\n\n`;
-            comment += `- **Branches ${actionText.toLowerCase()}**: ${deletedCount}\n`;
-            comment += `- **Branches kept**: ${keptCount}\n`;
-            comment += `- **Max age for merged branches**: ${{ env.MAX_AGE_DAYS }} days\n\n`;
-
-            if (deletedList.trim()) {
-              comment += `### ${actionText} Branches\n\n${deletedList}\n\n`;
-            }
-
-            if (keptList.trim() && keptCount <= 20) {
-              comment += `### ✅ Kept Branches\n\n${keptList}\n\n`;
-            } else if (keptCount > 20) {
-              comment += `### ✅ Kept Branches\n\n${keptCount} branches kept (too many to list)\n\n`;
-            }
-
-            comment += `### Cleanup Policy\n\n`;
-            comment += `- ✅ Auto-delete: Merged branches older than ${{ env.MAX_AGE_DAYS }} days\n`;
-            comment += `- ⏭️  Skip: Branches with open PRs\n`;
-            comment += `- ⏭️  Skip: Unmerged branches (kept for manual review)\n`;
-            comment += `- 🔒 Protected: main, staging, master, develop\n\n`;
-
-            comment += `\n---\n*🤖 Automated cleanup • Triggered: ${new Date().toISOString()}*`;
-
-            // Find or create tracking issue
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['automated-cleanup', 'infrastructure'],
-              state: 'open'
-            });
-
-            let trackingIssue = issues.data.find(i => i.title.includes('Stale Branches Cleanup'));
-
-            if (!trackingIssue) {
-              const newIssue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: '🧹 Stale Branches Cleanup Tracking',
-                body: 'This issue tracks automated stale branches cleanup operations.\n\nCleanup reports will be posted as comments below.',
-                labels: ['automated-cleanup', 'infrastructure']
-              });
-              trackingIssue = newIssue.data;
-            }
-
-            await github.rest.issues.createComment({
-              issue_number: trackingIssue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+        run: |
+          echo "🧹 Stale Branches Cleanup Report"
+          echo ""
+          echo "Deleted: ${{ steps.cleanup.outputs.deleted_count }}"
+          echo "Kept: ${{ steps.cleanup.outputs.kept_count }}"
+          echo "Max age: ${{ env.MAX_AGE_DAYS }} days"
+          echo "Dry run: ${{ env.DRY_RUN }}"
+          echo ""
+          echo "See full details in GitHub Actions logs:"
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Summary
         run: |
