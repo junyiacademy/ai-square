@@ -121,11 +121,11 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* 標題區域 */}
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+          <div className="mx-auto h-12 w-12 bg-[#0363A7] rounded-xl flex items-center justify-center mb-4">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -147,7 +147,7 @@ function LoginContent() {
         </div>
 
         {/* 註冊連結 - 移到最上方 */}
-        <div className="bg-blue-50 rounded-lg p-4 text-center space-y-2">
+        <div className="bg-[#0363A7]/5 rounded-lg p-4 text-center space-y-2">
           <p className="text-sm text-gray-700">
             {t("dontHaveAccount", "Don't have an account?")}{" "}
             <a
@@ -156,7 +156,7 @@ function LoginContent() {
                   ? `/register?redirect=${encodeURIComponent(searchParams.get("redirect")!)}`
                   : "/register"
               }
-              className="font-semibold text-blue-600 hover:text-blue-700 underline"
+              className="font-semibold text-[#0363A7] hover:text-[#0363A7]/80 underline"
             >
               {t("createAccount", "Create one")}
             </a>
@@ -172,7 +172,7 @@ function LoginContent() {
         {/* 登入表單區域 */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {info && (
-            <div className="mb-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
+            <div className="mb-4 p-3 bg-[#0363A7]/5 text-[#0363A7] rounded-lg text-sm">
               {info}
             </div>
           )}
@@ -206,7 +206,7 @@ function LoginContent() {
           <button
             onClick={() => setShowNicknameModal(true)}
             disabled={guestLoading || loading}
-            className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-full text-sm font-medium text-white bg-[#EC6C1F] hover:bg-[#EC6C1F]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EC6C1F] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
           >
             {guestLoading ? (
               <>
@@ -259,7 +259,7 @@ function LoginContent() {
                 id="guest-nickname"
                 maxLength={20}
                 placeholder={t("nicknamePlaceholder", "例如：小明")}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0363A7] mb-4"
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     const nickname = (e.target as HTMLInputElement).value;
@@ -284,7 +284,7 @@ function LoginContent() {
                     ) as HTMLInputElement;
                     handleGuestLogin(input?.value);
                   }}
-                  className="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md text-sm font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600"
+                  className="flex-1 px-4 py-2 bg-[#0363A7] text-white rounded-full text-sm font-medium hover:bg-[#0363A7]/90 shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   {t("startExperience", "開始體驗")}
                 </button>
@@ -317,7 +317,7 @@ function LoginContent() {
 
 function LoginFallback() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 flex items-center justify-center">
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="animate-pulse space-y-4">

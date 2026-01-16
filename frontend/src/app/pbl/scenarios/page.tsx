@@ -261,7 +261,7 @@ export default function PBLScenariosPage() {
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-[#0363A7] text-white rounded-full hover:bg-[#0363A7]/90 transition-all duration-200 shadow-md hover:shadow-lg"
             >
               Refresh
             </button>
@@ -290,7 +290,7 @@ export default function PBLScenariosPage() {
                       <div
                         className={`w-12 h-12 ${
                           isAvailable
-                            ? "bg-blue-100 dark:bg-blue-900"
+                            ? "bg-[#0363A7]/10 dark:bg-[#0363A7]/20"
                             : "bg-gray-200 dark:bg-gray-700"
                         } rounded-lg flex items-center justify-center`}
                       >
@@ -364,7 +364,7 @@ export default function PBLScenariosPage() {
                     {isAvailable ? (
                       <Link
                         href={`/pbl/scenarios/${scenario.id}`}
-                        className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="block w-full bg-[#0363A7] text-white text-center px-4 py-2 rounded-full hover:bg-[#0363A7]/90 transition-all duration-200 shadow-md hover:shadow-lg"
                       >
                         {t("viewDetails")}
                       </Link>
@@ -387,9 +387,9 @@ export default function PBLScenariosPage() {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#0363A7]/10 dark:bg-[#0363A7]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-blue-600 dark:text-blue-400"
+                  className="w-8 h-8 text-[#0363A7] dark:text-[#0363A7]/80"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

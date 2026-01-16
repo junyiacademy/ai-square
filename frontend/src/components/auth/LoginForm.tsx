@@ -145,7 +145,7 @@ export function LoginForm({
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] transition-colors text-gray-900 bg-white"
             placeholder={emailPlaceholder}
             required
             disabled={loading}
@@ -165,7 +165,7 @@ export function LoginForm({
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] transition-colors text-gray-900 bg-white"
             placeholder={passwordPlaceholder}
             required
             disabled={loading}
@@ -180,7 +180,7 @@ export function LoginForm({
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-[#0363A7] focus:ring-[#0363A7] border-gray-300 rounded"
               disabled={loading}
             />
             <span className="ml-2 text-sm text-gray-700">
@@ -189,7 +189,7 @@ export function LoginForm({
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm text-blue-600 hover:text-blue-500"
+            className="text-sm text-[#0363A7] hover:text-[#0363A7]/80"
           >
             {t("signIn.forgotPassword", "Forgot password?")}
           </Link>
@@ -198,7 +198,7 @@ export function LoginForm({
         <button
           type="submit"
           disabled={loading || !email || !password}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full bg-[#0363A7] text-white py-3 px-4 rounded-full font-medium hover:bg-[#0363A7]/90 focus:ring-2 focus:ring-[#0363A7] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
         >
           {loading ? t("loading") : t("login")}
         </button>
@@ -236,7 +236,7 @@ export function LoginForm({
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-md mb-2 ${
                       index === 0
-                        ? "bg-gradient-to-br from-blue-400 to-blue-600"
+                        ? "bg-gradient-to-br from-[#0363A7] to-[#0363A7]/80"
                         : index === 1
                           ? "bg-gradient-to-br from-green-400 to-green-600"
                           : "bg-gradient-to-br from-purple-400 to-purple-600"

@@ -36,11 +36,11 @@ export default function OnboardingWelcomePage() {
             {t("onboarding:welcome.step1.content")}
           </p>
           <div className="grid grid-cols-2 gap-4 mt-6">
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
+            <div className="bg-[#0363A7]/5 dark:bg-[#0363A7]/20 p-4 rounded-lg">
+              <h4 className="font-semibold text-[#0363A7] dark:text-[#0363A7]/80 mb-2">
                 {t("onboarding:welcome.step1.assessment")}
               </h4>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+              <p className="text-sm text-[#0363A7] dark:text-[#0363A7]/70">
                 {t("onboarding:welcome.step1.assessmentDesc")}
               </p>
             </div>
@@ -238,13 +238,13 @@ export default function OnboardingWelcomePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0363A7]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 via-white to-[#0363A7]/10 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -264,7 +264,7 @@ export default function OnboardingWelcomePage() {
                 key={index}
                 className={`h-2 w-16 rounded-full transition-colors ${
                   index <= currentStep
-                    ? "bg-blue-600"
+                    ? "bg-[#0363A7]"
                     : "bg-gray-300 dark:bg-gray-700"
                 }`}
               />
@@ -309,7 +309,7 @@ export default function OnboardingWelcomePage() {
             )}
             <button
               onClick={handleNext}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              className="px-6 py-3 bg-[#0363A7] text-white rounded-full hover:bg-[#0363A7]/90 transition-all duration-200 flex items-center shadow-md hover:shadow-lg"
             >
               {currentStep === steps.length - 1 ? (
                 <>

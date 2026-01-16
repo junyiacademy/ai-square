@@ -390,7 +390,7 @@ export default function ScenarioDetailPage({
           </p>
           <Link
             href="/pbl/scenarios"
-            className="text-blue-600 hover:text-blue-700"
+            className="text-[#0363A7] hover:text-[#0363A7]/80"
           >
             {t("details.backToScenarios", "Back to Scenarios")}
           </Link>
@@ -513,7 +513,7 @@ export default function ScenarioDetailPage({
                                   program.status === "completed"
                                     ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                     : program.status === "active"
-                                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                                      ? "bg-[#0363A7]/10 text-[#0363A7] dark:bg-[#0363A7]/20 dark:text-[#0363A7]/80"
                                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
                                 }`}
                               >
@@ -574,7 +574,7 @@ export default function ScenarioDetailPage({
                               disabled={!isScenarioInteractive}
                               className={`text-sm px-4 py-2 rounded-md transition-colors font-medium ${
                                 isScenarioInteractive
-                                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                                  ? "bg-[#0363A7] text-white hover:bg-[#0363A7]/90 rounded-full shadow-md hover:shadow-lg transition-all duration-200"
                                   : "bg-gray-200 text-gray-600 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
                               }`}
                             >
@@ -709,7 +709,7 @@ export default function ScenarioDetailPage({
 
                   return (
                     <li key={index} className="flex items-start">
-                      <span className="text-blue-500 mr-2">•</span>
+                      <span className="text-[#0363A7] mr-2">•</span>
                       <span className="text-gray-600 dark:text-gray-300">
                         {parts.map((part, i) => {
                           // If this part is a URL, make it a clickable link
@@ -718,7 +718,7 @@ export default function ScenarioDetailPage({
                               <button
                                 key={i}
                                 onClick={() => handleVideoClick(part)}
-                                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                                className="text-[#0363A7] dark:text-[#0363A7]/80 hover:underline cursor-pointer"
                               >
                                 {part}
                               </button>
@@ -752,7 +752,7 @@ export default function ScenarioDetailPage({
               (domain: string, index: number) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#0363A7]/10 text-[#0363A7] dark:bg-[#0363A7]/20 dark:text-[#0363A7]/80"
                 >
                   {getDomainTranslation(domain)}
                 </span>
@@ -818,10 +818,10 @@ export default function ScenarioDetailPage({
                   Array.isArray(ksaMapping.skills) &&
                   ksaMapping.skills.length > 0 ? (
                     <div>
-                      <span className="font-medium text-blue-700 dark:text-blue-300">
+                      <span className="font-medium text-[#0363A7] dark:text-[#0363A7]/80">
                         {t("details.skills", "Skills")}:{" "}
                       </span>
-                      <span className="text-blue-600 dark:text-blue-400">
+                      <span className="text-[#0363A7] dark:text-[#0363A7]/80">
                         {ksaMapping?.skills &&
                           Array.isArray(ksaMapping.skills) &&
                           ksaMapping.skills
@@ -996,11 +996,11 @@ export default function ScenarioDetailPage({
 
                   {/* Expected Outcome */}
                   {task.expectedOutcome ? (
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
-                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                    <div className="bg-[#0363A7]/5 dark:bg-[#0363A7]/20 rounded p-3">
+                      <p className="text-sm font-medium text-[#0363A7] dark:text-[#0363A7]/80 mb-1">
                         {t("details.expectedOutcome", "Expected Outcome")}
                       </p>
-                      <p className="text-sm text-blue-600 dark:text-blue-400">
+                      <p className="text-sm text-[#0363A7] dark:text-[#0363A7]/80">
                         {String(task.expectedOutcome)}
                       </p>
                     </div>

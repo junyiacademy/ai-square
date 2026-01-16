@@ -92,14 +92,14 @@ function ResetPasswordContent() {
   if (checkingToken || !isI18nReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0363A7]"></div>
       </div>
     );
   }
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900">
         <div className="max-w-md w-full space-y-8 text-center">
           <div className="bg-green-100 dark:bg-green-900/20 rounded-full p-3 w-16 h-16 mx-auto">
             <svg
@@ -128,7 +128,7 @@ function ResetPasswordContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
@@ -141,7 +141,7 @@ function ResetPasswordContent() {
             <p className="text-sm text-red-800 dark:text-red-400">{error}</p>
             <Link
               href="/forgot-password"
-              className="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-500"
+              className="mt-2 inline-block text-sm text-[#0363A7] hover:text-[#0363A7]/80"
             >
               {t("resetPassword.requestNewLink")}
             </Link>
@@ -172,7 +172,7 @@ function ResetPasswordContent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-gray-700"
                   placeholder={t("passwordPlaceholder")}
                 />
               </div>
@@ -192,7 +192,7 @@ function ResetPasswordContent() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
+                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-gray-700"
                   placeholder={t("confirmPasswordPlaceholder")}
                 />
               </div>
@@ -202,7 +202,7 @@ function ResetPasswordContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-[#0363A7] hover:bg-[#0363A7]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0363A7] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200"
               >
                 {isLoading ? t("resetting") : t("resetPassword.resetButton")}
               </button>
@@ -218,7 +218,7 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />
+        <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10" />
       }
     >
       <ResetPasswordContent />

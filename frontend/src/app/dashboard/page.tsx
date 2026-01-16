@@ -241,7 +241,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div
           data-testid="loading-spinner"
-          className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+          className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0363A7]"
         ></div>
       </div>
     );
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                 <div className="flex flex-wrap gap-4 items-center">
                   <Link
                     href="/learning-path"
-                    className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-white text-[#0363A7] rounded-lg font-medium hover:bg-gray-100 transition-colors"
                   >
                     {t("dashboard:viewAllPaths")}
                     <svg
@@ -352,7 +352,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                           <div
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            className="bg-[#0363A7] h-2 rounded-full transition-all duration-300"
                             style={{ width: `${score}%` }}
                           />
                         </div>
@@ -363,7 +363,7 @@ export default function DashboardPage() {
                 <div className="mt-4 text-center">
                   <Link
                     href="/learning-path"
-                    className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80"
                   >
                     {t("dashboard:viewDetailedProgress")} →
                   </Link>
@@ -379,7 +379,7 @@ export default function DashboardPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-[#0363A7]">
                       {learningProgress.completedScenarios}
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -446,7 +446,7 @@ export default function DashboardPage() {
                       {activity.link && (
                         <Link
                           href={activity.link}
-                          className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80"
                         >
                           {t("common:view")} →
                         </Link>
@@ -579,7 +579,7 @@ export default function DashboardPage() {
                 </div>
                 <Link
                   href="/onboarding/goals"
-                  className="block mt-3 text-center text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  className="block mt-3 text-center text-sm text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80"
                 >
                   {t("dashboard:updateGoals")}
                 </Link>

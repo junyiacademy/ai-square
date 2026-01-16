@@ -118,13 +118,13 @@ export default function IdentityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Progress indicator */}
         <div className="mb-8">
           <div className="flex items-center justify-center space-x-4">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+              <div className="w-8 h-8 bg-[#0363A7] rounded-full flex items-center justify-center text-white text-sm font-medium">
                 1
               </div>
               <span className="ml-2 text-sm text-gray-600">
@@ -133,7 +133,7 @@ export default function IdentityPage() {
             </div>
             <div className="w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+              <div className="w-8 h-8 bg-[#0363A7] rounded-full flex items-center justify-center text-white text-sm font-medium">
                 2
               </div>
               <span className="ml-2 text-sm font-medium text-gray-900">
@@ -228,9 +228,9 @@ export default function IdentityPage() {
             <button
               onClick={handleContinue}
               disabled={!selectedIdentity || loading}
-              className={`px-8 py-3 rounded-lg font-medium transition-all duration-200 ${
+              className={`px-8 py-3 rounded-full font-medium transition-all duration-200 ${
                 selectedIdentity && !loading
-                  ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl"
+                  ? "bg-[#0363A7] text-white hover:bg-[#0363A7]/90 shadow-md hover:shadow-lg"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
