@@ -347,6 +347,12 @@ export function useChatState(): UseChatStateReturn {
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // Ignore Enter key during IME composition (e.g., Chinese input)
+      // This allows users to confirm characters first before sending
+      if (e.nativeEvent.isComposing) {
+        return;
+      }
+
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         handleSendMessage();
