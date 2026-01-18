@@ -26,7 +26,7 @@ describe("Button", () => {
   it("applies default variant classes", () => {
     render(<Button>Default</Button>);
     const button = screen.getByText("Default").closest("button");
-    expect(button).toHaveClass("bg-blue-600", "text-white");
+    expect(button).toHaveClass("bg-[#0363A7]", "text-white");
   });
 
   it("applies destructive variant classes", () => {

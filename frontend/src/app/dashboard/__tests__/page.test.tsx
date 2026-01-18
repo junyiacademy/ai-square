@@ -771,7 +771,7 @@ describe("DashboardPage", () => {
 
     await waitFor(() => {
       // Check for progress bars
-      const progressBars = container.querySelectorAll(".bg-blue-600");
+      const progressBars = container.querySelectorAll(".bg-\[#0363A7\]");
       expect(progressBars.length).toBeGreaterThan(0);
 
       // Check if progress bars have correct width styles

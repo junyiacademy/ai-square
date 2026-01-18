@@ -120,7 +120,7 @@ describe("DesktopNavigation", () => {
       const pblLink = screen.getByRole("link", { name: "pbl" });
       expect(pblLink).toHaveClass("text-gray-900");
       expect(pblLink).toHaveClass("border-b-2");
-      expect(pblLink).toHaveClass("border-blue-600");
+      expect(pblLink).toHaveClass("border-[#0363A7]");
     });
 
     it("applies hover styles to inactive links", () => {

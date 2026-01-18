@@ -45,7 +45,7 @@ describe("LoadingSpinner", () => {
     expect(spinner.className).toContain("animate-spin");
     expect(spinner.className).toContain("rounded-full");
     expect(spinner.className).toContain("border-b-2");
-    expect(spinner.className).toContain("border-blue-600");
+    expect(spinner.className).toContain("border-[#0363A7]");
   });
 
   it("should apply custom className to wrapper", () => {

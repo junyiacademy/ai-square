@@ -67,7 +67,7 @@ describe("HeroSection", () => {
 
     const section = document.querySelector("section");
     expect(section?.className).toContain("bg-gradient-to-br");
-    expect(section?.className).toContain("from-blue-50");
+    expect(section?.className).toContain("from-[#0363A7]/5");
     expect(section?.className).toContain("via-indigo-50");
     expect(section?.className).toContain("to-purple-50");
   });

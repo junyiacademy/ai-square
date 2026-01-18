@@ -171,7 +171,7 @@ describe("OnboardingWelcomePage", () => {
       expect(progressBars.length).toBeGreaterThan(0);
     });
 
-    const activeBar = document.querySelector(".bg-blue-600");
+    const activeBar = document.querySelector(".bg-\[#0363A7\]");
     expect(activeBar).toBeInTheDocument();
   });
 
@@ -483,7 +483,7 @@ describe("OnboardingWelcomePage", () => {
     await waitFor(() => {
       const progressBars = document.querySelectorAll(".h-2.w-16");
       expect(progressBars.length).toBeGreaterThanOrEqual(3);
-      expect(progressBars[0]).toHaveClass("bg-blue-600");
+      expect(progressBars[0]).toHaveClass("bg-[#0363A7]");
       expect(progressBars[1]).toHaveClass("bg-gray-300");
       expect(progressBars[2]).toHaveClass("bg-gray-300");
     });
@@ -494,8 +494,8 @@ describe("OnboardingWelcomePage", () => {
     // Step 2 - first two bars active
     await waitFor(() => {
       const progressBars = document.querySelectorAll(".h-2.w-16");
-      expect(progressBars[0]).toHaveClass("bg-blue-600");
-      expect(progressBars[1]).toHaveClass("bg-blue-600");
+      expect(progressBars[0]).toHaveClass("bg-[#0363A7]");
+      expect(progressBars[1]).toHaveClass("bg-[#0363A7]");
       expect(progressBars[2]).toHaveClass("bg-gray-300");
     });
 
@@ -504,9 +504,9 @@ describe("OnboardingWelcomePage", () => {
     // Step 3 - all bars active
     await waitFor(() => {
       const progressBars = document.querySelectorAll(".h-2.w-16");
-      expect(progressBars[0]).toHaveClass("bg-blue-600");
-      expect(progressBars[1]).toHaveClass("bg-blue-600");
-      expect(progressBars[2]).toHaveClass("bg-blue-600");
+      expect(progressBars[0]).toHaveClass("bg-[#0363A7]");
+      expect(progressBars[1]).toHaveClass("bg-[#0363A7]");
+      expect(progressBars[2]).toHaveClass("bg-[#0363A7]");
     });
   });
 
@@ -549,7 +549,7 @@ describe("OnboardingWelcomePage", () => {
       const mainContainer = screen
         .getByText("Welcome, John Doe!")
         .closest(".min-h-screen");
-      expect(mainContainer).toHaveClass("bg-gradient-to-br", "from-blue-50");
+      expect(mainContainer).toHaveClass("bg-gradient-to-br", "from-[#0363A7]/5");
 
       const contentCard = screen
         .getByText("Discover Your AI Potential")
