@@ -8,7 +8,7 @@ exports[`page should match snapshot 1`] = `
     class="w-full flex justify-center mb-6"
   >
     <div
-      class="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl animate-pulse"
+      class="w-[320px] h-[120px] bg-gradient-to-r from-[#0363A7]/20 to-[#0363A7]/30 rounded-2xl animate-pulse"
     />
   </div>
   <div

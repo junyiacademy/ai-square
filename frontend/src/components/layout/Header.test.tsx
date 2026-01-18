@@ -244,9 +244,9 @@ describe("Header 組件測試", () => {
       expect(loginButton).toHaveClass(
         "bg-[#0363A7]",
         "text-white",
-        "px-4",
-        "py-2",
-        "rounded-lg",
+        "px-5",
+        "py-2.5",
+        "rounded-full",
       );
     });
 

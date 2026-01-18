@@ -171,7 +171,10 @@ describe("OnboardingWelcomePage", () => {
       expect(progressBars.length).toBeGreaterThan(0);
     });
 
-    const activeBar = document.querySelector(".bg-\[#0363A7\]");
+    const allBars = document.querySelectorAll(".h-2.w-16");
+    const activeBar = Array.from(allBars).find((el) =>
+      el.className.includes("bg-[#0363A7]")
+    );
     expect(activeBar).toBeInTheDocument();
   });
 

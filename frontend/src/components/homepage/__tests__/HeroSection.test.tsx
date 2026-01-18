@@ -68,8 +68,8 @@ describe("HeroSection", () => {
     const section = document.querySelector("section");
     expect(section?.className).toContain("bg-gradient-to-br");
     expect(section?.className).toContain("from-[#0363A7]/5");
-    expect(section?.className).toContain("via-indigo-50");
-    expect(section?.className).toContain("to-purple-50");
+    expect(section?.className).toContain("via-[#0363A7]/10");
+    expect(section?.className).toContain("to-[#0363A7]/15");
   });
 
   it("should render visual representation icons", () => {
@@ -92,7 +92,7 @@ describe("HeroSection", () => {
     render(<HeroSection />);
 
     const journeyLink = screen.getByText("hero.cta.getStarted").closest("a");
-    expect(journeyLink).toHaveClass("hover:from-blue-700");
+    expect(journeyLink).toHaveClass("hover:bg-[#0363A7]/90");
     expect(journeyLink).toHaveClass("transform");
     expect(journeyLink).toHaveClass("hover:scale-105");
   });

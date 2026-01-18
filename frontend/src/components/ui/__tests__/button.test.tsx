@@ -49,7 +49,7 @@ describe("Button", () => {
 
     rerender(<Button variant="link">Link</Button>);
     button = screen.getByRole("button");
-    expect(button.className).toContain("text-blue-600");
+    expect(button.className).toContain("text-[#0363A7]");
   });
 
   it("should apply size classes", () => {

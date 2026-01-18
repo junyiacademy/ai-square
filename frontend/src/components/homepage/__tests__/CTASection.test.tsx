@@ -100,8 +100,8 @@ describe("CTASection", () => {
     const section = container.querySelector("section");
     expect(section).toHaveClass(
       "bg-gradient-to-r",
-      "from-blue-600",
-      "to-indigo-700",
+      "from-[#0363A7]",
+      "to-[#0363A7]/90",
     );
   });
 
@@ -125,7 +125,7 @@ describe("CTASection", () => {
   it("applies hover effects to the CTA button", async () => {
     renderWithProviders(<CTASection />);
     const link = screen.getByText("🚀 探索世界").closest("a");
-    expect(link).toHaveClass("hover:bg-purple-700", "hover:scale-105");
+    expect(link).toHaveClass("hover:bg-[#EC6C1F]/90", "hover:scale-105");
   });
 
   it("uses proper spacing and padding", async () => {

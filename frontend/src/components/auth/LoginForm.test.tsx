@@ -380,7 +380,7 @@ describe("LoginForm 組件測試", () => {
         "w-full",
         "bg-[#0363A7]",
         "text-white",
-        "rounded-lg",
+        "rounded-full",
       );
     });
 

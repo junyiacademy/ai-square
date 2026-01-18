@@ -2,7 +2,7 @@
 
 exports[`page should match snapshot 1`] = `
 <div
-  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8"
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8"
 >
   <div
     class="max-w-md w-full space-y-8"
@@ -23,7 +23,7 @@ exports[`page should match snapshot 1`] = `
         resetPassword.noToken
       </p>
       <a
-        class="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-500"
+        class="mt-2 inline-block text-sm text-[#0363A7] hover:text-[#0363A7]/80"
         href="/forgot-password"
       >
         resetPassword.requestNewLink

@@ -56,7 +56,7 @@ describe("Button", () => {
   it("applies link variant classes", () => {
     render(<Button variant="link">Link</Button>);
     const button = screen.getByText("Link").closest("button");
-    expect(button).toHaveClass("text-blue-600", "underline-offset-4");
+    expect(button).toHaveClass("text-[#0363A7]", "underline-offset-4");
   });
 
   it("applies default size classes", () => {
