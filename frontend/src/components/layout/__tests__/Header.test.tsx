@@ -173,7 +173,7 @@ describe("Header", () => {
       // For active links, the component applies these classes conditionally
       expect(pblLink.className).toContain("text-gray-900");
       expect(pblLink.className).toContain("border-b-2");
-      expect(pblLink.className).toContain("border-blue-600");
+      expect(pblLink.className).toContain("border-[#0363A7]");
     });
 
     it("redirects to login when sign in button is clicked", async () => {

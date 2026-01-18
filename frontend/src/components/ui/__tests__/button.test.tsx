@@ -29,7 +29,7 @@ describe("Button", () => {
   it("should apply variant classes", () => {
     const { rerender } = render(<Button variant="default">Default</Button>);
     let button = screen.getByRole("button");
-    expect(button.className).toContain("bg-blue-600");
+    expect(button.className).toContain("bg-[#0363A7]");
 
     rerender(<Button variant="destructive">Destructive</Button>);
     button = screen.getByRole("button");
@@ -99,7 +99,7 @@ describe("Button", () => {
   it("should apply default variant and size when not specified", () => {
     render(<Button>Default</Button>);
     const button = screen.getByRole("button");
-    expect(button.className).toContain("bg-blue-600"); // default variant
+    expect(button.className).toContain("bg-[#0363A7]"); // default variant
     expect(button.className).toContain("h-10"); // default size
   });
 

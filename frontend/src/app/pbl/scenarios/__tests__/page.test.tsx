@@ -379,7 +379,7 @@ describe("PBLScenariosPage", () => {
     expect(refreshButton).toHaveClass(
       "px-4",
       "py-2",
-      "bg-blue-600",
+      "bg-[#0363A7]",
       "text-white",
     );
 

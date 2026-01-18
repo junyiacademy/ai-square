@@ -155,7 +155,7 @@ describe("Header Navigation Tests", () => {
       const pblLink = screen.getByText("Problem-Based Learning").closest("a");
       // Active links have text-gray-900 and border-blue-600 classes based on the Header component
       expect(pblLink).toHaveClass("text-gray-900");
-      expect(pblLink).toHaveClass("border-blue-600");
+      expect(pblLink).toHaveClass("border-[#0363A7]");
       expect(pblLink).toHaveClass("border-b-2");
     });
   });
