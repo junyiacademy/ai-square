@@ -53,6 +53,13 @@
     "summaryText": "Alcanzaste el nivel {{level}} con un {{score}}% de puntuación general, respondiendo correctamente {{correct}} de {{total}} preguntas.",
     "domainBreakdown": "Desglose por Dominio",
     "personalizedRecommendations": "Recomendaciones Personalizadas",
+    "recommendations": {
+      "focusOn": "Enfocarse en mejorar",
+      "engaging_with_ai": "Enfocarse en mejorar la Interacción con IA: Comprensión de las limitaciones de la IA, preocupaciones de privacidad y consideraciones éticas al interactuar con sistemas de IA",
+      "creating_with_ai": "Enfocarse en mejorar la Creación con IA: Aprendizaje de técnicas de prompts, mejores prácticas de generación de contenido y colaboración creativa con herramientas de IA",
+      "managing_with_ai": "Enfocarse en mejorar la Gestión con IA: Desarrollo de habilidades para la toma de decisiones asistida por IA, automatización de flujos de trabajo y colaboración en equipo",
+      "designing_with_ai": "Enfocarse en mejorar el Diseño con IA: Construcción de currículum de alfabetización en IA, creación de materiales de aprendizaje y diseño de experiencias mejoradas con IA"
+    },
     "nextSteps": "Próximos Pasos Recomendados",
     "nextStep1": "Enfócate en tus dominios con menor puntuación",
     "nextStep2": "Practica con ejercicios interactivos",
@@ -86,19 +93,27 @@
     "saveError": "Error al guardar los resultados: {{error}}",
     "autoSaving": "Guardando automáticamente tus resultados...",
     "autoSaved": "Resultados guardados automáticamente",
-    "recommendations": {
-      "focusOn": "Enfocarse en mejorar",
-      "engaging_with_ai": "Enfocarse en mejorar la Interacción con IA: Comprensión de las limitaciones de la IA, preocupaciones de privacidad y consideraciones éticas al interactuar con sistemas de IA",
-      "creating_with_ai": "Enfocarse en mejorar la Creación con IA: Aprendizaje de técnicas de prompts, mejores prácticas de generación de contenido y colaboración creativa con herramientas de IA",
-      "managing_with_ai": "Enfocarse en mejorar la Gestión con IA: Desarrollo de habilidades para la toma de decisiones asistida por IA, automatización de flujos de trabajo y colaboración en equipo",
-      "designing_with_ai": "Enfocarse en mejorar el Diseño con IA: Construcción de currículum de alfabetización en IA, creación de materiales de aprendizaje y diseño de experiencias mejoradas con IA"
-    },
     "knowledgeGraph": {
       "title": "Grafo de competencias",
       "description": "Visualización interactiva de sus competencias de alfabetización en IA mostrando niveles detallados de dominio",
       "yourProfile": "Su perfil de alfabetización en IA",
-      "mastery": "Dominio",
-      "masteryLevel": "Nivel de dominio (0-100%)"
+      "masteryLevel": "Nivel de dominio (0-100%)",
+      "mastery": {
+        "label": "Dominio",
+        "allCorrect": "Todo Correcto",
+        "partiallyCorrect": "Parcialmente Correcto",
+        "completelyWrong": "Completamente Incorrecto"
+      },
+      "legend": {
+        "masteryLevels": "Completamente Incorrecto / Parcialmente Correcto / Todo Correcto",
+        "knowledge": "K (Conocimiento)",
+        "skills": "S (Habilidades)",
+        "attitudes": "A (Actitudes)"
+      },
+      "instructions": {
+        "clickNode": "Consejo: Haga clic en los nodos de código KSA para ver las preguntas relacionadas",
+        "pinchZoom": "Consejo: Use pellizco para ampliar detalles"
+      }
     },
     "questionReview": {
       "title": "Revisión de preguntas",

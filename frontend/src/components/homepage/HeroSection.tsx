@@ -18,17 +18,17 @@ export default function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* Hero Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             {t("hero.title")}
           </h1>
 
           {/* Hero Subtitle */}
-          <p className="text-xl sm:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 mb-8 max-w-3xl mx-auto">
             {t("hero.subtitle")}
           </p>
 
           {/* Hero Description */}
-          <p className="text-lg text-gray-600 mb-12 max-w-4xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto">
             {t("hero.description")}
           </p>
 
@@ -56,7 +56,7 @@ export default function HeroSection() {
 
             <Link
               href="/relations"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
               {t("hero.cta.explore")}
               <svg
@@ -88,10 +88,10 @@ export default function HeroSection() {
             ].map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200"
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 <div className="text-4xl mb-2">{item.emoji}</div>
-                <p className="text-sm font-medium text-gray-700 mt-2">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
                   {t(`domains.items.${item.key}.name`)}
                 </p>
                 <div className="h-2 bg-gradient-to-r from-[#0363A7] to-[#0363A7]/60 rounded-full mt-2"></div>

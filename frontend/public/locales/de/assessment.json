@@ -53,6 +53,13 @@
     "summaryText": "Sie haben das {{level}}-Niveau mit {{score}}% Gesamtpunktzahl erreicht und {{correct}} von {{total}} Fragen richtig beantwortet.",
     "domainBreakdown": "Bereichsaufschlüsselung",
     "personalizedRecommendations": "Personalisierte Empfehlungen",
+    "recommendations": {
+      "focusOn": "Fokus auf Verbesserung",
+      "engaging_with_ai": "Fokus auf Verbesserung von KI-Interaktion: Verständnis von KI-Grenzen, Datenschutzbedenken und ethischen Überlegungen bei der Interaktion mit KI-Systemen",
+      "creating_with_ai": "Fokus auf Verbesserung von KI-Erstellung: Erlernen von Prompt-Techniken, Best Practices für Inhaltsgenerierung und kreative Zusammenarbeit mit KI-Tools",
+      "managing_with_ai": "Fokus auf Verbesserung von KI-Management: Entwicklung von Fähigkeiten für KI-unterstützte Entscheidungsfindung, Workflow-Automatisierung und Teamzusammenarbeit",
+      "designing_with_ai": "Fokus auf Verbesserung von KI-Design: Aufbau von KI-Kompetenz-Lehrplänen, Erstellung von Lernmaterialien und Gestaltung von KI-erweiterten Erfahrungen"
+    },
     "nextSteps": "Empfohlene nächste Schritte",
     "nextStep1": "Konzentrieren Sie sich auf Ihre schwächsten Bereiche",
     "nextStep2": "Üben Sie mit interaktiven Übungen",
@@ -78,13 +85,6 @@
       "skillsAreas": "Fähigkeitsbereiche",
       "attitudesAreas": "Einstellungsbereiche"
     },
-    "recommendations": {
-      "focusOn": "Fokus auf Verbesserung",
-      "engaging_with_ai": "Fokus auf Verbesserung von KI-Interaktion: Verständnis von KI-Grenzen, Datenschutzbedenken und ethischen Überlegungen bei der Interaktion mit KI-Systemen",
-      "creating_with_ai": "Fokus auf Verbesserung von KI-Erstellung: Erlernen von Prompt-Techniken, Best Practices für Inhaltsgenerierung und kreative Zusammenarbeit mit KI-Tools",
-      "managing_with_ai": "Fokus auf Verbesserung von KI-Management: Entwicklung von Fähigkeiten für KI-unterstützte Entscheidungsfindung, Workflow-Automatisierung und Teamzusammenarbeit",
-      "designing_with_ai": "Fokus auf Verbesserung von KI-Design: Aufbau von KI-Kompetenz-Lehrplänen, Erstellung von Lernmaterialien und Gestaltung von KI-erweiterten Erfahrungen"
-    },
     "saveResults": "Ergebnisse speichern",
     "viewLearningPath": "Lernpfad anzeigen",
     "saving": "Speichern...",
@@ -97,8 +97,23 @@
       "title": "Kompetenz-Wissensgraph",
       "description": "Interaktive Visualisierung Ihrer KI-Kompetenzen mit detaillierten Beherrschungsgraden",
       "yourProfile": "Ihr KI-Kompetenzprofil",
-      "mastery": "Beherrschung",
-      "masteryLevel": "Beherrschungsgrad (0-100%)"
+      "masteryLevel": "Beherrschungsgrad (0-100%)",
+      "mastery": {
+        "label": "Beherrschung",
+        "allCorrect": "Alle Richtig",
+        "partiallyCorrect": "Teilweise Richtig",
+        "completelyWrong": "Völlig Falsch"
+      },
+      "legend": {
+        "masteryLevels": "Völlig Falsch / Teilweise Richtig / Alle Richtig",
+        "knowledge": "K (Wissen)",
+        "skills": "S (Fähigkeiten)",
+        "attitudes": "A (Einstellungen)"
+      },
+      "instructions": {
+        "clickNode": "Tipp: Klicken Sie auf KSA-Code-Knoten, um verwandte Fragen anzuzeigen",
+        "pinchZoom": "Tipp: Pinch-Zoom für Details verwenden"
+      }
     },
     "questionReview": {
       "title": "Fragenüberprüfung",
