@@ -446,9 +446,12 @@ describe("DomainScoreAggregationService", () => {
       const recommendations = service.generateRecommendations(domainScores, 60);
 
       expect(recommendations.length).toBeGreaterThan(0);
-      expect(recommendations.some((r) => r.includes("engaging with ai"))).toBe(
-        true,
-      );
+      // Now returns i18n keys instead of hardcoded English
+      expect(
+        recommendations.some((r) =>
+          r.includes("results.recommendations.engaging_with_ai"),
+        ),
+      ).toBe(true);
     });
 
     it("should return general recommendations for low scores", () => {
@@ -456,7 +459,14 @@ describe("DomainScoreAggregationService", () => {
       const recommendations = service.generateRecommendations(domainScores, 50);
 
       expect(recommendations.length).toBeGreaterThan(0);
-      expect(recommendations.some((r) => r.includes("AI literacy"))).toBe(true);
+      // Now returns i18n keys for low score recommendations
+      expect(
+        recommendations.some(
+          (r) =>
+            r.includes("results.recommendations.reviewFundamentals") ||
+            r.includes("results.recommendations.takeIntroCourses"),
+        ),
+      ).toBe(true);
     });
 
     it("should recommend advanced content for high scores", () => {
@@ -464,9 +474,12 @@ describe("DomainScoreAggregationService", () => {
       const recommendations = service.generateRecommendations(domainScores, 85);
 
       expect(recommendations.length).toBeGreaterThan(0);
+      // Now returns i18n keys for high score recommendations
       expect(
         recommendations.some(
-          (r) => r.includes("mentor") || r.includes("latest"),
+          (r) =>
+            r.includes("results.recommendations.considerMentoring") ||
+            r.includes("results.recommendations.stayUpdated"),
         ),
       ).toBe(true);
     });
