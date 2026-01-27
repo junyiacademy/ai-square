@@ -43,7 +43,7 @@ export function DesktopNavigation({
             href={link.href}
             className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
               pathname === link.href
-                ? "text-gray-900 dark:text-white border-b-2 border-blue-600 active"
+                ? "text-gray-900 dark:text-white border-b-2 border-[#0363A7] active"
                 : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600"
             }`}
           >

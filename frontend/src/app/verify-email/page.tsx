@@ -52,7 +52,7 @@ function VerifyEmailContent() {
   }, [token, router, t]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 text-center">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center mb-4">
@@ -73,7 +73,7 @@ function VerifyEmailContent() {
         <div className="mt-8">
           {status === "loading" && (
             <div className="space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0363A7] mx-auto"></div>
               <p className="text-gray-600 dark:text-gray-400">
                 {t("auth:verifyEmail.verifying")}
               </p>
@@ -136,14 +136,14 @@ function VerifyEmailContent() {
               <div className="mt-6 space-y-2">
                 <Link
                   href="/register"
-                  className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+                  className="inline-block text-sm font-medium text-[#0363A7] hover:text-[#0363A7]/80"
                 >
                   {t("auth:verifyEmail.tryAgain")}
                 </Link>
                 <span className="mx-2 text-gray-400">|</span>
                 <Link
                   href="/contact"
-                  className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+                  className="inline-block text-sm font-medium text-[#0363A7] hover:text-[#0363A7]/80"
                 >
                   {t("auth:verifyEmail.contactSupport")}
                 </Link>
@@ -160,7 +160,7 @@ export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />
+        <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10" />
       }
     >
       <VerifyEmailContent />

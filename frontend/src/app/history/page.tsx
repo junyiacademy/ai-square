@@ -517,13 +517,13 @@ export default function UnifiedHistoryPage() {
           <div className="mt-4 space-x-4">
             <Link
               href="/assessment"
-              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+              className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80"
             >
               {t("assessment:history.takeAssessment")}
             </Link>
             <Link
               href="/pbl"
-              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+              className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80"
             >
               {t("pbl:history.startLearning")}
             </Link>
@@ -557,7 +557,7 @@ export default function UnifiedHistoryPage() {
               onClick={() => setFilter("all")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === "all"
-                  ? "bg-blue-600 text-white"
+                  ? "bg-[#0363A7] text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
@@ -567,7 +567,7 @@ export default function UnifiedHistoryPage() {
               onClick={() => setFilter("assessment")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === "assessment"
-                  ? "bg-blue-600 text-white"
+                  ? "bg-[#0363A7] text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
@@ -579,7 +579,7 @@ export default function UnifiedHistoryPage() {
               onClick={() => setFilter("pbl")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === "pbl"
-                  ? "bg-blue-600 text-white"
+                  ? "bg-[#0363A7] text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
@@ -590,7 +590,7 @@ export default function UnifiedHistoryPage() {
               onClick={() => setFilter("discovery")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === "discovery"
-                  ? "bg-blue-600 text-white"
+                  ? "bg-[#0363A7] text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
@@ -622,21 +622,21 @@ export default function UnifiedHistoryPage() {
             <div className="space-x-4">
               <Link
                 href="/assessment"
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 font-medium"
               >
                 {t("navigation:startAssessment")}
               </Link>
               <span className="text-gray-400">|</span>
               <Link
                 href="/pbl"
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 font-medium"
               >
                 {t("navigation:startPBL")}
               </Link>
               <span className="text-gray-400">|</span>
               <Link
                 href="/discovery"
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 font-medium"
               >
                 {t("navigation:startDiscovery")}
               </Link>
@@ -656,7 +656,7 @@ export default function UnifiedHistoryPage() {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                           <div className="flex items-center mb-2">
-                            <span className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 text-xs font-medium px-2.5 py-0.5 rounded mr-2">
+                            <span className="bg-[#0363A7]/10 text-[#0363A7] dark:bg-[#0363A7]/20 dark:text-[#0363A7] text-xs font-medium px-2.5 py-0.5 rounded mr-2">
                               {t("assessment:title")}
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -781,7 +781,7 @@ export default function UnifiedHistoryPage() {
                         </div>
                         <button
                           onClick={() => router.push(`/assessment`)}
-                          className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                          className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 text-sm font-medium"
                         >
                           {t("assessment:history.takeNewAssessment")} →
                         </button>
@@ -1107,14 +1107,14 @@ export default function UnifiedHistoryPage() {
                                   `/pbl/scenarios/${session.scenarioId}/programs/${session.id}/tasks/${taskId}`,
                                 );
                               }}
-                              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                              className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 text-sm font-medium"
                             >
                               {t("pbl:history.continueStudy")} →
                             </button>
                           )}
                           <Link
                             href={`/pbl/programs/${session.id}/complete`}
-                            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                            className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 text-sm font-medium"
                           >
                             {t("pbl:complete.viewReport")} →
                           </Link>
@@ -1441,14 +1441,14 @@ export default function UnifiedHistoryPage() {
                                   `/discovery/scenarios/${session.scenarioId}/programs/${session.programId}/tasks/${taskId}`,
                                 );
                               }}
-                              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                              className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 text-sm font-medium"
                             >
                               {t("pbl:history.continueStudy")} →
                             </button>
                           )}
                           <Link
                             href={`/discovery/programs/${session.programId}/complete`}
-                            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                            className="text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] dark:hover:text-[#0363A7]/80 text-sm font-medium"
                           >
                             {t("pbl:complete.viewReport")} →
                           </Link>
@@ -1466,7 +1466,7 @@ export default function UnifiedHistoryPage() {
         <div className="mt-8 text-center space-x-4">
           <Link
             href="/assessment"
-            className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors inline-block"
+            className="bg-[#0363A7] text-white px-8 py-3 rounded-full shadow-md hover:shadow-lg font-medium hover:bg-[#0363A7]/90 transition-all duration-200 inline-block"
           >
             {t("assessment:history.takeNewAssessment")}
           </Link>

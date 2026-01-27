@@ -276,7 +276,7 @@ export default function RelationsClient() {
     return (
       <main className="p-8 bg-gray-50 min-h-screen">
         <div className="w-full flex justify-center mb-6">
-          <div className="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl animate-pulse" />
+          <div className="w-[320px] h-[120px] bg-gradient-to-r from-[#0363A7]/20 to-[#0363A7]/30 rounded-2xl animate-pulse" />
         </div>
         <div className="max-w-3xl mx-auto">
           <LoadingAccordion />
@@ -296,7 +296,7 @@ export default function RelationsClient() {
           href="https://ailiteracyframework.org/wp-content/uploads/2025/05/AILitFramework_ReviewDraft.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#0363A7] text-white rounded-full hover:bg-[#0363A7]/90 transition-all duration-200 shadow-md hover:shadow-lg"
         >
           <svg
             className="w-5 h-5"
@@ -363,12 +363,12 @@ function DomainAccordion({
   return (
     <div className="mb-6">
       <div
-        className="cursor-pointer bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow flex items-center justify-between"
+        className="cursor-pointer bg-gradient-to-r from-[#0363A7]/10 to-[#0363A7]/15 px-6 py-4 rounded-lg shadow flex items-center justify-between"
         onClick={() => setOpen((o) => !o)}
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">
+          <span className="text-lg sm:text-xl font-bold text-[#0363A7] mr-2">
             {domain.name || t(domain.id || domain.key || "")}
           </span>
           <span className="text-gray-700 text-base font-medium">
@@ -434,17 +434,17 @@ function CompetencyAccordion({
         className="cursor-pointer bg-gray-100 px-4 py-2 rounded flex items-center justify-between"
         onClick={() => setOpen((o) => !o)}
       >
-        <span className="font-semibold text-blue-700 mr-2">
+        <span className="font-semibold text-[#0363A7] mr-2">
           {comp.id || comp.key || ""}
         </span>
         <span className="text-gray-700 font-medium flex-1">{description}</span>
         <span className="ml-2">{open ? "▲" : "▼"}</span>
       </div>
       {open && (
-        <div className="bg-white border border-blue-100 rounded-xl px-6 py-4 mt-2 shadow-md">
+        <div className="bg-white border border-[#0363A7]/10 rounded-xl px-6 py-4 mt-2 shadow-md">
           <div className="mb-4">
             {content && (
-              <div className="text-base font-bold text-blue-900 mb-2 whitespace-pre-line">
+              <div className="text-base font-bold text-[#0363A7] mb-2 whitespace-pre-line">
                 {content}
               </div>
             )}
@@ -470,7 +470,7 @@ function CompetencyAccordion({
           <div className="border-t border-gray-200 pt-6 mt-6">
             <div className="bg-gray-50 rounded-lg shadow-inner p-4 md:p-8">
               <div className="mb-4 px-4 py-2">
-                <div className="text-lg font-bold text-blue-700 flex items-center gap-2 mb-1">
+                <div className="text-lg font-bold text-[#0363A7] flex items-center gap-2 mb-1">
                   <span>🧭</span>
                   <span>{t("ksaTitle")}</span>
                 </div>
@@ -481,7 +481,7 @@ function CompetencyAccordion({
               <div className="px-4">
                 <KSAList
                   type={
-                    <span className="flex items-center gap-1 text-blue-700 font-semibold">
+                    <span className="flex items-center gap-1 text-[#0363A7] font-semibold">
                       <span>📖</span>
                       {t("knowledge")}
                     </span>
@@ -585,7 +585,7 @@ function KSAList({
         {codes.map((code: string) => (
           <span
             key={code}
-            className={`inline-block px-3 py-1 rounded text-sm font-semibold cursor-pointer mb-1 transition-all ${selected === code ? "bg-blue-500 text-white" : "bg-blue-100 text-blue-800"}`}
+            className={`inline-block px-3 py-1 rounded text-sm font-semibold cursor-pointer mb-1 transition-all ${selected === code ? "bg-[#0363A7] text-white" : "bg-[#0363A7]/10 text-[#0363A7]"}`}
             onClick={() => setSelected(code)}
           >
             {code}
@@ -623,20 +623,20 @@ function KSACard({ info, lang }: { info: KSAItem; lang: string }) {
   const theme = info.theme || "";
   const explanation = info.explanation || "";
   return (
-    <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
+    <div className="w-full max-w-md mx-auto bg-white border border-[#0363A7]/20 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
-        <span className="text-blue-600 text-lg md:text-xl font-extrabold mr-2">
+        <span className="text-[#0363A7] text-lg md:text-xl font-extrabold mr-2">
           🔎
         </span>
-        <span className="text-base md:text-lg font-bold text-blue-800 leading-snug break-words">
+        <span className="text-base md:text-lg font-bold text-[#0363A7] leading-snug break-words">
           {summary}
         </span>
       </div>
       <div className="flex flex-col md:flex-row items-start md:items-center mb-2 gap-2">
-        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-semibold mr-2 mb-1 md:mb-0">
+        <span className="bg-[#0363A7]/10 text-[#0363A7] rounded-full px-3 py-0.5 text-xs font-semibold mr-2 mb-1 md:mb-0">
           {t("theme")}
         </span>
-        <span className="text-blue-700 text-sm md:text-base font-medium break-words">
+        <span className="text-[#0363A7] text-sm md:text-base font-medium break-words">
           {theme}
         </span>
       </div>

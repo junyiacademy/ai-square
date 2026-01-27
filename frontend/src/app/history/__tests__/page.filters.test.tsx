@@ -219,7 +219,7 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     await waitFor(() => {
       const allFilter = screen.getByText(/^All/);
       // Default active filter uses blue-600
-      expect(allFilter).toHaveClass("bg-blue-600", "text-white");
+      expect(allFilter).toHaveClass("bg-[#0363A7]", "text-white");
     });
 
     // Get the first Assessment text (the button, not the badge)
@@ -227,9 +227,9 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     await user.click(assessmentFilter);
 
     await waitFor(() => {
-      expect(assessmentFilter).toHaveClass("bg-blue-600", "text-white");
+      expect(assessmentFilter).toHaveClass("bg-[#0363A7]", "text-white");
       expect(screen.getByText(/^All/)).not.toHaveClass(
-        "bg-blue-600",
+        "bg-[#0363A7]",
         "text-white",
       );
     });

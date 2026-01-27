@@ -155,7 +155,7 @@ function RegisterContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center mb-4">
@@ -179,7 +179,7 @@ function RegisterContent() {
                   ? `/login?redirect=${encodeURIComponent(searchParams.get("redirect")!)}`
                   : "/login"
               }
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-[#0363A7] hover:text-[#0363A7]/80"
             >
               {t("auth:register.signIn")}
             </Link>
@@ -218,7 +218,7 @@ function RegisterContent() {
                   errors.name
                     ? "border-red-300"
                     : "border-gray-300 dark:border-gray-700"
-                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-slate-800`}
+                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-slate-800`}
                 placeholder={t("auth:register.namePlaceholder")}
                 value={formData.name}
                 onChange={handleChange}
@@ -245,7 +245,7 @@ function RegisterContent() {
                   errors.email
                     ? "border-red-300"
                     : "border-gray-300 dark:border-gray-700"
-                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-slate-800`}
+                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-slate-800`}
                 placeholder={t("auth:register.emailPlaceholder")}
                 value={formData.email}
                 onChange={handleChange}
@@ -272,7 +272,7 @@ function RegisterContent() {
                   errors.password
                     ? "border-red-300"
                     : "border-gray-300 dark:border-gray-700"
-                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-slate-800`}
+                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-slate-800`}
                 placeholder={t("auth:register.passwordPlaceholder")}
                 value={formData.password}
                 onChange={handleChange}
@@ -299,7 +299,7 @@ function RegisterContent() {
                   errors.confirmPassword
                     ? "border-red-300"
                     : "border-gray-300 dark:border-gray-700"
-                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-slate-800`}
+                } placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-slate-800`}
                 placeholder={t("auth:register.confirmPasswordPlaceholder")}
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -446,7 +446,7 @@ function RegisterContent() {
                         type="button"
                         onClick={handleResendVerification}
                         disabled={resendingVerification || !formData.email}
-                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-full text-[#0363A7] bg-[#0363A7]/10 hover:bg-[#0363A7]/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0363A7] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {resendingVerification ? (
                           <>
@@ -488,7 +488,7 @@ function RegisterContent() {
                 id="acceptTerms"
                 name="acceptTerms"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-[#0363A7] focus:ring-[#0363A7] border-gray-300 rounded"
                 checked={formData.acceptTerms}
                 onChange={handleChange}
               />
@@ -499,11 +499,11 @@ function RegisterContent() {
                 className="font-medium text-gray-700 dark:text-gray-300"
               >
                 {t("auth:register.agreeToTerms")}{" "}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
+                <a href="#" className="text-[#0363A7] hover:text-[#0363A7]/80">
                   {t("auth:register.termsOfService")}
                 </a>{" "}
                 {t("auth:register.and")}{" "}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
+                <a href="#" className="text-[#0363A7] hover:text-[#0363A7]/80">
                   {t("auth:register.privacyPolicy")}
                 </a>
               </label>
@@ -519,7 +519,7 @@ function RegisterContent() {
             <button
               type="submit"
               disabled={loading || !!successMessage}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-[#0363A7] hover:bg-[#0363A7]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0363A7] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
             >
               {loading ? (
                 <div className="flex items-center">
@@ -562,7 +562,7 @@ export default function RegisterPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />
+        <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10" />
       }
     >
       <RegisterContent />

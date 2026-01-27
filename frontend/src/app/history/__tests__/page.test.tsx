@@ -653,16 +653,16 @@ describe("UnifiedHistoryPage", () => {
 
       await waitFor(() => {
         const allFilter = screen.getByText("All (2)");
-        expect(allFilter).toHaveClass("bg-blue-600", "text-white");
+        expect(allFilter).toHaveClass("bg-[#0363A7]", "text-white");
       });
 
       const assessmentFilter = screen.getByText("Assessment (1)");
       await user.click(assessmentFilter);
 
       await waitFor(() => {
-        expect(assessmentFilter).toHaveClass("bg-blue-600", "text-white");
+        expect(assessmentFilter).toHaveClass("bg-[#0363A7]", "text-white");
         expect(screen.getByText("All (2)")).not.toHaveClass(
-          "bg-blue-600",
+          "bg-[#0363A7]",
           "text-white",
         );
       });
@@ -1591,7 +1591,7 @@ describe("UnifiedHistoryPage", () => {
         const startNewPBL = screen.getByText("Start New PBL");
         const startNewDiscovery = screen.getByText("Start New Discovery");
 
-        expect(takeNewAssessment).toHaveClass("bg-indigo-600", "text-white");
+        expect(takeNewAssessment).toHaveClass("bg-[#0363A7]", "text-white");
         expect(startNewPBL).toHaveClass("bg-purple-600", "text-white");
         expect(startNewDiscovery).toHaveClass("bg-emerald-600", "text-white");
       });

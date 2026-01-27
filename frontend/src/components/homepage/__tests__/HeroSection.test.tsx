@@ -43,7 +43,7 @@ describe("HeroSection", () => {
   it("should render journey link to PBL", () => {
     render(<HeroSection />);
 
-    const journeyLink = screen.getByText("開始你的旅程").closest("a");
+    const journeyLink = screen.getByText("hero.cta.getStarted").closest("a");
     expect(journeyLink).toHaveAttribute("href", "/pbl");
   });
 
@@ -67,9 +67,9 @@ describe("HeroSection", () => {
 
     const section = document.querySelector("section");
     expect(section?.className).toContain("bg-gradient-to-br");
-    expect(section?.className).toContain("from-blue-50");
-    expect(section?.className).toContain("via-indigo-50");
-    expect(section?.className).toContain("to-purple-50");
+    expect(section?.className).toContain("from-[#0363A7]/5");
+    expect(section?.className).toContain("via-[#0363A7]/10");
+    expect(section?.className).toContain("to-[#0363A7]/15");
   });
 
   it("should render visual representation icons", () => {
@@ -91,9 +91,19 @@ describe("HeroSection", () => {
   it("should apply hover effects to links", () => {
     render(<HeroSection />);
 
-    const journeyLink = screen.getByText("開始你的旅程").closest("a");
-    expect(journeyLink).toHaveClass("hover:from-blue-700");
+    const journeyLink = screen.getByText("hero.cta.getStarted").closest("a");
+    expect(journeyLink).toHaveClass("hover:bg-[#0363A7]/90");
     expect(journeyLink).toHaveClass("transform");
     expect(journeyLink).toHaveClass("hover:scale-105");
+  });
+
+  it("should render domain names with emojis", () => {
+    render(<HeroSection />);
+
+    // Verify all four domain names are displayed
+    expect(screen.getByText("domains.items.engaging.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.creating.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.managing.name")).toBeInTheDocument();
+    expect(screen.getByText("domains.items.designing.name")).toBeInTheDocument();
   });
 });

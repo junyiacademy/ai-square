@@ -196,7 +196,7 @@ export default function ProfilePage() {
   if (authLoading || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0363A7]"></div>
       </div>
     );
   }
@@ -206,7 +206,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-[#0363A7]/20 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                       type="button"
                       onClick={handleResendVerification}
                       disabled={isResending}
-                      className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-sm text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isResending
                         ? t("profile.resending")
@@ -273,7 +273,7 @@ export default function ProfilePage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] dark:bg-gray-700 dark:text-white"
                   required
                 />
               </div>
@@ -289,7 +289,7 @@ export default function ProfilePage() {
                   id="language"
                   value={preferredLanguage}
                   onChange={(e) => setPreferredLanguage(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] dark:bg-gray-700 dark:text-white"
                 >
                   {supportedLanguages.map((lang) => (
                     <option key={lang.code} value={lang.code}>
@@ -320,7 +320,7 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => setShowPasswordSection(!showPasswordSection)}
-                  className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                  className="text-sm text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7]"
                 >
                   {showPasswordSection
                     ? t("profile.cancel")
@@ -342,7 +342,7 @@ export default function ProfilePage() {
                       type="password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] dark:bg-gray-700 dark:text-white"
                     />
                   </div>
 
@@ -358,7 +358,7 @@ export default function ProfilePage() {
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] dark:bg-gray-700 dark:text-white"
                       minLength={8}
                     />
                   </div>
@@ -375,7 +375,7 @@ export default function ProfilePage() {
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#0363A7] focus:border-[#0363A7] dark:bg-gray-700 dark:text-white"
                       minLength={8}
                     />
                   </div>
@@ -396,7 +396,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-2 bg-[#0363A7] text-white rounded-full shadow-md hover:shadow-lg hover:bg-[#0363A7]/90 focus:ring-2 focus:ring-[#0363A7] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {isSaving ? t("profile.saving") : t("profile.saveChanges")}
               </button>

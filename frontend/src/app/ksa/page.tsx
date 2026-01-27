@@ -139,7 +139,7 @@ export default function KSADisplayPage() {
             placeholder={t("searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 pl-12 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-4 py-3 pl-12 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0363A7] focus:border-transparent"
           />
           <svg
             className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -202,10 +202,10 @@ export default function KSADisplayPage() {
           <button
             key={section.key}
             onClick={() => setActiveSection(section.key)}
-            className={`px-4 py-3 sm:px-6 rounded-lg font-semibold transition-all duration-200 text-center ${
+            className={`px-4 py-3 sm:px-6 rounded-full font-semibold transition-all duration-200 text-center ${
               activeSection === section.key
-                ? "bg-indigo-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-indigo-50 shadow-md"
+                ? "bg-[#0363A7] text-white shadow-lg"
+                : "bg-white text-gray-700 hover:bg-[#0363A7]/5 shadow-md"
             }`}
           >
             <span className="hidden sm:inline">{section.label}</span>
@@ -280,11 +280,11 @@ export default function KSADisplayPage() {
             ([themeKey, theme]) => (
               <div key={themeKey} className="mb-6">
                 <div
-                  className="cursor-pointer bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow flex items-center justify-between"
+                  className="cursor-pointer bg-gradient-to-r from-[#0363A7]/10 to-[#0363A7]/15 px-6 py-4 rounded-lg shadow flex items-center justify-between"
                   onClick={() => toggleTheme(themeKey)}
                 >
                   <div className="flex items-center">
-                    <h3 className="text-lg sm:text-xl font-bold text-blue-800 mr-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#0363A7] mr-2">
                       {t(`themes.${themeKey}`, {
                         defaultValue: formatThemeName(themeKey),
                       })}
@@ -304,7 +304,7 @@ export default function KSADisplayPage() {
                         className="p-3 sm:p-4 border-b last:border-b-0"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 mb-3">
-                          <span className="px-2 py-1 text-xs font-mono bg-indigo-100 text-indigo-800 rounded self-start">
+                          <span className="px-2 py-1 text-xs font-mono bg-[#0363A7]/10 text-[#0363A7] rounded self-start">
                             {codeKey}
                           </span>
                         </div>
@@ -321,7 +321,7 @@ export default function KSADisplayPage() {
                                 (question: string, idx: number) => (
                                   <div
                                     key={idx}
-                                    className="text-xs text-gray-600 pl-3 border-l-2 border-indigo-200 bg-white p-2 rounded-r"
+                                    className="text-xs text-gray-600 pl-3 border-l-2 border-[#0363A7]/20 bg-white p-2 rounded-r"
                                   >
                                     {question}
                                   </div>

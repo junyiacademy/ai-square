@@ -51,7 +51,7 @@ describe("LoadingSpinner", () => {
     expect(spinner).toHaveClass(
       "rounded-full",
       "border-b-2",
-      "border-blue-600",
+      "border-[#0363A7]",
     );
   });
 });

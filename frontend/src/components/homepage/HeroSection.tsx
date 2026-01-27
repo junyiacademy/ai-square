@@ -8,11 +8,11 @@ export default function HeroSection() {
   const { t } = useTranslation("homepage");
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-24 pb-20">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#0363A7]/5 via-[#0363A7]/10 to-[#0363A7]/15 pt-24 pb-20">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-300 rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-300 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#0363A7] rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#EC6C1F] rounded-full opacity-20 blur-3xl"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,9 +36,9 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/pbl"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-[#0363A7] rounded-full hover:bg-[#0363A7]/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              開始你的旅程
+              {t("hero.cta.getStarted")}
               <svg
                 className="ml-2 w-5 h-5"
                 fill="none"
@@ -80,13 +80,21 @@ export default function HeroSection() {
         <div className="mt-16 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent z-10"></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {["🎯", "🎨", "🎮", "🏗️"].map((emoji, index) => (
+            {[
+              { emoji: "🎯", key: "engaging" },
+              { emoji: "🎨", key: "creating" },
+              { emoji: "🎮", key: "managing" },
+              { emoji: "🏗️", key: "designing" },
+            ].map((item, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200"
               >
-                <div className="text-4xl mb-2">{emoji}</div>
-                <div className="h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
+                <div className="text-4xl mb-2">{item.emoji}</div>
+                <p className="text-sm font-medium text-gray-700 mt-2">
+                  {t(`domains.items.${item.key}.name`)}
+                </p>
+                <div className="h-2 bg-gradient-to-r from-[#0363A7] to-[#0363A7]/60 rounded-full mt-2"></div>
               </div>
             ))}
           </div>

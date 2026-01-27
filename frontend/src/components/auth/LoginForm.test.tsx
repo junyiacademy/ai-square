@@ -378,9 +378,9 @@ describe("LoginForm 組件測試", () => {
       // 檢查按鈕樣式
       expect(submitButton).toHaveClass(
         "w-full",
-        "bg-blue-600",
+        "bg-[#0363A7]",
         "text-white",
-        "rounded-lg",
+        "rounded-full",
       );
     });
 

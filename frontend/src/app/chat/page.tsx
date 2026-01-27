@@ -184,7 +184,7 @@ function ChatPageContent() {
           </Panel>
 
           {/* Left Resize Handle */}
-          <PanelResizeHandle className="w-1.5 bg-gray-100 hover:bg-blue-400 transition-colors duration-200 relative group">
+          <PanelResizeHandle className="w-1.5 bg-gray-100 hover:bg-[#0363A7] transition-colors duration-200 relative group">
             <button
               onClick={toggleLeftPanel}
               className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10 bg-white rounded-full shadow-md border border-gray-200 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -224,7 +224,7 @@ function ChatPageContent() {
           </Panel>
 
           {/* Right Resize Handle */}
-          <PanelResizeHandle className="w-1.5 bg-gray-100 hover:bg-blue-400 transition-colors duration-200 relative group">
+          <PanelResizeHandle className="w-1.5 bg-gray-100 hover:bg-[#0363A7] transition-colors duration-200 relative group">
             <button
               onClick={toggleRightPanel}
               className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10 bg-white rounded-full shadow-md border border-gray-200 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -283,7 +283,7 @@ function MobileTabBar({ activeTab, onTabChange }: MobileTabBarProps) {
           onClick={() => onTabChange(tab.id)}
           className={`flex-1 py-3 text-sm font-medium transition-colors ${
             activeTab === tab.id
-              ? "text-blue-600 border-b-2 border-blue-600"
+              ? "text-[#0363A7] border-b-2 border-[#0363A7]"
               : "text-gray-500"
           }`}
         >
@@ -300,7 +300,7 @@ export default function ChatPage() {
     <Suspense
       fallback={
         <div className="h-screen flex items-center justify-center">
-          <Brain className="w-12 h-12 text-blue-500 animate-pulse" />
+          <Brain className="w-12 h-12 text-[#0363A7] animate-pulse" />
         </div>
       }
     >

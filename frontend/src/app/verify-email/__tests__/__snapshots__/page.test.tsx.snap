@@ -2,7 +2,7 @@
 
 exports[`page should match snapshot 1`] = `
 <div
-  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8"
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8"
 >
   <div
     class="max-w-md w-full space-y-8 text-center"
@@ -70,7 +70,7 @@ exports[`page should match snapshot 1`] = `
           class="mt-6 space-y-2"
         >
           <a
-            class="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+            class="inline-block text-sm font-medium text-[#0363A7] hover:text-[#0363A7]/80"
             href="/register"
           >
             auth:verifyEmail.tryAgain
@@ -81,7 +81,7 @@ exports[`page should match snapshot 1`] = `
             |
           </span>
           <a
-            class="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+            class="inline-block text-sm font-medium text-[#0363A7] hover:text-[#0363A7]/80"
             href="/contact"
           >
             auth:verifyEmail.contactSupport

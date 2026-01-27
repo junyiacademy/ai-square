@@ -213,7 +213,7 @@ describe("KSA Display Page", () => {
 
       // Check if knowledge button is active (has indigo background)
       if (knowledgeButton && "className" in knowledgeButton) {
-        expect(knowledgeButton.className).toContain("bg-indigo-600");
+        expect(knowledgeButton.className).toContain("bg-[#0363A7]");
       }
       // Check if skills button is not active (has white background)
       if (skillsButton && "className" in skillsButton) {

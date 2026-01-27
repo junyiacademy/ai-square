@@ -8,7 +8,7 @@ export default function CTASection() {
   const { t } = useTranslation("homepage");
 
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
+    <section className="py-20 bg-gradient-to-r from-[#0363A7] to-[#0363A7]/90">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -20,7 +20,7 @@ export default function CTASection() {
           <div className="flex justify-center">
             <Link
               href="/discovery"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-purple-600 rounded-lg hover:bg-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg border-2 border-purple-500"
+              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-[#EC6C1F] rounded-full hover:bg-[#EC6C1F]/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl border-2 border-[#EC6C1F]/50"
             >
               🚀 探索世界
               <svg

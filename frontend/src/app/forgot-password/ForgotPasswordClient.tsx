@@ -54,7 +54,7 @@ export default function ForgotPasswordClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0363A7]/5 to-[#0363A7]/10 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
@@ -95,7 +95,7 @@ export default function ForgotPasswordClient() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
+              className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-[#0363A7] focus:border-[#0363A7] focus:z-10 sm:text-sm dark:bg-gray-700"
               placeholder={t("emailPlaceholder")}
             />
           </div>
@@ -104,7 +104,7 @@ export default function ForgotPasswordClient() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-[#0363A7] hover:bg-[#0363A7]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0363A7] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200"
             >
               {isLoading ? t("sending") : t("forgotPassword.sendResetLink")}
             </button>
@@ -113,7 +113,7 @@ export default function ForgotPasswordClient() {
           <div className="text-center">
             <Link
               href="/login"
-              className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+              className="text-sm text-[#0363A7] hover:text-[#0363A7]/80 dark:text-[#0363A7]"
             >
               {t("forgotPassword.backToLogin")}
             </Link>

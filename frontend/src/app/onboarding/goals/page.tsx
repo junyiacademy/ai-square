@@ -73,7 +73,7 @@ export default function OnboardingGoalsPage() {
 
   const categoryColors = {
     foundation:
-      "bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700",
+      "bg-[#0363A7]/10 dark:bg-[#0363A7]/30 border-[#0363A7]/30 dark:border-[#0363A7]/70",
     creative:
       "bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700",
     analytical:
@@ -344,7 +344,7 @@ export default function OnboardingGoalsPage() {
   // };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#0363A7]/5 via-white to-[#0363A7]/10 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Progress indicator */}
         <div className="mb-8">
@@ -368,7 +368,7 @@ export default function OnboardingGoalsPage() {
             </div>
             <div className="w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+              <div className="w-8 h-8 bg-[#0363A7] rounded-full flex items-center justify-center text-white text-sm font-medium">
                 3
               </div>
               <span className="ml-2 text-sm font-medium text-gray-900">
@@ -398,14 +398,14 @@ export default function OnboardingGoalsPage() {
                 onClick={() => handleGoalToggle(goal.id)}
                 className={`relative cursor-pointer rounded-xl p-6 border-2 transition-all transform hover:scale-105 ${
                   isSelected
-                    ? "ring-2 ring-blue-500 shadow-lg"
+                    ? "ring-2 ring-[#0363A7] shadow-lg"
                     : "hover:shadow-md"
                 } ${categoryColors[goal.category as keyof typeof categoryColors]}`}
               >
                 {/* Selection Indicator */}
                 {isSelected && (
                   <div className="absolute top-4 right-4">
-                    <div className="bg-blue-600 rounded-full p-1">
+                    <div className="bg-[#0363A7] rounded-full p-1">
                       <svg
                         className="h-4 w-4 text-white"
                         fill="currentColor"
@@ -465,7 +465,7 @@ export default function OnboardingGoalsPage() {
                 return goal ? (
                   <span
                     key={goalId}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#0363A7]/10 dark:bg-[#0363A7]/30 text-[#0363A7] dark:text-[#0363A7]/80"
                   >
                     <span className="mr-2">{goal.icon}</span>
                     {goal.title}
@@ -488,10 +488,10 @@ export default function OnboardingGoalsPage() {
           <button
             onClick={handleSubmit}
             disabled={loading || selectedGoals.length === 0}
-            className={`px-8 py-3 rounded-lg font-medium transition-all flex items-center ${
+            className={`px-8 py-3 rounded-full font-medium transition-all flex items-center ${
               selectedGoals.length === 0
                 ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
+                : "bg-[#0363A7] text-white hover:bg-[#0363A7]/90 shadow-md hover:shadow-lg"
             }`}
           >
             {loading ? (

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Contrast Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mode-toggle {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 2px solid #0363A7;
+            background: #0363A7;
+            color: white;
+            font-weight: 600;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            background: #0363A7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .card-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #222222;
+            margin-bottom: 16px;
+        }
+
+        .card-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #717171;
+        }
+
+        .section-title {
+            font-size: 40px;
+            font-weight: 700;
+            text-align: center;
+            color: #222222;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            text-align: center;
+            color: #717171;
+            margin-bottom: 64px;
+        }
+
+        /* Dark Mode Styles */
+        body.dark {
+            background: #0A0A0A;
+        }
+
+        body.dark .card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .card-title {
+            color: #FFFFFF; /* NEW: Changed from #FFFFFF to pure white */
+        }
+
+        body.dark .card-description {
+            color: rgba(255, 255, 255, 0.8); /* NEW: Changed from #A0A0A0 to white with 80% opacity */
+        }
+
+        body.dark .section-title {
+            color: #FFFFFF; /* NEW: Changed from #FFFFFF to pure white */
+        }
+
+        body.dark .section-subtitle {
+            color: rgba(255, 255, 255, 0.7); /* NEW: Changed from #A0A0A0 to white with 70% opacity */
+        }
+
+        body.dark button {
+            background: white;
+            color: #0363A7;
+            border-color: white;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .comparison-item {
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+        }
+
+        body.dark .comparison-item {
+            background: #1A1A1A;
+        }
+
+        .comparison-label {
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .old {
+            border: 3px solid #DC2626;
+        }
+
+        .new {
+            border: 3px solid #16A34A;
+        }
+
+        .old .comparison-label {
+            color: #DC2626;
+        }
+
+        .new .comparison-label {
+            color: #16A34A;
+        }
+
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.05);
+        }
+
+        body.dark .color-swatch {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        body.dark .swatch {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        .color-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .color-value {
+            font-size: 12px;
+            opacity: 0.7;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="mode-toggle">
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+
+        <h1 style="text-align: center; margin-bottom: 60px; font-size: 48px; color: #0363A7;">
+            Dark Mode Contrast Fix
+        </h1>
+
+        <div class="comparison">
+            <div class="comparison-item old">
+                <div class="comparison-label">❌ OLD (BROKEN)</div>
+                <div class="color-swatch">
+                    <div class="swatch" style="background: #A0A0A0;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Secondary (Old)</div>
+                        <div class="color-value">#A0A0A0</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch" style="background: rgba(26, 26, 26, 0.8);"></div>
+                    <div class="color-info">
+                        <div class="color-name">Card Background</div>
+                        <div class="color-value">rgba(26, 26, 26, 0.8)</div>
+                    </div>
+                </div>
+                <p style="margin-top: 16px; padding: 12px; background: rgba(26, 26, 26, 0.8); color: #A0A0A0; border-radius: 8px;">
+                    This text is hard to read! Dark gray on dark background = poor contrast.
+                </p>
+            </div>
+
+            <div class="comparison-item new">
+                <div class="comparison-label">✅ NEW (FIXED)</div>
+                <div class="color-swatch">
+                    <div class="swatch" style="background: rgba(255, 255, 255, 0.8);"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Secondary (New)</div>
+                        <div class="color-value">rgba(255, 255, 255, 0.8)</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="swatch" style="background: rgba(26, 26, 26, 0.8);"></div>
+                    <div class="color-info">
+                        <div class="color-name">Card Background</div>
+                        <div class="color-value">rgba(26, 26, 26, 0.8)</div>
+                    </div>
+                </div>
+                <p style="margin-top: 16px; padding: 12px; background: rgba(26, 26, 26, 0.8); color: rgba(255, 255, 255, 0.8); border-radius: 8px;">
+                    Much better! White text with 80% opacity provides excellent contrast and readability.
+                </p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Why AI Square?</h2>
+        <p class="section-subtitle">A unique learning platform that balances technical excellence with human-centered design.</p>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon" style="background: #EC6C1F;">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h3 class="card-title">Personal Growth</h3>
+                <p class="card-description">
+                    Develop AI literacy at your own pace with personalized learning paths tailored to your goals.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h3 class="card-title">Tech Professional</h3>
+                <p class="card-description">
+                    Master AI tools and techniques used by industry leaders. Build real-world projects and skills.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #0363A7 0%, #EC6C1F 100%);">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <h3 class="card-title">Future Ready</h3>
+                <p class="card-description">
+                    Stay ahead of AI trends and prepare for the evolving landscape of technology and society.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
