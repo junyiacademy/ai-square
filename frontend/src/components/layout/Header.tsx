@@ -55,8 +55,7 @@ export function Header() {
     {
       href: "/assessment/scenarios",
       label: t("assessment"),
-      disabled: true,
-      tooltip: t("comingSoon") || "即將發行",
+      disabled: false,
     },
     {
       href: "/dashboard",
