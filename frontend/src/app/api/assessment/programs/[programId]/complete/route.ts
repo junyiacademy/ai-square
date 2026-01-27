@@ -11,6 +11,7 @@ import {
   isAssessmentInteraction,
   fromIInteraction,
 } from "@/types/assessment-types";
+import { DomainScoreAggregationService } from "@/lib/services/assessment/domain-score-aggregation.service";
 
 export async function POST(
   request: NextRequest,
@@ -356,8 +357,12 @@ export async function POST(
     else if (overallScore >= 70) level = "advanced";
     else if (overallScore >= 50) level = "intermediate";
 
-    // Generate recommendations
-    const recommendations = generateRecommendations(domainScores, overallScore);
+    // Generate recommendations using service
+    const domainScoreService = new DomainScoreAggregationService();
+    const recommendations = domainScoreService.generateRecommendations(
+      domainScores,
+      overallScore,
+    );
 
     // KSA Analysis - track correct and incorrect KSA mappings
     const correctKSA = {
@@ -586,41 +591,4 @@ function generateOverallFeedback(score: number, level: string): string {
   } else {
     return `You've completed the assessment at ${level} level. This is a great starting point for your AI literacy journey.`;
   }
-}
-
-function generateRecommendations(
-  domainScores: Map<string, DomainScore>,
-  overallScore: number,
-): string[] {
-  const recommendations: string[] = [];
-
-  // Find weak domains
-  const weakDomains = Array.from(domainScores.entries())
-    .filter(([, ds]) => ds.score < 60)
-    .sort((a, b) => a[1].score - b[1].score);
-
-  if (weakDomains.length > 0) {
-    weakDomains.forEach(([domain]) => {
-      const domainName = domain.replace(/_/g, " ").toLowerCase();
-      recommendations.push(
-        `Focus on improving your ${domainName} skills through hands-on practice`,
-      );
-    });
-  }
-
-  // General recommendations based on score
-  if (overallScore < 60) {
-    recommendations.push("Review the fundamental concepts of AI literacy");
-    recommendations.push("Take introductory courses on AI basics");
-  } else if (overallScore < 80) {
-    recommendations.push("Practice with more advanced AI scenarios");
-    recommendations.push("Explore real-world AI applications in your field");
-  } else {
-    recommendations.push("Consider mentoring others in AI literacy");
-    recommendations.push(
-      "Stay updated with latest AI developments and best practices",
-    );
-  }
-
-  return recommendations.slice(0, 4); // Return top 4 recommendations
 }
