@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { OAuthButtons } from "@/components/auth/OAuthButtons";
+// import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { useAuth } from "@/contexts/AuthContext";
 
 function LoginContent() {
@@ -176,9 +176,10 @@ function LoginContent() {
               {info}
             </div>
           )}
-          <OAuthButtons redirectPath={redirectPath} />
+          {/* TODO: OAuth login not implemented yet */}
+          {/* <OAuthButtons redirectPath={redirectPath} /> */}
 
-          <div className="relative my-6">
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
             </div>
@@ -187,7 +188,7 @@ function LoginContent() {
                 {t("or", "或")}
               </span>
             </div>
-          </div>
+          </div> */}
           <LoginForm onSubmit={handleLogin} loading={loading} error={error} />
 
           {/* Divider */}

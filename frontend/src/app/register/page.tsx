@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import Image from "next/image";
-import { OAuthButtons } from "@/components/auth/OAuthButtons";
+// import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 function RegisterContent() {
   const searchParams = useSearchParams();
@@ -186,7 +186,8 @@ function RegisterContent() {
           </p>
         </div>
 
-        <div className="mt-8 space-y-6">
+        {/* TODO: OAuth login not implemented yet */}
+        {/* <div className="mt-8 space-y-6">
           <OAuthButtons redirectPath={redirectPath} />
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
@@ -198,8 +199,8 @@ function RegisterContent() {
               </span>
             </div>
           </div>
-        </div>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        </div> */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label
