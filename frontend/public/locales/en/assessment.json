@@ -60,7 +60,13 @@
       "managing_with_ai": "Focus on improving Managing AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration",
       "designing_with_ai": "Focus on improving Designing AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences",
       "managing_ai": "Focus on improving Managing AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration",
-      "designing_ai": "Focus on improving Designing AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences"
+      "designing_ai": "Focus on improving Designing AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences",
+      "reviewFundamentals": "Review the fundamental concepts of AI literacy",
+      "takeIntroCourses": "Take introductory courses on AI basics",
+      "practiceAdvancedScenarios": "Practice with more advanced AI scenarios",
+      "exploreRealWorldApplications": "Explore real-world AI applications in your field",
+      "considerMentoring": "Consider mentoring others in AI literacy",
+      "stayUpdated": "Stay updated with latest AI developments and best practices"
     },
     "nextSteps": "Recommended Next Steps",
     "nextStep1": "Focus on your lowest scoring domains",
@@ -87,8 +93,23 @@
       "title": "Competency Knowledge Graph",
       "description": "Interactive visualization of your AI literacy competencies showing detailed mastery levels",
       "yourProfile": "Your AI Literacy Profile",
-      "mastery": "Mastery",
-      "masteryLevel": "Mastery Level (0-100%)"
+      "masteryLevel": "Mastery Level (0-100%)",
+      "mastery": {
+        "label": "Mastery",
+        "allCorrect": "All Correct",
+        "partiallyCorrect": "Partially Correct",
+        "completelyWrong": "Completely Wrong"
+      },
+      "legend": {
+        "masteryLevels": "Completely Wrong / Partially Correct / All Correct",
+        "knowledge": "K (Knowledge)",
+        "skills": "S (Skills)",
+        "attitudes": "A (Attitudes)"
+      },
+      "instructions": {
+        "clickNode": "Tip: Click KSA code nodes to view related questions",
+        "pinchZoom": "Tip: Use pinch to zoom in for details"
+      }
     },
     "questionReview": {
       "title": "Question Review",

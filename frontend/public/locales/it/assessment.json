@@ -53,6 +53,13 @@
     "summaryText": "Hai raggiunto il livello {{level}} con un punteggio complessivo del {{score}}%, rispondendo correttamente a {{correct}} domande su {{total}}.",
     "domainBreakdown": "Analisi per Domini",
     "personalizedRecommendations": "Raccomandazioni Personalizzate",
+    "recommendations": {
+      "focusOn": "Concentrati sul miglioramento",
+      "engaging_with_ai": "Concentrati sul miglioramento dell'Interazione con l'IA: Comprendere i limiti dell'IA, le preoccupazioni sulla privacy e le considerazioni etiche nell'interazione con i sistemi IA",
+      "creating_with_ai": "Concentrati sul miglioramento della Creazione con l'IA: Apprendere tecniche di prompting, best practice per la generazione di contenuti e collaborazione creativa con strumenti IA",
+      "managing_with_ai": "Concentrati sul miglioramento della Gestione con l'IA: Sviluppare competenze per il processo decisionale assistito dall'IA, l'automazione del flusso di lavoro e la collaborazione in team",
+      "designing_with_ai": "Concentrati sul miglioramento della Progettazione con l'IA: Costruire curriculum di alfabetizzazione IA, creare materiali didattici e progettare esperienze potenziate dall'IA"
+    },
     "nextSteps": "Prossimi Passi Consigliati",
     "nextStep1": "Concentrati sui domini con punteggio più basso",
     "nextStep2": "Pratica con esercizi interattivi",
@@ -78,13 +85,6 @@
       "skillsAreas": "Aree di Abilità",
       "attitudesAreas": "Aree di Attitudini"
     },
-    "recommendations": {
-      "focusOn": "Concentrati sul miglioramento",
-      "engaging_with_ai": "Concentrati sul miglioramento dell'Interazione con l'IA: Comprendere i limiti dell'IA, le preoccupazioni sulla privacy e le considerazioni etiche nell'interazione con i sistemi IA",
-      "creating_with_ai": "Concentrati sul miglioramento della Creazione con l'IA: Apprendere tecniche di prompting, best practice per la generazione di contenuti e collaborazione creativa con strumenti IA",
-      "managing_with_ai": "Concentrati sul miglioramento della Gestione con l'IA: Sviluppare competenze per il processo decisionale assistito dall'IA, l'automazione del flusso di lavoro e la collaborazione in team",
-      "designing_with_ai": "Concentrati sul miglioramento della Progettazione con l'IA: Costruire curriculum di alfabetizzazione IA, creare materiali didattici e progettare esperienze potenziate dall'IA"
-    },
     "saveResults": "Salva risultati",
     "viewLearningPath": "Visualizza percorso di apprendimento",
     "saving": "Salvataggio...",
@@ -97,8 +97,23 @@
       "title": "Grafo delle competenze",
       "description": "Visualizzazione interattiva delle tue competenze di alfabetizzazione IA con livelli di padronanza dettagliati",
       "yourProfile": "Il tuo profilo di alfabetizzazione IA",
-      "mastery": "Padronanza",
-      "masteryLevel": "Livello di padronanza (0-100%)"
+      "masteryLevel": "Livello di padronanza (0-100%)",
+      "mastery": {
+        "label": "Padronanza",
+        "allCorrect": "Tutto Corretto",
+        "partiallyCorrect": "Parzialmente Corretto",
+        "completelyWrong": "Completamente Sbagliato"
+      },
+      "legend": {
+        "masteryLevels": "Completamente Sbagliato / Parzialmente Corretto / Tutto Corretto",
+        "knowledge": "K (Conoscenza)",
+        "skills": "S (Abilità)",
+        "attitudes": "A (Atteggiamenti)"
+      },
+      "instructions": {
+        "clickNode": "Suggerimento: Fare clic sui nodi del codice KSA per visualizzare le domande correlate",
+        "pinchZoom": "Suggerimento: Pizzica per ingrandire i dettagli"
+      }
     },
     "questionReview": {
       "title": "Revisione domande",

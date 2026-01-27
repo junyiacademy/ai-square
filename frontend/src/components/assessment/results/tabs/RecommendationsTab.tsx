@@ -33,7 +33,7 @@ export function RecommendationsTab({
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-yellow-800">{recommendation}</p>
+                <p className="text-sm text-yellow-800">{t(recommendation)}</p>
               </div>
             </div>
           </div>

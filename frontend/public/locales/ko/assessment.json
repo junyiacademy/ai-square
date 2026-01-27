@@ -53,6 +53,13 @@
     "summaryText": "{{level}} 수준을 달성했으며, 전체 점수 {{score}}%로 {{total}}문제 중 {{correct}}개를 맞췄습니다.",
     "domainBreakdown": "영역별 분석",
     "personalizedRecommendations": "개인 맞춤 권장사항",
+    "recommendations": {
+      "focusOn": "개선에 집중",
+      "engaging_with_ai": "AI와의 상호작용 개선에 집중: AI 시스템과 상호작용할 때 AI의 한계, 개인정보 보호 문제 및 윤리적 고려사항 이해",
+      "creating_with_ai": "AI로 창작하기 개선에 집중: 프롬프트 기법, 콘텐츠 생성 모범 사례 및 AI 도구와의 창의적 협업 학습",
+      "managing_with_ai": "AI로 관리하기 개선에 집중: AI 지원 의사결정, 워크플로 자동화 및 팀 협업을 위한 기술 개발",
+      "designing_with_ai": "AI로 설계하기 개선에 집중: AI 리터러시 커리큘럼 구축, 학습 자료 작성 및 AI 강화 경험 설계"
+    },
     "nextSteps": "다음 단계 권장사항",
     "nextStep1": "점수가 낮은 영역에 집중하기",
     "nextStep2": "인터랙티브 연습 문제로 실습하기",
@@ -78,13 +85,6 @@
       "skillsAreas": "기술 영역",
       "attitudesAreas": "태도 영역"
     },
-    "recommendations": {
-      "focusOn": "개선에 집중",
-      "engaging_with_ai": "AI와의 상호작용 개선에 집중: AI 시스템과 상호작용할 때 AI의 한계, 개인정보 보호 문제 및 윤리적 고려사항 이해",
-      "creating_with_ai": "AI로 창작하기 개선에 집중: 프롬프트 기법, 콘텐츠 생성 모범 사례 및 AI 도구와의 창의적 협업 학습",
-      "managing_with_ai": "AI로 관리하기 개선에 집중: AI 지원 의사결정, 워크플로 자동화 및 팀 협업을 위한 기술 개발",
-      "designing_with_ai": "AI로 설계하기 개선에 집중: AI 리터러시 커리큘럼 구축, 학습 자료 작성 및 AI 강화 경험 설계"
-    },
     "saveResults": "결과 저장",
     "viewLearningPath": "학습 경로 보기",
     "saving": "저장 중...",
@@ -97,8 +97,23 @@
       "title": "역량 지식 그래프",
       "description": "상세한 숙련도를 보여주는 AI 리터러시 역량의 대화형 시각화",
       "yourProfile": "당신의 AI 리터러시 프로필",
-      "mastery": "숙련도",
-      "masteryLevel": "숙련도 수준 (0-100%)"
+      "masteryLevel": "숙련도 수준 (0-100%)",
+      "mastery": {
+        "label": "숙련도",
+        "allCorrect": "모두 정답",
+        "partiallyCorrect": "부분 정답",
+        "completelyWrong": "모두 오답"
+      },
+      "legend": {
+        "masteryLevels": "모두 오답 / 부분 정답 / 모두 정답",
+        "knowledge": "K (지식)",
+        "skills": "S (기술)",
+        "attitudes": "A (태도)"
+      },
+      "instructions": {
+        "clickNode": "팁: KSA 코드 노드를 클릭하여 관련 질문 보기",
+        "pinchZoom": "팁: 핀치하여 세부 정보 확대"
+      }
     },
     "questionReview": {
       "title": "문제 검토",

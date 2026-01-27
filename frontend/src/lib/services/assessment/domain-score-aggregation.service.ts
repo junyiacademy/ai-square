@@ -207,6 +207,7 @@ export class DomainScoreAggregationService {
 
   /**
    * Generate recommendations based on performance
+   * Returns i18n translation keys for frontend to translate
    */
   generateRecommendations(
     domainScores: Map<string, DomainScore>,
@@ -221,25 +222,23 @@ export class DomainScoreAggregationService {
 
     if (weakDomains.length > 0) {
       weakDomains.forEach(([domain]) => {
-        const domainName = domain.replace(/_/g, " ").toLowerCase();
-        recommendations.push(
-          `Focus on improving your ${domainName} skills through hands-on practice`,
-        );
+        // Return i18n key instead of hardcoded English text
+        recommendations.push(`results.recommendations.${domain}`);
       });
     }
 
-    // General recommendations based on score
+    // General recommendations based on score - return i18n keys
     if (overallScore < 60) {
-      recommendations.push("Review the fundamental concepts of AI literacy");
-      recommendations.push("Take introductory courses on AI basics");
+      recommendations.push("results.recommendations.reviewFundamentals");
+      recommendations.push("results.recommendations.takeIntroCourses");
     } else if (overallScore < 80) {
-      recommendations.push("Practice with more advanced AI scenarios");
-      recommendations.push("Explore real-world AI applications in your field");
-    } else {
-      recommendations.push("Consider mentoring others in AI literacy");
+      recommendations.push("results.recommendations.practiceAdvancedScenarios");
       recommendations.push(
-        "Stay updated with latest AI developments and best practices",
+        "results.recommendations.exploreRealWorldApplications",
       );
+    } else {
+      recommendations.push("results.recommendations.considerMentoring");
+      recommendations.push("results.recommendations.stayUpdated");
     }
 
     return recommendations.slice(0, 4);

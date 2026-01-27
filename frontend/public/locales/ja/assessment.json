@@ -53,6 +53,13 @@
     "summaryText": "{{level}}レベルを達成し、全体スコア{{score}}%で、{{total}}問中{{correct}}問正解しました。",
     "domainBreakdown": "分野別内訳",
     "personalizedRecommendations": "パーソナライズされた推奨事項",
+    "recommendations": {
+      "focusOn": "改善に焦点を当てる",
+      "engaging_with_ai": "AIとの関わり方の改善に焦点を当てる：AIシステムと対話する際のAIの限界、プライバシーの懸念、倫理的考慮事項の理解",
+      "creating_with_ai": "AIでの創造の改善に焦点を当てる：プロンプト技術、コンテンツ生成のベストプラクティス、AIツールとの創造的な協力の学習",
+      "managing_with_ai": "AIでの管理の改善に焦点を当てる：AI支援による意思決定、ワークフロー自動化、チームコラボレーションのスキル開発",
+      "designing_with_ai": "AIでの設計の改善に焦点を当てる：AIリテラシーカリキュラムの構築、学習教材の作成、AI拡張体験の設計"
+    },
     "nextSteps": "推奨される次のステップ",
     "nextStep1": "スコアの低い分野に集中する",
     "nextStep2": "インタラクティブな演習で練習する",
@@ -78,13 +85,6 @@
       "skillsAreas": "スキル領域",
       "attitudesAreas": "態度領域"
     },
-    "recommendations": {
-      "focusOn": "改善に焦点を当てる",
-      "engaging_with_ai": "AIとの関わり方の改善に焦点を当てる：AIシステムと対話する際のAIの限界、プライバシーの懸念、倫理的考慮事項の理解",
-      "creating_with_ai": "AIでの創造の改善に焦点を当てる：プロンプト技術、コンテンツ生成のベストプラクティス、AIツールとの創造的な協力の学習",
-      "managing_with_ai": "AIでの管理の改善に焦点を当てる：AI支援による意思決定、ワークフロー自動化、チームコラボレーションのスキル開発",
-      "designing_with_ai": "AIでの設計の改善に焦点を当てる：AIリテラシーカリキュラムの構築、学習教材の作成、AI拡張体験の設計"
-    },
     "saveResults": "結果を保存",
     "viewLearningPath": "学習パスを表示",
     "saving": "保存中...",
@@ -97,8 +97,23 @@
       "title": "コンピテンシーナレッジグラフ",
       "description": "AIリテラシーコンピテンシーの詳細な習熟度を示すインタラクティブな可視化",
       "yourProfile": "あなたのAIリテラシープロファイル",
-      "mastery": "習熟度",
-      "masteryLevel": "習熟レベル (0-100%)"
+      "masteryLevel": "習熟レベル (0-100%)",
+      "mastery": {
+        "label": "習熟度",
+        "allCorrect": "全問正解",
+        "partiallyCorrect": "一部正解",
+        "completelyWrong": "全問不正解"
+      },
+      "legend": {
+        "masteryLevels": "全問不正解 / 一部正解 / 全問正解",
+        "knowledge": "K (知識)",
+        "skills": "S (スキル)",
+        "attitudes": "A (態度)"
+      },
+      "instructions": {
+        "clickNode": "ヒント：KSAコードノードをクリックすると関連する質問が表示されます",
+        "pinchZoom": "ヒント：ピンチして詳細を拡大表示"
+      }
     },
     "questionReview": {
       "title": "問題レビュー",

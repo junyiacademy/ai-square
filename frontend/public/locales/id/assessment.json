@@ -58,7 +58,13 @@
       "engaging_with_ai": "Fokus pada peningkatan Berinteraksi dengan AI: Memahami keterbatasan AI, masalah privasi, dan pertimbangan etis saat berinteraksi dengan sistem AI",
       "creating_with_ai": "Fokus pada peningkatan Berkreasi dengan AI: Mempelajari teknik prompting, praktik terbaik pembuatan konten, dan kolaborasi kreatif dengan alat AI",
       "managing_with_ai": "Fokus pada peningkatan Mengelola dengan AI: Mengembangkan keterampilan pengambilan keputusan berbantuan AI, otomasi alur kerja, dan kolaborasi tim",
-      "designing_with_ai": "Fokus pada peningkatan Merancang dengan AI: Membangun kurikulum literasi AI, membuat materi pembelajaran, dan merancang pengalaman yang ditingkatkan AI"
+      "designing_with_ai": "Fokus pada peningkatan Merancang dengan AI: Membangun kurikulum literasi AI, membuat materi pembelajaran, dan merancang pengalaman yang ditingkatkan AI",
+      "reviewFundamentals": "Tinjau konsep dasar literasi AI",
+      "takeIntroCourses": "Ikuti kursus pengantar tentang dasar-dasar AI",
+      "practiceAdvancedScenarios": "Latihan dengan skenario AI yang lebih canggih",
+      "exploreRealWorldApplications": "Jelajahi aplikasi AI dunia nyata di bidang Anda",
+      "considerMentoring": "Pertimbangkan untuk membimbing orang lain dalam literasi AI",
+      "stayUpdated": "Tetap terkini dengan perkembangan dan praktik terbaik AI terbaru"
     },
     "nextSteps": "Langkah Selanjutnya yang Direkomendasikan",
     "nextStep1": "Fokus pada domain dengan skor terendah",
@@ -85,8 +91,23 @@
       "title": "Grafik Pengetahuan Kompetensi",
       "description": "Visualisasi interaktif kompetensi literasi AI Anda yang menunjukkan tingkat penguasaan terperinci",
       "yourProfile": "Profil Literasi AI Anda",
-      "mastery": "Penguasaan",
-      "masteryLevel": "Tingkat Penguasaan (0-100%)"
+      "masteryLevel": "Tingkat Penguasaan (0-100%)",
+      "mastery": {
+        "label": "Penguasaan",
+        "allCorrect": "Semua Benar",
+        "partiallyCorrect": "Sebagian Benar",
+        "completelyWrong": "Sepenuhnya Salah"
+      },
+      "legend": {
+        "masteryLevels": "Sepenuhnya Salah / Sebagian Benar / Semua Benar",
+        "knowledge": "K (Pengetahuan)",
+        "skills": "S (Keterampilan)",
+        "attitudes": "A (Sikap)"
+      },
+      "instructions": {
+        "clickNode": "Tips: Klik node kode KSA untuk melihat pertanyaan terkait",
+        "pinchZoom": "Tips: Gunakan cubit untuk memperbesar detail"
+      }
     },
     "questionReview": {
       "title": "Tinjauan Pertanyaan",

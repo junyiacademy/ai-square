@@ -58,7 +58,13 @@
       "engaging_with_ai": "重点提升与AI互动：了解AI系统的局限性、隐私问题和伦理考虑",
       "creating_with_ai": "重点提升与AI创作：学习提示技巧、内容生成最佳实践和与AI工具的创意协作",
       "managing_with_ai": "重点提升与AI管理：发展AI辅助决策、工作流自动化和团队协作技能",
-      "designing_with_ai": "重点提升与AI设计：构建AI素养课程、创建学习材料和设计AI增强体验"
+      "designing_with_ai": "重点提升与AI设计：构建AI素养课程、创建学习材料和设计AI增强体验",
+      "reviewFundamentals": "复习AI素养的基本概念",
+      "takeIntroCourses": "参加AI基础入门课程",
+      "practiceAdvancedScenarios": "练习更高级的AI应用场景",
+      "exploreRealWorldApplications": "探索您领域中的实际AI应用",
+      "considerMentoring": "考虑指导他人学习AI素养",
+      "stayUpdated": "持续关注最新的AI发展和最佳实践"
     },
     "nextSteps": "建议的下一步",
     "nextStep1": "专注于您得分最低的领域",
@@ -85,8 +91,23 @@
       "title": "能力知识图谱",
       "description": "显示详细掌握程度的AI素养能力交互可视化",
       "yourProfile": "您的AI素养档案",
-      "mastery": "掌握程度",
-      "masteryLevel": "掌握程度 (0-100%)"
+      "masteryLevel": "掌握程度 (0-100%)",
+      "mastery": {
+        "label": "掌握程度",
+        "allCorrect": "全对",
+        "partiallyCorrect": "部分正确",
+        "completelyWrong": "完全错误"
+      },
+      "legend": {
+        "masteryLevels": "完全错误 / 部分正确 / 全对",
+        "knowledge": "K (知识)",
+        "skills": "S (技能)",
+        "attitudes": "A (态度)"
+      },
+      "instructions": {
+        "clickNode": "提示：点击 KSA 代码节点可查看相关题目",
+        "pinchZoom": "提示：使用双指缩放查看细节"
+      }
     },
     "questionReview": {
       "title": "问题回顾",

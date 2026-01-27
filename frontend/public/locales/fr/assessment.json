@@ -53,6 +53,13 @@
     "summaryText": "Vous avez atteint le niveau {{level}} avec un score global de {{score}}%, répondant correctement à {{correct}} questions sur {{total}}.",
     "domainBreakdown": "Répartition par Domaine",
     "personalizedRecommendations": "Recommandations Personnalisées",
+    "recommendations": {
+      "focusOn": "Se concentrer sur l'amélioration",
+      "engaging_with_ai": "Se concentrer sur l'amélioration de l'interaction avec l'IA : Comprendre les limites de l'IA, les préoccupations de confidentialité et les considérations éthiques lors de l'interaction avec les systèmes d'IA",
+      "creating_with_ai": "Se concentrer sur l'amélioration de la création avec l'IA : Apprendre les techniques de prompt, les meilleures pratiques de génération de contenu et la collaboration créative avec les outils d'IA",
+      "managing_with_ai": "Se concentrer sur l'amélioration de la gestion avec l'IA : Développer des compétences pour la prise de décision assistée par l'IA, l'automatisation des flux de travail et la collaboration en équipe",
+      "designing_with_ai": "Se concentrer sur l'amélioration de la conception avec l'IA : Construire un programme de compétences en IA, créer du matériel d'apprentissage et concevoir des expériences améliorées par l'IA"
+    },
     "nextSteps": "Prochaines Étapes Recommandées",
     "nextStep1": "Concentrez-vous sur vos domaines les moins performants",
     "nextStep2": "Pratiquez avec des exercices interactifs",
@@ -78,13 +85,6 @@
       "skillsAreas": "Domaines de Compétences",
       "attitudesAreas": "Domaines d'Attitudes"
     },
-    "recommendations": {
-      "focusOn": "Se concentrer sur l'amélioration",
-      "engaging_with_ai": "Se concentrer sur l'amélioration de l'interaction avec l'IA : Comprendre les limites de l'IA, les préoccupations de confidentialité et les considérations éthiques lors de l'interaction avec les systèmes d'IA",
-      "creating_with_ai": "Se concentrer sur l'amélioration de la création avec l'IA : Apprendre les techniques de prompt, les meilleures pratiques de génération de contenu et la collaboration créative avec les outils d'IA",
-      "managing_with_ai": "Se concentrer sur l'amélioration de la gestion avec l'IA : Développer des compétences pour la prise de décision assistée par l'IA, l'automatisation des flux de travail et la collaboration en équipe",
-      "designing_with_ai": "Se concentrer sur l'amélioration de la conception avec l'IA : Construire un programme de compétences en IA, créer du matériel d'apprentissage et concevoir des expériences améliorées par l'IA"
-    },
     "saveResults": "Enregistrer les résultats",
     "viewLearningPath": "Voir le parcours d'apprentissage",
     "saving": "Enregistrement...",
@@ -97,8 +97,23 @@
       "title": "Graphe de compétences",
       "description": "Visualisation interactive de vos compétences en IA avec des niveaux de maîtrise détaillés",
       "yourProfile": "Votre profil de compétences IA",
-      "mastery": "Maîtrise",
-      "masteryLevel": "Niveau de maîtrise (0-100%)"
+      "masteryLevel": "Niveau de maîtrise (0-100%)",
+      "mastery": {
+        "label": "Maîtrise",
+        "allCorrect": "Tout Correct",
+        "partiallyCorrect": "Partiellement Correct",
+        "completelyWrong": "Complètement Incorrect"
+      },
+      "legend": {
+        "masteryLevels": "Complètement Incorrect / Partiellement Correct / Tout Correct",
+        "knowledge": "K (Connaissances)",
+        "skills": "S (Compétences)",
+        "attitudes": "A (Attitudes)"
+      },
+      "instructions": {
+        "clickNode": "Astuce : Cliquez sur les nœuds de code KSA pour voir les questions associées",
+        "pinchZoom": "Astuce : Pincez pour zoomer sur les détails"
+      }
     },
     "questionReview": {
       "title": "Révision des questions",

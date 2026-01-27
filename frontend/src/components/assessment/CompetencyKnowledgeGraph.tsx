@@ -799,10 +799,10 @@ export default function CompetencyKnowledgeGraph({
         if ((d.type === "ksa-code" || d.type === "ksa-subcode") && d.details) {
           const status =
             d.mastery === 2
-              ? "✅ 全對"
+              ? `✅ ${t("results.knowledgeGraph.mastery.allCorrect")}`
               : d.mastery === 1
-                ? "⚠️ 部分正確"
-                : "❌ 完全錯誤";
+                ? `⚠️ ${t("results.knowledgeGraph.mastery.partiallyCorrect")}`
+                : `❌ ${t("results.knowledgeGraph.mastery.completelyWrong")}`;
           content += `${status}<br/>`;
           content += `答對: ${d.details.correct}/${d.details.total} 題<br/>`;
           if (d.details.summary) {
@@ -952,27 +952,27 @@ export default function CompetencyKnowledgeGraph({
                 <div className="w-4 h-4 rounded-full bg-green-500"></div>
               </div>
               <span className="text-xs sm:text-sm text-gray-600">
-                完全錯誤 / 部分正確 / 全對
+                {t("results.knowledgeGraph.legend.masteryLevels")}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-              <span className="text-xs sm:text-sm text-gray-600">K (知識)</span>
+              <span className="text-xs sm:text-sm text-gray-600">{t("results.knowledgeGraph.legend.knowledge")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded-full bg-green-500"></div>
-              <span className="text-xs sm:text-sm text-gray-600">S (技能)</span>
+              <span className="text-xs sm:text-sm text-gray-600">{t("results.knowledgeGraph.legend.skills")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded-full bg-purple-500"></div>
-              <span className="text-xs sm:text-sm text-gray-600">A (態度)</span>
+              <span className="text-xs sm:text-sm text-gray-600">{t("results.knowledgeGraph.legend.attitudes")}</span>
             </div>
           </div>
 
           {/* Instructions */}
           <div className="mt-2 text-xs text-gray-500">
-            <p className="sm:hidden">提示：使用雙指縮放查看細節</p>
-            <p>提示：點擊 KSA 代碼節點可查看相關題目</p>
+            <p className="sm:hidden">{t("results.knowledgeGraph.instructions.pinchZoom")}</p>
+            <p>{t("results.knowledgeGraph.instructions.clickNode")}</p>
           </div>
         </div>
 
@@ -1000,15 +1000,15 @@ export default function CompetencyKnowledgeGraph({
                 <div className="mb-3">
                   <div className="flex items-center gap-2 mb-2">
                     {selectedNode.mastery === 2 && (
-                      <span className="text-green-600 text-lg">✅ 全對</span>
+                      <span className="text-green-600 text-lg">✅ {t("results.knowledgeGraph.mastery.allCorrect")}</span>
                     )}
                     {selectedNode.mastery === 1 && (
                       <span className="text-yellow-600 text-lg">
-                        ⚠️ 部分正確
+                        ⚠️ {t("results.knowledgeGraph.mastery.partiallyCorrect")}
                       </span>
                     )}
                     {selectedNode.mastery === 0 && (
-                      <span className="text-red-600 text-lg">❌ 完全錯誤</span>
+                      <span className="text-red-600 text-lg">❌ {t("results.knowledgeGraph.mastery.completelyWrong")}</span>
                     )}
                   </div>
                   <div className="text-sm text-gray-600">
