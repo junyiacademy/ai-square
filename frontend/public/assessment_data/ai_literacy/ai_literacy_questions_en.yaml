@@ -29,11 +29,11 @@ tasks:
         domain: engaging_with_ai
         difficulty: basic
         type: multiple_choice
-        correct_answer: b
+        correct_answer: a
         question: What is the most effective way to get better results from an AI chatbot?
         options:
-          a: Ask very general questions
-          b: Provide clear, specific prompts with context
+          a: Provide clear, specific prompts with context
+          b: Ask very general questions
           c: Use only yes/no questions
           d: Always ask multiple questions at once
         explanation: Clear, specific prompts with context help AI understand exactly what you need and provide more accurate, useful responses.
@@ -49,12 +49,12 @@ tasks:
         domain: engaging_with_ai
         difficulty: intermediate
         type: multiple_choice
-        correct_answer: b
+        correct_answer: c
         question: When an AI gives you an incorrect answer, what should be your first response?
         options:
           a: Immediately trust the AI and use the information
-          b: Verify the information through other reliable sources
-          c: Stop using AI altogether
+          b: Stop using AI altogether
+          c: Verify the information through other reliable sources
           d: Report the AI as broken
         explanation: Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide outdated information.
         ksa_mapping:
@@ -97,13 +97,13 @@ tasks:
         domain: creating_with_ai
         difficulty: basic
         type: multiple_choice
-        correct_answer: b
+        correct_answer: d
         question: Which approach is most effective when using AI for creative writing?
         options:
           a: Let AI write everything without human input
-          b: Use AI as a collaborative partner for brainstorming and refinement
-          c: Only use AI to fix grammar and spelling
-          d: Avoid AI completely in creative processes
+          b: Only use AI to fix grammar and spelling
+          c: Avoid AI completely in creative processes
+          d: Use AI as a collaborative partner for brainstorming and refinement
         explanation: AI works best as a creative partner, helping with ideation, feedback, and refinement while maintaining human creativity and oversight.
         ksa_mapping:
           knowledge:
@@ -118,12 +118,12 @@ tasks:
         domain: creating_with_ai
         difficulty: intermediate
         type: multiple_choice
-        correct_answer: b
+        correct_answer: c
         question: When using AI image generators, what is the most important ethical consideration?
         options:
           a: Making images as realistic as possible
-          b: Respecting copyright and avoiding deepfakes of real people
-          c: Using the fastest generation settings
+          b: Using the fastest generation settings
+          c: Respecting copyright and avoiding deepfakes of real people
           d: Creating as many images as possible
         explanation: Respecting intellectual property rights and avoiding misuse for creating unauthorized likenesses or misleading content is crucial for ethical AI use.
         ksa_mapping:
@@ -138,11 +138,11 @@ tasks:
         domain: creating_with_ai
         difficulty: advanced
         type: multiple_choice
-        correct_answer: b
+        correct_answer: a
         question: How should you approach AI-assisted code generation for a critical software project?
         options:
-          a: Use AI code directly without review
-          b: Thoroughly review, test, and validate all AI-generated code
+          a: Thoroughly review, test, and validate all AI-generated code
+          b: Use AI code directly without review
           c: Only use AI for comments and documentation
           d: Replace all developers with AI tools
         explanation: Critical software requires human oversight, thorough testing, and validation of AI-generated code to ensure security, reliability, and correctness.
@@ -166,13 +166,13 @@ tasks:
         domain: managing_with_ai
         difficulty: basic
         type: multiple_choice
-        correct_answer: b
+        correct_answer: d
         question: What should you do with sensitive personal information when using AI tools?
         options:
           a: Share it freely to get better AI responses
-          b: Never input sensitive information into AI systems
-          c: Only share it with trusted AI companies
-          d: Encrypt it before sharing with AI
+          b: Only share it with trusted AI companies
+          c: Encrypt it before sharing with AI
+          d: Never input sensitive information into AI systems
         explanation: Sensitive personal information should never be inputted into AI systems as it may be stored, processed, or potentially exposed.
         ksa_mapping:
           knowledge:
@@ -207,12 +207,12 @@ tasks:
         domain: managing_with_ai
         difficulty: advanced
         type: multiple_choice
-        correct_answer: b
+        correct_answer: c
         question: What is the most critical factor when implementing AI in business processes?
         options:
           a: Choosing the most advanced AI technology
-          b: Understanding limitations and maintaining human oversight
-          c: Implementing AI as quickly as possible
+          b: Implementing AI as quickly as possible
+          c: Understanding limitations and maintaining human oversight
           d: Replacing as many human workers as possible
         explanation: Understanding AI limitations and maintaining appropriate human oversight ensures successful, responsible, and sustainable AI implementation in business.
         ksa_mapping:
@@ -235,11 +235,11 @@ tasks:
         domain: designing_with_ai
         difficulty: basic
         type: multiple_choice
-        correct_answer: b
+        correct_answer: a
         question: When designing an AI-powered feature for users, what should be the primary focus?
         options:
-          a: Showcasing the most advanced AI capabilities
-          b: Solving real user problems and improving user experience
+          a: Solving real user problems and improving user experience
+          b: Showcasing the most advanced AI capabilities
           c: Making the AI as complex as possible
           d: Hiding the fact that AI is being used
         explanation: User-centered design focuses on solving real problems and improving experiences, not on displaying technology for its own sake.
@@ -277,13 +277,13 @@ tasks:
         domain: designing_with_ai
         difficulty: advanced
         type: multiple_choice
-        correct_answer: b
+        correct_answer: d
         question: What is the most important consideration when designing AI systems for diverse global audiences?
         options:
           a: Using the same design for everyone to ensure consistency
-          b: Understanding cultural contexts and avoiding algorithmic bias
-          c: Focusing only on the largest market segments
-          d: Implementing the latest AI technologies everywhere
+          b: Focusing only on the largest market segments
+          c: Implementing the latest AI technologies everywhere
+          d: Understanding cultural contexts and avoiding algorithmic bias
         explanation: Inclusive AI design requires understanding diverse cultural contexts and actively working to prevent algorithmic bias that could harm different groups.
         ksa_mapping:
           knowledge:
