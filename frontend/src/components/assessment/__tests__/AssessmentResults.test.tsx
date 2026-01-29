@@ -147,6 +147,12 @@ const mockT = jest.fn(
       "domains.creating_with_ai": "Creating with AI",
       "domains.managing_with_ai": "Managing AI",
       "domains.designing_with_ai": "Designing AI",
+      "results.recommendations.creating_with_ai": "重點加強與 AI 共創（用AI）：學習提示技巧、內容生成最佳實踐，以及與 AI 工具的創意協作",
+      "results.recommendations.practiceAdvancedScenarios": "練習更進階的 AI 應用場景",
+      "results.recommendations.engaging_with_ai": "重點加強與 AI 互動（問AI）：了解 AI 的限制、隱私議題，以及與 AI 系統互動時的倫理考量",
+      "results.recommendations.designing_with_ai": "重點加強設計 AI（造AI）：建立 AI 素養課程、創建學習材料，以及設計 AI 增強體驗",
+      "results.recommendations.managing_with_ai": "重點加強管理 AI（管AI）：發展 AI 輔助決策、工作流程自動化，以及團隊協作的技能",
+      "results.recommendations.reviewFundamentals": "複習 AI 素養的基本概念",
     };
 
     if (key === "results.summaryText") {
@@ -175,8 +181,8 @@ const mockResult: AssessmentResult = {
   completedAt: new Date("2025-06-25T12:00:00Z"),
   level: "expert",
   recommendations: [
-    "Focus on improving Creating with AI: Using AI tools to enhance creativity and productivity",
-    "Focus on improving Managing AI: Understanding AI limitations, privacy, and ethical considerations",
+    "results.recommendations.creating_with_ai",
+    "results.recommendations.practiceAdvancedScenarios",
   ],
 };
 
@@ -314,11 +320,12 @@ describe("AssessmentResults", () => {
     // Switch to recommendations tab
     fireEvent.click(screen.getByText("Recommendations"));
 
+    // Verify that recommendations are translated using t() function
     expect(
-      screen.getByText(/Focus on improving Creating with AI/),
+      screen.getByText(/重點加強與 AI 共創（用AI）/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Focus on improving Managing AI/),
+      screen.getByText(/練習更進階的 AI 應用場景/),
     ).toBeInTheDocument();
     expect(screen.getByText("Next Steps")).toBeInTheDocument();
     expect(screen.getByText("• Take advanced AI courses")).toBeInTheDocument();

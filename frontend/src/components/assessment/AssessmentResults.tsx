@@ -441,7 +441,7 @@ export default function AssessmentResults({
                         </div>
                         <div className="ml-3">
                           <p className="text-sm text-yellow-800">
-                            {recommendation}
+                            {t(recommendation)}
                           </p>
                         </div>
                       </div>
