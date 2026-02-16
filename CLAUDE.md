@@ -17,16 +17,14 @@ Development workflow is now fully automated through specialized agents:
 
 ## ☁️ GCP Configuration
 
-**Project**: `ai-square-463013` | **Account**: `youngtsai@junyiacademy.org` | **Region**: `asia-east1`
+| Field | Value |
+|-------|-------|
+| gcloud config | `ai-square` |
+| Account | `youngtsai@junyiacademy.org` |
+| GCP Project | `ai-square-463013` |
+| Region | `asia-east1` |
 
-**CRITICAL**: Before any GCP operation, verify configuration:
-```bash
-gcloud config list  # Must show correct project/account/region
-```
-
-If incorrect, use `gcp-config-manager` agent to fix.
-
-**Note**: Hook system automatically reminds you to verify GCP config when GCP keywords are detected.
+> Hook auto-switches. If permission error → `gcloud config configurations activate ai-square`
 
 ## 🤖 MANDATORY: Use Agents Manager
 
