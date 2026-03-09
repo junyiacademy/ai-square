@@ -1,9 +1,9 @@
 name: Weekly Report
 
 on:
-  schedule:
-    # Every Monday at 09:00 Asia/Taipei (01:00 UTC)
-    - cron: '0 1 * * 1'
+  # schedule:
+  #   # Every Monday at 09:00 Asia/Taipei (01:00 UTC)
+  #   - cron: '0 1 * * 1'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
