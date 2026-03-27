@@ -302,6 +302,89 @@ export function rateLimit(
 }
 
 /**
+ * Daily AI token budget — hard cap to prevent runaway costs
+ * Resets at UTC midnight. In-memory counter (sufficient for single Cloud Run instance).
+ */
+interface TokenBudgetState {
+  date: string; // YYYY-MM-DD UTC
+  globalTokens: number;
+  perUser: Map<string, number>;
+}
+
+const tokenBudget: TokenBudgetState = {
+  date: new Date().toISOString().slice(0, 10),
+  globalTokens: 0,
+  perUser: new Map(),
+};
+
+const DAILY_GLOBAL_LIMIT = 500_000; // 500K tokens/day (~$0.30)
+const DAILY_PER_USER_LIMIT = 50_000; // 50K tokens/day per user
+
+function resetIfNewDay(): void {
+  const today = new Date().toISOString().slice(0, 10);
+  if (tokenBudget.date !== today) {
+    tokenBudget.date = today;
+    tokenBudget.globalTokens = 0;
+    tokenBudget.perUser.clear();
+  }
+}
+
+export function checkTokenBudget(userId?: string): {
+  allowed: boolean;
+  reason?: string;
+  globalUsed: number;
+  userUsed: number;
+} {
+  resetIfNewDay();
+
+  const userUsed = userId ? (tokenBudget.perUser.get(userId) || 0) : 0;
+
+  if (tokenBudget.globalTokens >= DAILY_GLOBAL_LIMIT) {
+    return {
+      allowed: false,
+      reason: "本日 AI 全站額度已用完，請明天再試",
+      globalUsed: tokenBudget.globalTokens,
+      userUsed,
+    };
+  }
+
+  if (userId && userUsed >= DAILY_PER_USER_LIMIT) {
+    return {
+      allowed: false,
+      reason: "您今日的 AI 使用額度已用完，請明天再試",
+      globalUsed: tokenBudget.globalTokens,
+      userUsed,
+    };
+  }
+
+  return { allowed: true, globalUsed: tokenBudget.globalTokens, userUsed };
+}
+
+export function recordTokenUsage(tokens: number, userId?: string): void {
+  resetIfNewDay();
+  tokenBudget.globalTokens += tokens;
+  if (userId) {
+    const current = tokenBudget.perUser.get(userId) || 0;
+    tokenBudget.perUser.set(userId, current + tokens);
+  }
+}
+
+export function getTokenBudgetStatus(): {
+  date: string;
+  globalUsed: number;
+  globalLimit: number;
+  globalPercent: number;
+} {
+  resetIfNewDay();
+  return {
+    date: tokenBudget.date,
+    globalUsed: tokenBudget.globalTokens,
+    globalLimit: DAILY_GLOBAL_LIMIT,
+    globalPercent: Math.round((tokenBudget.globalTokens / DAILY_GLOBAL_LIMIT) * 100),
+  };
+}
+
+/**
  * Memoization for expensive computations
  */
 export function memoize<T extends (...args: unknown[]) => unknown>(
