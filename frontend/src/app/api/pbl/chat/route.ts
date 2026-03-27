@@ -248,7 +248,7 @@ Current Task: ${taskTitle}
 Description: ${taskDescription}
 
 Task Instructions:
-${instructions.map((inst, i) => `${i + 1}. ${inst}`).join("\n")}
+${(instructions || []).map((inst: string, i: number) => `${i + 1}. ${inst}`).join("\n")}
 
 Expected Outcome: ${expectedOutcome}
 

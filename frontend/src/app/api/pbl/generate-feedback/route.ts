@@ -256,12 +256,12 @@ export async function POST(request: NextRequest) {
     }
 
     if (!evaluation) {
-      // Trigger evaluation calculation if needed
-      const completeUrl = new URL(
-        `/api/pbl/programs/${programId}/complete`,
-        request.url,
-      );
-      const completeRes = await fetch(completeUrl.toString(), {
+      // Call the complete endpoint internally
+      // Use localhost to avoid Cloud Run self-referential HTTP issues
+      const port = process.env.PORT || "3000";
+      const internalBaseUrl = `http://localhost:${port}`;
+      const completeUrl = `${internalBaseUrl}/api/pbl/programs/${programId}/complete`;
+      const completeRes = await fetch(completeUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
