@@ -25,6 +25,7 @@ export interface UseProgramCompletionReturn {
   scenarioTitle: string;
   feedback: QualitativeFeedback | undefined;
   generatingFeedback: boolean;
+  feedbackError: string | null;
   allTasksEvaluated: boolean;
   formatDuration: (seconds: number) => string;
   generateFeedback: (forceRegenerate?: boolean) => Promise<void>;
@@ -40,11 +41,13 @@ export function useProgramCompletion({
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   // Refs for preventing duplicate API calls
   const loadingRef = useRef(false);
   const feedbackGeneratingRef = useRef(false);
   const isMountedRef = useRef(false);
+  const feedbackDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Check if all tasks are evaluated
   const allTasksEvaluated = completionData
@@ -120,6 +123,7 @@ export function useProgramCompletion({
 
       try {
         setGeneratingFeedback(true);
+        setFeedbackError(null);
 
         const response = await authenticatedFetch("/api/pbl/generate-feedback", {
           method: "POST",
@@ -176,6 +180,9 @@ export function useProgramCompletion({
         }
       } catch (error) {
         console.error("Error generating feedback:", error);
+        const errMsg =
+          error instanceof Error ? error.message : "Failed to generate feedback";
+        setFeedbackError(errMsg);
       } finally {
         setGeneratingFeedback(false);
         feedbackGeneratingRef.current = false;
@@ -299,7 +306,16 @@ export function useProgramCompletion({
       !feedbackGeneratingRef.current &&
       !generatingFeedback
     ) {
-      generateFeedback();
+      // Debounce to prevent rapid language switches from spawning multiple AI calls
+      if (feedbackDebounceRef.current) {
+        clearTimeout(feedbackDebounceRef.current);
+      }
+      setFeedbackError(null);
+      feedbackDebounceRef.current = setTimeout(() => {
+        if (!feedbackGeneratingRef.current) {
+          generateFeedback();
+        }
+      }, 500);
     }
   }, [
     i18n.language,
@@ -319,6 +335,7 @@ export function useProgramCompletion({
     scenarioTitle,
     feedback,
     generatingFeedback,
+    feedbackError,
     allTasksEvaluated,
     formatDuration,
     generateFeedback,

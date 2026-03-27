@@ -3,6 +3,9 @@ import { VertexAI } from "@google-cloud/vertexai";
 import { ErrorResponse } from "@/types/api";
 import { ChatMessage } from "@/types/pbl-api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import { rateLimit } from "@/lib/api/optimization-utils";
+
+const chatRateLimit = rateLimit(60000, 30); // 30 requests per minute per IP
 
 interface ChatRequestBody {
   message: string;
@@ -20,6 +23,17 @@ interface ChatRequestBody {
 
 export async function POST(request: NextRequest) {
   try {
+    const rateLimitResult = chatRateLimit(request);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json<ErrorResponse>(
+        { error: "AI 服務忙碌中，請稍後再試" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimitResult.retryAfter ?? 60) },
+        },
+      );
+    }
+
     const body: ChatRequestBody = await request.json();
     const { message, sessionId, context } = body;
 
@@ -167,15 +181,31 @@ export async function POST(request: NextRequest) {
         sessionId,
       });
     } catch (vertexError) {
+      const vertexErrMsg =
+        vertexError instanceof Error ? vertexError.message : "";
       console.error("Vertex AI error:", {
         error: vertexError,
-        message: (vertexError as Error).message,
-        stack: (vertexError as Error).stack,
+        message: vertexErrMsg,
+        stack: vertexError instanceof Error ? vertexError.stack : undefined,
         projectId,
         aiModule,
       });
+
+      const isQuotaExhausted =
+        vertexErrMsg.includes("RESOURCE_EXHAUSTED") ||
+        vertexErrMsg.includes("429") ||
+        vertexErrMsg.includes("Quota exceeded") ||
+        vertexErrMsg.includes("rate limit");
+
+      if (isQuotaExhausted) {
+        return NextResponse.json<ErrorResponse>(
+          { error: "AI 服務忙碌中，請稍後再試" },
+          { status: 429, headers: { "Retry-After": "60" } },
+        );
+      }
+
       return NextResponse.json<ErrorResponse>(
-        { error: `AI generation failed: ${(vertexError as Error).message}` },
+        { error: `AI generation failed: ${vertexErrMsg}` },
         { status: 500 },
       );
     }

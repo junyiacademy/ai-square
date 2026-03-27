@@ -107,6 +107,7 @@ export default function ProgramCompletePage() {
     scenarioTitle,
     feedback,
     generatingFeedback,
+    feedbackError,
     allTasksEvaluated,
     formatDuration,
     generateFeedback,
@@ -233,6 +234,7 @@ export default function ProgramCompletePage() {
               isGenerating={generatingFeedback}
               onRegenerate={() => generateFeedback(true)}
               showDevControls={process.env.NODE_ENV === "development"}
+              error={feedbackError}
             />
 
             {/* Three Column Layout - Score Cards */}

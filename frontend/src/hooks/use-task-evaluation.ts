@@ -101,7 +101,7 @@ export function useTaskEvaluation({
   }, [conversations, taskId, programId, currentTask, i18n.language]);
 
   const handleEvaluate = async () => {
-    if (!currentTask || conversations.length === 0) return;
+    if (!currentTask || conversations.length === 0 || isEvaluating) return;
 
     setIsEvaluating(true);
 
@@ -130,6 +130,11 @@ export function useTaskEvaluation({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("Evaluation API error:", errorData);
+        if (response.status === 429) {
+          throw new Error(
+            errorData.error || "AI 服務忙碌中，請稍後再試",
+          );
+        }
         throw new Error(
           errorData.error || `HTTP ${response.status}: Failed to evaluate`,
         );
