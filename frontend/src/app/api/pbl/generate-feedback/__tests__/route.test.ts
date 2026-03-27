@@ -25,6 +25,9 @@ import { mockConsoleError, mockConsoleLog } from "@/test-utils/helpers/console";
 // Mock rate limiter to always allow in tests
 jest.mock("@/lib/api/optimization-utils", () => ({
   rateLimit: () => () => ({ allowed: true }),
+  checkTokenBudget: () => ({ allowed: true, globalUsed: 0, userUsed: 0 }),
+  recordTokenUsage: () => {},
+  getTokenBudgetStatus: () => ({ date: "2026-01-01", globalUsed: 0, globalLimit: 500000, globalPercent: 0 }),
 }));
 
 // Unmock unified-auth to use actual implementation but with our explicit mocks
