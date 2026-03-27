@@ -6,6 +6,9 @@ import {
 } from "@/lib/auth/unified-auth";
 import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
 import { Task, Evaluation } from "@/lib/repositories/interfaces";
+import { rateLimit } from "@/lib/api/optimization-utils";
+
+const generateFeedbackRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -179,6 +182,17 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
+    const rateLimitResult = generateFeedbackRateLimit(request);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { success: false, error: "AI 服務忙碌中，請稍後再試" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimitResult.retryAfter ?? 60) },
+        },
+      );
+    }
+
     const {
       programId,
       scenarioId,
@@ -531,7 +545,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 65535, // Increased token limit
+        maxOutputTokens: 8192,
         responseMimeType: "application/json",
         responseSchema: feedbackSchema,
       },
@@ -682,6 +696,21 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     });
   } catch (error) {
     console.error("Error generating feedback:", error);
+
+    const errMsg = error instanceof Error ? error.message : "";
+    const isQuotaExhausted =
+      errMsg.includes("RESOURCE_EXHAUSTED") ||
+      errMsg.includes("429") ||
+      errMsg.includes("Quota exceeded") ||
+      errMsg.includes("rate limit");
+
+    if (isQuotaExhausted) {
+      return NextResponse.json(
+        { success: false, error: "AI 服務忙碌中，請稍後再試" },
+        { status: 429, headers: { "Retry-After": "60" } },
+      );
+    }
+
     return NextResponse.json(
       { success: false, error: "Failed to generate feedback" },
       { status: 500 },

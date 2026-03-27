@@ -3,6 +3,11 @@ import { POST } from "../route";
 import { VertexAI } from "@google-cloud/vertexai";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 
+// Mock rate limiter to always allow in tests
+jest.mock("@/lib/api/optimization-utils", () => ({
+  rateLimit: () => () => ({ allowed: true }),
+}));
+
 // Mock unified auth
 jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),

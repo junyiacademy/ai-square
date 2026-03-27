@@ -15,6 +15,7 @@ interface QualitativeFeedbackSectionProps {
   isGenerating: boolean;
   onRegenerate?: () => void;
   showDevControls?: boolean;
+  error?: string | null;
 }
 
 export function QualitativeFeedbackSection({
@@ -22,10 +23,11 @@ export function QualitativeFeedbackSection({
   isGenerating,
   onRegenerate,
   showDevControls = false,
+  error,
 }: QualitativeFeedbackSectionProps) {
   const { t } = useTranslation(["pbl"]);
 
-  if (!feedback?.overallAssessment && !isGenerating) {
+  if (!feedback?.overallAssessment && !isGenerating && !error) {
     return null;
   }
 
@@ -39,6 +41,19 @@ export function QualitativeFeedbackSection({
               "pbl:complete.generatingFeedback",
               "Generating personalized feedback..."
             )}
+          </p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-4">
+          <p className="text-amber-600 dark:text-amber-400">
+            {error.includes("429") ||
+            error.includes("忙碌") ||
+            error.includes("RESOURCE_EXHAUSTED")
+              ? t("pbl:complete.aiBusy", "AI 服務忙碌中，請稍後再試")
+              : t(
+                  "pbl:complete.feedbackUnavailable",
+                  "Feedback temporarily unavailable. Please try again later."
+                )}
           </p>
         </div>
       ) : feedback ? (

@@ -17,6 +17,11 @@ import {
   mockConsoleLog,
 } from "@/test-utils/helpers/console";
 
+// Mock rate limiter to always allow in tests
+jest.mock("@/lib/api/optimization-utils", () => ({
+  rateLimit: () => () => ({ allowed: true }),
+}));
+
 // Mock dependencies
 jest.mock("@/lib/auth/unified-auth");
 jest.mock("@/lib/repositories/base/repository-factory", () => ({

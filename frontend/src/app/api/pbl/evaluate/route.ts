@@ -4,9 +4,26 @@ import { EvaluateRequestBody, Conversation } from "@/types/pbl-evaluate";
 import { ErrorResponse } from "@/types/api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 import { LANGUAGE_NAMES } from "@/lib/utils/language";
+import { rateLimit } from "@/lib/api/optimization-utils";
+
+const evaluateRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting to protect AI quota
+    const rateLimitResult = evaluateRateLimit(request);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json<ErrorResponse>(
+        { error: "AI 服務忙碌中，請稍後再試" },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimitResult.retryAfter ?? 60),
+          },
+        },
+      );
+    }
+
     // Use unified authentication
     const session = await getUnifiedAuth(request);
 
@@ -212,7 +229,7 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
       ],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 65535,
+        maxOutputTokens: 8192,
         responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
@@ -403,12 +420,22 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
   } catch (error) {
     console.error("Error in evaluation:", error);
 
-    // Provide more detailed error information
-    let errorMessage = "Failed to evaluate";
-    const statusCode = 500;
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to evaluate";
+    const isQuotaExhausted =
+      errorMessage.includes("RESOURCE_EXHAUSTED") ||
+      errorMessage.includes("429") ||
+      errorMessage.includes("Quota exceeded") ||
+      errorMessage.includes("rate limit");
+
+    if (isQuotaExhausted) {
+      return NextResponse.json(
+        { success: false, error: "AI 服務忙碌中，請稍後再試" },
+        { status: 429, headers: { "Retry-After": "60" } },
+      );
+    }
 
     if (error instanceof Error) {
-      errorMessage = error.message;
       console.error("Error details:", error.stack);
     }
 
@@ -418,7 +445,7 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? error : undefined,
       },
-      { status: statusCode },
+      { status: 500 },
     );
   }
 }

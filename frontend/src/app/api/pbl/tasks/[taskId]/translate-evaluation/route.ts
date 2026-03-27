@@ -5,6 +5,9 @@ import {
 } from "@/lib/auth/unified-auth";
 import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
 import { VertexAI } from "@google-cloud/vertexai";
+import { rateLimit } from "@/lib/api/optimization-utils";
+
+const translateRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
 // POST - Translate existing evaluation to current language
 export async function POST(
@@ -12,6 +15,17 @@ export async function POST(
   { params }: { params: Promise<{ taskId: string }> },
 ) {
   try {
+    const rateLimitResult = translateRateLimit(request);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { success: false, error: "AI 服務忙碌中，請稍後再試" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimitResult.retryAfter ?? 60) },
+        },
+      );
+    }
+
     // Get user session
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
@@ -163,6 +177,21 @@ Return the same JSON structure with all text translated.`;
       });
     } catch (error) {
       console.error("Translation failed:", error);
+
+      const errMsg = error instanceof Error ? error.message : "";
+      const isQuotaExhausted =
+        errMsg.includes("RESOURCE_EXHAUSTED") ||
+        errMsg.includes("429") ||
+        errMsg.includes("Quota exceeded") ||
+        errMsg.includes("rate limit");
+
+      if (isQuotaExhausted) {
+        return NextResponse.json(
+          { success: false, error: "AI 服務忙碌中，請稍後再試" },
+          { status: 429, headers: { "Retry-After": "60" } },
+        );
+      }
+
       return NextResponse.json(
         { success: false, error: "Failed to translate evaluation" },
         { status: 500 },

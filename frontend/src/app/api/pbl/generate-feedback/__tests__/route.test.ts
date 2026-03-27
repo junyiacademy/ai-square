@@ -22,6 +22,11 @@ import type {
 } from "@/types/unified-learning";
 import { mockConsoleError, mockConsoleLog } from "@/test-utils/helpers/console";
 
+// Mock rate limiter to always allow in tests
+jest.mock("@/lib/api/optimization-utils", () => ({
+  rateLimit: () => () => ({ allowed: true }),
+}));
+
 // Unmock unified-auth to use actual implementation but with our explicit mocks
 jest.unmock("@/lib/auth/unified-auth");
 // Mock dependencies
@@ -984,7 +989,7 @@ describe("POST /api/pbl/generate-feedback", () => {
           ]),
           generationConfig: expect.objectContaining({
             temperature: 0.7,
-            maxOutputTokens: 65535,
+            maxOutputTokens: 8192,
             responseMimeType: "application/json",
             responseSchema: expect.any(Object),
           }),
