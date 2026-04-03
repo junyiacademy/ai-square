@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Thai
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "ผู้พิทักษ์พลังงานสีเขียว - ที่ปรึกษากลยุทธ์พลังงานสีเขียว"
+  short_description: "ใช้พลังแสงอาทิตย์ ลม และธรรมชาติเพื่ออนาคตที่ยั่งยืน"
+  long_description: |
+    คุณเป็นวิศวกรมือใหม่ที่ "หอพลังงานยั่งยืน" ที่นี่พลังธรรมชาติถูกดักจับและแปลงเป็นไฟฟ้าสะอาด ในหอแห่งนี้คุณจะค้นพบว่าแสงอาทิตย์กลายเป็นพลังงานได้อย่างไร ลมทำให้กังหันหมุนอย่างไร และเซลล์เชื้อเพลิงไฮโดรเจนเก็บพลังงานสำหรับวันพรุ่งนี้อย่างไร เมื่อการเปลี่ยนแปลงสภาพภูมิอากาศคุกคามโลก นวัตกรรมของคุณอาจช่วยโลกได้
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "หอพลังงานยั่งยืน"
+  description: |
+    หอพลังงานยั่งยืนเป็นสิ่งมหัศจรรย์ของวิศวกรรมสีเขียวที่ตั้งตระหง่านเหนือดินแดนที่ขับเคลื่อนด้วยพลังงานหมุนเวียนทั้งหมด วิศวกรที่นี่ใช้แผงโซลาร์ กังหันลม และระบบไฮโดรเจนเพื่อจ่ายพลังงานสะอาดให้กับเมืองทั้งเมือง ทุกความก้าวหน้าที่นี่ช่วยลดการปล่อยคาร์บอนและปกป้องโลก
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "สัญญาณเตือนวิกฤตพลังงาน"
+  description: |
+    วิศวกรหัวหน้า Aurora ส่งสัญญาณเตือน: กริดไฟฟ้าของเมืองกำลังล้มเหลวเพราะพึ่งพาเชื้อเพลิงฟอสซิลมากเกินไป คุณต้องออกแบบระบบพลังงานหมุนเวียนใหม่เพื่อแทนที่โรงไฟฟ้าถ่านหินเก่า การเดินทางของคุณเริ่มต้นด้วยการเข้าใจว่าแสงอาทิตย์และลมสามารถจ่ายไฟให้เมืองทั้งเมืองได้อย่างสะอาดและมีประสิทธิภาพ
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "ระบบพลังงานแสงอาทิตย์"
+      description: "เรียนรู้วิธีที่แผงโซลาร์แปลงแสงอาทิตย์เป็นไฟฟ้าสะอาด"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "ระบบพลังงานลม"
+      description: "เรียนรู้วิธีที่กังหันลมผลิตไฟฟ้าจากอากาศที่เคลื่อนที่"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "การเก็บพลังงาน"
+      description: "แก้ปัญหาการเก็บพลังงานหมุนเวียนเมื่อแสงอาทิตย์และลมไม่มี"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "การจัดการกริดอัจฉริยะ"
+      description: "สมดุลอุปทานและความต้องการพลังงานในเมืองโดยใช้ระบบอัจฉริยะ"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "เทคโนโลยีไฮโดรเจน"
+      description: "ออกแบบระบบผลิตไฮโดรเจนและเซลล์เชื้อเพลิงสำหรับการเก็บพลังงานสะอาด"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "ระบบพลังงานนอกชายฝั่ง"
+      description: "สร้างระบบพลังงานลมและคลื่นในสภาพแวดล้อมมหาสมุทร"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "การวางแผนลดคาร์บอน"
+      description: "ออกแบบแผนงานลดรอยเท้าคาร์บอนของเมืองและอุตสาหกรรม"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "แถวโซลาร์แรก"
+    description: "ออกแบบและคำนวณระบบแผงโซลาร์ที่จ่ายไฟให้อาคารโรงเรียน"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "นักออกแบบฟาร์มลม"
+    description: "วางแผนฟาร์มกังหันลมเพื่อเพิ่มผลผลิตพลังงานสำหรับภูมิภาคชายฝั่ง"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "สถาปนิกเมืองสีเขียว"
+    description: "ออกแบบระบบพลังงานหมุนเวียนครบถ้วนสำหรับเขตเมืองทั้งหมด"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "วัตต์แรก"
+    description: "ผลิตพลังงานหมุนเวียนจำลองกิโลวัตต์แรกของคุณ"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "ฮีโร่ลดคาร์บอน"
+    description: "ออกแบบระบบที่กำจัดการปล่อย CO2 ได้ 100 ตัน"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "ผู้สมดุลกริด"
+    description: "สมดุลอุปทานและความต้องการพลังงานได้สำเร็จ 24 ชั่วโมง"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "ตำนานพลังงานสีเขียว"
+    description: "ทำแบบทดสอบพลังงานหมุนเวียนทั้งหมดในหอให้สำเร็จ"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "เครื่องคำนวณแผงโซลาร์"
+      description: "คำนวณว่าบ้านต้องการแผงโซลาร์กี่แผงเพื่อพึ่งพาตัวเองด้านพลังงาน"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "พื้นฐานพลังงานลม"
+      description: "วิเคราะห์ข้อมูลความเร็วลมเพื่อหาตำแหน่งที่ดีที่สุดสำหรับกังหันลม"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "ระบบเก็บพลังงานแบตเตอรี่"
+      description: "ออกแบบระบบแบตเตอรี่ที่เก็บพลังงานแสงอาทิตย์สำหรับใช้ตอนกลางคืน"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "จำลองกริดอัจฉริยะ"
+      description: "จำลองวิธีที่กริดอัจฉริยะสมดุลพลังงานหมุนเวียนในชุมชน"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "โรงไฟฟ้าไฮโดรเจน"
+      description: "ออกแบบโรงงานผลิตไฮโดรเจนสีเขียวโดยใช้พลังงานแสงอาทิตย์ส่วนเกิน"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "แผนเมืองศูนย์คาร์บอน"
+      description: "สร้างแผนพลังงานที่เป็นกลางทางคาร์บอนครบถ้วนสำหรับเมืองขนาดกลาง"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจวิธีที่แผงโซลาร์แปลงแสงอาทิตย์เป็นไฟฟ้า"
+  - "เรียนรู้วิธีที่กังหันลมผลิตไฟฟ้าสะอาดจากอากาศที่เคลื่อนที่"
+  - "เรียนรู้เทคโนโลยีการเก็บพลังงานรวมถึงแบตเตอรี่และไฮโดรเจน"
+  - "ออกแบบระบบกริดอัจฉริยะที่สมดุลอุปทานและความต้องการ"
+  - "คำนวณความต้องการพลังงานและออกแบบระบบหมุนเวียนขนาดเหมาะสม"
+  - "เข้าใจผลกระทบของพลังงานหมุนเวียนต่อการลดการปล่อยคาร์บอน"
+  - "สำรวจเทคโนโลยีเซลล์เชื้อเพลิงไฮโดรเจนในฐานะทางออกการเก็บพลังงาน"
+  - "พัฒนาทักษะการวางแผนการเปลี่ยนผ่านพลังงานยั่งยืนระดับเมือง"
+
+career_outcomes:
+  - "ที่ปรึกษากลยุทธ์พลังงานสีเขียว"
+  - "นักออกแบบระบบโซลาร์"
+  - "ผู้เชี่ยวชาญพลังงานลม"
+  - "วิศวกรการเก็บพลังงาน"
+  - "วิศวกรกริดอัจฉริยะ"
+  - "วิศวกรระบบไฮโดรเจน"
+  - "ที่ปรึกษาความยั่งยืน"
+  - "นักวางแผนลดคาร์บอน"

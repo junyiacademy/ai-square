@@ -1,0 +1,219 @@
+# Green Energy Strategy Consultant Discovery Path - English
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Guardian of Energy - Green Energy Strategy Consultant"
+  short_description: "Protect the planet's future with renewable energy and smart grids"
+  long_description: |
+    You are an apprentice guardian of the "Sustainable Energy Tower," gifted with
+    the power to harness wind, light, and water. In this realm where the fate of
+    the Earth hangs in the balance, every kilowatt of green energy generated
+    buys precious time on the clock fighting climate change.
+
+  estimated_hours: 50
+  skill_focus:
+    - renewable_energy
+    - energy_storage
+    - smart_grid
+    - carbon_management
+
+world_setting:
+  name: "Sustainable Energy Tower"
+  description: |
+    The Sustainable Energy Tower stands tall on the western coast, its rooftop
+    turbines and solar panels powering an entire city. Green energy engineers
+    learn here how to make renewable energy stable, efficient, and reliable.
+    The journey to net-zero carbon emissions by 2050 begins right here.
+
+  atmosphere: "eco_futuristic"
+  visual_theme: "energy_tower"
+
+starting_scenario:
+  title: "The First Kilowatt of Green Power"
+  description: |
+    Energy Elder Volt guides you through the current energy landscape and the
+    challenges of transition. But a sudden "Power Storm" called Blackout is
+    threatening grid stability. You must master supply-demand balance to save
+    the entire city from plunging into darkness.
+
+  initial_tasks:
+    - learn_energy_basics
+    - understand_renewables
+    - first_solar_design
+
+skill_tree:
+  core_skills:
+    - id: solar_energy
+      name: "Solar Engineering"
+      description: "Design and optimize photovoltaic power generation systems"
+      max_level: 10
+      unlocks:
+        - pv_system_design
+        - solar_forecasting
+
+    - id: wind_energy
+      name: "Wind Power"
+      description: "Understand turbine design, site selection, and operations"
+      max_level: 10
+      unlocks:
+        - turbine_aerodynamics
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Energy Storage Technology"
+      description: "Master lithium batteries, flow batteries, and hydrogen storage"
+      max_level: 10
+      unlocks:
+        - battery_management
+        - hydrogen_systems
+
+    - id: smart_grid
+      name: "Smart Grid"
+      description: "Use AI to manage power supply, demand, dispatch, and trading"
+      max_level: 10
+      unlocks:
+        - demand_response
+        - grid_optimization
+
+  advanced_skills:
+    - id: carbon_engineering
+      name: "Carbon Management Engineering"
+      description: "Carbon capture, carbon trading, and corporate carbon auditing"
+      max_level: 15
+      requires: [solar_energy, wind_energy]
+
+    - id: microgrid_design
+      name: "Microgrid Design"
+      description: "Design off-grid or community-scale independent power systems"
+      max_level: 15
+      requires: [energy_storage, smart_grid]
+
+    - id: green_hydrogen
+      name: "Green Hydrogen Technology"
+      description: "Complete systems for producing hydrogen via renewable electrolysis"
+      max_level: 15
+      requires: [energy_storage, carbon_engineering]
+
+milestone_quests:
+  - id: first_kilowatt
+    name: "The First Kilowatt"
+    description: "Design and simulate a solar energy system capable of generating 1kW"
+    required_level: 5
+    skills_tested: [solar_energy, smart_grid]
+    xp_reward: 500
+    unlocks:
+      - solar_badge
+      - field_access
+
+  - id: blackout_preventer
+    name: "Blackout Terminator"
+    description: "Use energy storage and demand response to stop a grid collapse"
+    required_level: 10
+    skills_tested: [energy_storage, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - grid_master_title
+      - control_room_access
+
+  - id: net_zero_architect
+    name: "Net-Zero Architect"
+    description: "Design a smart community that achieves net-zero carbon emissions"
+    required_level: 20
+    skills_tested: [microgrid_design, carbon_engineering]
+    xp_reward: 2500
+    unlocks:
+      - net_zero_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_panel
+    name: "First Panel"
+    description: "Complete the installation design for a solar panel system"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: wind_rider
+    name: "Wind Rider"
+    description: "Optimize an offshore wind farm to reach 95% generation efficiency"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Grid Balancer Master"
+    description: "Maintain zero supply-demand deviation on the grid for 30 consecutive days"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: energy_legend
+    name: "Energy Legend"
+    description: "Complete all green energy engineering challenges"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calculator
+      type: analysis
+      title: "Solar Output Calculator"
+      description: "Estimate annual power generation using regional solar irradiance data"
+      skills_improved: [solar_energy]
+      xp_reward: 60
+
+    - id: energy_audit
+      type: analysis
+      title: "Home Energy Audit"
+      description: "Analyze a household's electricity consumption patterns and propose energy-saving measures"
+      skills_improved: [smart_grid]
+      xp_reward: 50
+
+  intermediate:
+    - id: hybrid_system
+      type: creation
+      title: "Solar-Wind Hybrid System"
+      description: "Design a hybrid power generation system combining solar and wind energy"
+      skills_improved: [solar_energy, wind_energy]
+      xp_reward: 180
+
+    - id: battery_sizing
+      type: creation
+      title: "Energy Storage System Design"
+      description: "Design an optimized energy storage configuration for a school"
+      skills_improved: [energy_storage, smart_grid]
+      xp_reward: 200
+
+  advanced:
+    - id: smart_community
+      type: creation
+      title: "Smart Community Grid"
+      description: "Design a community microgrid with solar, storage, and EV charging"
+      skills_improved: [microgrid_design, smart_grid]
+      xp_reward: 350
+
+    - id: carbon_neutral
+      type: creation
+      title: "Corporate Carbon Neutrality Plan"
+      description: "Plan a carbon neutrality pathway for a manufacturing company"
+      skills_improved: [carbon_engineering, green_hydrogen]
+      xp_reward: 400
+
+learning_objectives:
+  - "Understand the principles and design of solar and wind power generation"
+  - "Master energy storage technology selection and system design"
+  - "Use AI to optimize smart grid dispatch"
+  - "Implement demand response and electricity trading"
+  - "Understand carbon auditing, carbon trading, and carbon capture"
+  - "Design community-level microgrid systems"
+  - "Explore the potential and challenges of green hydrogen technology"
+  - "Learn about energy transition policies and 2050 net-zero goals"
+
+career_outcomes:
+  - "Renewable Energy Engineer"
+  - "Energy Storage Systems Engineer"
+  - "Smart Grid Engineer"
+  - "Carbon Management Consultant"
+  - "ESG Analyst"
+  - "Energy Policy Researcher"
+  - "Microgrid Designer"
+  - "Green Hydrogen Technology Engineer"

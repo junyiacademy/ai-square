@@ -295,6 +295,16 @@
     }
   },
 
+  "evaluation": {
+    "completedTitle": "評估完成！",
+    "completedDescription": "以下是你的興趣概況結果",
+    "techInterest": "科技興趣",
+    "creativeInterest": "創意興趣",
+    "businessInterest": "商業興趣",
+    "viewScenarios": "探索職業情境",
+    "retakeAssessment": "重新評估"
+  },
+
   "navigation": {
     "overview": "總覽",
     "evaluation": "評估",

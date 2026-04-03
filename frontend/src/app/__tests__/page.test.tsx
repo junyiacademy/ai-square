@@ -1,40 +1,22 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Home from "../page";
 
-// Mock next/dynamic to handle dynamic imports in tests
-jest.mock("next/dynamic", () => ({
-  __esModule: true,
-  default: (fn: () => Promise<{ default: React.ComponentType }>) => {
-    const MockedComponent = () => {
-      const [Component, setComponent] =
-        React.useState<React.ComponentType | null>(null);
-      React.useEffect(() => {
-        fn().then((mod) => setComponent(() => mod.default));
-      }, []);
-      if (!Component) return null;
-      return <Component />;
-    };
-    return MockedComponent;
-  },
-}));
-
-// Mock all the components
 jest.mock("@/components/homepage/HeroSection", () => {
   return function MockHeroSection() {
     return <div data-testid="hero-section">Hero Section</div>;
   };
 });
 
-jest.mock("@/components/homepage/FeaturesSection", () => {
-  return function MockFeaturesSection() {
-    return <div data-testid="features-section">Features Section</div>;
+jest.mock("@/components/homepage/StatsSection", () => {
+  return function MockStatsSection() {
+    return <div data-testid="stats-section">Stats Section</div>;
   };
 });
 
-jest.mock("@/components/homepage/KnowledgeGraph", () => {
-  return function MockKnowledgeGraph() {
-    return <div data-testid="knowledge-graph">Knowledge Graph</div>;
+jest.mock("@/components/homepage/ModesSection", () => {
+  return function MockModesSection() {
+    return <div data-testid="modes-section">Modes Section</div>;
   };
 });
 
@@ -44,11 +26,9 @@ jest.mock("@/components/homepage/HowItWorksSection", () => {
   };
 });
 
-jest.mock("@/components/homepage/TargetAudienceSection", () => {
-  return function MockTargetAudienceSection() {
-    return (
-      <div data-testid="target-audience-section">Target Audience Section</div>
-    );
+jest.mock("@/components/homepage/DomainsSection", () => {
+  return function MockDomainsSection() {
+    return <div data-testid="domains-section">Domains Section</div>;
   };
 });
 
@@ -59,57 +39,35 @@ jest.mock("@/components/homepage/CTASection", () => {
 });
 
 describe("Home Page", () => {
-  it("renders all homepage sections", async () => {
+  it("renders all homepage sections", () => {
     render(<Home />);
 
-    // Check that all sections are rendered
     expect(screen.getByTestId("hero-section")).toBeInTheDocument();
-    expect(screen.getByTestId("features-section")).toBeInTheDocument();
-    // KnowledgeGraph is dynamically imported, wait for it
-    await waitFor(() => {
-      expect(screen.getByTestId("knowledge-graph")).toBeInTheDocument();
-    });
+    expect(screen.getByTestId("stats-section")).toBeInTheDocument();
+    expect(screen.getByTestId("modes-section")).toBeInTheDocument();
     expect(screen.getByTestId("how-it-works-section")).toBeInTheDocument();
-    expect(screen.getByTestId("target-audience-section")).toBeInTheDocument();
+    expect(screen.getByTestId("domains-section")).toBeInTheDocument();
     expect(screen.getByTestId("cta-section")).toBeInTheDocument();
   });
 
   it("renders with correct layout structure", () => {
     const { container } = render(<Home />);
-
-    // Check main element
     const main = container.querySelector("main");
     expect(main).toHaveClass("min-h-screen");
-
-    // Check knowledge graph section has proper styling
-    const knowledgeGraphSection = container.querySelector("section.bg-gray-50");
-    expect(knowledgeGraphSection).toHaveClass("py-20", "bg-gray-50");
-
-    // Check container div
-    const containerDiv = knowledgeGraphSection?.querySelector("div");
-    expect(containerDiv).toHaveClass(
-      "max-w-7xl",
-      "mx-auto",
-      "px-4",
-      "sm:px-6",
-      "lg:px-8",
-    );
   });
 
   it("renders sections in the correct order", () => {
     render(<Home />);
 
     const sections = screen.getAllByTestId(/section$/);
-    const sectionIds = sections.map((section) =>
-      section.getAttribute("data-testid"),
-    );
+    const sectionIds = sections.map((s) => s.getAttribute("data-testid"));
 
     expect(sectionIds).toEqual([
       "hero-section",
-      "features-section",
-      "knowledge-graph-section",
+      "stats-section",
+      "modes-section",
       "how-it-works-section",
-      "target-audience-section",
+      "domains-section",
       "cta-section",
     ]);
   });

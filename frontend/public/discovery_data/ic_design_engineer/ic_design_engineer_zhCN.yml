@@ -1,0 +1,218 @@
+# IC设计工程师探索路径 - 简体中文
+path_id: ic_design_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "硅盾锻造师 - IC设计工程师"
+  short_description: "在硅盾锻造所打造驱动现代世界的微小芯片"
+  long_description: |
+    你是"硅盾锻造所"的见习锻造师，拥有设计肉眼看不见的微小电路的天赋。
+    每一颗芯片都像一座微型城市——有道路（导线）、建筑物（逻辑门）和交通
+    规则（时序），全部压缩在比你指甲还小的空间里。全球超过90%的顶尖芯片
+    来自台湾，你也可以成为这个故事的一部分！
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "硅盾锻造所"
+  description: |
+    硅盾锻造所是一个高科技工坊，工程师和见习生在这里合作设计用于医疗设备、
+    太空卫星和日常手机的芯片。锻造所的精神是：精准、创意与团队合作——
+    一个微小的设计错误，可能影响全球数百万台设备。
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "锻造所的第一天"
+  description: |
+    首席工程师林师傅欢迎你来到锻造所。你的第一个挑战：竞争对手的工坊
+    推出了一颗有隐藏缺陷的芯片，导致手机过热。你必须学习芯片设计的基础，
+    帮助打造更安全的替代品——了解逻辑开关如何组合成更大的功能，以及设计师
+    如何在送交工厂前找出错误。
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "逻辑设计"
+      description: "学习将简单的ON/OFF开关（逻辑门）组合成复杂功能，像计算器和内存——就像用积木搭建，但用的是电流"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "芯片架构"
+      description: "了解芯片如何被分成不同区块——像有处理、内存、通信各区的城市——并规划各区如何协同运作"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "电路测试"
+      description: "用软件模拟和测试你的设计，在制造前找出错误——就像文章印出一千万份前先做校对"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "物理布局"
+      description: "像城市规划师一样在芯片上安排电路元件——决定每个区块的位置，并以最短路径连接它们"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "低功耗设计"
+      description: "设计尽可能省电的芯片——对需要整天靠小电池运作的智能手机和可穿戴设备至关重要"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "信号质量精通"
+      description: "确保电信号在芯片中干净传输不失真——就像让电话通话听起来清晰无杂音"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "AI加速器设计"
+      description: "设计专为AI任务打造的芯片——比如人脸识别或语言翻译——比普通芯片快得多"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "第一个电路完成"
+    description: "设计一个能正确运作的4位计算电路，并通过所有测试案例"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "蓝图挑战"
+    description: "为一颗简单芯片制作完整布局规划，并说明各区块如何彼此沟通"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "硅盾诞生"
+    description: "设计、测试并优化一颗完整的低功耗芯片，准备好送交生产"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "第一道火花"
+    description: "成功执行你的第一次电路模拟，看着设计活起来"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "漏洞猎人"
+    description: "在到达工厂前找出并修复10个设计错误"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "能源守护者"
+    description: "通过聪明的设计决策将芯片功耗降低30%"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "锻造所传说"
+    description: "完成所有芯片设计挑战，交出生产就绪的设计"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "逻辑门谜题"
+      description: "连接逻辑开关，建造一个只有当两个按钮同时按下时才会亮灯的电路"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "芯片地图探索"
+      description: "观察一张真实的芯片示意图，找出主要区块，用简单的话解释每个区域的功能"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "电路调试"
+      description: "模拟电路给出了错误答案——在送到客户手上前找出逻辑错误并修复它"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "城市规划师"
+      description: "重新排列芯片区块，缩短导线长度，避免元件间的信号干扰"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "节能行动"
+      description: "重新设计芯片某个区块，在保持相同处理速度的情况下将功耗减半"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "AI引擎蓝图"
+      description: "设计一颗能比普通处理器快10倍识别人脸的芯片架构"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解简单逻辑开关如何组合成复杂的数字电路"
+  - "说明现代芯片内部的主要功能区块"
+  - "使用模拟工具测试并找出电路设计中的错误"
+  - "应用布局规划原则有效率地组织芯片元件"
+  - "设计在速度与耗电量之间取得平衡的电路"
+  - "追踪芯片从设计到工厂实体制造的完整旅程"
+  - "了解台湾半导体产业如何影响全球经济"
+  - "评估性能、功耗与芯片面积之间的设计取舍"
+
+career_outcomes:
+  - "IC设计工程师"
+  - "数字逻辑设计师"
+  - "芯片验证工程师"
+  - "物理设计工程师"
+  - "AI硬件工程师"
+  - "嵌入式系统工程师"
+  - "半导体研发研究员"
+  - "硬件产品经理"

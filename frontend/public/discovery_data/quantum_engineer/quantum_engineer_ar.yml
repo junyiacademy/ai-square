@@ -1,0 +1,219 @@
+# مسار اكتشاف مهندس الكم - العربية
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "نساج أحلام الكم - باحث تكنولوجيا الكم"
+  short_description: "أتقن التراكب والتشابك لحل المستحيل"
+  long_description: |
+    أنت نساج أحلام متدرب في «متاهة الكم»، تمتلك الحدس لفهم
+    أن الجسيمات يمكن أن توجد في حالات متعددة في آنٍ واحد.
+    في هذا المجال الذي يقلب منطق الحوسبة الكلاسيكية رأساً على عقب،
+    كل عملية على كيوبت يمكن أن تفتح مشاكل كانت ستستغرق عشرة آلاف عام
+    للحواسيب التقليدية لحلها.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "متاهة الكم"
+  description: |
+    متاهة الكم هي منشأة بحثية موجودة في حالة تراكب،
+    حيث تؤدي ممراتها في عدة اتجاهات في آنٍ واحد.
+    يتعلم مهندسو الكم هنا كيفية التحكم في الكيوبتات وتصميم خوارزميات الكم.
+    تُصنع أبرز ابتكارات تكنولوجيا الكم بين هذه الجدران.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "الدرس الأول لشرودنجر"
+  description: |
+    يستخدم المرشد الكمي Qubit قطة شرودنجر لشرح مفهوم التراكب.
+    لكن وحش تناقض الكم الكامن في المتاهة يدمر الحالات الكمية.
+    يجب أن تتعلم تصحيح أخطاء الكم لحماية كيوبتاتك.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "أساسيات ميكانيكا الكم"
+      description: "فهم المفاهيم الجوهرية للتراكب والتشابك والقياس"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "الدوائر الكمية"
+      description: "تجميع البوابات الكمية لبناء دوائر كمية"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "البرمجة الكمية"
+      description: "كتابة برامج كمية باستخدام Qiskit / Cirq"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "خوارزميات الكم"
+      description: "تطبيق خوارزميات مثل Grover وShor وVQE"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "تصحيح أخطاء الكم"
+      description: "تصميم وتطبيق أكواد تصحيح أخطاء الكم"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "التشفير الكمي"
+      description: "بناء أنظمة توزيع المفاتيح الكمية والتشفير ما بعد الكم"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "تعلم الآلة الكمي"
+      description: "خوارزميات هجينة تجمع الحوسبة الكمية وتعلم الآلة"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "أول حالة تراكب"
+    description: "وضع كيوبت بنجاح في حالة تراكب وقياسه"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "مقاتل التناقض"
+    description: "تشغيل خوارزمية بنجاح على حاسوب كمي ضوضائي"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "تحقيق الأفضلية الكمية"
+    description: "حل مشكلة لا تستطيع الحواسيب الكلاسيكية حلها بكفاءة"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "تحضير حالة بيل"
+    description: "تحضير أول زوج من الكيوبتات المتشابكة بنجاح"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "منفذ الخوارزميات"
+    description: "تشغيل بحث Grover بنجاح على حاسوب كمي حقيقي"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "أستاذ تصحيح أخطاء الكم"
+    description: "تطبيق كود تصحيح أخطاء الكم الكامل"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "أسطورة الكم"
+    description: "إتمام جميع تحديات تكنولوجيا الكم"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "أول لقاء مع الكيوبتات"
+      description: "تصور حالة كيوبت واحد باستخدام كرة بلوخ"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "أول دائرة كمية"
+      description: "تحضير حالة متشابكة باستخدام بوابتي Hadamard وCNOT"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "تحدي بحث Grover"
+      description: "تطبيق خوارزمية البحث الكمي للعثور على إجابة مخفية"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "تجربة محاكاة الضوضاء"
+      description: "محاكاة تأثير الضوضاء في الحواسيب الكمية الحقيقية على النتائج"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "توزيع المفاتيح الكمية"
+      description: "تطبيق بروتوكول BB84 لبناء قناة مشفرة محصنة ضد التنصت"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "التعلم الهجين الكمي-الكلاسيكي"
+      description: "استخدام VQE لحل مشاكل التحسين في محاكاة الجزيئات"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم المفاهيم الجوهرية لميكانيكا الكم: التراكب والتشابك والقياس"
+  - "إتقان تصميم البوابات الكمية والدوائر الكمية"
+  - "كتابة برامج كمية باستخدام Qiskit أو Cirq"
+  - "تطبيق خوارزميات بحث Grover وتحليل عوامل Shor"
+  - "فهم مبادئ وتطبيق تصحيح أخطاء الكم"
+  - "استكشاف التشفير الكمي والأمان ما بعد الكم"
+  - "الجمع بين الحوسبة الكمية وتعلم الآلة"
+  - "التعرف على أحدث اتجاهات البحث في تكنولوجيا الكم"
+
+career_outcomes:
+  - "مهندس برمجيات كمية"
+  - "باحث خوارزميات كمية"
+  - "مهندس أجهزة كمية"
+  - "مهندس تشفير ما بعد الكم"
+  - "عالم تطبيقات كمية"
+  - "باحث تعلم آلة كمي"
+  - "مستشار حوسبة كمية"
+  - "مدير منتج تكنولوجيا الكم"

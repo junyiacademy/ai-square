@@ -1,0 +1,221 @@
+# مسار استكشاف مهندس تصميم الدوائر المتكاملة - العربية
+path_id: ic_design_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "حداد الدرع السيليكوني - مهندس تصميم الدوائر المتكاملة"
+  short_description: "اصنع الرقائق الصغيرة التي تحرك العالم الحديث"
+  long_description: |
+    أنت متدرب في مصنع الدرع السيليكوني، ورشة أسطورية يصمم فيها المهندسون
+    الدوائر المجهرية التي تشغّل كل هاتف ذكي وحاسوب وسيارة كهربائية. كل رقاقة
+    تصمّمها تشبه مدينة مصغّرة — بها طرق (أسلاك) ومبانٍ (بوابات منطقية)
+    وقواعد مرور (توقيت)، كل ذلك في مساحة أصغر من ظفرك. أكثر من 90% من
+    أكثر الرقائق تطوراً في العالم تُصنع في تايوان — يمكنك أن تكون جزءاً من
+    هذه القصة!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "مصنع الدرع السيليكوني"
+  description: |
+    مصنع الدرع السيليكوني ورشة عالية التقنية يتعاون فيها مهندسون خبراء ومتدربون
+    لتصميم رقائق تُستخدم في الأجهزة الطبية والأقمار الصناعية والهواتف اليومية.
+    روح المصنع: الدقة والإبداع والعمل الجماعي — خطأ صغير في التصميم قد يؤثر
+    على ملايين الأجهزة حول العالم.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "اليوم الأول في المصنع"
+  description: |
+    يرحب بك كبير المهندسين لين في المصنع. تحديك الأول: أصدرت ورشة منافسة
+    رقاقة بها عيب مخفي يتسبب في ارتفاع حرارة الهواتف. يجب أن تتعلم أساسيات
+    تصميم الرقائق للمساعدة في إنشاء بديل أكثر أماناً — فهم كيف تتحد المفاتيح
+    المنطقية لتشكّل وظائف أكبر.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "تصميم منطقي"
+      description: "تعلّم كيف تجمع مفاتيح تشغيل/إيقاف بسيطة (بوابات منطقية) لبناء وظائف معقدة كالآلات الحاسبة والذاكرة — مثل البناء بـLEGO لكن بالكهرباء"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "هندسة الرقاقة"
+      description: "افهم كيف تُنظَّم الرقاقة في أقسام — كمدينة بأحياء للمعالجة والذاكرة والاتصالات — وخطّط لكيفية عملها معاً"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "اختبار الدوائر"
+      description: "محاكاة واختبار تصميمك بأدوات برمجية لاكتشاف الأخطاء قبل التصنيع — كمراجعة مقال قبل طباعة 10 ملايين نسخة"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "التصميم المادي"
+      description: "رتّب مكونات الدائرة على الرقاقة كمخطط مدني — قرر أين يذهب كل قسم واربطها بأقصر المسارات"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "هندسة الطاقة المنخفضة"
+      description: "صمّم رقائق تستخدم أقل قدر من الطاقة — ضروري للهواتف الذكية والأجهزة القابلة للارتداء التي تحتاج للعمل طوال اليوم ببطارية صغيرة"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "إتقان جودة الإشارة"
+      description: "تأكد من انتقال الإشارات الكهربائية بنظافة عبر الرقاقة دون تشويه — كضمان وضوح المكالمات الهاتفية"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "تصميم مسرّع الذكاء الاصطناعي"
+      description: "صمّم رقائق خاصة لمهام الذكاء الاصطناعي — كالتعرف على الوجوه أو الترجمة — أسرع بكثير من الرقائق العادية"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "أول دائرة تُصنع"
+    description: "صمّم دائرة حاسبة 4 بت تعمل وتحقق أنها تعطي إجابات صحيحة لجميع حالات الاختبار"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "تحدي المخطط"
+    description: "أنشئ خطة تصميم كاملة لرقاقة بسيطة واشرح كيف تتواصل الأقسام مع بعضها"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "الدرع السيليكوني"
+    description: "صمّم واختبر وحسّن رقاقة منخفضة الطاقة كاملة جاهزة للإنتاج"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "الشرارة الأولى"
+    description: "شغّل محاكاة دائرتك الأولى بنجاح وشاهد تصميمك يحيا"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "صائد الأخطاء"
+    description: "اكتشف وصحّح 10 أخطاء تصميم قبل وصولها إلى المصنع"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "حارس الطاقة"
+    description: "خفّض استهلاك طاقة الرقاقة بنسبة 30% من خلال قرارات تصميم ذكية"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "أسطورة المصنع"
+    description: "أكمل جميع تحديات تصميم الرقائق وسلّم تصميماً جاهزاً للإنتاج"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "لغز البوابات"
+      description: "وصّل مفاتيح منطقية لبناء دائرة تضيء مصباحاً فقط عند الضغط على زرين في آنٍ واحد"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "مستكشف خريطة الرقاقة"
+      description: "انظر في مخطط رقاقة حقيقية، حدّد الأقسام الرئيسية، واشرح بكلمات بسيطة ما تفعله كل منطقة"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "تصحيح الدائرة"
+      description: "دائرة محاكاة تعطي إجابات خاطئة — ابحث عن الخطأ المنطقي وصحّحه قبل وصوله للعملاء"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "مخطط المدينة"
+      description: "أعد ترتيب أقسام الرقاقة لتقصير توصيلات الأسلاك وتجنب التداخل بين المكونات"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "حمية الطاقة"
+      description: "أعد تصميم قسم من الرقاقة لتخفيض استهلاك الطاقة إلى النصف مع الحفاظ على نفس السرعة"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "مخطط محرك الذكاء الاصطناعي"
+      description: "صمّم بنية رقاقة تتعرف على الوجوه بسرعة أكبر 10 مرات من المعالج العادي"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم كيف تتحد مفاتيح منطقية بسيطة لبناء دوائر رقمية معقدة"
+  - "شرح الأقسام الوظيفية الرئيسية داخل رقاقة حديثة"
+  - "استخدام أدوات المحاكاة لاختبار وإيجاد الأخطاء في تصاميم الدوائر"
+  - "تطبيق مبادئ تخطيط التصميم لتنظيم مكونات الرقاقة بكفاءة"
+  - "تصميم دوائر توازن بين السرعة واستهلاك الطاقة"
+  - "تتبع رحلة الرقاقة من التصميم إلى التصنيع المادي في المصنع"
+  - "فهم كيف تشكّل صناعة أشباه الموصلات في تايوان الاقتصاد العالمي"
+  - "تقييم مقايضات التصميم بين الأداء والطاقة ومساحة الرقاقة"
+
+career_outcomes:
+  - "مهندس تصميم الدوائر المتكاملة"
+  - "مصمم المنطق الرقمي"
+  - "مهندس التحقق من الرقائق"
+  - "مهندس التصميم المادي"
+  - "مهندس أجهزة الذكاء الاصطناعي"
+  - "مهندس الأنظمة المدمجة"
+  - "باحث بحث وتطوير أشباه الموصلات"
+  - "مدير منتجات الأجهزة"

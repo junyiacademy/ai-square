@@ -1,0 +1,219 @@
+# Путь открытия квантового инженера - Русский
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Квантовый Ткач Снов - Исследователь Квантовых Вычислений"
+  short_description: "Овладей суперпозицией и запутанностью, чтобы решать невозможное"
+  long_description: |
+    Ты — ученик Ткача Снов в «Квантовом Лабиринте», обладающий интуицией понимания того,
+    что частицы одновременно существуют в нескольких состояниях.
+    В этой области, опрокидывающей логику классических вычислений, каждая операция
+    с кубитом может раскрыть задачи, на решение которых у обычных компьютеров
+    ушло бы десять тысяч лет.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "Квантовый Лабиринт"
+  description: |
+    Квантовый Лабиринт — исследовательский объект, существующий в суперпозиции,
+    где его коридоры одновременно ведут в нескольких направлениях.
+    Квантовые инженеры учатся здесь управлять кубитами и разрабатывать квантовые алгоритмы.
+    Самые передовые инновации в квантовых технологиях рождаются за этими стенами.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "Первый Урок Шрёдингера"
+  description: |
+    Квантовый наставник Кубит использует кота Шрёдингера, чтобы объяснить концепцию суперпозиции.
+    Но монстр квантовой декогеренции, скрывающийся в лабиринте, разрушает квантовые состояния.
+    Ты должен научиться квантовой коррекции ошибок, чтобы защитить свои кубиты.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "Основы квантовой механики"
+      description: "Понять ключевые концепции суперпозиции, запутанности и измерения"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "Квантовые схемы"
+      description: "Комбинировать квантовые вентили для построения квантовых схем"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "Квантовое программирование"
+      description: "Писать квантовые программы с использованием Qiskit / Cirq"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "Квантовые алгоритмы"
+      description: "Реализовывать алгоритмы Гровера, Шора, VQE и другие"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "Квантовая коррекция ошибок"
+      description: "Проектировать и реализовывать коды коррекции квантовых ошибок"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "Квантовая криптография"
+      description: "Строить системы квантового распределения ключей и постквантового шифрования"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "Квантовое машинное обучение"
+      description: "Гибридные алгоритмы, сочетающие квантовые вычисления и машинное обучение"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "Первое состояние суперпозиции"
+    description: "Успешно поместить кубит в суперпозицию и измерить его"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "Борец с декогеренцией"
+    description: "Успешно выполнить алгоритм на зашумлённом квантовом компьютере"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "Квантовое превосходство достигнуто"
+    description: "Решить задачу, которую классические компьютеры не могут эффективно решить"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "Подготовка состояния Белла"
+    description: "Успешно подготовить первую пару запутанных кубитов"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "Исполнитель алгоритмов"
+    description: "Успешно запустить поиск Гровера на настоящем квантовом компьютере"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "Мастер квантовой коррекции ошибок"
+    description: "Реализовать полный код коррекции квантовых ошибок"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "Квантовая легенда"
+    description: "Завершить все испытания квантовых технологий"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "Первое знакомство с кубитами"
+      description: "Визуализировать состояние одиночного кубита с помощью сферы Блоха"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "Первая квантовая схема"
+      description: "Подготовить запутанное состояние с помощью вентилей Адамара и CNOT"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Испытание поиска Гровера"
+      description: "Реализовать алгоритм квантового поиска для нахождения скрытого ответа"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "Эксперимент по симуляции шума"
+      description: "Симулировать влияние шума реальных квантовых компьютеров на результаты"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "Квантовое распределение ключей"
+      description: "Реализовать протокол BB84 для построения защищённого от прослушивания зашифрованного канала"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "Гибридное квантово-классическое обучение"
+      description: "Использовать VQE для решения задач оптимизации в молекулярном моделировании"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять ключевые концепции квантовой механики: суперпозиция, запутанность, измерение"
+  - "Освоить проектирование квантовых вентилей и квантовых схем"
+  - "Писать квантовые программы с использованием Qiskit или Cirq"
+  - "Реализовать алгоритмы поиска Гровера и факторизации Шора"
+  - "Понять принципы и реализацию квантовой коррекции ошибок"
+  - "Исследовать квантовую криптографию и постквантовую безопасность"
+  - "Сочетать квантовые вычисления с машинным обучением"
+  - "Изучить передовые направления исследований в области квантовых технологий"
+
+career_outcomes:
+  - "Инженер квантового программного обеспечения"
+  - "Исследователь квантовых алгоритмов"
+  - "Инженер квантового аппаратного обеспечения"
+  - "Инженер постквантовой криптографии"
+  - "Учёный по квантовым приложениям"
+  - "Исследователь квантового машинного обучения"
+  - "Консультант по квантовым вычислениям"
+  - "Менеджер продукта квантовых технологий"

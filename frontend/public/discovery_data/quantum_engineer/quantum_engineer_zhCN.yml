@@ -1,0 +1,216 @@
+# 量子计算研究员探索路径 - 简体中文
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "量子织梦者 - 量子计算研究员"
+  short_description: "驾驭量子世界的叠加与纠缠来解决不可能的问题"
+  long_description: |
+    你是「量子迷宫」的见习织梦者，拥有理解粒子同时存在多种状态的直觉
+    在这个颠覆传统运算逻辑的领域中，每一个量子比特的操作
+    都可能解开传统电脑花一万年也解不开的难题
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "量子迷宫"
+  description: |
+    量子迷宫是一座存在于叠加态的研究设施，这里的走廊同时通往多个方向
+    量子工程师在此学习操控量子比特、设计量子算法
+    中国量子科技核心技术就在这里孕育
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "薛定谔的第一课"
+  description: |
+    量子导师 Qubit 用薛定谔的猫说明叠加态的概念
+    但迷宫中的量子退相干怪物 Decoherence 正在破坏量子态
+    你必须学会量子纠错才能保护你的量子比特
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "量子力学基础"
+      description: "理解叠加、纠缠、测量的核心概念"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "量子电路"
+      description: "用量子门组合出量子电路"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "量子程序设计"
+      description: "用 Qiskit / Cirq 编写量子程序"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "量子算法"
+      description: "实现 Grover、Shor、VQE 等算法"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "量子纠错"
+      description: "设计和实现量子错误修正码"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "量子密码学"
+      description: "建立量子密钥分发和后量子加密系统"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "量子机器学习"
+      description: "结合量子运算与机器学习的混合算法"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "第一个叠加态"
+    description: "成功将量子比特置入叠加态并测量"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "退相干对抗者"
+    description: "在有噪音的量子电脑上成功执行算法"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "量子优势达成"
+    description: "解决一个传统电脑无法有效求解的问题"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "贝尔态制备"
+    description: "成功制备你的第一对纠缠量子比特"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "算法执行者"
+    description: "在真实量子电脑上成功执行 Grover 搜索"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "量子纠错大师"
+    description: "实现完整的量子错误修正码"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "量子传奇"
+    description: "完成所有量子科技挑战"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "量子比特初体验"
+      description: "用 Bloch 球面可视化单一量子比特的状态"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "第一个量子电路"
+      description: "用 Hadamard 门和 CNOT 门制备纠缠态"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Grover 搜索挑战"
+      description: "实现量子搜索算法找到隐藏的答案"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "噪音模拟实验"
+      description: "模拟真实量子电脑的噪音对结果的影响"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "量子密钥分发"
+      description: "实现 BB84 协议建立无法窃听的加密通道"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "量子-经典混合学习"
+      description: "用 VQE 解决分子模拟的最优化问题"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解量子力学的核心概念：叠加、纠缠、测量"
+  - "掌握量子门和量子电路的设计"
+  - "用 Qiskit 或 Cirq 编写量子程序"
+  - "实现 Grover 搜索和 Shor 分解算法"
+  - "理解量子错误修正的原理与实现"
+  - "探索量子密码学与后量子安全"
+  - "结合量子运算与机器学习"
+  - "了解量子科技的前沿研发方向"
+
+career_outcomes:
+  - "量子软件工程师"
+  - "量子算法研究员"
+  - "量子硬件工程师"
+  - "后量子密码学工程师"
+  - "量子应用科学家"
+  - "量子机器学习研究员"
+  - "量子计算顾问"
+  - "量子技术产品经理"

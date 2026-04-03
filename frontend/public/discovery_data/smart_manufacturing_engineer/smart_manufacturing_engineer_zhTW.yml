@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Traditional Chinese
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "數位工廠指揮官 - 智慧工廠營運經理"
+  short_description: "將傳統工廠轉型為智慧化、無人化生產系統"
+  long_description: |
+    你是「數位工廠」的見習工程師，在這裡機器彼此溝通、機器人徹夜工作無需人工干預，人工智慧在缺陷發生前就能預測問題。這座以富士康燈塔工廠為靈感的未來工廠中，你將學習感測器、數據和智慧演算法如何結合，創造能夠自我運行的工廠。製造業正在被重新定義，而你就是這場革命的領導者。
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "數位工廠"
+  description: |
+    數位工廠是一座最先進的設施，每一台機器都互相連結，每個流程都被即時監控，人工智慧以超越人類的速度做出決策。這裡的工程師設計機器人與人類並肩工作的系統，數位孿生模擬整條生產線，預測系統在問題發生前就加以阻止。這就是未來的工廠。
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "工廠的覺醒"
+  description: |
+    工廠總監 Titan 宣布了一個大膽的使命：在一年內將舊生產線轉型為全自動智慧工廠。競爭對手已在使用AI驅動的機器人和即時品質管控。你必須學習如何用感測器連接機器、建立生產線數位孿生，並使用數據消除浪費和缺陷。製造業的未來從現在開始。
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "物聯網感測器網路"
+      description: "用收集即時生產數據的感測器連接機器和設備"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "數位孿生系統"
+      description: "創建工廠的虛擬副本，反映現實世界狀況以進行測試和優化"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "AI品質管控"
+      description: "使用電腦視覺和機器學習自動偵測產品缺陷"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "預測性維護"
+      description: "分析機器數據，在設備故障導致停產前預測問題"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "機器人自動化"
+      description: "設計和編程機器人系統以執行複雜的組裝和物料搬運任務"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "供應鏈智慧化"
+      description: "使用AI驅動的供應鏈管理優化物料和零件的流動"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "無人燈塔製造"
+      description: "設計全自動生產系統，可在無人干預下24/7運行"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "第一條連網生產線"
+    description: "成功用物聯網感測器連接整條生產線並顯示即時數據"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "零缺陷挑戰"
+    description: "實施達到99.9%缺陷偵測準確率的AI品質管控系統"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "無人燈塔工廠"
+    description: "設計能在無人干預下持續運行72小時的生產系統"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "第一次連線"
+    description: "成功將你的第一台機器接入物聯網網路"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "缺陷偵探"
+    description: "使用AI視覺自動偵測100個產品缺陷"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "運轉冠軍"
+    description: "通過預測性維護警報防止5次設備故障"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "工廠傳奇"
+    description: "完成數位工廠中所有智慧製造挑戰"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "感測器網路架設"
+      description: "將溫度、振動和速度感測器連接到模擬生產機器"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "生產數據儀表板"
+      description: "建立即時儀表板，顯示來自感測器數據的關鍵生產指標"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "數位孿生建構"
+      description: "創建反映真實機器行為的生產單元數位孿生"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "AI品質檢測員"
+      description: "訓練電腦視覺模型識別製造零件上的表面缺陷"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "預測性維護系統"
+      description: "設計使用振動數據提前48小時預測機器故障的系統"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "自主生產線"
+      description: "設計帶有機器人搬運和AI品質管控的全自動生產序列"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "了解物聯網感測器如何收集和傳輸即時工廠數據"
+  - "學習建立實體生產系統的數位孿生模擬"
+  - "將電腦視覺和機器學習應用於自動化品質檢測"
+  - "設計防止昂貴設備故障的預測性維護系統"
+  - "了解機器人系統如何被編程以執行靈活的製造任務"
+  - "分析生產數據以識別效率提升和減少浪費的機會"
+  - "設計機器互相溝通和自我優化的互聯工廠系統"
+  - "探索無人燈塔製造和全自動工廠的未來"
+
+career_outcomes:
+  - "智慧工廠營運經理"
+  - "工業物聯網工程師"
+  - "數位孿生專家"
+  - "機器人自動化工程師"
+  - "AI品質管控工程師"
+  - "預測性維護工程師"
+  - "製造數據科學家"
+  - "工業4.0顧問"

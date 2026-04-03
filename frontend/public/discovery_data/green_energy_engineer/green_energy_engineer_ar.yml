@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Arabic
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "حارس الطاقة الخضراء - مستشار استراتيجيات الطاقة الخضراء"
+  short_description: "استغل قوة الشمس والرياح والطبيعة من أجل مستقبل مستدام"
+  long_description: |
+    أنت مهندس مبتدئ في "برج الطاقة المستدامة"، حيث تُلتقط قوى الطبيعة وتُحوَّل إلى كهرباء نظيفة. في هذا البرج عالي التقنية، ستكتشف كيف يتحول ضوء الشمس إلى طاقة، وكيف تدور التوربينات بفعل الرياح، وكيف تخزن خلايا وقود الهيدروجين الطاقة للغد. مع تهديد تغير المناخ للعالم، قد تساعد ابتكاراتك في إنقاذه.
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "برج الطاقة المستدامة"
+  description: |
+    برج الطاقة المستدامة أعجوبة هندسية خضراء تتربع فوق منطقة تعمل بالكامل بمصادر الطاقة المتجددة. يستغل المهندسون هنا الألواح الشمسية وتوربينات الرياح وأنظمة الهيدروجين لتزويد مدن بأكملها بالطاقة النظيفة. كل اختراق هنا يقلل من انبعاثات الكربون ويحمي الكوكب.
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "إنذار أزمة الطاقة"
+  description: |
+    تُطلق المهندسة الرئيسية أورورا الإنذار: شبكة الكهرباء في المدينة تتعطل بسبب الاعتماد المفرط على الوقود الأحفوري. يجب عليك تصميم نظام جديد للطاقة المتجددة ليحل محل محطات الفحم القديمة. تبدأ رحلتك بفهم كيف يمكن لضوء الشمس والرياح أن يزودا مدينة بأكملها بالطاقة بشكل نظيف وفعال.
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "أنظمة الطاقة الشمسية"
+      description: "أتقن كيفية تحويل الألواح الشمسية لضوء الشمس إلى كهرباء نظيفة"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "أنظمة طاقة الرياح"
+      description: "تعلم كيف توليد توربينات الرياح للكهرباء من الهواء المتحرك"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "تخزين الطاقة"
+      description: "حل مشكلة تخزين الطاقة المتجددة عندما لا تتوفر الشمس والرياح"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "إدارة الشبكة الذكية"
+      description: "وازن بين عرض وطلب الطاقة في المدينة باستخدام الأنظمة الذكية"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "تكنولوجيا الهيدروجين"
+      description: "صمم أنظمة إنتاج الهيدروجين وخلايا الوقود لتخزين الطاقة النظيفة"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "أنظمة الطاقة البحرية"
+      description: "ابنِ أنظمة طاقة الرياح والأمواج في البيئات المحيطية"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "تخطيط خفض الكربون"
+      description: "صمم خططاً شاملة لتقليل البصمة الكربونية للمدن والصناعات"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "أول مصفوفة شمسية"
+    description: "صمم واحسب نظام ألواح شمسية يزود مبنى مدرسة بالكهرباء"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "مصمم مزرعة الرياح"
+    description: "خطط لتخطيط مزرعة طاقة رياح تزيد إنتاج الطاقة لمنطقة ساحلية"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "مهندس المدينة الخضراء"
+    description: "صمم نظاماً كاملاً للطاقة المتجددة لحي مدني بأكمله"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "أول واط"
+    description: "ولّد أول كيلوواط من طاقتك المتجددة المحاكاة"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "منقذ الكربون"
+    description: "صمم نظاماً يزيل 100 طن من انبعاثات ثاني أكسيد الكربون"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "موازن الشبكة"
+    description: "وازن بنجاح بين عرض وطلب الطاقة لمدة 24 ساعة"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "أسطورة الطاقة الخضراء"
+    description: "أكمل جميع تحديات الطاقة المتجددة في البرج"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "حاسبة الألواح الشمسية"
+      description: "احسب عدد الألواح الشمسية التي يحتاجها المنزل للاستقلالية الطاقوية"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "أساسيات طاقة الرياح"
+      description: "حلل بيانات سرعة الرياح لإيجاد أفضل موقع لتوربين الرياح"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "نظام تخزين البطاريات"
+      description: "صمم نظام بطاريات يخزن الطاقة الشمسية للاستخدام الليلي"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "محاكاة الشبكة الذكية"
+      description: "محاكاة كيفية موازنة الشبكة الذكية للطاقة المتجددة في الحي"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "محطة كهرباء الهيدروجين"
+      description: "صمم منشأة لإنتاج الهيدروجين الأخضر باستخدام الطاقة الشمسية الفائضة"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "خطة مدينة صفر كربون"
+      description: "أنشئ خطة طاقة محايدة كربونياً شاملة لمدينة متوسطة الحجم"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم كيفية تحويل الألواح الشمسية لضوء الشمس إلى كهرباء"
+  - "تعلم كيف توليد توربينات الرياح طاقة نظيفة من الهواء المتحرك"
+  - "إتقان تقنيات تخزين الطاقة بما فيها البطاريات والهيدروجين"
+  - "تصميم أنظمة شبكة ذكية توازن بين العرض والطلب"
+  - "حساب احتياجات الطاقة وتصميم أنظمة متجددة بالحجم المناسب"
+  - "فهم تأثير الطاقة المتجددة في تقليل انبعاثات الكربون"
+  - "استكشاف تكنولوجيا خلايا وقود الهيدروجين كحل لتخزين الطاقة"
+  - "تطوير مهارات التخطيط لتحولات الطاقة المستدامة على مستوى المدينة"
+
+career_outcomes:
+  - "مستشار استراتيجيات الطاقة الخضراء"
+  - "مصمم أنظمة الطاقة الشمسية"
+  - "متخصص في طاقة الرياح"
+  - "مهندس تخزين الطاقة"
+  - "مهندس الشبكة الذكية"
+  - "مهندس أنظمة الهيدروجين"
+  - "مستشار الاستدامة"
+  - "مخطط خفض الكربون"

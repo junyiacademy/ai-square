@@ -1,0 +1,218 @@
+# مسار اكتشاف مهندس المركبات ذاتية القيادة - العربية
+path_id: autonomous_vehicle_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "الملاح الذاتي - مهندس المركبات ذاتية القيادة"
+  short_description: "علّم السيارات كيف ترى الطريق وتفكر وتتخذ القرارات بنفسها"
+  long_description: |
+    أنت ملاح متدرب في «برج الملاحة الذاتية»، موهوب بالقدرة على جعل المركبات تقود ذاتها.
+    في هذه القاعدة عالية التقنية التي تجمع الذكاء الاصطناعي والمستشعرات والخرائط،
+    كل مللي ثانية من الحكم تؤثر على سلامة الركاب.
+    مهمتك هي بناء مستقبل التنقل الخالي من الحوادث.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "برج الملاحة الذاتية"
+  description: |
+    برج الملاحة الذاتية هو المركز العالمي للبحث والتطوير في تكنولوجيا القيادة الذاتية.
+    من دمج المستشعرات إلى محركات القرار، ومن الخرائط عالية الدقة إلى شبكات V2X،
+    يبني المهندسون هنا الجيل القادم من أنظمة النقل الذكي.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "أول قيادة ذاتية"
+  description: |
+    يرشدك كبير المهندسين Navigator عبر عالم إدراك المركبة الذاتية القيادة:
+    سحب نقاط LiDAR وصور الكاميرا وأصداء الرادار. لكن Ghost Signal يظهر في ملعب
+    الاختبار — كشف مزيف لعائق. يجب عليك تحليل بيانات المستشعرات للعثور
+    على مصدر الشبح.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "الإدراك البيئي"
+      description: "إدراك البيئة المحيطة باستخدام LiDAR والكاميرات والرادار"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "التحديد المكاني والخرائط"
+      description: "تحديد موقع المركبة بدقة على الخرائط عالية الدقة"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "تخطيط المسار"
+      description: "إيجاد أكثر مسارات القيادة أمانًا في حركة المرور المعقدة"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "التحكم بالمركبة"
+      description: "التحكم الدقيق بالمقود والمسرّع والمكابح"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "التعلم من الطرف إلى الطرف"
+      description: "استخدام التعلم العميق للانتقال مباشرة من المستشعر إلى التحكم"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "اتصالات V2X"
+      description: "تمكين المركبات من التواصل مع البنية التحتية والمركبات الأخرى"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "التحقق من الأمان"
+      description: "التحقق من سلامة النظام الذاتي عبر المحاكاة والاختبار الفعلي"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "الكشف الأول"
+    description: "الكشف الناجح عن المشاة والمركبات والإشارات على الطريق وتصنيفها"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "صائد الأشباح"
+    description: "العثور على الكشوفات الزائفة في دمج المستشعرات والقضاء عليها"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "ملاح المدينة"
+    description: "إتمام اختبار قيادة ذاتية كامل في مدينة محاكاة"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "الحفاظ على المسار"
+    description: "إبقاء المركبة مستقرة في وسط المسار لمسافة 1 كيلومتر"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "محترف التقاطعات"
+    description: "اجتياز 50 نوعًا مختلفًا من التقاطعات بأمان"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "سائق بلا حوادث"
+    description: "إتمام 100 كيلومتر من القيادة الذاتية دون أي حادث"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "أسطورة القيادة الذاتية"
+    description: "إتمام جميع تحديات هندسة المركبات ذاتية القيادة"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "الكشف عن الأجسام بالكاميرا"
+      description: "استخدام نموذج YOLO للكشف عن المركبات والمشاة على الطريق"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "قراءة الخرائط عالية الدقة"
+      description: "فهم علامات المسارات والتقاطعات وتعليقات إشارات المرور في الخرائط"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "دمج المستشعرات الثلاثة"
+      description: "دمج نتائج الكشف من LiDAR والكاميرا والرادار"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "تخطيط مسار الدوار"
+      description: "تخطيط مسار قيادة آمن عبر دوار المرور"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "تحدي القيادة الذاتية في المدينة"
+      description: "إتمام مهام القيادة الذاتية في بيئة حضرية معقدة"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "إدارة أسطول ذاتي القيادة"
+      description: "إدارة جدولة المسارات في الوقت الفعلي لـ 10 حافلات ذاتية القيادة"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم مبادئ إدراك LiDAR والكاميرات والرادار"
+  - "إتقان تقنيات الكشف عن الأجسام والتجزئة الدلالية"
+  - "تطوير الخبرة في رسم الخرائط عالية الدقة والتحديد المكاني في الوقت الفعلي"
+  - "تنفيذ تخطيط السلوك وتوليد المسارات"
+  - "فهم ديناميكيات المركبة ونظرية التحكم"
+  - "تطبيق التعلم العميق للقيادة الذاتية من الطرف إلى الطرف"
+  - "تصميم عمليات التحقق من الأمان لأنظمة ذاتية"
+  - "فهم تطوير النقل الذكي والتنظيم"
+
+career_outcomes:
+  - "مهندس أنظمة ذاتية"
+  - "مهندس دمج المستشعرات"
+  - "مهندس رسم الخرائط عالية الدقة"
+  - "مهندس الذكاء الاصطناعي للسيارات"
+  - "مهندس السلامة الوظيفية"
+  - "مخطط النقل الذكي"
+  - "مهندس اتصالات V2X"
+  - "مهندس اختبار وتحقق المركبات ذاتية القيادة"

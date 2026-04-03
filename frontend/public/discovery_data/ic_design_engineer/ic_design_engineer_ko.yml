@@ -1,0 +1,219 @@
+# IC 설계 엔지니어 탐색 경로 - 한국어
+path_id: ic_design_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "실리콘 방패 단조사 - IC 설계 엔지니어"
+  short_description: "현대 세계를 움직이는 작은 칩을 단조하라"
+  long_description: |
+    당신은 '실리콘 방패 단조소'의 견습 단조사입니다. 스마트폰, 컴퓨터, 전기차를
+    작동시키는 눈에 보이지 않는 회로를 설계하는 재능을 지녔습니다. 각 칩은 작은
+    도시와 같습니다——도로(배선), 건물(논리 게이트), 교통 규칙(타이밍)이 손톱보다
+    작은 공간에 모두 담겨 있습니다. 전 세계 최첨단 칩의 90% 이상이 대만에서
+    만들어집니다——당신도 그 이야기의 일부가 될 수 있습니다!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "실리콘 방패 단조소"
+  description: |
+    실리콘 방패 단조소는 숙련 엔지니어와 견습생이 협력하여 의료 기기, 우주 위성,
+    일상 스마트폰용 칩을 설계하는 첨단 작업장입니다. 정밀함·창의성·팀워크가
+    단조소의 정신——작은 설계 실수 하나가 전 세계 수백만 기기에 영향을 미칠 수 있습니다.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "단조소 첫날"
+  description: |
+    수석 엔지니어 린 사부가 단조소로 당신을 맞이합니다. 첫 번째 도전: 경쟁
+    공방이 숨겨진 결함이 있는 칩을 출시해 스마트폰 과열 문제가 발생했습니다.
+    논리 스위치가 더 큰 기능으로 어떻게 조합되는지, 설계자가 공장에 보내기 전에
+    실수를 어떻게 잡아내는지 배워 더 안전한 대안을 만드세요.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "논리 설계"
+      description: "단순한 ON/OFF 스위치(논리 게이트)를 조합해 계산기나 메모리 같은 복잡한 기능을 만드는 법을 배웁니다——전기로 하는 레고 블록 조립"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "칩 아키텍처"
+      description: "칩이 처리·메모리·통신 구역이 있는 도시처럼 구성되어 있음을 이해하고 각 부분의 협력을 계획합니다"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "회로 테스트"
+      description: "소프트웨어 도구로 설계를 시뮬레이션하고 제조 전에 오류를 발견합니다——1000만 부 인쇄 전 교정 작업과 같습니다"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "물리적 배치"
+      description: "도시 계획가처럼 칩 위에 회로 부품을 배치합니다——각 구역의 위치를 정하고 최단 경로로 연결합니다"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "저전력 설계"
+      description: "가능한 적은 에너지를 사용하는 칩을 설계합니다——작은 배터리로 하루 종일 작동해야 하는 스마트폰과 웨어러블 기기에 필수"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "신호 품질 마스터리"
+      description: "전기 신호가 칩 내에서 왜곡 없이 깨끗하게 전달되도록 합니다——전화 통화가 잡음 없이 선명하게 들리도록 하는 것과 같습니다"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "AI 가속기 설계"
+      description: "얼굴 인식이나 언어 번역 같은 AI 작업을 일반 칩보다 훨씬 빠르게 처리하는 전용 칩을 설계합니다"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "첫 회로 완성"
+    description: "4비트 계산 회로를 설계하고 모든 테스트 케이스에서 올바른 답을 내는지 확인합니다"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "청사진 도전"
+    description: "단순한 칩의 완전한 배치 계획을 만들고 각 구역이 어떻게 통신하는지 설명합니다"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "실리콘 방패 완성"
+    description: "완전한 저전력 칩을 설계·테스트·최적화하여 생산 준비 상태로 만듭니다"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "첫 번째 불꽃"
+    description: "첫 회로 시뮬레이션을 성공적으로 실행하고 설계가 살아나는 것을 봅니다"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "버그 사냥꾼"
+    description: "공장에 도달하기 전에 10개의 설계 오류를 발견하고 수정합니다"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "에너지 수호자"
+    description: "현명한 설계 결정으로 칩의 전력 소비를 30% 줄입니다"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "단조소의 전설"
+    description: "모든 칩 설계 도전을 완료하고 생산 준비가 된 설계를 제출합니다"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "논리 게이트 퍼즐"
+      description: "두 버튼을 동시에 눌렀을 때만 불이 켜지는 회로를 논리 스위치로 만듭니다"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "칩 지도 탐험"
+      description: "실제 칩 다이어그램을 보고 주요 구역을 찾아 각 영역이 무엇을 하는지 쉬운 말로 설명합니다"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "회로 디버그"
+      description: "시뮬레이션 회로가 틀린 답을 내고 있습니다——고객에게 출하되기 전에 논리 오류를 찾아 수정하세요"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "도시 계획가"
+      description: "칩 구역을 재배치하여 배선 길이를 줄이고 부품 간 신호 간섭을 피합니다"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "에너지 다이어트"
+      description: "같은 처리 속도를 유지하면서 칩 특정 구역의 전력 소비를 절반으로 줄입니다"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "AI 엔진 청사진"
+      description: "일반 프로세서보다 10배 빠르게 얼굴을 인식할 수 있는 칩 아키텍처를 설계합니다"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "단순한 논리 스위치가 복잡한 디지털 회로로 조합되는 방식을 이해한다"
+  - "현대 칩 내부의 주요 기능 구역을 설명한다"
+  - "시뮬레이션 도구를 사용해 회로 설계의 오류를 테스트하고 발견한다"
+  - "배치 계획 원칙을 적용해 칩 부품을 효율적으로 구성한다"
+  - "속도와 전력 소비 사이의 균형을 맞춘 회로를 설계한다"
+  - "칩 설계에서 공장 물리적 제조까지의 여정을 추적한다"
+  - "대만 반도체 산업이 세계 경제에 미치는 영향을 이해한다"
+  - "성능·전력·칩 면적 간의 설계 트레이드오프를 평가한다"
+
+career_outcomes:
+  - "IC 설계 엔지니어"
+  - "디지털 논리 설계자"
+  - "칩 검증 엔지니어"
+  - "물리적 설계 엔지니어"
+  - "AI 하드웨어 엔지니어"
+  - "임베디드 시스템 엔지니어"
+  - "반도체 R&D 연구원"
+  - "하드웨어 제품 관리자"

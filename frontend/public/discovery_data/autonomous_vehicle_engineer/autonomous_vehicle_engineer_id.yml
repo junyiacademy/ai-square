@@ -1,0 +1,218 @@
+# Jalur Penemuan Insinyur Kendaraan Otonom - Bahasa Indonesia
+path_id: autonomous_vehicle_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Navigator Otonom - Insinyur Kendaraan Otonom"
+  short_description: "Ajarkan mobil untuk melihat jalan, berpikir, dan mengambil keputusan sendiri"
+  long_description: |
+    Kamu adalah navigator magang di «Menara Navigasi Otonom», dianugerahi bakat untuk
+    membuat kendaraan berkendara sendiri. Di markas berteknologi tinggi yang menggabungkan
+    AI, sensor, dan peta ini, setiap milidetik keputusan memengaruhi keselamatan penumpang.
+    Misimu adalah membangun masa depan mobilitas tanpa kecelakaan.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "Menara Navigasi Otonom"
+  description: |
+    Menara Navigasi Otonom adalah pusat R&D global untuk teknologi mengemudi otonom.
+    Dari fusi sensor hingga mesin keputusan, dari peta HD hingga jaringan V2X, para
+    insinyur di sini membangun sistem transportasi cerdas generasi berikutnya.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "Mengemudi Otonom Pertama"
+  description: |
+    Insinyur Kepala Navigator memandu kamu melalui dunia persepsi kendaraan otonom:
+    awan titik LiDAR, gambar kamera, gema radar. Tapi sebuah Ghost Signal muncul di
+    lintasan uji — deteksi rintangan palsu. Kamu harus menganalisis data sensor
+    untuk menemukan sumber hantu itu.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "Persepsi Lingkungan"
+      description: "Mendeteksi lingkungan sekitar menggunakan LiDAR, kamera, dan radar"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "Lokalisasi dan Pemetaan"
+      description: "Menentukan posisi kendaraan secara tepat pada peta definisi tinggi"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "Perencanaan Rute"
+      description: "Menemukan rute berkendara paling aman dalam lalu lintas yang kompleks"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "Kontrol Kendaraan"
+      description: "Mengontrol kemudi, akselerator, dan rem dengan presisi"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "Pembelajaran End-to-End"
+      description: "Menggunakan deep learning untuk langsung dari sensor ke kontrol"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "Komunikasi V2X"
+      description: "Memungkinkan kendaraan berkomunikasi dengan infrastruktur dan kendaraan lain"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "Validasi Keamanan"
+      description: "Memvalidasi keamanan sistem otonom melalui simulasi dan pengujian nyata"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "Deteksi Pertama"
+    description: "Berhasil mendeteksi dan mengklasifikasikan pejalan kaki, kendaraan, dan sinyal di jalan"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "Pemburu Hantu"
+    description: "Temukan dan hilangkan deteksi palsu dalam fusi sensor"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "Navigator Kota"
+    description: "Selesaikan uji berkendara sepenuhnya otonom di kota simulasi"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "Pemelihara Lajur"
+    description: "Jaga kendaraan tetap stabil di tengah lajur selama 1 kilometer"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "Master Persimpangan"
+    description: "Melewati 50 jenis persimpangan yang berbeda dengan aman"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "Pengemudi Tanpa Insiden"
+    description: "Selesaikan 100 km berkendara otonom tanpa insiden apapun"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "Legenda Otonom"
+    description: "Selesaikan semua tantangan rekayasa kendaraan otonom"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "Deteksi Objek dengan Kamera"
+      description: "Gunakan model YOLO untuk mendeteksi kendaraan dan pejalan kaki di jalan"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "Membaca Peta HD"
+      description: "Memahami penandaan lajur, persimpangan, dan anotasi rambu lalu lintas pada peta"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "Fusi Tiga Sensor"
+      description: "Menggabungkan hasil deteksi dari LiDAR, kamera, dan radar"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "Perencanaan Rute Bundaran"
+      description: "Merencanakan lintasan berkendara yang aman di bundaran"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "Tantangan Berkendara Otonom di Kota"
+      description: "Selesaikan tugas berkendara otonom di lingkungan perkotaan yang kompleks"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "Pengiriman Armada Otonom"
+      description: "Kelola penjadwalan rute real-time untuk 10 bus otonom"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami prinsip persepsi LiDAR, kamera, dan radar"
+  - "Menguasai teknik deteksi objek dan segmentasi semantik"
+  - "Mengembangkan keahlian dalam pemetaan HD dan lokalisasi real-time"
+  - "Mengimplementasikan perencanaan perilaku dan pembangkitan lintasan"
+  - "Memahami dinamika kendaraan dan teori kontrol"
+  - "Menerapkan deep learning untuk berkendara otonom end-to-end"
+  - "Merancang proses validasi keamanan untuk sistem otonom"
+  - "Memahami perkembangan transportasi cerdas dan regulasi"
+
+career_outcomes:
+  - "Insinyur Sistem Otonom"
+  - "Insinyur Fusi Sensor"
+  - "Insinyur Pemetaan HD"
+  - "Insinyur AI Otomotif"
+  - "Insinyur Keamanan Fungsional"
+  - "Perencana Transportasi Cerdas"
+  - "Insinyur Komunikasi V2X"
+  - "Insinyur Uji dan Validasi Kendaraan Otonom"

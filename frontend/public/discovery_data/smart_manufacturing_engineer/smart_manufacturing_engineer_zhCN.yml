@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Simplified Chinese
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "数字工厂指挥官 - 智慧工厂营运经理"
+  short_description: "将传统工厂转型为智能化、无人化生产系统"
+  long_description: |
+    你是「数字工厂」的见习工程师，在这里机器彼此沟通、机器人彻夜工作无需人工干预，人工智能在缺陷发生前就能预测问题。这座以富士康灯塔工厂为灵感的未来工厂中，你将学习传感器、数据和智能算法如何结合，创造能够自我运行的工厂。制造业正在被重新定义，而你就是这场革命的领导者。
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "数字工厂"
+  description: |
+    数字工厂是一座最先进的设施，每一台机器都互相连接，每个流程都被实时监控，人工智能以超越人类的速度做出决策。这里的工程师设计机器人与人类并肩工作的系统，数字孪生模拟整条生产线，预测系统在问题发生前就加以阻止。这就是未来的工厂。
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "工厂的觉醒"
+  description: |
+    工厂总监 Titan 宣布了一个大胆的使命：在一年内将旧生产线转型为全自动智能工厂。竞争对手已在使用AI驱动的机器人和实时品质管控。你必须学习如何用传感器连接机器、建立生产线数字孪生，并使用数据消除浪费和缺陷。制造业的未来从现在开始。
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "物联网传感器网络"
+      description: "用收集实时生产数据的传感器连接机器和设备"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "数字孪生系统"
+      description: "创建工厂的虚拟副本，反映现实世界状况以进行测试和优化"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "AI品质管控"
+      description: "使用计算机视觉和机器学习自动检测产品缺陷"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "预测性维护"
+      description: "分析机器数据，在设备故障导致停产前预测问题"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "机器人自动化"
+      description: "设计和编程机器人系统以执行复杂的组装和物料搬运任务"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "供应链智能化"
+      description: "使用AI驱动的供应链管理优化物料和零件的流动"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "无人灯塔制造"
+      description: "设计全自动生产系统，可在无人干预下24/7运行"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "第一条连网生产线"
+    description: "成功用物联网传感器连接整条生产线并显示实时数据"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "零缺陷挑战"
+    description: "实施达到99.9%缺陷检测准确率的AI品质管控系统"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "无人灯塔工厂"
+    description: "设计能在无人干预下持续运行72小时的生产系统"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "第一次连线"
+    description: "成功将你的第一台机器接入物联网网络"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "缺陷侦探"
+    description: "使用AI视觉自动检测100个产品缺陷"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "运转冠军"
+    description: "通过预测性维护警报防止5次设备故障"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "工厂传奇"
+    description: "完成数字工厂中所有智能制造挑战"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "传感器网络搭建"
+      description: "将温度、振动和速度传感器连接到模拟生产机器"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "生产数据仪表板"
+      description: "建立实时仪表板，显示来自传感器数据的关键生产指标"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "数字孪生构建"
+      description: "创建反映真实机器行为的生产单元数字孪生"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "AI品质检测员"
+      description: "训练计算机视觉模型识别制造零件上的表面缺陷"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "预测性维护系统"
+      description: "设计使用振动数据提前48小时预测机器故障的系统"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "自主生产线"
+      description: "设计带有机器人搬运和AI品质管控的全自动生产序列"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "了解物联网传感器如何收集和传输实时工厂数据"
+  - "学习建立实体生产系统的数字孪生模拟"
+  - "将计算机视觉和机器学习应用于自动化品质检测"
+  - "设计防止昂贵设备故障的预测性维护系统"
+  - "了解机器人系统如何被编程以执行灵活的制造任务"
+  - "分析生产数据以识别效率提升和减少浪费的机会"
+  - "设计机器互相沟通和自我优化的互联工厂系统"
+  - "探索无人灯塔制造和全自动工厂的未来"
+
+career_outcomes:
+  - "智慧工厂营运经理"
+  - "工业物联网工程师"
+  - "数字孪生专家"
+  - "机器人自动化工程师"
+  - "AI品质管控工程师"
+  - "预测性维护工程师"
+  - "制造数据科学家"
+  - "工业4.0顾问"

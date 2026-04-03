@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - German
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Digitalfabrik-Kommandant - Smart-Manufacturing-Betriebsleiter"
+  short_description: "Traditionelle Fabriken in intelligente, vollautomatische Produktionssysteme verwandeln"
+  long_description: |
+    Du bist ein Nachwuchsingenieur in der "Digitalfabrik", wo Maschinen miteinander kommunizieren, Roboter die Nacht ohne menschliche Eingriffe durcharbeiten und künstliche Intelligenz Defekte erkennt, bevor sie auftreten. In dieser futuristischen Fabrik, inspiriert von Foxconns Lights-Out-Automation, lernst du, wie Sensoren, Daten und intelligente Algorithmen sich zusammenfügen, um Fabriken zu schaffen, die sich selbst verwalten. Die Fertigung wird neu erfunden — und du führst die Revolution an.
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "Digitalfabrik"
+  description: |
+    Die Digitalfabrik ist eine hochmoderne Einrichtung, in der jede Maschine vernetzt ist, jeder Prozess in Echtzeit überwacht wird und KI schneller Entscheidungen trifft als jeder Mensch. Ingenieure hier entwerfen Systeme, in denen Roboter und Menschen Seite an Seite arbeiten, Digitale Zwillinge die gesamte Produktionslinie simulieren und prädiktive Systeme Probleme verhindern, bevor sie auftreten. Das ist die Fabrik der Zukunft.
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "Das Erwachen der Fabrik"
+  description: |
+    Fabrikdirektor Titan kündigt eine mutige Mission an: die alte Montageanlage innerhalb eines Jahres in eine vollautomatisierte Smart Factory zu verwandeln. Wettbewerber setzen bereits KI-gesteuerte Roboter und Echtzeit-Qualitätskontrolle ein. Du musst lernen, Maschinen mit Sensoren zu verbinden, Digitale Zwillinge der Produktionslinie zu bauen und Daten zu nutzen, um Verschwendung und Defekte zu eliminieren. Die Zukunft der Fertigung beginnt jetzt.
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "IoT-Sensornetzwerke"
+      description: "Verbinde Maschinen und Anlagen mit Sensoren, die Echtzeit-Produktionsdaten sammeln"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "Digitaler-Zwilling-Systeme"
+      description: "Erstelle virtuelle Kopien der Fabrik, die reale Bedingungen für Tests und Optimierung widerspiegeln"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "KI-Qualitätskontrolle"
+      description: "Nutze Computer Vision und maschinelles Lernen zur automatischen Erkennung von Produktdefekten"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "Prädiktive Wartung"
+      description: "Analysiere Maschinendaten, um Geräteausfälle vorherzusagen, bevor sie Produktionsstopps verursachen"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Roboterautomation"
+      description: "Entwirf und programmiere Robotersysteme für komplexe Montage- und Materialhandhabungsaufgaben"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Supply-Chain-Intelligenz"
+      description: "Optimiere den Materialfluss mit KI-gesteuertem Supply-Chain-Management"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Lights-Out-Fertigung"
+      description: "Entwirf vollautomatisierte Produktionssysteme, die 24/7 ohne menschliche Eingriffe laufen können"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "Erste Vernetzte Linie"
+    description: "Vernetze eine komplette Produktionslinie mit IoT-Sensoren und zeige Echtzeit-Daten an"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "Zero-Defekt-Challenge"
+    description: "Implementiere ein KI-Qualitätssystem mit 99,9% Defekterkennungsgenauigkeit"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "Lights-Out-Fabrik"
+    description: "Entwirf ein Produktionssystem, das 72 Stunden ohne menschliche Eingriffe läuft"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "Erste Verbindung"
+    description: "Verbinde erfolgreich deine erste Maschine mit dem IoT-Netzwerk"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "Defekt-Detektiv"
+    description: "Erkenne mit KI-Vision automatisch 100 Produktdefekte"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "Verfügbarkeitschampion"
+    description: "Verhindere 5 Geräteausfälle mit prädiktiven Wartungswarnungen"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Fabrik-Legende"
+    description: "Schließe alle Smart-Manufacturing-Herausforderungen in der Digitalfabrik ab"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "Sensornetzwerk-Einrichtung"
+      description: "Verbinde Temperatur-, Vibrations- und Geschwindigkeitssensoren mit einer simulierten Produktionsmaschine"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "Produktionsdaten-Dashboard"
+      description: "Erstelle ein Echtzeit-Dashboard mit wichtigen Produktionskennzahlen aus Sensordaten"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "Digitaler-Zwilling-Builder"
+      description: "Erstelle einen Digitalen Zwilling einer Produktionszelle, der das reale Maschinenverhalten widerspiegelt"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "KI-Qualitätsinspektor"
+      description: "Trainiere ein Computer-Vision-Modell zur Identifizierung von Oberflächendefekten an Fertigungsteilen"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Prädiktives Wartungssystem"
+      description: "Entwirf ein System, das Maschinenausfälle 48 Stunden im Voraus anhand von Vibrationsdaten vorhersagt"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "Autonome Produktionslinie"
+      description: "Entwirf eine vollautomatisierte Produktionssequenz mit Roboterhandling und KI-Qualitätskontrolle"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "Verstehen, wie IoT-Sensoren Echtzeit-Fabrikdaten sammeln und übertragen"
+  - "Lernen, Digitale-Zwilling-Simulationen physischer Produktionssysteme zu erstellen"
+  - "Computer Vision und maschinelles Lernen für automatisierte Qualitätsprüfung anwenden"
+  - "Prädiktive Wartungssysteme entwerfen, die teure Geräteausfälle verhindern"
+  - "Verstehen, wie Robotersysteme für flexible Fertigungsaufgaben programmiert werden"
+  - "Produktionsdaten analysieren, um Effizienzverbesserungen und Abfallreduzierung zu identifizieren"
+  - "Vernetzte Fabriksysteme entwerfen, in denen Maschinen kommunizieren und sich selbst optimieren"
+  - "Die Zukunft der Lights-Out-Fertigung und vollautonomer Fabriken erkunden"
+
+career_outcomes:
+  - "Smart-Manufacturing-Betriebsleiter"
+  - "Industrieller IoT-Ingenieur"
+  - "Digitaler-Zwilling-Spezialist"
+  - "Roboterautomations-Ingenieur"
+  - "KI-Qualitätskontroll-Ingenieur"
+  - "Prädiktiver-Wartungs-Ingenieur"
+  - "Fertigungs-Data-Scientist"
+  - "Industrie-4.0-Berater"

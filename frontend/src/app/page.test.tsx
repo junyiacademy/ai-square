@@ -2,52 +2,29 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "./page";
 
-// Mock next/dynamic to return the mocked component immediately
-jest.mock("next/dynamic", () => ({
-  __esModule: true,
-  default: (
-    fn: () => Promise<{ default: React.ComponentType }>,
-    options?: { loading?: () => React.ReactElement },
-  ) => {
-    // Return a component that renders the mock directly
-    const MockedComponent = () => {
-      const [Component, setComponent] =
-        React.useState<React.ComponentType | null>(null);
-      React.useEffect(() => {
-        fn().then((mod) => setComponent(() => mod.default));
-      }, []);
-      if (!Component && options?.loading) return options.loading();
-      if (!Component) return null;
-      return <Component />;
-    };
-    return MockedComponent;
-  },
-}));
-
-// Mock the components as default exports
 jest.mock("@/components/homepage/HeroSection", () => ({
   __esModule: true,
   default: () => <div data-testid="hero-section">Hero Section</div>,
 }));
 
-jest.mock("@/components/homepage/FeaturesSection", () => ({
+jest.mock("@/components/homepage/StatsSection", () => ({
   __esModule: true,
-  default: () => <div data-testid="features-section">Features Section</div>,
+  default: () => <div data-testid="stats-section">Stats Section</div>,
 }));
 
-jest.mock("@/components/homepage/KnowledgeGraph", () => ({
+jest.mock("@/components/homepage/ModesSection", () => ({
   __esModule: true,
-  default: () => <div data-testid="knowledge-graph">Knowledge Graph</div>,
+  default: () => <div data-testid="modes-section">Modes Section</div>,
 }));
 
 jest.mock("@/components/homepage/HowItWorksSection", () => ({
   __esModule: true,
-  default: () => <div data-testid="how-it-works">How It Works</div>,
+  default: () => <div data-testid="how-it-works-section">How It Works</div>,
 }));
 
-jest.mock("@/components/homepage/TargetAudienceSection", () => ({
+jest.mock("@/components/homepage/DomainsSection", () => ({
   __esModule: true,
-  default: () => <div data-testid="target-audience">Target Audience</div>,
+  default: () => <div data-testid="domains-section">Domains</div>,
 }));
 
 jest.mock("@/components/homepage/CTASection", () => ({
@@ -56,45 +33,33 @@ jest.mock("@/components/homepage/CTASection", () => ({
 }));
 
 describe("HomePage", () => {
-  it("should render all homepage sections", async () => {
+  it("should render all homepage sections", () => {
     render(<HomePage />);
 
     expect(screen.getByTestId("hero-section")).toBeInTheDocument();
-    expect(screen.getByTestId("features-section")).toBeInTheDocument();
-    expect(screen.getByTestId("knowledge-graph-section")).toBeInTheDocument();
-    // KnowledgeGraph is dynamically imported, so it may take a moment to appear
-    await screen.findByTestId("knowledge-graph");
-    expect(screen.getByTestId("knowledge-graph")).toBeInTheDocument();
-    expect(screen.getByTestId("how-it-works")).toBeInTheDocument();
-    expect(screen.getByTestId("target-audience")).toBeInTheDocument();
+    expect(screen.getByTestId("stats-section")).toBeInTheDocument();
+    expect(screen.getByTestId("modes-section")).toBeInTheDocument();
+    expect(screen.getByTestId("how-it-works-section")).toBeInTheDocument();
+    expect(screen.getByTestId("domains-section")).toBeInTheDocument();
     expect(screen.getByTestId("cta-section")).toBeInTheDocument();
   });
 
   it("should have proper structure", () => {
     const { container } = render(<HomePage />);
     const mainElement = container.querySelector("main");
-
     expect(mainElement).toBeInTheDocument();
     expect(mainElement).toHaveClass("min-h-screen");
   });
 
-  it("should render sections in correct order", async () => {
+  it("should render sections in correct order", () => {
     const { container } = render(<HomePage />);
-
-    // Wait for dynamic component to load
-    await screen.findByTestId("knowledge-graph");
-
     const sections = container.querySelectorAll("[data-testid]");
 
     expect(sections[0]).toHaveAttribute("data-testid", "hero-section");
-    expect(sections[1]).toHaveAttribute("data-testid", "features-section");
-    expect(sections[2]).toHaveAttribute(
-      "data-testid",
-      "knowledge-graph-section",
-    );
-    expect(sections[3]).toHaveAttribute("data-testid", "knowledge-graph");
-    expect(sections[4]).toHaveAttribute("data-testid", "how-it-works");
-    expect(sections[5]).toHaveAttribute("data-testid", "target-audience");
-    expect(sections[6]).toHaveAttribute("data-testid", "cta-section");
+    expect(sections[1]).toHaveAttribute("data-testid", "stats-section");
+    expect(sections[2]).toHaveAttribute("data-testid", "modes-section");
+    expect(sections[3]).toHaveAttribute("data-testid", "how-it-works-section");
+    expect(sections[4]).toHaveAttribute("data-testid", "domains-section");
+    expect(sections[5]).toHaveAttribute("data-testid", "cta-section");
   });
 });
