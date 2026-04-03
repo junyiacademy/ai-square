@@ -1,0 +1,229 @@
+scenario_info:
+  id: autonomous-vehicles
+  difficulty: advanced
+  estimated_duration: 130
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "Autonomous Vehicles: Computer Vision, SLAM, and Safe Decision-Making"
+  description: "Engineer the full autonomous driving stack — from computer vision and LiDAR-based 3D perception to SLAM navigation, sensor fusion, and the safety-critical decision-making systems that determine when and how a self-driving car acts in complex real-world environments."
+  prerequisites:
+    - Linear algebra and probability basics
+    - Programming experience (Python preferred)
+    - Familiarity with machine learning concepts
+  learning_objectives:
+    - Design and evaluate computer vision systems for real-time object detection and lane tracking in autonomous vehicles
+    - Implement SLAM (Simultaneous Localization and Mapping) algorithms for autonomous navigation
+    - Engineer multi-sensor fusion architectures combining camera, LiDAR, and radar data
+    - Analyze safety-critical decision-making frameworks and regulatory requirements for autonomous driving
+
+ksa_mapping:
+  knowledge:
+    - K1.4
+    - K2.1
+    - K2.3
+    - K4.2
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+    - A4.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K2.1
+        - S2.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Computer Vision Expert
+      initial_prompt: |
+        You are a Computer Vision Expert specializing in autonomous vehicle perception systems.
+
+        Guide students through the computer vision pipeline for self-driving cars:
+        1. Camera types and placement: Monocular, stereo, fisheye cameras and their coverage zones
+        2. Object detection: YOLO, Faster R-CNN for detecting vehicles, pedestrians, cyclists
+        3. Semantic segmentation: SegNet, DeepLab for understanding drivable surfaces and obstacles
+        4. Lane detection: Hough transforms, deep learning approaches (LaneNet)
+        5. Depth estimation from monocular cameras: Monodepth2 and its limitations vs. stereo
+
+        Critical engineering considerations:
+        - Occlusion handling: What happens when a pedestrian is partially hidden?
+        - Lighting robustness: Night, glare, fog conditions
+        - Real-time constraints: Must run at camera framerate (30-60 FPS)
+        - Long-tail problem: Rare events (children on scooters, unusual vehicles) are critical
+
+        Use the Tesla Autopilot vs. Waymo approaches to ground the discussion. They made fundamentally different bets on camera-only vs. multi-sensor approaches.
+    title: "Computer Vision for Autonomous Vehicles: Seeing the Road"
+    description: "Before a self-driving car can make any decision, it must accurately perceive its environment. Computer vision systems process camera streams in real-time to detect objects, segment the road, track lanes, and estimate distances — all while running at highway speeds."
+    instructions:
+      - Design the camera configuration for a level 4 autonomous vehicle (field of view, number, placement)
+      - Analyze the tradeoffs between Tesla's camera-only approach and Waymo's multi-sensor approach
+      - Identify the three most dangerous computer vision failure modes in autonomous driving and propose mitigations
+      - Evaluate how adverse weather (snow, heavy rain, glare) degrades each component of the perception pipeline
+    expected_outcome: "Camera configuration diagram with coverage analysis, a structured comparison of camera-only vs. multi-sensor approaches, three failure mode analyses with mitigations, and a weather impact assessment"
+
+  - id: task-2
+    category: creation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K2.3
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: SLAM Navigation Engineer
+      initial_prompt: |
+        You are a SLAM Navigation Engineer mentoring students through simultaneous localization and mapping.
+
+        SLAM is the core technology that allows robots and autonomous vehicles to build maps of unknown environments while tracking their own position within those maps.
+
+        Guide students through:
+        1. The SLAM problem: Why GPS alone is insufficient for autonomous driving
+        2. LiDAR SLAM: Point cloud registration, ICP algorithm, loop closure
+        3. Visual SLAM: ORB-SLAM3, feature extraction and matching
+        4. Graph-based SLAM: Pose graph optimization
+        5. HD Maps: How pre-built high-definition maps complement SLAM
+        6. Localization vs. Mapping modes: Different use cases
+
+        Use concrete scenarios:
+        - Underground parking garage (no GPS signal)
+        - Construction zone with changed road geometry
+        - Dense urban canyon with GPS multipath errors
+
+        When explaining algorithms, use the analogy of a person entering a dark room and figuring out where they are by touching walls and remembering their steps.
+    title: "SLAM Navigation: Building Maps and Finding Position Simultaneously"
+    description: "GPS tells you roughly where you are — but autonomous vehicles need centimeter-level accuracy in real-time, even indoors, underground, or in GPS-denied environments. SLAM solves this by building and updating maps on the fly while simultaneously figuring out where the vehicle is within that map."
+    instructions:
+      - Explain the core SLAM problem: why localization and mapping are interdependent challenges
+      - Compare LiDAR SLAM and Visual SLAM across key dimensions (accuracy, cost, weather robustness)
+      - Trace through how a SLAM system would handle a loop closure event (returning to a previously visited location)
+      - Design a SLAM strategy for an autonomous delivery vehicle operating in a multi-story parking garage
+    expected_outcome: "Written explanation of the SLAM problem with concrete examples, LiDAR vs. Visual SLAM comparison table, loop closure walkthrough with state update description, and parking garage SLAM strategy"
+
+  - id: task-3
+    category: implementation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: Sensor Fusion Architect
+      initial_prompt: |
+        You are a Sensor Fusion Architect teaching students to combine multiple sensor modalities for robust autonomous driving perception.
+
+        Cover the sensor modalities and their characteristics:
+        1. Cameras: Rich visual information, poor depth, affected by lighting
+        2. LiDAR: Precise 3D point clouds, no color, expensive, affected by rain/fog
+        3. Radar: All-weather, measures velocity directly (Doppler), low resolution
+        4. Ultrasonic: Short-range, low cost, used for parking
+
+        Fusion architectures:
+        - Early fusion: Combine raw sensor data before processing
+        - Late fusion: Process each sensor independently, then merge decisions
+        - Deep fusion: Neural networks that operate on multiple sensor representations simultaneously
+
+        Key fusion algorithms:
+        - Extended Kalman Filter (EKF) for state estimation
+        - Occupancy Grid Mapping for environment representation
+        - Bayesian inference for combining uncertain detections
+
+        Use the challenge of detecting a white truck crossing the highway (the Tesla Model S 2016 fatal crash scenario) to motivate why sensor fusion is safety-critical.
+    title: "Sensor Fusion: Combining Camera, LiDAR, and Radar for Reliable Perception"
+    description: "No single sensor can reliably handle all autonomous driving scenarios. Camera data fails in poor lighting, LiDAR struggles in heavy rain, and GPS fails indoors. Sensor fusion combines all available sensor data to build a perception system more reliable than any individual sensor."
+    instructions:
+      - Analyze the 2016 Tesla Autopilot fatal crash and explain how proper sensor fusion could have prevented it
+      - Design a sensor fusion architecture for a level 4 highway autonomous driving system (which sensors, what fusion strategy)
+      - Compare early fusion vs. late fusion vs. deep fusion for an urban driving scenario with pedestrians
+      - Calculate how confidence in object detection changes when camera and LiDAR detections agree vs. disagree
+    expected_outcome: "Tesla crash analysis with sensor fusion solution, a complete sensor fusion architecture specification, fusion strategy comparison for urban driving, and a probabilistic confidence calculation example"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+        - S6.1
+      secondary:
+        - A3.1
+        - A4.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: Autonomous Driving Safety Analyst
+      initial_prompt: |
+        You are an Autonomous Driving Safety Analyst helping students understand the safety-critical aspects of autonomous vehicle decision-making.
+
+        Cover these interconnected areas:
+        1. Decision-making architecture: Prediction → Planning → Control pipeline
+        2. Behavior prediction: Anticipating what other road users will do
+        3. Path planning: Trajectory optimization under constraints (speed, comfort, legality)
+        4. Ethical dilemmas: Trolley problems in AV context, how manufacturers encode ethics
+        5. Regulatory landscape: SAE levels, NHTSA, EU AI Act implications for AVs
+        6. Fail-safe design: Minimal Risk Conditions (MRC), redundancy requirements
+
+        Critical discussion points:
+        - How do you validate software for safety-critical systems? (Simulation, scenario testing, formal verification)
+        - Who is liable when an autonomous vehicle crashes?
+        - TEMC angle: Taiwan's AV industry (Foxconn electric vehicles, ADAS chip development at MediaTek/Novatek)
+
+        Push students to think about the difference between "statistically safer than humans" and "safe enough for public roads." These are different standards with different implications.
+    title: "Safe Decision-Making: Ethics, Regulations, and Fail-Safe Systems"
+    description: "The hardest problem in autonomous driving is not perception or localization — it's making safe decisions in ambiguous situations at highway speeds. This requires rigorous safety engineering, clear ethical frameworks, and regulatory compliance."
+    instructions:
+      - Analyze an AV ethical dilemma scenario (unavoidable collision: prioritize occupant or pedestrian?) and evaluate how different safety frameworks approach this
+      - Design the decision-making pipeline for an AV encountering a construction zone with ambiguous road markings
+      - Evaluate the regulatory requirements for deploying a level 4 AV in Taiwan and identify the gaps in current regulations
+      - Propose a testing and validation methodology for an AV system designed for Taipei city streets
+    expected_outcome: "Ethical framework analysis with the student's own reasoned position, a decision-making pipeline design for the construction zone scenario, a Taiwan regulatory gap analysis, and a validation methodology proposal"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Complete at least 3 of 4 tasks
+    - Design a computer vision system for autonomous vehicle perception
+    - Explain SLAM and its importance for autonomous navigation
+    - Evaluate safety-critical decision-making requirements
+
+resources:
+  videos:
+    - title: "How Waymo's Self-Driving Technology Works"
+      url: https://www.youtube.com/watch?v=aaOB-ErYq6Y
+    - title: "SLAM Explained (MATLAB Tech Talk)"
+      url: https://www.youtube.com/watch?v=saVZtgPyyJQ
+  readings:
+    - title: "SAE Levels of Driving Automation"
+      url: https://www.sae.org/standards/content/j3016_202104/
+    - title: "Apollo Open Platform Documentation"
+      url: https://apollo.baidu.com/docs/
+  tools:
+    - title: "CARLA Autonomous Driving Simulator"
+      url: https://carla.org/
+    - title: "nuScenes Dataset"
+      url: https://www.nuscenes.org/

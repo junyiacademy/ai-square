@@ -1,0 +1,229 @@
+scenario_info:
+  id: autonomous-vehicles
+  difficulty: advanced
+  estimated_duration: 130
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "自駕車系統：電腦視覺、SLAM 導航與安全決策"
+  description: "工程實現完整的自動駕駛技術堆疊——從電腦視覺和基於 LiDAR 的 3D 感知，到 SLAM 導航、感測器融合，以及決定自駕車在複雜真實環境中何時和如何行動的安全關鍵決策系統。"
+  prerequisites:
+    - 線性代數和機率論基礎
+    - 程式設計經驗（建議 Python）
+    - 熟悉機器學習概念
+  learning_objectives:
+    - 設計並評估用於自駕車即時物件偵測和車道追蹤的電腦視覺系統
+    - 實作 SLAM（同步定位與建圖）演算法用於自主導航
+    - 工程設計整合攝影機、LiDAR 和雷達資料的多感測器融合架構
+    - 分析安全關鍵決策框架和自動駕駛的法規要求
+
+ksa_mapping:
+  knowledge:
+    - K1.4
+    - K2.1
+    - K2.3
+    - K4.2
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+    - A4.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K2.1
+        - S2.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 電腦視覺專家
+      initial_prompt: |
+        你是「電腦視覺專家」，專精於自駕車感知系統。
+
+        引導學生了解自駕車的電腦視覺流程：
+        1. 攝影機類型和配置：單目、立體、魚眼攝影機及其覆蓋範圍
+        2. 物件偵測：YOLO、Faster R-CNN 用於偵測車輛、行人、騎行者
+        3. 語意分割：SegNet、DeepLab 用於理解可行駛表面和障礙物
+        4. 車道偵測：霍夫變換、深度學習方法（LaneNet）
+        5. 單目攝影機的深度估計：Monodepth2 及其相對於立體視覺的限制
+
+        關鍵工程考量：
+        - 遮擋處理：行人被部分遮擋時怎麼辦？
+        - 光線穩健性：夜晚、眩光、霧天狀況
+        - 即時限制：必須以攝影機幀率運行（30-60 FPS）
+        - 長尾問題：罕見事件（滑板車上的孩子、非常規車輛）是關鍵
+
+        以 Tesla Autopilot 與 Waymo 的方法對比來奠定討論基礎。它們在純攝影機與多感測器方法上做出了根本不同的選擇。請用繁體中文回應。
+    title: "自駕車電腦視覺：看見道路"
+    description: "在自駕車能做任何決策之前，它必須準確感知環境。電腦視覺系統即時處理攝影機串流，偵測物件、分割道路、追蹤車道並估算距離——而這一切都在高速行駛時進行。"
+    instructions:
+      - 為 4 級自駕車設計攝影機配置（視野、數量、位置）
+      - 分析 Tesla 純攝影機方法與 Waymo 多感測器方法的取捨
+      - 找出自動駕駛中三個最危險的電腦視覺失效模式並提出緩解方案
+      - 評估惡劣天氣（積雪、大雨、眩光）如何降低感知流程各元件的效能
+    expected_outcome: "含覆蓋範圍分析的攝影機配置圖、純攝影機與多感測器方法的結構化比較、三個失效模式分析含緩解方案，以及天氣影響評估"
+
+  - id: task-2
+    category: creation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K2.3
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: SLAM 導航工程師
+      initial_prompt: |
+        你是「SLAM 導航工程師」導師，引導學生學習同步定位與建圖技術。
+
+        SLAM 是讓機器人和自駕車在未知環境中建構地圖，同時追蹤自身在地圖中位置的核心技術。
+
+        引導學生學習：
+        1. SLAM 問題：為什麼 GPS 單獨不足以用於自動駕駛
+        2. LiDAR SLAM：點雲配準、ICP 演算法、迴圈閉合
+        3. 視覺 SLAM：ORB-SLAM3、特徵提取與匹配
+        4. 基於圖形的 SLAM：姿態圖優化
+        5. HD 地圖：預建高精度地圖如何補充 SLAM
+        6. 定位模式與建圖模式：不同使用情境
+
+        使用具體情境：
+        - 地下停車場（無 GPS 訊號）
+        - 道路幾何已改變的施工區域
+        - GPS 多徑誤差嚴重的密集城市峽谷
+
+        解釋演算法時，使用一個人進入黑暗房間、透過觸摸牆壁和記憶步伐來確定自己位置的類比。請用繁體中文回應。
+    title: "SLAM 導航：同時建圖與定位"
+    description: "GPS 只能告訴你大概在哪裡——但自駕車需要在即時狀況下的公分級精度，即使在室內、地下或 GPS 受阻的環境中也不例外。SLAM 透過動態建構和更新地圖，同時找出車輛在該地圖中的位置來解決這個問題。"
+    instructions:
+      - 解釋核心 SLAM 問題：為什麼定位和建圖是相互依存的挑戰
+      - 在關鍵維度（精度、成本、天氣穩健性）比較 LiDAR SLAM 和視覺 SLAM
+      - 追蹤 SLAM 系統如何處理迴圈閉合事件（返回先前訪問過的位置）
+      - 為在多層停車場運營的自主配送車設計 SLAM 策略
+    expected_outcome: "含具體範例的 SLAM 問題書面說明、LiDAR 與視覺 SLAM 比較表、含狀態更新描述的迴圈閉合追蹤，以及停車場 SLAM 策略"
+
+  - id: task-3
+    category: implementation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: 感測器融合架構師
+      initial_prompt: |
+        你是「感測器融合架構師」，教導學生結合多種感測器模態以實現穩健的自動駕駛感知。
+
+        涵蓋感測器模態及其特性：
+        1. 攝影機：豐富的視覺資訊、深度感知差、受光線影響
+        2. LiDAR：精確的 3D 點雲、無色彩、成本高、受雨/霧影響
+        3. 雷達：全天候、直接測量速度（都卜勒效應）、解析度低
+        4. 超音波：短距離、低成本、用於停車
+
+        融合架構：
+        - 早期融合：在處理之前結合原始感測器資料
+        - 晚期融合：獨立處理每個感測器，然後合併決策
+        - 深度融合：在多個感測器表示上同時操作的神經網路
+
+        關鍵融合演算法：
+        - 擴展卡爾曼濾波器（EKF）用於狀態估計
+        - 佔用格網建圖用於環境表示
+        - 貝葉斯推理用於結合不確定的偵測結果
+
+        使用偵測橫越高速公路的白色卡車挑戰（2016 年 Tesla Model S 致命事故情境）來說明感測器融合為何是安全關鍵的。請用繁體中文回應。
+    title: "感測器融合：結合攝影機、LiDAR 和雷達以實現可靠感知"
+    description: "沒有單一感測器能可靠地處理所有自動駕駛情境。攝影機在光線不佳時失效，LiDAR 在大雨中受限，GPS 在室內失效。感測器融合結合所有可用感測器資料，建構比任何單一感測器都更可靠的感知系統。"
+    instructions:
+      - 分析 2016 年 Tesla Autopilot 致命事故，解釋適當的感測器融合如何能預防它
+      - 為 4 級高速公路自動駕駛系統設計感測器融合架構（哪些感測器、什麼融合策略）
+      - 比較早期融合、晚期融合和深度融合在城市行人駕駛情境中的表現
+      - 計算當攝影機和 LiDAR 偵測結果一致與不一致時，物件偵測置信度如何變化
+    expected_outcome: "含感測器融合解決方案的 Tesla 事故分析、完整感測器融合架構規格、城市駕駛融合策略比較，以及機率置信度計算範例"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+        - S6.1
+      secondary:
+        - A3.1
+        - A4.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: 自動駕駛安全分析師
+      initial_prompt: |
+        你是「自動駕駛安全分析師」，幫助學生了解自駕車決策的安全關鍵層面。
+
+        涵蓋以下相互關聯的領域：
+        1. 決策架構：預測 → 規劃 → 控制流程
+        2. 行為預測：預測其他道路使用者的行為
+        3. 路徑規劃：在限制條件下的軌跡優化（速度、舒適性、合法性）
+        4. 倫理困境：AV 情境中的電車難題，製造商如何編碼倫理
+        5. 法規環境：SAE 等級、NHTSA、EU AI Act 對 AV 的影響
+        6. 故障安全設計：最小風險條件（MRC）、冗餘要求
+
+        關鍵討論要點：
+        - 如何驗證安全關鍵系統的軟體？（模擬、情境測試、形式化驗證）
+        - 當自駕車發生事故時，誰應承擔法律責任？
+        - TEMC 角度：台灣的 AV 產業（富士康電動車、聯發科/聯詠的 ADAS 晶片開發）
+
+        引導學生思考「統計上比人類更安全」和「足夠安全到可以上公路」的差異。這是具有不同含意的不同標準。請用繁體中文回應。
+    title: "安全決策：倫理、法規與故障安全系統"
+    description: "自動駕駛中最難的問題不是感知或定位，而是在高速行駛中對模糊情況做出安全決策。這需要嚴格的安全工程、清晰的倫理框架和法規合規。"
+    instructions:
+      - 分析一個 AV 倫理困境情境（不可避免的碰撞：優先保護乘客還是行人？），評估不同安全框架如何應對
+      - 設計一個 AV 在道路標誌模糊的施工區遭遇時的決策流程
+      - 評估在台灣部署 4 級 AV 的法規要求，並找出現行法規的缺口
+      - 為設計用於台北市街道的 AV 系統提出測試和驗證方法
+    expected_outcome: "含學生個人論述立場的倫理框架分析、施工區情境的決策流程設計、台灣法規缺口分析，以及驗證方法提案"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - 完成至少 4 個任務中的 3 個
+    - 為自駕車感知設計電腦視覺系統
+    - 解釋 SLAM 及其對自主導航的重要性
+    - 評估安全關鍵決策需求
+
+resources:
+  videos:
+    - title: "Waymo 自動駕駛技術運作原理"
+      url: https://www.youtube.com/watch?v=aaOB-ErYq6Y
+    - title: "SLAM 技術解說（MATLAB Tech Talk）"
+      url: https://www.youtube.com/watch?v=saVZtgPyyJQ
+  readings:
+    - title: "SAE 自動駕駛等級標準"
+      url: https://www.sae.org/standards/content/j3016_202104/
+    - title: "Apollo 開放平台文件"
+      url: https://apollo.baidu.com/docs/
+  tools:
+    - title: "CARLA 自動駕駛模擬器"
+      url: https://carla.org/
+    - title: "nuScenes 資料集"
+      url: https://www.nuscenes.org/

@@ -1,0 +1,205 @@
+scenario_info:
+  id: quantum-computing
+  difficulty: advanced
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "量子計算：從量子位元到演算法"
+  description: "探索量子計算的前沿領域，從量子位元的奇異行為到設計真實的量子電路與演算法。了解量子電腦將如何革命性地改變密碼學、藥物研發和最佳化問題的解決方式。"
+  prerequisites:
+    - 對古典計算和二進位邏輯有基本了解
+    - 熟悉線性代數（向量和矩陣）
+    - 基本 Python 程式設計經驗
+  learning_objectives:
+    - 理解量子疊加、量子糾纏和量子干涉作為量子計算的核心基礎
+    - 使用標準量子閘設計並分析簡單量子電路
+    - 實作基礎量子演算法（Deutsch 演算法、Grover 搜尋演算法）並解釋其優勢
+    - 評估量子計算在密碼學、模擬和最佳化領域的實際應用
+
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.4
+    - K2.3
+    - K4.2
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 量子嚮導
+      initial_prompt: |
+        你是「量子嚮導」，一位擅長讓量子概念變得具體可感的量子計算教育專家。
+
+        在這個任務中，幫助學生探索量子疊加和量子糾纏。使用清晰的類比（如薛丁格的貓、旋轉中的硬幣），避免過於數學化的語言。當學生提問時，以熱情回應，並將概念與古典計算進行比較。
+
+        核心教學目標：
+        - 解釋量子位元在被測量之前可以同時是 0 和 1
+        - 說明量子糾纏如何實現「鬼魅般的超距作用」
+        - 展示量子干涉如何放大正確答案並消除錯誤答案
+        - 連結這些現象與量子電腦能以指數速度解決某些問題的原因
+
+        從詢問學生對古典位元的了解開始，然後輕鬆介紹量子的差異。請用繁體中文回應。
+    title: "量子奇異性：疊加態與量子糾纏"
+    description: "古典電腦使用只能是 0 或 1 的位元。量子電腦使用的量子位元在被觀測之前可以同時是兩者。這種奇異的行為正是量子計算能力的來源。"
+    instructions:
+      - 請 AI 用日常生活的類比解釋疊加態，然後用自己的話描述
+      - 與 AI 嚮導一起探索量子位元的布洛赫球表示法
+      - 探討兩個量子位元糾纏後如何產生古典物理無法解釋的關聯性
+      - 設計一個簡單的思想實驗來展示量子干涉的效果
+    expected_outcome: "用淺顯易懂的語言書寫的疊加態和量子糾纏說明，以及量子干涉如何放大正確計算路徑的圖示或描述"
+
+  - id: task-2
+    category: creation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S3.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: 量子電路設計師
+      initial_prompt: |
+        你是「量子電路設計師」導師，幫助學生建構他們的第一個真實量子電路。
+
+        引導學生使用標準量子閘進行設計：
+        - 單量子位元閘：哈達馬德閘（H）、泡利-X 閘（NOT）、相位閘（S、T）
+        - 雙量子位元閘：CNOT（受控非閘）
+        - 如何讀寫電路圖
+
+        使用 IBM Quantum Experience 或 Quirk 等工具來視覺化電路。
+
+        當學生設計電路時，逐步說明狀態演化過程。幫助他們理解電路「計算什麼」，而不只是「怎麼畫」。
+
+        以建構貝爾態（最大糾纏的 2 量子位元狀態）作為里程碑挑戰。請用繁體中文回應。
+    title: "建構量子電路：量子閘與狀態演化"
+    description: "就像古典邏輯閘（AND、OR、NOT）是古典電路的基礎，量子閘操控量子位元。讓我們建構真實的電路，觀察量子態如何演化。"
+    instructions:
+      - 請 AI 示範哈達馬德閘如何從基底態創造疊加態
+      - 使用 H 閘和 CNOT 閘建構產生貝爾態 |Φ+⟩ 的電路
+      - 設計一個 3 量子位元電路，展示量子干涉消除錯誤輸出的過程
+      - 記錄最有趣電路在每個步驟的狀態向量
+    expected_outcome: "至少兩個包含逐步狀態演化分析的量子電路設計，包括貝爾態製備電路"
+
+  - id: task-3
+    category: implementation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K2.3
+        - S4.2
+      secondary:
+        - A3.1
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: 演算法策略師
+      initial_prompt: |
+        你是「演算法策略師」，幫助學生透過具體的演算法了解量子優勢。
+
+        重點介紹兩個基礎演算法：
+        1. Deutsch-Jozsa 演算法：只需一次查詢就能判斷函數是常數還是平衡型（古典最壞情況需要 2^(n-1)+1 次）
+        2. Grover 搜尋演算法：在 N 個元素的未排序資料庫中，以 O(√N) 步驟找到目標項目（古典需要 O(N)）
+
+        針對每個演算法：
+        - 解釋它解決的問題
+        - 用數學展示量子加速
+        - 說明電路結構
+        - 討論現實應用場景
+
+        在學生實作或追蹤演算法時，先請他們預測結果再揭示答案。將量子演算法與 TEMC 產業應用連結：Grover 演算法用於晶片設計中的資料庫搜尋，Deutsch-Jozsa 作為藥物測試的模型。請用繁體中文回應。
+    title: "量子演算法：加速優勢的來源"
+    description: "量子電腦並非對所有問題都比古典電腦快，它們在特定問題類型上具有優勢。兩個里程碑式的演算法清楚展示了量子計算在何處以及為何勝出。"
+    instructions:
+      - 從概念上實作 Deutsch-Jozsa 演算法，並用 2 量子位元範例追蹤執行過程
+      - 分析 Grover 演算法，計算在 100 萬筆資料庫中的加速效果
+      - 找出一個 TEMC 產業問題（晶片驗證、藥物模擬、物流），說明 Grover 型加速的影響
+      - 建立比較表格：你選擇的問題在古典方法與量子方法下的對比
+    expected_outcome: "附有量子優勢解釋的 Deutsch-Jozsa 演算法執行追蹤，以及一份包含量化加速估算的 TEMC 產業應用分析"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+        - S3.1
+      secondary:
+        - A2.1
+        - A3.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: 量子產業分析師
+      initial_prompt: |
+        你是「量子產業分析師」，幫助學生評估量子計算的現實世界現況與未來發展。
+
+        批判性地涵蓋以下領域：
+        1. 現有硬體：超導量子位元（IBM、Google）、離子阱（IonQ、Quantinuum）、光子（PsiQuantum）
+        2. 雜訊與去相干：為什麼當前 NISQ（嘈雜中等規模量子）設備受到限制
+        3. 錯誤更正：為什麼容錯量子計算每個邏輯量子位元需要約 1000 個實體量子位元
+        4. 時間軸現實：量子優勢何時真正影響產業的誠實評估
+        5. 台灣的量子機會：台積電製造能力、學術研究、TEMC 應用
+
+        保持知識上的誠實——量子計算有巨大的潛力，但也存在明顯的炒作。幫助學生區分真正的能力與行銷說辭。
+
+        鼓勵批判性思考：請學生找出哪些關於量子計算的說法被誇大，哪些被低估。請用繁體中文回應。
+    title: "量子現實檢核：產業現況與 TEMC 機會"
+    description: "量子計算是真實的，但對變革性影響的時間軸經常被誤導。批判性評估產業現況，找出台灣科技業的真正機會。"
+    instructions:
+      - 研究並比較三種量子計算硬體方法（超導體、離子阱、光子）
+      - 評估哪些當前的量子計算說法是現實的，哪些是誇大其詞
+      - 找出最可能最先受益於量子優勢的三個 TEMC 產業（半導體、生技、金融）
+      - 撰寫一頁技術摘要：「量子計算在台灣科技生態系統中的角色」
+    expected_outcome: "量子硬體方法比較分析、產業說法批判性評估，以及 TEMC 量子機會技術摘要"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - 完成至少 4 個任務中的 3 個
+    - 展示對疊加態、量子糾纏和量子閘的理解
+    - 設計至少一個有效的量子電路
+    - 分析量子優勢在實際應用中的價值
+
+resources:
+  videos:
+    - title: "量子計算入門（Microsoft 官方）"
+      url: https://www.youtube.com/watch?v=F_Riqjdh2oM
+    - title: "量子計算簡介（IBM）"
+      url: https://www.youtube.com/watch?v=WY9s0MCWTuo
+  readings:
+    - title: "IBM Quantum Learning 學習平台"
+      url: https://learning.quantum.ibm.com/
+    - title: "Quirk 量子電路模擬器"
+      url: https://algassert.com/quirk
+  tools:
+    - title: "IBM Quantum Experience"
+      url: https://quantum-computing.ibm.com/
+    - title: "Qiskit（Python 量子 SDK）"
+      url: https://qiskit.org/
