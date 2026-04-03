@@ -1,0 +1,219 @@
+# Smart Manufacturing Engineer Discovery Path - English
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Industrial Alchemist - Smart Manufacturing Engineer"
+  short_description: "Use AI and data to transform factories into self-thinking living systems"
+  long_description: |
+    You are an apprentice alchemist in the "Digital Factory," gifted with the power
+    to make production lines evolve on their own. In this future factory combining
+    IoT, AI, and digital twins, every sensor's data helps machines make autonomous
+    decisions — and your mission is to build the never-stopping smart production line.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Digital Factory"
+  description: |
+    The Digital Factory is a production base where the physical and virtual worlds
+    are perfectly mirrored. Every machine has its digital twin, every process is
+    driven by data. Foxconn's lights-out factory is the ultimate expression of
+    this system.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "The Digital Awakening of the Factory"
+  description: |
+    Factory Director Forge walks you into a traditional factory — production lines
+    are inefficient and yield rates are unstable. Suddenly a core machine called
+    Breakdown emits an abnormal vibration. You must use sensor data to predict
+    when it will fail.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "Industrial IoT"
+      description: "Deploy sensor networks to collect production data"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Manufacturing Data Analytics"
+      description: "Analyze production data to find bottlenecks and anomalies"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Automation Control"
+      description: "Design PLC and SCADA automation systems"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Digital Twin"
+      description: "Build virtual replicas of production lines for simulation"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Predictive Maintenance"
+      description: "Use AI to give early warnings before equipment failure"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "AI Quality Inspection"
+      description: "Use computer vision to automatically detect product defects"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Lights-Out Factory"
+      description: "Design a fully unmanned autonomous production system"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "First Sensor"
+    description: "Successfully deploy a sensor and collect meaningful production data"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Breakdown Prophet"
+    description: "Successfully predict an equipment failure 24 hours in advance"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Smart Factory Architect"
+    description: "Design and deploy a complete smart factory"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "First Dashboard"
+    description: "Build a real-time production line monitoring dashboard"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Yield Booster"
+    description: "Raise production line yield from 90% to 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Zero Downtime Record"
+    description: "90 consecutive days with zero unplanned production stoppages"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Factory Legend"
+    description: "Complete all smart manufacturing challenges"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Sensor Deployment"
+      description: "Install vibration and temperature sensors on a CNC lathe"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Production Line Data Analysis"
+      description: "Analyze one week of production data to find efficiency bottlenecks"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Digital Twin Modeling"
+      description: "Build a digital twin model for an SMT production line"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "AI Visual Inspection System"
+      description: "Train a model to automatically detect soldering defects on PCB boards"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Predictive Maintenance System"
+      description: "Build a health scoring and failure prediction system for all factory equipment"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Autonomous Factory Design"
+      description: "Design a lights-out factory with fully automated scheduling and quality inspection"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Understand Industrial IoT architecture and sensor technology"
+  - "Master manufacturing data collection and analysis methods"
+  - "Design PLC and SCADA automation systems"
+  - "Build digital twin models of production lines"
+  - "Apply AI for predictive maintenance"
+  - "Implement computer vision quality inspection"
+  - "Design unmanned lights-out factories"
+  - "Understand smart manufacturing and Industry 4.0 developments"
+
+career_outcomes:
+  - "Smart Manufacturing Engineer"
+  - "Industrial IoT Architect"
+  - "Digital Twin Engineer"
+  - "Manufacturing Data Scientist"
+  - "Automation Systems Integrator"
+  - "Predictive Maintenance Engineer"
+  - "AI Quality Engineer"
+  - "Smart Factory Consultant"

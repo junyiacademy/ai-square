@@ -1,0 +1,216 @@
+# 綠能工程師探索路徑 - 繁體中文
+path_id: green_energy_engineer
+category: sustainability
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "能源守護者 - 綠能工程師"
+  short_description: "用再生能源和智慧電網守護地球的未來"
+  long_description: |
+    你是「永續能源塔」的見習守護者，擁有駕馭風、光、水的天賦
+    在這個攸關地球存亡的領域中，每一度綠電的產生
+    都在對抗氣候變遷的時鐘上爭取更多時間
+
+  estimated_hours: 50
+  skill_focus:
+    - renewable_energy
+    - energy_storage
+    - smart_grid
+    - carbon_management
+
+world_setting:
+  name: "永續能源塔"
+  description: |
+    永續能源塔矗立在台灣西海岸，塔頂的風機和太陽能板為整座城市供電
+    綠能工程師在此學習如何讓再生能源穩定、高效、可靠
+    台灣 2050 淨零碳排的目標就從這裡開始實現
+
+  atmosphere: "eco_futuristic"
+  visual_theme: "energy_tower"
+
+starting_scenario:
+  title: "第一度綠電"
+  description: |
+    能源長老 Volt 帶你了解台灣的能源現況和轉型挑戰
+    但一場突如其來的「電力風暴」Blackout 正在威脅電網穩定
+    你必須理解供需平衡才能拯救整座城市不陷入黑暗
+
+  initial_tasks:
+    - learn_energy_basics
+    - understand_renewables
+    - first_solar_design
+
+skill_tree:
+  core_skills:
+    - id: solar_energy
+      name: "太陽能工程"
+      description: "設計和優化太陽能發電系統"
+      max_level: 10
+      unlocks:
+        - pv_system_design
+        - solar_forecasting
+
+    - id: wind_energy
+      name: "風力發電"
+      description: "理解風機設計、選址和維運"
+      max_level: 10
+      unlocks:
+        - turbine_aerodynamics
+        - offshore_wind
+
+    - id: energy_storage
+      name: "儲能技術"
+      description: "掌握鋰電池、液流電池、氫能儲存"
+      max_level: 10
+      unlocks:
+        - battery_management
+        - hydrogen_systems
+
+    - id: smart_grid
+      name: "智慧電網"
+      description: "用 AI 管理電力供需、調度和交易"
+      max_level: 10
+      unlocks:
+        - demand_response
+        - grid_optimization
+
+  advanced_skills:
+    - id: carbon_engineering
+      name: "碳管理工程"
+      description: "碳捕捉、碳交易、企業碳盤查"
+      max_level: 15
+      requires: [solar_energy, wind_energy]
+
+    - id: microgrid_design
+      name: "微電網設計"
+      description: "設計離網或社區級的獨立電力系統"
+      max_level: 15
+      requires: [energy_storage, smart_grid]
+
+    - id: green_hydrogen
+      name: "綠氫技術"
+      description: "用再生能源電解水產氫的完整系統"
+      max_level: 15
+      requires: [energy_storage, carbon_engineering]
+
+milestone_quests:
+  - id: first_kilowatt
+    name: "第一千瓦"
+    description: "設計並模擬一套能發出 1kW 的太陽能系統"
+    required_level: 5
+    skills_tested: [solar_energy, smart_grid]
+    xp_reward: 500
+    unlocks:
+      - solar_badge
+      - field_access
+
+  - id: blackout_preventer
+    name: "黑暗終結者"
+    description: "用儲能和需量反應阻止一次電網崩潰"
+    required_level: 10
+    skills_tested: [energy_storage, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - grid_master_title
+      - control_room_access
+
+  - id: net_zero_architect
+    name: "淨零建築師"
+    description: "設計一座達成淨零碳排的智慧社區"
+    required_level: 20
+    skills_tested: [microgrid_design, carbon_engineering]
+    xp_reward: 2500
+    unlocks:
+      - net_zero_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_panel
+    name: "第一片面板"
+    description: "完成太陽能面板的安裝設計"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: wind_rider
+    name: "馭風者"
+    description: "優化離岸風場的發電效率達 95%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "電網平衡大師"
+    description: "連續 30 天維持電網供需零偏差"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: energy_legend
+    name: "能源傳奇"
+    description: "完成所有綠能工程挑戰"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calculator
+      type: analysis
+      title: "太陽能發電量計算"
+      description: "根據台灣各地日照資料估算年發電量"
+      skills_improved: [solar_energy]
+      xp_reward: 60
+
+    - id: energy_audit
+      type: analysis
+      title: "家庭能源審計"
+      description: "分析一個家庭的用電模式並提出節能建議"
+      skills_improved: [smart_grid]
+      xp_reward: 50
+
+  intermediate:
+    - id: hybrid_system
+      type: creation
+      title: "風光互補系統"
+      description: "設計太陽能 + 風力的混合發電系統"
+      skills_improved: [solar_energy, wind_energy]
+      xp_reward: 180
+
+    - id: battery_sizing
+      type: creation
+      title: "儲能系統設計"
+      description: "為一座學校設計最佳化的儲能配置"
+      skills_improved: [energy_storage, smart_grid]
+      xp_reward: 200
+
+  advanced:
+    - id: smart_community
+      type: creation
+      title: "智慧社區電網"
+      description: "設計含太陽能、儲能、電動車充電的社區微電網"
+      skills_improved: [microgrid_design, smart_grid]
+      xp_reward: 350
+
+    - id: carbon_neutral
+      type: creation
+      title: "企業碳中和方案"
+      description: "為一家製造業公司規劃碳中和路徑"
+      skills_improved: [carbon_engineering, green_hydrogen]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解太陽能和風力發電的原理與設計"
+  - "掌握儲能技術的選型與系統設計"
+  - "運用 AI 優化智慧電網調度"
+  - "實作需量反應與電力交易"
+  - "理解碳盤查、碳交易與碳捕捉"
+  - "設計社區級微電網系統"
+  - "探索綠氫技術的潛力與挑戰"
+  - "了解台灣能源轉型政策與 2050 淨零目標"
+
+career_outcomes:
+  - "再生能源工程師"
+  - "儲能系統工程師"
+  - "智慧電網工程師"
+  - "碳管理顧問"
+  - "ESG 分析師"
+  - "能源政策研究員"
+  - "微電網設計師"
+  - "綠氫技術工程師"

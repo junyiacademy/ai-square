@@ -1,0 +1,217 @@
+# เส้นทางการค้นพบ: วิศวกรการผลิตอัจฉริยะ - ภาษาไทย
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "นักเล่นแร่แปรธาตุอุตสาหกรรม - วิศวกรการผลิตอัจฉริยะ"
+  short_description: "ใช้ AI และข้อมูลเพื่อเปลี่ยนโรงงานให้เป็นสิ่งมีชีวิตที่คิดได้เอง"
+  long_description: |
+    คุณคือนักเล่นแร่แปรธาตุฝึกหัดใน «โรงงานดิจิทัล» ผู้มีพรสวรรค์ในการทำให้
+    สายการผลิตวิวัฒน์ด้วยตัวเอง ในโรงงานแห่งอนาคตที่รวม IoT, AI และ Digital Twin
+    ข้อมูลจากเซ็นเซอร์แต่ละตัวช่วยให้เครื่องจักรตัดสินใจได้อย่างอิสระ
+    และภารกิจของคุณคือการสร้างสายการผลิตอัจฉริยะที่ไม่มีวันหยุด
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "โรงงานดิจิทัล"
+  description: |
+    โรงงานดิจิทัลคือฐานการผลิตที่โลกทางกายภาพและโลกเสมือนสะท้อนกันอย่างสมบูรณ์แบบ
+    เครื่องจักรทุกเครื่องมีแฝดดิจิทัล ทุกกระบวนการขับเคลื่อนด้วยข้อมูล
+    โรงงานปิดไฟของ Foxconn คือตัวอย่างสูงสุดของระบบนี้
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "การตื่นตัวดิจิทัลของโรงงาน"
+  description: |
+    ผู้อำนวยการโรงงาน Forge พาคุณเข้าไปในโรงงานแบบดั้งเดิม สายการผลิตมีประสิทธิภาพต่ำ
+    และอัตราผลผลิตไม่เสถียร ทันใดนั้นเครื่องจักรหลักชื่อ Breakdown ก็สั่นผิดปกติ
+    คุณต้องใช้ข้อมูลเซ็นเซอร์เพื่อทำนายว่าเมื่อไหร่มันจะพัง
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "IoT อุตสาหกรรม"
+      description: "ติดตั้งเครือข่ายเซ็นเซอร์เพื่อเก็บข้อมูลการผลิต"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "การวิเคราะห์ข้อมูลการผลิต"
+      description: "วิเคราะห์ข้อมูลการผลิตเพื่อค้นหาคอขวดและความผิดปกติ"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "การควบคุมระบบอัตโนมัติ"
+      description: "ออกแบบระบบอัตโนมัติ PLC และ SCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "แฝดดิจิทัล"
+      description: "สร้างสำเนาเสมือนของสายการผลิตเพื่อจำลอง"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "การบำรุงรักษาเชิงพยากรณ์"
+      description: "ใช้ AI เพื่อแจ้งเตือนล่วงหน้าก่อนที่อุปกรณ์จะขัดข้อง"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "การควบคุมคุณภาพด้วย AI"
+      description: "ใช้ Computer Vision ตรวจจับข้อบกพร่องของผลิตภัณฑ์โดยอัตโนมัติ"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "โรงงานปิดไฟ"
+      description: "ออกแบบระบบการผลิตอัตโนมัติโดยไม่มีพนักงานเลย"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "เซ็นเซอร์ตัวแรก"
+    description: "ติดตั้งเซ็นเซอร์สำเร็จและเก็บข้อมูลการผลิตที่มีความหมาย"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "ผู้พยากรณ์การขัดข้อง"
+    description: "ทำนายการขัดข้องของอุปกรณ์ล่วงหน้า 24 ชั่วโมงได้สำเร็จ"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "สถาปนิกโรงงานอัจฉริยะ"
+    description: "ออกแบบและติดตั้งโรงงานอัจฉริยะที่สมบูรณ์"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "แดชบอร์ดแรก"
+    description: "สร้างแดชบอร์ดติดตามสายการผลิตแบบเรียลไทม์"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "ผู้เพิ่มอัตราผลผลิต"
+    description: "เพิ่มอัตราผลผลิตของสายการผลิตจาก 90% เป็น 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "สถิติหยุดทำงานศูนย์"
+    description: "90 วันติดต่อกันโดยไม่มีการหยุดการผลิตที่ไม่ได้วางแผน"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "ตำนานโรงงาน"
+    description: "ทำความท้าทายด้านการผลิตอัจฉริยะทั้งหมดให้สำเร็จ"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "การติดตั้งเซ็นเซอร์"
+      description: "ติดตั้งเซ็นเซอร์การสั่นและอุณหภูมิบนเครื่องกลึง CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "การวิเคราะห์ข้อมูลสายการผลิต"
+      description: "วิเคราะห์ข้อมูลการผลิตหนึ่งสัปดาห์เพื่อค้นหาคอขวดด้านประสิทธิภาพ"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "การสร้างแบบจำลองแฝดดิจิทัล"
+      description: "สร้างแบบจำลองแฝดดิจิทัลสำหรับสายการผลิต SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "ระบบตรวจสอบด้วยภาพ AI"
+      description: "ฝึกโมเดลเพื่อตรวจจับข้อบกพร่องการบัดกรีบนแผงวงจร PCB โดยอัตโนมัติ"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "ระบบการบำรุงรักษาเชิงพยากรณ์"
+      description: "สร้างระบบคะแนนสุขภาพและการพยากรณ์ความขัดข้องสำหรับอุปกรณ์ทั้งโรงงาน"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "การออกแบบโรงงานอัตโนมัติ"
+      description: "ออกแบบโรงงานปิดไฟที่ระบบอัตโนมัติครบวงจรตั้งแต่การจัดตารางจนถึงการตรวจสอบ"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจสถาปัตยกรรม IoT อุตสาหกรรมและเทคโนโลยีเซ็นเซอร์"
+  - "เชี่ยวชาญวิธีการเก็บรวบรวมและวิเคราะห์ข้อมูลการผลิต"
+  - "ออกแบบระบบอัตโนมัติ PLC และ SCADA"
+  - "สร้างแบบจำลองแฝดดิจิทัลของสายการผลิต"
+  - "ประยุกต์ใช้ AI สำหรับการบำรุงรักษาเชิงพยากรณ์"
+  - "ดำเนินการตรวจสอบคุณภาพด้วย Computer Vision"
+  - "ออกแบบโรงงานปิดไฟไร้คนงาน"
+  - "เข้าใจการพัฒนาการผลิตอัจฉริยะและอุตสาหกรรม 4.0"
+
+career_outcomes:
+  - "วิศวกรการผลิตอัจฉริยะ"
+  - "สถาปนิก IoT อุตสาหกรรม"
+  - "วิศวกรแฝดดิจิทัล"
+  - "นักวิทยาศาสตร์ข้อมูลการผลิต"
+  - "ผู้รวมระบบอัตโนมัติ"
+  - "วิศวกรการบำรุงรักษาเชิงพยากรณ์"
+  - "วิศวกรคุณภาพ AI"
+  - "ที่ปรึกษาโรงงานอัจฉริยะ"

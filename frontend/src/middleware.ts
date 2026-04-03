@@ -20,6 +20,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Block discovery routes on production to prevent AI quota abuse
+  // Discovery AI chat/evaluation has no per-user rate limit yet
+  const isProduction = process.env.NODE_ENV === "production" &&
+    !request.nextUrl.hostname.includes("staging") &&
+    !request.nextUrl.hostname.includes("preview");
+  if (isProduction && (pathname.startsWith("/discovery") || pathname.startsWith("/api/discovery"))) {
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json({ error: "Discovery is temporarily unavailable" }, { status: 503 });
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   // Handle API routes with rate limiting
   const isApiRoute = pathname.startsWith("/api/");
   if (isApiRoute) {

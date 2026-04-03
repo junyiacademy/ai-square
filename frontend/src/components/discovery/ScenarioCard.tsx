@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
@@ -14,6 +15,7 @@ interface ScenarioCardProps {
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     color: string;
     skills: string[];
+    bannerImage?: string;
     primaryStatus?: "mastered" | "in-progress" | "new";
     currentProgress?: number;
     stats?: {
@@ -57,12 +59,24 @@ export default function ScenarioCard({
         className="cursor-pointer h-full bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-purple-200"
         data-testid="scenario-card"
       >
-        {/* Gradient Background */}
-        <div className={`h-32 bg-gradient-to-br ${scenario.color} relative`}>
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Icon className="w-16 h-16 text-white/90" />
-          </div>
+        {/* Banner */}
+        <div className={`h-40 bg-gradient-to-br ${scenario.color} relative overflow-hidden`}>
+          {scenario.bannerImage ? (
+            <Image
+              src={scenario.bannerImage}
+              alt={scenario.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Icon className="w-16 h-16 text-white/90" />
+              </div>
+            </>
+          )}
 
           {/* Status Badge */}
           {primaryStatus === "mastered" && (

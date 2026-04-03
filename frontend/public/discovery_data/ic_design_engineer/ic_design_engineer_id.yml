@@ -1,0 +1,224 @@
+# Jalur Eksplorasi Insinyur Desain IC - Bahasa Indonesia
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Pandai Besi Perisai Silikon - Insinyur Desain IC"
+  short_description: "Tempa chip kecil yang menggerakkan dunia modern"
+  long_description: |
+    Kamu adalah magang di Bengkel Perisai Silikon, sebuah bengkel legendaris di mana
+    para insinyur merancang sirkuit mikroskopis yang menjalankan setiap smartphone,
+    komputer, dan kendaraan listrik. Setiap chip yang kamu rancang seperti kota
+    mini — dengan jalan (kabel), gedung (gerbang logika), dan aturan lalu lintas
+    (pewaktuan), semuanya dalam ruang lebih kecil dari kukumu. Lebih dari 90%
+    chip paling canggih di dunia dibuat di Taiwan — kamu pun bisa menjadi bagian
+    dari cerita itu!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Bengkel Perisai Silikon"
+  description: |
+    Bengkel Perisai Silikon adalah workshop teknologi tinggi di mana insinyur
+    berpengalaman dan magang berkolaborasi untuk merancang chip yang digunakan
+    dalam perangkat medis, satelit luar angkasa, dan ponsel sehari-hari. Semangat
+    bengkel: presisi, kreativitas, dan kerja tim — satu kesalahan desain kecil
+    dapat mempengaruhi jutaan perangkat di seluruh dunia.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "Hari Pertama di Bengkel"
+  description: |
+    Insinyur Utama Lin menyambutmu di bengkel. Tantangan pertamamu: bengkel rival
+    merilis chip dengan cacat tersembunyi yang menyebabkan ponsel kepanasan. Kamu
+    harus mempelajari dasar-dasar desain chip untuk membantu menciptakan alternatif
+    yang lebih aman — memahami bagaimana sakelar logika digabungkan menjadi fungsi
+    yang lebih besar.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Desain Logika"
+      description: "Pelajari cara menggabungkan sakelar ON/OFF sederhana (gerbang logika) untuk membangun fungsi kompleks seperti kalkulator dan memori — seperti main LEGO tapi dengan listrik"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Arsitektur Chip"
+      description: "Pahami bagaimana chip diorganisasi dalam seksi-seksi — seperti kota dengan distrik pemrosesan, memori, dan komunikasi — dan rencanakan cara mereka bekerja bersama"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "Pengujian Sirkuit"
+      description: "Simulasikan dan uji desainmu dengan alat perangkat lunak untuk mendeteksi kesalahan sebelum diproduksi — seperti mengoreksi esai sebelum mencetak 10 juta salinan"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "Tata Letak Fisik"
+      description: "Susun komponen sirkuit di chip seperti perencana kota — memutuskan di mana setiap bagian ditempatkan dan menghubungkannya lewat jalur terpendek"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Rekayasa Daya Rendah"
+      description: "Rancang chip yang menggunakan sesedikit mungkin energi — penting untuk smartphone dan wearable yang harus berjalan seharian dengan baterai kecil"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "Penguasaan Kualitas Sinyal"
+      description: "Pastikan sinyal listrik mengalir bersih melalui chip tanpa distorsi — seperti memastikan panggilan telepon terdengar jernih"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "Desain Akselerator AI"
+      description: "Rancang chip khusus untuk tugas AI — seperti pengenalan wajah atau terjemahan bahasa — jauh lebih cepat dari chip biasa"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "Sirkuit Pertama Ditempa"
+    description: "Rancang sirkuit kalkulator 4-bit yang berfungsi dan verifikasi bahwa memberikan jawaban benar untuk semua kasus uji"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "Tantangan Cetak Biru"
+    description: "Buat rencana tata letak lengkap untuk chip sederhana dan jelaskan bagaimana seksi-seksi berkomunikasi"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "Perisai Silikon"
+    description: "Rancang, uji, dan optimalkan chip daya rendah lengkap yang siap produksi"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "Percikan Pertama"
+    description: "Jalankan simulasi sirkuit pertamamu dan lihat desainmu hidup"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Pemburu Bug"
+    description: "Temukan dan perbaiki 10 kesalahan desain sebelum mencapai lantai pabrik"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Penjaga Energi"
+    description: "Kurangi konsumsi daya chip sebesar 30% melalui keputusan desain cerdas"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Legenda Bengkel"
+    description: "Selesaikan semua tantangan desain chip dan kirimkan desain yang siap produksi"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Teka-Teki Gerbang"
+      description: "Sambungkan sakelar logika untuk membangun sirkuit yang menyalakan lampu hanya ketika dua tombol ditekan bersamaan"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "Penjelajah Peta Chip"
+      description: "Lihat diagram chip nyata, identifikasi bagian utama, dan jelaskan dengan kata sederhana apa yang dilakukan setiap area"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "Debug Sirkuit"
+      description: "Sirkuit simulasi memberikan jawaban salah — temukan kesalahan logika dan perbaiki sebelum sampai ke pelanggan"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "Perencana Kota"
+      description: "Susun ulang bagian chip untuk mempersingkat koneksi kabel dan menghindari interferensi antar komponen"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "Diet Energi"
+      description: "Rancang ulang bagian chip untuk memotong konsumsi daya setengahnya sambil mempertahankan kecepatan yang sama"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "Cetak Biru Mesin AI"
+      description: "Rancang arsitektur chip yang dapat mengenali wajah 10 kali lebih cepat dari prosesor biasa"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami bagaimana sakelar logika sederhana digabungkan untuk membangun sirkuit digital yang kompleks"
+  - "Menjelaskan bagian fungsional utama dalam chip modern"
+  - "Menggunakan alat simulasi untuk menguji dan menemukan kesalahan dalam desain sirkuit"
+  - "Menerapkan prinsip perencanaan tata letak untuk mengorganisir komponen chip secara efisien"
+  - "Merancang sirkuit yang menyeimbangkan kecepatan dan konsumsi energi"
+  - "Melacak perjalanan dari desain chip hingga manufaktur fisik di pabrik"
+  - "Memahami bagaimana industri semikonduktor Taiwan membentuk ekonomi global"
+  - "Mengevaluasi trade-off desain antara kinerja, daya, dan area chip"
+
+career_outcomes:
+  - "Insinyur Desain IC"
+  - "Desainer Logika Digital"
+  - "Insinyur Verifikasi Chip"
+  - "Insinyur Desain Fisik"
+  - "Insinyur Hardware AI"
+  - "Insinyur Sistem Tertanam"
+  - "Peneliti R&D Semikonduktor"
+  - "Manajer Produk Hardware"

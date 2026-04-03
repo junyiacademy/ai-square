@@ -1,0 +1,223 @@
+# IC-Designingenieur Entdeckungspfad - Deutsch
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Siliziumschild-Schmied - IC-Designingenieur"
+  short_description: "Schmiede die winzigen Chips, die die moderne Welt antreiben"
+  long_description: |
+    Du bist Lehrling in der Siliziumschild-Schmiede, einer legendären Werkstatt, in der
+    Ingenieure die mikroskopischen Schaltkreise entwerfen, die jedes Smartphone,
+    jeden Computer und jedes Elektrofahrzeug betreiben. Jeder Chip, den du entwirfst,
+    ist wie eine Miniaturstadt — mit Straßen (Drähten), Gebäuden (Logikgattern) und
+    Verkehrsregeln (Taktung), alles in einem Raum kleiner als dein Fingernagel.
+    Über 90% der fortschrittlichsten Chips der Welt werden in Taiwan hergestellt —
+    du könntest Teil dieser Geschichte sein!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Siliziumschild-Schmiede"
+  description: |
+    Die Siliziumschild-Schmiede ist eine Hightech-Werkstatt, in der erfahrene
+    Ingenieure und Lehrlinge zusammenarbeiten, um Chips für Medizingeräte,
+    Weltraumsatelliten und Alltagstelefone zu entwerfen. Der Geist der Schmiede:
+    Präzision, Kreativität und Teamarbeit — ein kleiner Designfehler kann
+    Millionen von Geräten weltweit beeinflussen.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "Erster Tag in der Schmiede"
+  description: |
+    Chefingenieur Lin begrüßt dich in der Schmiede. Deine erste Herausforderung:
+    Eine Konkurrenzwerkstatt hat einen Chip mit einem versteckten Fehler veröffentlicht,
+    der Telefone zum Überhitzen bringt. Du musst die Grundlagen des Chip-Designs lernen,
+    um eine sicherere Alternative zu entwickeln.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Logikdesign"
+      description: "Lerne, einfache EIN/AUS-Schalter (Logikgatter) zu kombinieren, um komplexe Funktionen wie Taschenrechner und Speicher zu bauen — wie LEGO spielen, aber mit Elektrizität"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Chip-Architektur"
+      description: "Verstehe, wie ein Chip in Bereiche gegliedert ist — wie eine Stadt mit Distrikten für Verarbeitung, Speicher und Kommunikation — und plane ihre Zusammenarbeit"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "Schaltkreistests"
+      description: "Simuliere und teste dein Design mit Software-Werkzeugen, um Fehler vor der Fertigung zu finden — wie ein Aufsatz korrekturlesen, bevor man 10 Millionen Exemplare druckt"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "Physisches Layout"
+      description: "Ordne Schaltkreiskomponenten auf dem Chip wie ein Stadtplaner an — entscheide, wo jeder Abschnitt platziert wird und verbinde sie auf den kürzesten Wegen"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Niederleistungs-Ingenieurskunst"
+      description: "Entwirf Chips, die so wenig Energie wie möglich verbrauchen — entscheidend für Smartphones und Wearables, die den ganzen Tag mit einer kleinen Batterie laufen müssen"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "Signalqualitäts-Meisterschaft"
+      description: "Stelle sicher, dass elektrische Signale sauber durch den Chip reisen ohne Verzerrung — wie ein Telefongespräch kristallklar klingen lassen"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "KI-Beschleuniger-Design"
+      description: "Entwirf spezielle Chips für KI-Aufgaben — wie Gesichtserkennung oder Sprachübersetzung — viel schneller als normale Chips"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "Erster Schaltkreis Geschmiedet"
+    description: "Entwirf einen funktionierenden 4-Bit-Rechner-Schaltkreis und verifiziere, dass er alle Testfälle korrekt löst"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "Die Blaupausen-Herausforderung"
+    description: "Erstelle einen vollständigen Layoutplan für einen einfachen Chip und erkläre, wie die Bereiche kommunizieren"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "Das Siliziumschild"
+    description: "Entwirf, teste und optimiere einen vollständigen Niederleistungs-Chip, der produktionsbereit ist"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "Erster Funke"
+    description: "Führe deine erste Schaltkreissimulation erfolgreich durch und sieh dein Design zum Leben erwachen"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Fehlerjäger"
+    description: "Finde und behebe 10 Designfehler, bevor sie die Fabrik erreichen"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Energie-Hüter"
+    description: "Reduziere den Energieverbrauch eines Chips durch kluge Designentscheidungen um 30%"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Legende der Schmiede"
+    description: "Schließe alle Chip-Design-Herausforderungen ab und liefere ein produktionsbereites Design"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Gatter-Puzzle"
+      description: "Verbinde Logikschalter, um einen Schaltkreis zu bauen, der nur leuchtet, wenn zwei Tasten gleichzeitig gedrückt werden"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "Chip-Karten-Erkunder"
+      description: "Sieh dir ein echtes Chip-Diagramm an, identifiziere die Hauptbereiche und erkläre in einfachen Worten, was jeder Bereich tut"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "Schaltkreis Debuggen"
+      description: "Ein simulierter Schaltkreis gibt falsche Antworten — finde den Logikfehler und behebe ihn, bevor er zu Kunden gelangt"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "Stadtplaner"
+      description: "Ordne Chip-Bereiche neu an, um Drahtverbindungen zu verkürzen und Interferenzen zwischen Komponenten zu vermeiden"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "Energie-Diät"
+      description: "Gestalte einen Chip-Bereich neu, um den Energieverbrauch bei gleicher Verarbeitungsgeschwindigkeit zu halbieren"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "KI-Motor-Blaupause"
+      description: "Entwirf die Architektur eines Chips, der Gesichter 10-mal schneller erkennt als ein normaler Prozessor"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "Verstehen, wie einfache Logikschalter kombiniert werden, um komplexe digitale Schaltkreise zu bauen"
+  - "Die wichtigsten Funktionsbereiche in einem modernen Chip erklären"
+  - "Simulationswerkzeuge verwenden, um Fehler in Schaltkreis-Designs zu testen und zu finden"
+  - "Grundsätze der Layout-Planung anwenden, um Chip-Komponenten effizient zu organisieren"
+  - "Schaltkreise entwerfen, die Geschwindigkeit und Energieverbrauch ausbalancieren"
+  - "Den Weg vom Chip-Design zur physischen Fertigung in einer Fabrik nachverfolgen"
+  - "Verstehen, wie Taiwans Halbleiterindustrie die Weltwirtschaft prägt"
+  - "Design-Kompromisse zwischen Leistung, Leistungsaufnahme und Chipfläche bewerten"
+
+career_outcomes:
+  - "IC-Designingenieur"
+  - "Digitallogik-Designer"
+  - "Chip-Verifikationsingenieur"
+  - "Physischer Design-Ingenieur"
+  - "KI-Hardware-Ingenieur"
+  - "Eingebettete-Systeme-Ingenieur"
+  - "Halbleiter-F&E-Forscher"
+  - "Hardware-Produktmanager"

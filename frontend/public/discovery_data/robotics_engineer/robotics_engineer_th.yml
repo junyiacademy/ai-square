@@ -1,0 +1,218 @@
+# วิศวกรหุ่นยนต์ - เส้นทางการค้นพบ - ภาษาไทย
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "ช่างสร้างเมคา - วิศวกรหุ่นยนต์"
+  short_description: "สร้างเครื่องจักรอัจฉริยะที่สามารถรับรู้ คิด และกระทำได้"
+  long_description: |
+    คุณคือช่างฝึกหัดที่ «เวิร์กช็อปเมคา» มีสัญชาตญาณที่ฝังอยู่ในตัวในการ
+    ปลุกชีวิตให้กับเครื่องจักร ในเวิร์กช็อปสหวิทยาการที่กลศาสตร์ อิเล็กทรอนิกส์
+    และซอฟต์แวร์บรรจบกัน การหมุนของมอเตอร์ทุกรอบแบกรับภารกิจในการให้
+    หุ่นยนต์รับใช้มนุษยชาติ
+
+  estimated_hours: 55
+  skill_focus:
+    - mechanical_design
+    - sensor_fusion
+    - motion_planning
+    - human_robot_interaction
+
+world_setting:
+  name: "เวิร์กช็อปเมคา"
+  description: |
+    เวิร์กช็อปเมคาคือฐาน R&D หุ่นยนต์ชั้นนำของโลก ตั้งแต่แขนอุตสาหกรรม
+    ไปจนถึงหุ่นยนต์บริการ จากโดรนถึงหุ่นยนต์ฮิวแมนอยด์ วิศวกรที่นี่
+    เปลี่ยนจินตนาการให้เป็นความจริง — สายการผลิตอัจฉริยะเกิดขึ้นที่นี่
+
+  atmosphere: "industrial_creative"
+  visual_theme: "mecha_workshop"
+
+starting_scenario:
+  title: "ปลุกเมคาตัวแรก"
+  description: |
+    ผู้อาวุโสของเวิร์กช็อป Servo แนะนำเสาหลักสามประการของหุ่นยนต์ให้คุณรู้จัก:
+    การรับรู้ การตัดสินใจ และการขับเคลื่อน แต่ต้นแบบที่หลุดออกจากการควบคุม
+    ชื่อ Haywire กำลังพุ่งชนไปทั่วเวิร์กช็อป คุณต้องเข้าใจข้อมูลเซ็นเซอร์ของมัน
+    เพื่อหยุดมันอย่างปลอดภัย
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_actuators
+    - first_robot_control
+
+skill_tree:
+  core_skills:
+    - id: mechanical_design
+      name: "การออกแบบกลไก"
+      description: "ออกแบบโครงกระดูก ข้อต่อ และกลไกส่งกำลังของหุ่นยนต์"
+      max_level: 10
+      unlocks:
+        - 3d_modeling
+        - material_selection
+
+    - id: embedded_systems
+      name: "ระบบฝังตัว"
+      description: "เขียนเฟิร์มแวร์เพื่อควบคุมมอเตอร์และเซ็นเซอร์"
+      max_level: 10
+      unlocks:
+        - microcontroller_programming
+        - rtos_basics
+
+    - id: sensor_fusion
+      name: "การหลอมรวมเซ็นเซอร์"
+      description: "รวมข้อมูลจากวิชัน LiDAR IMU และเซ็นเซอร์หลายตัว"
+      max_level: 10
+      unlocks:
+        - computer_vision
+        - lidar_processing
+
+    - id: motion_planning
+      name: "การวางแผนการเคลื่อนไหว"
+      description: "วางแผนเส้นทางและลำดับการกระทำของหุ่นยนต์"
+      max_level: 10
+      unlocks:
+        - path_planning
+        - trajectory_optimization
+
+  advanced_skills:
+    - id: robot_learning
+      name: "การเรียนรู้ของหุ่นยนต์"
+      description: "ใช้การเรียนรู้เสริมกำลังให้หุ่นยนต์เรียนทักษะใหม่ได้เองอย่างอิสระ"
+      max_level: 15
+      requires: [motion_planning, sensor_fusion]
+
+    - id: multi_robot_systems
+      name: "การประสานงานหลายหุ่นยนต์"
+      description: "ประสานงานทีมหุ่นยนต์หลายตัวให้ปฏิบัติภารกิจ"
+      max_level: 15
+      requires: [embedded_systems, motion_planning]
+
+    - id: humanoid_design
+      name: "หุ่นยนต์ฮิวแมนอยด์"
+      description: "ออกแบบการเดินสองขา มือที่คล่องแคล่ว และระบบอื่นๆ ที่คล้ายมนุษย์"
+      max_level: 15
+      requires: [mechanical_design, robot_learning]
+
+milestone_quests:
+  - id: first_movement
+    name: "ก้าวแรก"
+    description: "ให้หุ่นยนต์ของคุณดำเนินคำสั่งการเคลื่อนไหวแรกได้สำเร็จ"
+    required_level: 5
+    skills_tested: [embedded_systems, mechanical_design]
+    xp_reward: 500
+    unlocks:
+      - movement_badge
+      - workshop_access
+
+  - id: haywire_tamer
+    name: "ผู้ปราบหุ่นยนต์บ้า"
+    description: "ใช้การหลอมรวมเซ็นเซอร์เพื่อจับหุ่นยนต์ที่หลุดออกจากการควบคุมอย่างปลอดภัย"
+    required_level: 10
+    skills_tested: [sensor_fusion, motion_planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_master_title
+      - advanced_lab
+
+  - id: factory_commander
+    name: "ผู้บัญชาการโรงงานอัจฉริยะ"
+    description: "ออกแบบและติดตั้งสายการผลิตอัตโนมัติแบบสมบูรณ์"
+    required_level: 20
+    skills_tested: [multi_robot_systems, robot_learning]
+    xp_reward: 2500
+    unlocks:
+      - commander_title
+      - workshop_leadership
+
+achievements:
+  - id: first_servo
+    name: "เซอร์โวมอเตอร์ตัวแรก"
+    description: "ควบคุมเซอร์โวมอเตอร์ตัวแรกของคุณได้สำเร็จ"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: obstacle_navigator
+    name: "นักนำทางผ่านสิ่งกีดขวาง"
+    description: "หุ่นยนต์นำทางผ่านสภาพแวดล้อมที่ซับซ้อนได้อย่างอิสระ"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: arm_master
+    name: "ปรมาจารย์แขนกล"
+    description: "ทำการประกอบที่แม่นยำด้วยแขนกล 6 แกนให้สำเร็จ"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "ตำนานเมคา"
+    description: "ทำสำเร็จทุกภารกิจด้านวิศวกรรมหุ่นยนต์"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: servo_control
+      type: interaction
+      title: "พื้นฐานเซอร์โวมอเตอร์"
+      description: "ใช้สัญญาณ PWM เพื่อหมุนมอเตอร์ไปยังมุมที่กำหนด"
+      skills_improved: [embedded_systems]
+      xp_reward: 60
+
+    - id: sensor_reading
+      type: analysis
+      title: "การตีความข้อมูลเซ็นเซอร์"
+      description: "อ่านข้อมูลระยะทางจากเซ็นเซอร์อัลตราโซนิกและอินฟราเรด"
+      skills_improved: [sensor_fusion]
+      xp_reward: 50
+
+  intermediate:
+    - id: robot_arm
+      type: creation
+      title: "การออกแบบแขนกล"
+      description: "ออกแบบแขนกลตั้งโต๊ะ 3 องศาอิสระ"
+      skills_improved: [mechanical_design, motion_planning]
+      xp_reward: 180
+
+    - id: slam_navigation
+      type: creation
+      title: "ภารกิจนำทาง SLAM"
+      description: "หุ่นยนต์สร้างแผนที่และระบุตำแหน่งตนเองพร้อมกันในสภาพแวดล้อมที่ไม่รู้จัก"
+      skills_improved: [sensor_fusion, motion_planning]
+      xp_reward: 200
+
+  advanced:
+    - id: factory_automation
+      type: creation
+      title: "ออกแบบสายการผลิตอัจฉริยะ"
+      description: "ออกแบบสายการประกอบแบบหลายหุ่นยนต์ร่วมกัน"
+      skills_improved: [multi_robot_systems, robot_learning]
+      xp_reward: 350
+
+    - id: humanoid_walk
+      type: creation
+      title: "ภารกิจการเดินสองขา"
+      description: "ให้หุ่นยนต์ฮิวแมนอยด์เดินได้อย่างมั่นคงบนพื้นที่ขรุขระ"
+      skills_improved: [humanoid_design, motion_planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจการออกแบบกลไกและจลนศาสตร์ของหุ่นยนต์"
+  - "เชี่ยวชาญระบบฝังตัวและการควบคุมแบบเรียลไทม์"
+  - "รวมเซ็นเซอร์หลายตัวเพื่อการรับรู้สภาพแวดล้อม"
+  - "ใช้งานอัลกอริทึมการวางแผนเส้นทางและการควบคุมการเคลื่อนไหว"
+  - "ประยุกต์ใช้การเรียนรู้เสริมกำลังเพื่อฝึกหุ่นยนต์"
+  - "ออกแบบระบบหุ่นยนต์หลายตัวทำงานร่วมกัน"
+  - "เข้าใจมาตรฐานความปลอดภัยสำหรับการทำงานร่วมระหว่างมนุษย์และหุ่นยนต์"
+  - "เรียนรู้ระบบนิเวศของอุตสาหกรรมการผลิตอัจฉริยะ"
+
+career_outcomes:
+  - "วิศวกรหุ่นยนต์"
+  - "วิศวกรบูรณาการระบบอัตโนมัติ"
+  - "นักโปรแกรมแขนกล"
+  - "วิศวกรระบบฝังตัว"
+  - "นักพัฒนา ROS"
+  - "ที่ปรึกษาการผลิตอัจฉริยะ"
+  - "นักออกแบบปฏิสัมพันธ์มนุษย์-หุ่นยนต์"
+  - "วิศวกรระบบโดรน"

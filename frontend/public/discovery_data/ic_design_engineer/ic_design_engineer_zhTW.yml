@@ -1,0 +1,218 @@
+# IC設計工程師探索路徑 - 繁體中文
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "矽盾鍛造師 - IC設計工程師"
+  short_description: "在矽盾鍛造所打造驅動現代世界的微小晶片"
+  long_description: |
+    你是「矽盾鍛造所」的見習鍛造師，擁有設計肉眼看不見的微小電路的天賦。
+    在這裡，每一顆晶片都像一座微型城市——有道路（導線）、建築物（邏輯閘）
+    和交通規則（時序），全部擠在比你指甲還小的空間裡。台灣製造了全球超過90%
+    的頂尖晶片，你也可以成為這個故事的一部分！
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "矽盾鍛造所"
+  description: |
+    矽盾鍛造所是台灣半導體產業的核心訓練基地，這裡的工程師和見習生合力
+    設計用於醫療設備、太空衛星和日常手機的晶片。鍛造所的精神是：精準、
+    創意與團隊合作——一個微小的設計錯誤，可能影響全球數百萬台裝置。
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "鍛造所的第一天"
+  description: |
+    首席工程師林師傅歡迎你來到鍛造所。你的第一個挑戰：競爭對手的工坊
+    推出了一顆有隱藏缺陷的晶片，導致手機過熱。你必須學習晶片設計的基礎，
+    協助打造更安全的替代品——了解邏輯開關如何組合成更大的功能，以及設計師
+    如何在送交工廠前找出錯誤。
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "邏輯設計"
+      description: "學習將簡單的ON/OFF開關（邏輯閘）組合成複雜功能，像計算機和記憶體——就像用積木搭建，但用的是電流"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "晶片架構"
+      description: "了解晶片如何被分成不同區塊——像有處理、記憶、通訊各區的城市——並規劃各區如何協同運作"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "電路測試"
+      description: "用軟體模擬和測試你的設計，在製造前找出錯誤——就像文章印出一千萬份前先做校對"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "實體佈局"
+      description: "像城市規劃師一樣在晶片上安排電路元件——決定每個區塊的位置，並以最短路徑連接它們"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "低功耗設計"
+      description: "設計盡可能省電的晶片——對需要整天靠小電池運作的智慧手機和穿戴裝置至關重要"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "訊號品質精通"
+      description: "確保電訊號在晶片中乾淨傳輸不失真——就像讓電話通話聽起來清晰無雜音"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "AI加速器設計"
+      description: "設計專為AI任務打造的晶片——比如人臉辨識或語言翻譯——比普通晶片快得多"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "第一個電路完成"
+    description: "設計一個能正確運作的4位元計算電路，並通過所有測試案例"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "藍圖挑戰"
+    description: "為一顆簡單晶片製作完整佈局規劃，並說明各區塊如何彼此溝通"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "矽盾誕生"
+    description: "設計、測試並優化一顆完整的低功耗晶片，準備好送交生產"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "第一道火花"
+    description: "成功執行你的第一次電路模擬，看著設計活起來"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "臭蟲獵人"
+    description: "在到達工廠前找出並修復10個設計錯誤"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "能源守護者"
+    description: "透過聰明的設計決策將晶片功耗降低30%"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "鍛造所傳說"
+    description: "完成所有晶片設計挑戰，交出生產就緒的設計"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "邏輯閘謎題"
+      description: "連接邏輯開關，建造一個只有當兩個按鈕同時按下時才會亮燈的電路"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "晶片地圖探索"
+      description: "觀察一張真實的晶片示意圖，找出主要區塊，用簡單的話解釋每個區域的功能"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "電路偵錯"
+      description: "模擬電路給出了錯誤答案——在送到客戶手上前找出邏輯錯誤並修復它"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "城市規劃師"
+      description: "重新排列晶片區塊，縮短導線長度，避免元件間的訊號干擾"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "節能行動"
+      description: "重新設計晶片某個區塊，在保持相同處理速度的情況下將功耗減半"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "AI引擎藍圖"
+      description: "設計一顆能比普通處理器快10倍辨識人臉的晶片架構"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解簡單邏輯開關如何組合成複雜的數位電路"
+  - "說明現代晶片內部的主要功能區塊"
+  - "使用模擬工具測試並找出電路設計中的錯誤"
+  - "應用佈局規劃原則有效率地組織晶片元件"
+  - "設計在速度與耗電量之間取得平衡的電路"
+  - "追蹤晶片從設計到工廠實體製造的完整旅程"
+  - "了解台灣半導體產業如何影響全球經濟"
+  - "評估效能、功耗與晶片面積之間的設計取捨"
+
+career_outcomes:
+  - "IC設計工程師"
+  - "數位邏輯設計師"
+  - "晶片驗證工程師"
+  - "實體設計工程師"
+  - "AI硬體工程師"
+  - "嵌入式系統工程師"
+  - "半導體研發研究員"
+  - "硬體產品經理"

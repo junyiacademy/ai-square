@@ -1,0 +1,218 @@
+# 자율주행 엔지니어 탐색 경로 - 한국어
+path_id: autonomous_vehicle_engineer
+category: autonomous_systems
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "자율 네비게이터 - 자율주행 엔지니어"
+  short_description: "차가 스스로 길을 보고, 생각하고, 결정하도록 가르쳐라"
+  long_description: |
+    당신은 「자율 항법 타워」의 견습 내비게이터로, 차량을 스스로 주행시키는
+    재능을 지닌 존재입니다. AI·센서·지도가 결합된 이 첨단 기지에서
+    매 밀리초의 판단이 승객의 안전과 직결됩니다. 당신의 임무는
+    무사고 모빌리티의 미래를 구축하는 것입니다.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "자율 항법 타워"
+  description: |
+    자율 항법 타워는 전 세계 자율주행 기술의 R&D 허브입니다. 센서 융합부터
+    의사결정 엔진, HD 지도부터 V2X 네트워크까지, 엔지니어들이 차세대
+    지능형 교통 시스템을 구축하고 있습니다.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "첫 번째 자율주행"
+  description: |
+    수석 엔지니어 Navigator가 자율주행차의 인식 세계를 안내합니다:
+    LiDAR 포인트 클라우드, 카메라 영상, 레이더 에코. 그런데 테스트 트랙에
+    Ghost Signal — 가짜 장애물 감지 — 이 나타났습니다. 센서 데이터를
+    분석해서 유령 신호의 출처를 찾아내야 합니다.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "환경 인식"
+      description: "LiDAR·카메라·레이더로 주변 환경을 감지한다"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "위치 추정과 지도"
+      description: "HD 지도 위에서 차량의 정확한 위치를 파악한다"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "경로 계획"
+      description: "복잡한 교통 상황에서 가장 안전한 주행 경로를 찾는다"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "차량 제어"
+      description: "핸들·액셀·브레이크를 정밀하게 제어한다"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "엔드투엔드 학습"
+      description: "딥러닝으로 센서 입력에서 제어 출력까지 직접 처리한다"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "V2X 통신"
+      description: "차량과 인프라, 다른 차량 간의 통신을 구현한다"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "안전성 검증"
+      description: "시뮬레이션과 실차 테스트로 자율주행 시스템 안전성을 검증한다"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "첫 번째 감지"
+    description: "도로 위의 보행자·차량·신호를 성공적으로 감지하고 분류한다"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "유령 사냥꾼"
+    description: "센서 융합에서 발생하는 가짜 감지를 찾아 제거한다"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "도시 내비게이터"
+    description: "시뮬레이션 도시에서 완전 자율주행 테스트를 완료한다"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "차선 유지"
+    description: "차량을 차선 중앙에서 안정적으로 1킬로미터 주행시킨다"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "교차로 마스터"
+    description: "50가지 다른 유형의 교차로를 안전하게 통과한다"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "무사고 운전"
+    description: "100km 자율주행을 무사고로 완주한다"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "자율주행 전설"
+    description: "모든 자율주행 엔지니어링 도전을 완료한다"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "카메라 물체 감지"
+      description: "YOLO 모델로 도로 위 차량과 보행자를 감지한다"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "HD 지도 해독"
+      description: "지도의 차선 표시, 교차로, 교통 신호 어노테이션을 이해한다"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "트리플 센서 융합"
+      description: "LiDAR·카메라·레이더의 감지 결과를 융합한다"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "회전교차로 경로 계획"
+      description: "로터리에서 안전한 주행 궤적을 계획한다"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "도심 자율주행 챌린지"
+      description: "복잡한 도심 환경에서 자율주행 임무를 완수한다"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "자율주행 차대 배차"
+      description: "자율주행 버스 10대의 실시간 노선 관리를 수행한다"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "LiDAR·카메라·레이더의 인식 원리를 이해한다"
+  - "물체 감지와 의미론적 분할 기술을 습득한다"
+  - "HD 지도 제작과 실시간 위치 추정을 마스터한다"
+  - "행동 계획과 궤적 생성을 구현한다"
+  - "차량 동역학과 제어 이론을 이해한다"
+  - "딥러닝으로 엔드투엔드 자율주행을 실현한다"
+  - "자율주행 시스템의 안전성 검증 프로세스를 설계한다"
+  - "스마트 교통 발전과 규제를 이해한다"
+
+career_outcomes:
+  - "자율주행 시스템 엔지니어"
+  - "센서 융합 엔지니어"
+  - "HD 지도 엔지니어"
+  - "차량용 AI 엔지니어"
+  - "기능 안전 엔지니어"
+  - "지능형 교통 계획가"
+  - "V2X 통신 엔지니어"
+  - "자율주행 테스트·검증 엔지니어"

@@ -1,0 +1,219 @@
+# Путь открытия инженера автономных транспортных средств - Русский
+path_id: autonomous_vehicle_engineer
+category: autonomous_systems
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Автономный навигатор - Инженер автономных транспортных средств"
+  short_description: "Научи автомобиль самому видеть дорогу, думать и принимать решения"
+  long_description: |
+    Ты стажёр-навигатор в «Башне автономной навигации», одарённый способностью
+    заставлять транспортные средства ездить самостоятельно. На этой высокотехнологичной
+    базе, объединяющей ИИ, датчики и карты, каждая миллисекунда решения влияет на
+    безопасность пассажиров. Твоя миссия — построить будущее мобильности без аварий.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "Башня автономной навигации"
+  description: |
+    Башня автономной навигации — глобальный центр R&D технологий автономного
+    вождения. От слияния датчиков до двигателей принятия решений, от HD-карт до
+    сетей V2X — инженеры здесь строят следующее поколение интеллектуальных
+    транспортных систем.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "Первая автономная поездка"
+  description: |
+    Главный инженер Navigator проводит тебя через перцептивный мир автономного
+    транспортного средства: облака точек LiDAR, изображения камер, радарные эхо.
+    Но на испытательном треке появляется Ghost Signal — ложное обнаружение препятствия.
+    Тебе нужно проанализировать данные датчиков, чтобы найти источник призрака.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "Восприятие окружающей среды"
+      description: "Воспринимать окружение с помощью LiDAR, камер и радара"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "Локализация и картирование"
+      description: "Точно определять положение транспортного средства на HD-картах"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "Планирование маршрута"
+      description: "Находить наиболее безопасный маршрут движения в сложном трафике"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "Управление транспортным средством"
+      description: "Точно управлять рулём, акселератором и тормозами"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "Сквозное обучение"
+      description: "Использовать глубокое обучение для прямого перехода от датчика к управлению"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "Коммуникация V2X"
+      description: "Обеспечить взаимодействие транспортных средств с инфраструктурой и другими машинами"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "Проверка безопасности"
+      description: "Проверять безопасность автономных систем с помощью симуляции и реальных испытаний"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "Первое обнаружение"
+    description: "Успешно обнаружить и классифицировать пешеходов, транспортные средства и сигналы на дороге"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "Охотник на призраков"
+    description: "Найти и устранить ложные обнаружения в слиянии датчиков"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "Городской навигатор"
+    description: "Пройти полностью автономный тест вождения в симулированном городе"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "Удержание полосы"
+    description: "Удерживать транспортное средство в центре полосы на протяжении 1 километра"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "Мастер перекрёстков"
+    description: "Безопасно проехать 50 различных типов перекрёстков"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "Водитель без происшествий"
+    description: "Проехать 100 км в автономном режиме без каких-либо инцидентов"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "Автономная легенда"
+    description: "Выполнить все задания инженерии автономных транспортных средств"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "Обнаружение объектов камерой"
+      description: "Использовать модель YOLO для обнаружения транспортных средств и пешеходов на дороге"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "Чтение HD-карт"
+      description: "Понимать разметку полос, перекрёстки и аннотации дорожных знаков на картах"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "Тройное слияние датчиков"
+      description: "Объединить результаты обнаружения LiDAR, камеры и радара"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "Планирование маршрута на кольцевом перекрёстке"
+      description: "Спланировать безопасную траекторию движения через кольцевую развязку"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "Испытание автономного вождения в городе"
+      description: "Выполнить задачи автономного вождения в сложной городской среде"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "Диспетчеризация автономного автопарка"
+      description: "Управлять расписанием маршрутов в реальном времени для 10 автономных автобусов"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять принципы восприятия LiDAR, камер и радара"
+  - "Освоить технологии обнаружения объектов и семантической сегментации"
+  - "Стать экспертом в HD-картировании и локализации в реальном времени"
+  - "Реализовать планирование поведения и генерацию траекторий"
+  - "Понять динамику транспортного средства и теорию управления"
+  - "Применять глубокое обучение для сквозного автономного вождения"
+  - "Разрабатывать процессы проверки безопасности автономных систем"
+  - "Понять развитие интеллектуального транспорта и регулирование"
+
+career_outcomes:
+  - "Инженер автономных систем"
+  - "Инженер по слиянию датчиков"
+  - "Инженер HD-картирования"
+  - "Инженер по автомобильному ИИ"
+  - "Инженер по функциональной безопасности"
+  - "Планировщик интеллектуального транспорта"
+  - "Инженер коммуникаций V2X"
+  - "Инженер по тестированию и валидации автономных транспортных средств"

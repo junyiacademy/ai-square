@@ -1,0 +1,218 @@
+# 自動運転エンジニア探索パス - 日本語
+path_id: autonomous_vehicle_engineer
+category: autonomous_systems
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "自律ナビゲーター - 自動運転エンジニア"
+  short_description: "車に自ら道を見て、考え、判断する力を与えよう"
+  long_description: |
+    あなたは「自律航法タワー」の見習いナビゲーターです。車両を自律走行させる
+    才能を持っています。AI・センサー・地図を組み合わせたこのハイテク基地では
+    ミリ秒単位の判断が乗客の安全を左右します。あなたの使命は
+    ゼロ事故のモビリティの未来を築くことです。
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "自律航法タワー"
+  description: |
+    自律航法タワーは自動運転技術のグローバルR&Dハブです。センサーフュージョンから
+    意思決定エンジン、HDマップからV2Xネットワークまで、エンジニアたちは次世代の
+    インテリジェント交通システムを構築しています。
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "初めての自動運転"
+  description: |
+    チーフエンジニアのナビゲーターが、自動運転車の知覚世界を案内します：
+    LiDARポイントクラウド、カメラ映像、レーダーエコー。しかしテストコースに
+    Ghost Signal — 偽の障害物検知 — が現れました。センサーデータを分析して
+    その幻影の正体を突き止めなければなりません。
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "環境認識"
+      description: "LiDAR・カメラ・レーダーで周囲の環境を感知する"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "自己位置推定とマッピング"
+      description: "HDマップ上での車両位置を精密に特定する"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "経路計画"
+      description: "複雑な交通の中で最も安全な走行ルートを見つける"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "車両制御"
+      description: "ステアリング・アクセル・ブレーキを精密に制御する"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "エンドツーエンド学習"
+      description: "深層学習でセンサー入力から制御出力まで直接処理する"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "V2X通信"
+      description: "車両とインフラや他車両との通信を実現する"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "安全性検証"
+      description: "シミュレーションと実車テストで自動運転システムの安全性を検証する"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "初めての物体検知"
+    description: "道路上の歩行者・車両・信号機を正確に検知・分類する"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "ゴーストバスター"
+    description: "センサーフュージョン内の誤検知を発見して排除する"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "シティナビゲーター"
+    description: "シミュレーション都市で完全自動運転テストを完了する"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "車線維持"
+    description: "車両を車線中央で安定走行させ1キロメートルを達成する"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "交差点マスター"
+    description: "50種類の異なる交差点を安全に通過する"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "無事故ドライバー"
+    description: "100kmの自動運転を無事故で完走する"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "自律伝説"
+    description: "自動運転エンジニアリングの全課題をクリアする"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "カメラ物体検知"
+      description: "YOLOモデルで道路上の車両と歩行者を検知する"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "HDマップ解読"
+      description: "地図の車線標示・交差点・交通標識のアノテーションを理解する"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "トリプルセンサーフュージョン"
+      description: "LiDAR・カメラ・レーダーの検知結果を融合する"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "ラウンドアバウト経路計画"
+      description: "ロータリー交差点での安全な走行軌跡を計画する"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "都市自動運転チャレンジ"
+      description: "複雑な都市環境で自動運転タスクを完了する"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "自動運転フリート配車"
+      description: "10台の自動運転バスのリアルタイム経路管理を行う"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "LiDAR・カメラ・レーダーの知覚原理を理解する"
+  - "物体検知とセマンティックセグメンテーション技術を習得する"
+  - "HDマッピングとリアルタイム自己位置推定を極める"
+  - "行動計画と軌道生成を実装する"
+  - "車両ダイナミクスと制御理論を理解する"
+  - "深層学習でエンドツーエンド自動運転を実現する"
+  - "自動運転システムの安全検証プロセスを設計する"
+  - "スマート交通の発展と規制を理解する"
+
+career_outcomes:
+  - "自動運転システムエンジニア"
+  - "センサーフュージョンエンジニア"
+  - "HDマッピングエンジニア"
+  - "車載AIエンジニア"
+  - "機能安全エンジニア"
+  - "インテリジェント交通プランナー"
+  - "V2X通信エンジニア"
+  - "自動運転テスト・バリデーションエンジニア"

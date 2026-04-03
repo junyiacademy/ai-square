@@ -1,0 +1,224 @@
+# Путь исследования инженера по проектированию ИС - Русский
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Кузнец Кремниевого Щита - Инженер по проектированию ИС"
+  short_description: "Куй крошечные чипы, которые питают современный мир"
+  long_description: |
+    Ты ученик в Кузнице Кремниевого Щита — легендарной мастерской, где инженеры
+    проектируют микроскопические схемы, которые приводят в действие каждый
+    смартфон, компьютер и электромобиль. Каждый чип, который ты проектируешь,
+    похож на миниатюрный город — с дорогами (проводами), зданиями (логическими
+    вентилями) и правилами движения (синхронизацией), всё это в пространстве
+    меньше твоего ногтя. Более 90% самых передовых чипов мира производится
+    на Тайване — ты тоже можешь стать частью этой истории!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Кузница Кремниевого Щита"
+  description: |
+    Кузница Кремниевого Щита — это высокотехнологичная мастерская, где опытные
+    инженеры и ученики сотрудничают для проектирования чипов, используемых в
+    медицинских устройствах, космических спутниках и обычных телефонах. Дух
+    кузницы: точность, творчество и командная работа — небольшая ошибка в
+    дизайне может повлиять на миллионы устройств по всему миру.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "Первый день в кузнице"
+  description: |
+    Главный инженер Линь приветствует тебя в кузнице. Первое испытание: конкурирующая
+    мастерская выпустила чип со скрытым дефектом, из-за которого телефоны перегреваются.
+    Ты должен изучить основы проектирования чипов, чтобы помочь создать более
+    безопасную альтернативу — понять, как логические переключатели объединяются в
+    более крупные функции.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Логическое проектирование"
+      description: "Научись комбинировать простые переключатели ВКЛ/ВЫКЛ (логические вентили) для создания сложных функций, таких как калькуляторы и память — как играть в LEGO, но с электричеством"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Архитектура чипа"
+      description: "Пойми, как чип организован в разделы — как город с районами для обработки, памяти и коммуникации — и спланируй их взаимодействие"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "Тестирование схем"
+      description: "Симулируй и тестируй дизайн с помощью программных инструментов для обнаружения ошибок до производства — как редактирование эссе перед печатью 10 миллионов копий"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "Физическая компоновка"
+      description: "Размести компоненты схемы на чипе как городской планировщик — решай, где расположить каждый раздел и соединяй их кратчайшими путями"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Проектирование с низким энергопотреблением"
+      description: "Проектируй чипы, которые используют как можно меньше энергии — критически важно для смартфонов и носимых устройств, работающих весь день на маленькой батарее"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "Мастерство качества сигнала"
+      description: "Обеспечь чистую передачу электрических сигналов через чип без искажений — как гарантия кристально чистого звука в телефонном разговоре"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "Проектирование ускорителей ИИ"
+      description: "Проектируй специальные чипы для задач ИИ — таких как распознавание лиц или перевод языков — намного быстрее обычных чипов"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "Первая схема выкована"
+    description: "Спроектируй работающую 4-битную вычислительную схему и проверь, что она дает правильные ответы для всех тестовых случаев"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "Испытание чертежом"
+    description: "Создай полный план компоновки простого чипа и объясни, как разделы взаимодействуют"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "Кремниевый щит"
+    description: "Спроектируй, протестируй и оптимизируй полный чип с низким энергопотреблением, готовый к производству"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "Первая искра"
+    description: "Успешно запусти первую симуляцию схемы и увидь, как дизайн оживает"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Охотник за ошибками"
+    description: "Найди и исправь 10 ошибок дизайна до того, как они попадут на завод"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Страж энергии"
+    description: "Сократи энергопотребление чипа на 30% с помощью умных решений в дизайне"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Легенда кузницы"
+    description: "Завершить все задания по проектированию чипов и сдать готовый к производству дизайн"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Головоломка вентилей"
+      description: "Соедини логические переключатели, чтобы построить схему, которая зажигает свет только при одновременном нажатии двух кнопок"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "Исследователь карты чипа"
+      description: "Рассмотри реальную схему чипа, определи основные разделы и объясни простыми словами, что делает каждая область"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "Отладка схемы"
+      description: "Симулированная схема дает неправильные ответы — найди логическую ошибку и исправь её до отправки клиентам"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "Городской планировщик"
+      description: "Переставь разделы чипа для сокращения соединений и устранения помех между компонентами"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "Энергетическая диета"
+      description: "Перепроектируй раздел чипа для вдвое меньшего потребления энергии при той же скорости обработки"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "Чертёж двигателя ИИ"
+      description: "Спроектируй архитектуру чипа, способного распознавать лица в 10 раз быстрее обычного процессора"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять, как простые логические переключатели объединяются для создания сложных цифровых схем"
+  - "Объяснить основные функциональные разделы внутри современного чипа"
+  - "Использовать инструменты симуляции для тестирования и поиска ошибок в дизайне схем"
+  - "Применять принципы планирования компоновки для эффективной организации компонентов чипа"
+  - "Проектировать схемы, балансирующие скорость и энергопотребление"
+  - "Отслеживать путь от дизайна чипа до физического производства на заводе"
+  - "Понять, как полупроводниковая промышленность Тайваня формирует мировую экономику"
+  - "Оценить компромиссы дизайна между производительностью, мощностью и площадью чипа"
+
+career_outcomes:
+  - "Инженер по проектированию ИС"
+  - "Разработчик цифровой логики"
+  - "Инженер по верификации чипов"
+  - "Инженер по физическому проектированию"
+  - "Инженер по аппаратному обеспечению ИИ"
+  - "Инженер встраиваемых систем"
+  - "Исследователь НИОКР в области полупроводников"
+  - "Менеджер продуктов аппаратного обеспечения"

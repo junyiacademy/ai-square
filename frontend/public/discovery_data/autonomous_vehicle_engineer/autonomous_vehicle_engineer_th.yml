@@ -1,0 +1,219 @@
+# เส้นทางค้นพบวิศวกรยานยนต์อัตโนมัติ - ภาษาไทย
+path_id: autonomous_vehicle_engineer
+category: autonomous_systems
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "ผู้นำทางอัตโนมัติ - วิศวกรยานยนต์อัตโนมัติ"
+  short_description: "สอนรถยนต์ให้มองเห็นถนน คิด และตัดสินใจได้ด้วยตัวเอง"
+  long_description: |
+    คุณคือผู้นำทางฝึกหัดที่ «หอนำทางอัตโนมัติ» ผู้มีพรสวรรค์ในการทำให้ยานพาหนะ
+    ขับเคลื่อนได้ด้วยตัวเอง ในฐานปฏิบัติการไฮเทคที่รวม AI เซ็นเซอร์ และแผนที่เข้าด้วยกัน
+    ทุกมิลลิวินาทีของการตัดสินใจส่งผลต่อความปลอดภัยของผู้โดยสาร
+    ภารกิจของคุณคือสร้างอนาคตการเคลื่อนที่ที่ปราศจากอุบัติเหตุ
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "หอนำทางอัตโนมัติ"
+  description: |
+    หอนำทางอัตโนมัติคือศูนย์วิจัยและพัฒนาเทคโนโลยีการขับขี่อัตโนมัติระดับโลก
+    ตั้งแต่การรวมข้อมูลเซ็นเซอร์ไปจนถึงเครื่องยนต์การตัดสินใจ
+    จากแผนที่ความละเอียดสูงไปจนถึงเครือข่าย V2X
+    วิศวกรที่นี่กำลังสร้างระบบการขนส่งอัจฉริยะรุ่นต่อไป
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "การขับขี่อัตโนมัติครั้งแรก"
+  description: |
+    หัวหน้าวิศวกร Navigator พาคุณสำรวจโลกการรับรู้ของยานยนต์อัตโนมัติ:
+    เมฆจุด LiDAR ภาพกล้อง คลื่นสะท้อนเรดาร์ แต่ Ghost Signal ปรากฏขึ้นในสนามทดสอบ
+    — การตรวจจับสิ่งกีดขวางปลอม คุณต้องวิเคราะห์ข้อมูลเซ็นเซอร์
+    เพื่อหาต้นตอของสัญญาณผี
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "การรับรู้สิ่งแวดล้อม"
+      description: "รับรู้สภาพแวดล้อมโดยรอบด้วย LiDAR กล้อง และเรดาร์"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "การระบุตำแหน่งและการทำแผนที่"
+      description: "ระบุตำแหน่งยานพาหนะบนแผนที่ความละเอียดสูงอย่างแม่นยำ"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "การวางแผนเส้นทาง"
+      description: "หาเส้นทางขับขี่ที่ปลอดภัยที่สุดในการจราจรที่ซับซ้อน"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "การควบคุมยานพาหนะ"
+      description: "ควบคุมพวงมาลัย คันเร่ง และเบรกอย่างแม่นยำ"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "การเรียนรู้แบบ End-to-End"
+      description: "ใช้ deep learning ในการประมวลผลจากเซ็นเซอร์ไปสู่การควบคุมโดยตรง"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "การสื่อสาร V2X"
+      description: "ให้ยานพาหนะสื่อสารกับโครงสร้างพื้นฐานและยานพาหนะอื่น"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "การตรวจสอบความปลอดภัย"
+      description: "ตรวจสอบความปลอดภัยของระบบอัตโนมัติด้วยการจำลองและการทดสอบจริง"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "การตรวจจับครั้งแรก"
+    description: "ตรวจจับและจำแนกคนเดินเท้า ยานพาหนะ และสัญญาณบนถนนได้สำเร็จ"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "นักล่าสัญญาณผี"
+    description: "ค้นหาและกำจัดการตรวจจับปลอมในการรวมข้อมูลเซ็นเซอร์"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "ผู้นำทางในเมือง"
+    description: "ผ่านการทดสอบการขับขี่อัตโนมัติเต็มรูปแบบในเมืองจำลอง"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "การรักษาเลน"
+    description: "รักษายานพาหนะให้อยู่กึ่งกลางเลนอย่างมั่นคงเป็นระยะ 1 กิโลเมตร"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "ผู้เชี่ยวชาญทางแยก"
+    description: "ผ่านทางแยก 50 ประเภทต่างกันอย่างปลอดภัย"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "คนขับไร้อุบัติเหตุ"
+    description: "ขับขี่อัตโนมัติครบ 100 กิโลเมตรโดยไม่มีอุบัติเหตุ"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "ตำนานอัตโนมัติ"
+    description: "ผ่านความท้าทายด้านวิศวกรรมยานยนต์อัตโนมัติทั้งหมด"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "การตรวจจับวัตถุด้วยกล้อง"
+      description: "ใช้โมเดล YOLO ตรวจจับยานพาหนะและคนเดินเท้าบนถนน"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "การอ่านแผนที่ความละเอียดสูง"
+      description: "เข้าใจการทำเครื่องหมายเลน ทางแยก และป้ายจราจรในแผนที่"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "การรวมเซ็นเซอร์สามชนิด"
+      description: "รวมผลการตรวจจับจาก LiDAR กล้อง และเรดาร์เข้าด้วยกัน"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "การวางแผนเส้นทางวงเวียน"
+      description: "วางแผนวิถีการขับขี่ที่ปลอดภัยผ่านวงเวียน"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "ความท้าทายการขับขี่อัตโนมัติในเมือง"
+      description: "ทำภารกิจขับขี่อัตโนมัติในสภาพแวดล้อมเมืองที่ซับซ้อน"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "การจัดการกองยานอัตโนมัติ"
+      description: "จัดการตารางเส้นทางแบบเรียลไทม์สำหรับรถบัสอัตโนมัติ 10 คัน"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจหลักการรับรู้ของ LiDAR กล้อง และเรดาร์"
+  - "เชี่ยวชาญเทคนิคการตรวจจับวัตถุและการแบ่งส่วนเชิงความหมาย"
+  - "พัฒนาความเชี่ยวชาญในการทำแผนที่ความละเอียดสูงและการระบุตำแหน่งแบบเรียลไทม์"
+  - "นำการวางแผนพฤติกรรมและการสร้างวิถีมาใช้งาน"
+  - "เข้าใจพลศาสตร์ยานพาหนะและทฤษฎีการควบคุม"
+  - "ประยุกต์ใช้ deep learning สำหรับการขับขี่อัตโนมัติแบบ end-to-end"
+  - "ออกแบบกระบวนการตรวจสอบความปลอดภัยสำหรับระบบอัตโนมัติ"
+  - "เข้าใจการพัฒนาการขนส่งอัจฉริยะและกฎระเบียบ"
+
+career_outcomes:
+  - "วิศวกรระบบอัตโนมัติ"
+  - "วิศวกรการรวมเซ็นเซอร์"
+  - "วิศวกรการทำแผนที่ความละเอียดสูง"
+  - "วิศวกร AI ยานยนต์"
+  - "วิศวกรความปลอดภัยเชิงฟังก์ชัน"
+  - "นักวางแผนระบบขนส่งอัจฉริยะ"
+  - "วิศวกรการสื่อสาร V2X"
+  - "วิศวกรทดสอบและตรวจสอบยานยนต์อัตโนมัติ"

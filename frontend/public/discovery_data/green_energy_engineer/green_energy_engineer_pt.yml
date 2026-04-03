@@ -1,0 +1,220 @@
+# Caminho de Exploração do Engenheiro de Energia Verde - Português
+path_id: green_energy_engineer
+category: sustainability
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Guardião da Energia - Engenheiro de Energia Verde"
+  short_description: "Proteja o futuro do planeta com energias renováveis e redes inteligentes"
+  long_description: |
+    Você é um guardião aprendiz da «Torre de Energia Sustentável», dotado do
+    dom de dominar o vento, a luz e a água. Neste reino onde o destino da
+    Terra está em jogo, cada quilowatt de energia verde gerada conquista
+    tempo precioso na luta contra as mudanças climáticas
+
+  estimated_hours: 50
+  skill_focus:
+    - renewable_energy
+    - energy_storage
+    - smart_grid
+    - carbon_management
+
+world_setting:
+  name: "Torre de Energia Sustentável"
+  description: |
+    A Torre de Energia Sustentável ergue-se imponente na costa, com suas
+    turbinas eólicas e painéis solares no topo fornecendo eletricidade para
+    toda uma cidade. Os engenheiros de energia verde aprendem aqui a tornar
+    as energias renováveis estáveis, eficientes e confiáveis.
+    O caminho para as emissões líquidas zero em 2050 começa aqui
+
+  atmosphere: "eco_futuristic"
+  visual_theme: "energy_tower"
+
+starting_scenario:
+  title: "O Primeiro Quilowatt Verde"
+  description: |
+    O Ancião da Energia Volt guia você pelo cenário energético atual e os
+    desafios da transição. Mas uma repentina «Tempestade de Energia» chamada
+    Blackout ameaça a estabilidade da rede. Você deve dominar o equilíbrio
+    entre oferta e demanda para salvar a cidade inteira das trevas
+
+  initial_tasks:
+    - learn_energy_basics
+    - understand_renewables
+    - first_solar_design
+
+skill_tree:
+  core_skills:
+    - id: solar_energy
+      name: "Engenharia Solar"
+      description: "Projete e otimize sistemas de geração fotovoltaica"
+      max_level: 10
+      unlocks:
+        - pv_system_design
+        - solar_forecasting
+
+    - id: wind_energy
+      name: "Energia Eólica"
+      description: "Compreenda design de turbinas, seleção de local e operações"
+      max_level: 10
+      unlocks:
+        - turbine_aerodynamics
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Tecnologia de Armazenamento de Energia"
+      description: "Domine baterias de lítio, baterias de fluxo e armazenamento de hidrogênio"
+      max_level: 10
+      unlocks:
+        - battery_management
+        - hydrogen_systems
+
+    - id: smart_grid
+      name: "Rede Elétrica Inteligente"
+      description: "Use IA para gerenciar fornecimento, demanda, despacho e comércio de energia"
+      max_level: 10
+      unlocks:
+        - demand_response
+        - grid_optimization
+
+  advanced_skills:
+    - id: carbon_engineering
+      name: "Engenharia de Gestão de Carbono"
+      description: "Captura de carbono, comércio de carbono e auditoria de carbono corporativa"
+      max_level: 15
+      requires: [solar_energy, wind_energy]
+
+    - id: microgrid_design
+      name: "Design de Microrrede"
+      description: "Projete sistemas de energia independentes isolados ou de escala comunitária"
+      max_level: 15
+      requires: [energy_storage, smart_grid]
+
+    - id: green_hydrogen
+      name: "Tecnologia de Hidrogênio Verde"
+      description: "Sistemas completos para produção de hidrogênio por eletrólise renovável"
+      max_level: 15
+      requires: [energy_storage, carbon_engineering]
+
+milestone_quests:
+  - id: first_kilowatt
+    name: "O Primeiro Quilowatt"
+    description: "Projete e simule um sistema solar capaz de gerar 1kW"
+    required_level: 5
+    skills_tested: [solar_energy, smart_grid]
+    xp_reward: 500
+    unlocks:
+      - solar_badge
+      - field_access
+
+  - id: blackout_preventer
+    name: "Exterminador do Blackout"
+    description: "Use armazenamento de energia e resposta à demanda para impedir um colapso da rede"
+    required_level: 10
+    skills_tested: [energy_storage, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - grid_master_title
+      - control_room_access
+
+  - id: net_zero_architect
+    name: "Arquiteto de Emissões Líquidas Zero"
+    description: "Projete uma comunidade inteligente que atinja emissões líquidas zero de carbono"
+    required_level: 20
+    skills_tested: [microgrid_design, carbon_engineering]
+    xp_reward: 2500
+    unlocks:
+      - net_zero_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_panel
+    name: "Primeiro Painel"
+    description: "Concluir o projeto de instalação de um sistema de painéis solares"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: wind_rider
+    name: "Cavaleiro do Vento"
+    description: "Otimizar um parque eólico offshore para atingir 95% de eficiência de geração"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Mestre Equilibrador da Rede"
+    description: "Manter zero desvio entre oferta e demanda na rede por 30 dias consecutivos"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: energy_legend
+    name: "Lenda da Energia"
+    description: "Concluir todos os desafios de engenharia de energia verde"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calculator
+      type: analysis
+      title: "Calculadora de Produção Solar"
+      description: "Estimar a geração anual de energia usando dados de irradiância solar regional"
+      skills_improved: [solar_energy]
+      xp_reward: 60
+
+    - id: energy_audit
+      type: analysis
+      title: "Auditoria Energética Residencial"
+      description: "Analisar os padrões de consumo elétrico de uma residência e propor medidas de economia"
+      skills_improved: [smart_grid]
+      xp_reward: 50
+
+  intermediate:
+    - id: hybrid_system
+      type: creation
+      title: "Sistema Híbrido Solar-Eólico"
+      description: "Projetar um sistema de geração híbrido combinando energia solar e eólica"
+      skills_improved: [solar_energy, wind_energy]
+      xp_reward: 180
+
+    - id: battery_sizing
+      type: creation
+      title: "Design de Sistema de Armazenamento de Energia"
+      description: "Projetar uma configuração de armazenamento otimizada para uma escola"
+      skills_improved: [energy_storage, smart_grid]
+      xp_reward: 200
+
+  advanced:
+    - id: smart_community
+      type: creation
+      title: "Rede de Comunidade Inteligente"
+      description: "Projetar uma microrrede comunitária com solar, armazenamento e carregamento de veículos elétricos"
+      skills_improved: [microgrid_design, smart_grid]
+      xp_reward: 350
+
+    - id: carbon_neutral
+      type: creation
+      title: "Plano de Neutralidade de Carbono Corporativa"
+      description: "Planejar um caminho de neutralidade de carbono para uma empresa manufatureira"
+      skills_improved: [carbon_engineering, green_hydrogen]
+      xp_reward: 400
+
+learning_objectives:
+  - "Compreender os princípios e o design da energia solar e eólica"
+  - "Dominar a seleção de tecnologias de armazenamento e o design de sistemas"
+  - "Usar IA para otimizar o despacho da rede inteligente"
+  - "Implementar resposta à demanda e comércio de eletricidade"
+  - "Compreender auditoria de carbono, comércio de carbono e captura de carbono"
+  - "Projetar sistemas de microrrede em escala comunitária"
+  - "Explorar o potencial e os desafios da tecnologia de hidrogênio verde"
+  - "Aprender sobre políticas de transição energética e metas de emissões líquidas zero para 2050"
+
+career_outcomes:
+  - "Engenheiro de Energias Renováveis"
+  - "Engenheiro de Sistemas de Armazenamento de Energia"
+  - "Engenheiro de Redes Inteligentes"
+  - "Consultor de Gestão de Carbono"
+  - "Analista ESG"
+  - "Pesquisador de Política Energética"
+  - "Designer de Microrredes"
+  - "Engenheiro de Tecnologia de Hidrogênio Verde"

@@ -1,0 +1,217 @@
+# 스마트 제조 엔지니어 탐색 경로 - 한국어
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "산업 연금술사 - 스마트 제조 엔지니어"
+  short_description: "AI와 데이터로 공장을 스스로 생각하는 생명체로 변환하라"
+  long_description: |
+    당신은 「디지털 공장」의 견습 연금술사로, 생산 라인을 스스로 진화시키는
+    재능을 지니고 있습니다. IoT, AI, 디지털 트윈이 결합된 이 미래 공장에서
+    모든 센서의 데이터가 기계의 자율 판단을 돕고 있으며, 당신의 사명은
+    절대 멈추지 않는 스마트 생산 라인을 구축하는 것입니다
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "디지털 공장"
+  description: |
+    디지털 공장은 물리적 세계와 가상 세계가 완벽하게 대응되는 생산 기지입니다
+    모든 기계는 디지털 트윈을 가지고 있으며, 모든 공정이 데이터로 구동됩니다
+    폭스콘의 무인 공장이 바로 이 시스템의 궁극적인 구현입니다
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "공장의 디지털 각성"
+  description: |
+    공장장 Forge가 당신을 전통적인 공장으로 안내합니다. 생산 라인 효율이 낮고
+    수율이 불안정합니다. 갑자기 핵심 설비 Breakdown이 이상한 진동을 발합니다
+    당신은 센서 데이터를 사용해 언제 고장날지 예측해야 합니다
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "산업용 IoT"
+      description: "센서 네트워크를 배치해 생산 데이터를 수집한다"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "제조 데이터 분석"
+      description: "생산 데이터를 분석해 병목과 이상을 발견한다"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "자동화 제어"
+      description: "PLC와 SCADA 자동화 시스템을 설계한다"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "디지털 트윈"
+      description: "생산 라인의 가상 복제본을 구축해 시뮬레이션을 수행한다"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "예지 보전"
+      description: "AI를 사용해 설비 고장 전에 조기 경보를 발한다"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "AI 품질 검사"
+      description: "컴퓨터 비전으로 제품 결함을 자동 검출한다"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "무인 공장"
+      description: "완전 무인 자율 생산 시스템을 설계한다"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "첫 번째 센서"
+    description: "센서를 성공적으로 배치하고 의미 있는 생산 데이터를 수집한다"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "고장 예언자"
+    description: "설비 고장 24시간 전에 성공적으로 조기 경보를 발한다"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "스마트 공장 건축가"
+    description: "완전한 스마트 공장을 설계하고 배포한다"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "첫 번째 대시보드"
+    description: "생산 라인 실시간 모니터링 대시보드를 구축한다"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "수율 향상자"
+    description: "생산 라인 수율을 90%에서 99%로 향상시킨다"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "제로 다운타임 기록"
+    description: "90일 연속 계획 외 생산 중단 제로 달성"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "공장 전설"
+    description: "모든 스마트 제조 챌린지를 완료한다"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "센서 설치"
+      description: "CNC 선반에 진동 및 온도 센서를 설치한다"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "생산 라인 데이터 분석"
+      description: "1주일치 생산 데이터를 분석해 효율 병목을 발견한다"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "디지털 트윈 모델링"
+      description: "SMT 생산 라인의 디지털 트윈 모델을 구축한다"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "AI 시각 검사 시스템"
+      description: "PCB 기판 위 솔더링 결함을 자동 검출하는 모델을 훈련한다"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "예지 보전 시스템"
+      description: "전체 공장 설비의 건강 점수 및 고장 예측 시스템을 구축한다"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "자율 공장 설계"
+      description: "스케줄링부터 품질 검사까지 완전 자동화된 무인 공장을 설계한다"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "산업용 IoT 아키텍처와 센서 기술을 이해한다"
+  - "제조 데이터 수집 및 분석 방법을 습득한다"
+  - "PLC와 SCADA 자동화 시스템을 설계한다"
+  - "생산 라인의 디지털 트윈 모델을 구축한다"
+  - "AI를 활용한 예지 보전을 구현한다"
+  - "컴퓨터 비전 품질 검사를 실시한다"
+  - "무인화 공장을 설계한다"
+  - "스마트 제조와 산업 4.0 발전을 이해한다"
+
+career_outcomes:
+  - "스마트 제조 엔지니어"
+  - "산업용 IoT 아키텍트"
+  - "디지털 트윈 엔지니어"
+  - "제조 데이터 사이언티스트"
+  - "자동화 시스템 통합 엔지니어"
+  - "예지 보전 엔지니어"
+  - "AI 품질 엔지니어"
+  - "스마트 공장 컨설턴트"

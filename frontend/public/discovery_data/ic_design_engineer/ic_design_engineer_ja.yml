@@ -1,0 +1,219 @@
+# ICデザインエンジニア探索パス - 日本語
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "シリコンシールド鍛冶師 - ICデザインエンジニア"
+  short_description: "現代世界を動かす小さなチップを鍛える"
+  long_description: |
+    あなたは「シリコンシールド鍛冶場」の見習い職人。スマートフォンや電気自動車の
+    中で動く目に見えない回路を設計する天賦の才能を持っています。チップは小さな都市
+    のようなもの——道路（配線）、建物（論理ゲート）、交通ルール（タイミング）が
+    爪より小さなスペースに詰め込まれています。世界中の最先端チップの90%以上が
+    台湾で作られており、あなたもその一翼を担えます！
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "シリコンシールド鍛冶場"
+  description: |
+    シリコンシールド鍛冶場は、ベテランエンジニアと見習いが協力して医療機器や
+    宇宙衛星、スマートフォン用のチップを設計する最先端の工房です。精密さ・創造性・
+    チームワークが鍛冶場の精神——小さな設計ミスが世界中の何百万台もの機器に
+    影響することがあります。
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "鍛冶場の初日"
+  description: |
+    主任エンジニアのリン師匠があなたを鍛冶場へ迎えます。最初の課題：ライバルの
+    工房が隠れた欠陥を持つチップを発売し、スマートフォンが過熱する問題が起きました。
+    基本的な論理スイッチの組み合わせを学び、より安全な代替品の設計に貢献してください。
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "論理設計"
+      description: "ON/OFFスイッチ（論理ゲート）を組み合わせて電卓やメモリなどの複雑な機能を作る方法を学ぶ——電気版レゴ積み木のようなもの"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "チップアーキテクチャ"
+      description: "チップが処理・記憶・通信の地区に分かれた都市のように構成されていることを理解し、各部分の連携を計画する"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "回路テスト"
+      description: "ソフトウェアツールで設計をシミュレートし、製造前にエラーを発見する——1000万部印刷する前の校正作業のようなもの"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "物理レイアウト"
+      description: "都市計画家のようにチップ上に回路部品を配置する——各部分の位置を決め、最短ルートで接続する"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "低消費電力設計"
+      description: "できるだけ少ないエネルギーで動くチップを設計する——小さなバッテリーで1日中動くスマートフォンやウェアラブル機器に不可欠"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "信号品質マスタリー"
+      description: "電気信号がチップ内をきれいに伝わり歪まないようにする——電話が雑音なくクリアに聞こえるようにするのと同じ"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "AIアクセラレータ設計"
+      description: "顔認識や言語翻訳などのAIタスクを普通のチップより格段に速く処理できる専用チップを設計する"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "最初の回路完成"
+    description: "4ビット計算回路を設計し、すべてのテストケースで正しい答えが出ることを確認する"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "設計図チャレンジ"
+    description: "シンプルなチップの完全なレイアウト計画を作成し、各部分の通信方法を説明する"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "シリコンシールドの完成"
+    description: "完全な低消費電力チップを設計・テスト・最適化し、量産準備を整える"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "最初の火花"
+    description: "初めての回路シミュレーションを成功させ、設計が動くのを見る"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "バグハンター"
+    description: "工場に届く前に10個の設計エラーを発見して修正する"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "エネルギー守護者"
+    description: "賢い設計の決断でチップの消費電力を30%削減する"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "鍛冶場の伝説"
+    description: "すべてのチップ設計チャレンジを完了し、量産可能な設計を完成させる"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "論理ゲートパズル"
+      description: "2つのボタンを同時に押したときだけライトが点く回路を論理スイッチで作る"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "チップマップ探検"
+      description: "実際のチップ図を見て主要な部分を特定し、各エリアの役割をわかりやすく説明する"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "回路デバッグ"
+      description: "シミュレーション回路が誤った答えを出している——出荷前に論理エラーを見つけて修正する"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "都市計画家"
+      description: "チップのセクションを並べ替えて配線を短くし、部品間の信号干渉を防ぐ"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "省エネ大作戦"
+      description: "同じ処理速度を保ちながらチップの特定部分の消費電力を半分にする"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "AIエンジン設計図"
+      description: "普通のプロセッサより10倍速く顔認識できるチップのアーキテクチャを設計する"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "シンプルな論理スイッチが組み合わさって複雑なデジタル回路になる仕組みを理解する"
+  - "現代のチップ内部の主要な機能部分を説明する"
+  - "シミュレーションツールを使って回路設計のエラーをテストして発見する"
+  - "レイアウト計画の原則を使ってチップ部品を効率よく配置する"
+  - "速度と消費電力のバランスを取った回路を設計する"
+  - "チップ設計から工場での物理的製造までの流れを追う"
+  - "台湾の半導体産業が世界経済に与える影響を理解する"
+  - "性能・電力・チップ面積のトレードオフを評価する"
+
+career_outcomes:
+  - "ICデザインエンジニア"
+  - "デジタル回路設計者"
+  - "チップ検証エンジニア"
+  - "物理設計エンジニア"
+  - "AIハードウェアエンジニア"
+  - "組み込みシステムエンジニア"
+  - "半導体研究開発者"
+  - "ハードウェアプロダクトマネージャー"

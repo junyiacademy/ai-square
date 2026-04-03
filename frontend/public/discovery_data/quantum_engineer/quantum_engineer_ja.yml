@@ -1,0 +1,218 @@
+# 量子エンジニア探索パス - 日本語
+path_id: quantum_engineer
+category: quantum_technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "量子ドリームウィーバー - 量子技術エンジニア"
+  short_description: "重ね合わせと量子もつれを駆使して不可能な問題を解き明かせ"
+  long_description: |
+    あなたは「量子迷宮」の見習いドリームウィーバーです。粒子が複数の状態に
+    同時に存在することを理解する直感を持っています。
+    従来の計算論理を覆すこの領域では、一つひとつの量子ビット操作が
+    従来のコンピュータでは一万年かかる難問を解き明かす鍵となります。
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "量子迷宮"
+  description: |
+    量子迷宮は重ね合わせ状態に存在する研究施設で、その廊下は同時に
+    複数の方向へと続いています。
+    量子エンジニアはここで量子ビットの操作と量子アルゴリズムの設計を学びます。
+    量子技術の中核となる革新がこの場所で生み出されています。
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "シュレーディンガーの最初の授業"
+  description: |
+    量子メンターのQubitはシュレーディンガーの猫を使って重ね合わせの概念を説明します。
+    しかし迷宮に潜む量子デコヒーレンスモンスターが量子状態を破壊しています。
+    あなたは量子ビットを守るために量子誤り訂正を習得しなければなりません。
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "量子力学の基礎"
+      description: "重ね合わせ・量子もつれ・測定の核心概念を理解する"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "量子回路"
+      description: "量子ゲートを組み合わせて量子回路を構築する"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "量子プログラミング"
+      description: "Qiskit / Cirq を使って量子プログラムを作成する"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "量子アルゴリズム"
+      description: "Grover・Shor・VQE などのアルゴリズムを実装する"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "量子誤り訂正"
+      description: "量子誤り訂正符号を設計・実装する"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "量子暗号"
+      description: "量子鍵配送と耐量子暗号システムを構築する"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "量子機械学習"
+      description: "量子計算と機械学習を組み合わせたハイブリッドアルゴリズム"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "最初の重ね合わせ状態"
+    description: "量子ビットを重ね合わせ状態に置いて測定することに成功する"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "デコヒーレンスの戦士"
+    description: "ノイズのある量子コンピュータでアルゴリズムを正常に実行する"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "量子優位性の達成"
+    description: "従来のコンピュータでは効率的に解けない問題を解決する"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "ベル状態の生成"
+    description: "初めてもつれた量子ビットペアを正常に生成する"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "アルゴリズム実行者"
+    description: "実際の量子コンピュータで Grover 探索を正常に実行する"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "量子誤り訂正マスター"
+    description: "完全な量子誤り訂正符号を実装する"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "量子の伝説"
+    description: "すべての量子技術チャレンジを完了する"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "量子ビット初体験"
+      description: "ブロッホ球面を使って単一量子ビットの状態を可視化する"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "最初の量子回路"
+      description: "HadamardゲートとCNOTゲートを使ってもつれ状態を生成する"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Grover探索チャレンジ"
+      description: "量子探索アルゴリズムを実装して隠れた答えを見つける"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "ノイズシミュレーション実験"
+      description: "実際の量子コンピュータのノイズが結果に与える影響をシミュレートする"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "量子鍵配送"
+      description: "BB84プロトコルを実装して盗聴不可能な暗号チャンネルを構築する"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "量子-古典ハイブリッド学習"
+      description: "VQEを使って分子シミュレーションの最適化問題を解く"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "量子力学の核心概念を理解する：重ね合わせ・量子もつれ・測定"
+  - "量子ゲートと量子回路の設計をマスターする"
+  - "Qiskit または Cirq を使って量子プログラムを作成する"
+  - "Grover探索と Shor素因数分解アルゴリズムを実装する"
+  - "量子誤り訂正の原理と実装を理解する"
+  - "量子暗号と耐量子セキュリティを探索する"
+  - "量子計算と機械学習を組み合わせる"
+  - "量子技術の最先端研究の方向性を学ぶ"
+
+career_outcomes:
+  - "量子ソフトウェアエンジニア"
+  - "量子アルゴリズム研究者"
+  - "量子ハードウェアエンジニア"
+  - "耐量子暗号エンジニア"
+  - "量子アプリケーション科学者"
+  - "量子機械学習研究者"
+  - "量子コンピューティングコンサルタント"
+  - "量子技術プロダクトマネージャー"

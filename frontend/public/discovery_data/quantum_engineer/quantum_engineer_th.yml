@@ -1,0 +1,218 @@
+# เส้นทางค้นพบวิศวกรควอนตัม - ภาษาไทย
+path_id: quantum_engineer
+category: quantum_technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "ผู้ทอฝันควอนตัม - วิศวกรเทคโนโลยีควอนตัม"
+  short_description: "ควบคุมการซ้อนทับและการพัวพันเพื่อแก้ปัญหาที่เป็นไปไม่ได้"
+  long_description: |
+    คุณคือผู้ทอฝันฝึกหัดใน «เขาวงกตควอนตัม» ผู้ซึ่งมีสัญชาตญาณในการเข้าใจว่า
+    อนุภาคสามารถดำรงอยู่ในหลายสถานะพร้อมกัน
+    ในอาณาจักรที่พลิกตรรกะการคำนวณแบบดั้งเดิมนี้ การดำเนินการแต่ละครั้งบนคิวบิต
+    อาจเปิดทางสู่การแก้ปัญหาที่คอมพิวเตอร์ทั่วไปต้องใช้เวลาหนึ่งหมื่นปี
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "เขาวงกตควอนตัม"
+  description: |
+    เขาวงกตควอนตัมคือสถานที่วิจัยที่ดำรงอยู่ในสถานะซ้อนทับ
+    ซึ่งทางเดินนำไปสู่หลายทิศทางพร้อมกัน
+    วิศวกรควอนตัมเรียนรู้ที่นี่เพื่อควบคุมคิวบิตและออกแบบอัลกอริทึมควอนตัม
+    นวัตกรรมเทคโนโลยีควอนตัมที่ล้ำสมัยที่สุดถูกสร้างขึ้นภายในกำแพงเหล่านี้
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "บทเรียนแรกของชเรอดิงเงอร์"
+  description: |
+    ที่ปรึกษาควอนตัม Qubit ใช้แมวของชเรอดิงเงอร์เพื่ออธิบายแนวคิดของการซ้อนทับ
+    แต่สัตว์ประหลาดดีโคฮีเรนซ์ที่ซ่อนตัวอยู่ในเขาวงกตกำลังทำลายสถานะควอนตัม
+    คุณต้องเรียนรู้การแก้ไขข้อผิดพลาดควอนตัมเพื่อปกป้องคิวบิตของคุณ
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "พื้นฐานกลศาสตร์ควอนตัม"
+      description: "เข้าใจแนวคิดหลักของการซ้อนทับ การพัวพัน และการวัด"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "วงจรควอนตัม"
+      description: "รวมเกตควอนตัมเพื่อสร้างวงจรควอนตัม"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "การเขียนโปรแกรมควอนตัม"
+      description: "เขียนโปรแกรมควอนตัมโดยใช้ Qiskit / Cirq"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "อัลกอริทึมควอนตัม"
+      description: "นำอัลกอริทึม Grover, Shor, VQE และอื่นๆ ไปใช้"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "การแก้ไขข้อผิดพลาดควอนตัม"
+      description: "ออกแบบและนำโค้ดแก้ไขข้อผิดพลาดควอนตัมไปใช้"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "การเข้ารหัสควอนตัม"
+      description: "สร้างระบบการแจกจ่ายคีย์ควอนตัมและการเข้ารหัสหลังควอนตัม"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "การเรียนรู้ของเครื่องควอนตัม"
+      description: "อัลกอริทึมไฮบริดที่รวมการคำนวณควอนตัมและการเรียนรู้ของเครื่อง"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "สถานะซ้อนทับแรก"
+    description: "วางคิวบิตในสถานะซ้อนทับได้สำเร็จและวัดผล"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "นักสู้ดีโคฮีเรนซ์"
+    description: "รันอัลกอริทึมบนคอมพิวเตอร์ควอนตัมที่มีสัญญาณรบกวนได้สำเร็จ"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "บรรลุความได้เปรียบควอนตัม"
+    description: "แก้ปัญหาที่คอมพิวเตอร์แบบดั้งเดิมไม่สามารถแก้ได้อย่างมีประสิทธิภาพ"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "การเตรียมสถานะเบลล์"
+    description: "เตรียมคู่คิวบิตพัวพันคู่แรกของคุณได้สำเร็จ"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "ผู้รันอัลกอริทึม"
+    description: "รันการค้นหา Grover บนคอมพิวเตอร์ควอนตัมจริงได้สำเร็จ"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "ปรมาจารย์แก้ไขข้อผิดพลาดควอนตัม"
+    description: "นำโค้ดแก้ไขข้อผิดพลาดควอนตัมที่สมบูรณ์ไปใช้"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "ตำนานควอนตัม"
+    description: "ทำความท้าทายเทคโนโลยีควอนตัมทั้งหมดให้สำเร็จ"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "ประสบการณ์แรกกับคิวบิต"
+      description: "แสดงภาพสถานะของคิวบิตเดียวโดยใช้ Bloch sphere"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "วงจรควอนตัมแรก"
+      description: "เตรียมสถานะพัวพันโดยใช้เกต Hadamard และ CNOT"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "ความท้าทายการค้นหา Grover"
+      description: "นำอัลกอริทึมการค้นหาควอนตัมไปใช้เพื่อหาคำตอบที่ซ่อนอยู่"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "การทดลองจำลองสัญญาณรบกวน"
+      description: "จำลองผลกระทบของสัญญาณรบกวนในคอมพิวเตอร์ควอนตัมจริงต่อผลลัพธ์"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "การแจกจ่ายคีย์ควอนตัม"
+      description: "นำโปรโตคอล BB84 ไปใช้เพื่อสร้างช่องทางเข้ารหัสที่ป้องกันการดักฟัง"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "การเรียนรู้แบบผสมควอนตัม-คลาสสิก"
+      description: "ใช้ VQE เพื่อแก้ปัญหาการเพิ่มประสิทธิภาพในการจำลองโมเลกุล"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจแนวคิดหลักของกลศาสตร์ควอนตัม: การซ้อนทับ การพัวพัน การวัด"
+  - "เชี่ยวชาญการออกแบบเกตควอนตัมและวงจรควอนตัม"
+  - "เขียนโปรแกรมควอนตัมโดยใช้ Qiskit หรือ Cirq"
+  - "นำอัลกอริทึมการค้นหา Grover และการแยกตัวประกอบ Shor ไปใช้"
+  - "เข้าใจหลักการและการนำการแก้ไขข้อผิดพลาดควอนตัมไปใช้"
+  - "สำรวจการเข้ารหัสควอนตัมและความปลอดภัยหลังควอนตัม"
+  - "รวมการคำนวณควอนตัมกับการเรียนรู้ของเครื่อง"
+  - "เรียนรู้ทิศทางการวิจัยล้ำสมัยในเทคโนโลยีควอนตัม"
+
+career_outcomes:
+  - "วิศวกรซอฟต์แวร์ควอนตัม"
+  - "นักวิจัยอัลกอริทึมควอนตัม"
+  - "วิศวกรฮาร์ดแวร์ควอนตัม"
+  - "วิศวกรการเข้ารหัสหลังควอนตัม"
+  - "นักวิทยาศาสตร์แอปพลิเคชันควอนตัม"
+  - "นักวิจัยการเรียนรู้ของเครื่องควอนตัม"
+  - "ที่ปรึกษาการคำนวณควอนตัม"
+  - "ผู้จัดการผลิตภัณฑ์เทคโนโลยีควอนตัม"

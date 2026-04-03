@@ -1,0 +1,218 @@
+# Robotik-Ingenieur Entdeckungspfad - Deutsch
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Mechan-Erschaffer - Robotik-Ingenieur"
+  short_description: "Baue intelligente Maschinen, die wahrnehmen, denken und handeln können"
+  long_description: |
+    Du bist ein Lehrling-Erschaffer in der «Mech-Werkstatt», mit dem angeborenen Instinkt,
+    Maschinen zum Leben zu erwecken. In dieser interdisziplinären Werkstatt, in der Mechanik,
+    Elektronik und Software verschmelzen, trägt jede Motorumdrehung die Mission, Roboter
+    der Menschheit zu Diensten zu stellen.
+
+  estimated_hours: 55
+  skill_focus:
+    - mechanical_design
+    - sensor_fusion
+    - motion_planning
+    - human_robot_interaction
+
+world_setting:
+  name: "Mech-Werkstatt"
+  description: |
+    Die Mech-Werkstatt ist die weltweit führende Robotik-Forschungs- und Entwicklungsbasis,
+    von Industriearmen bis zu Servicerobotern, von Drohnen bis zu Humanoiden. Ingenieure
+    verwandeln hier Imagination in Realität — intelligente Fertigungslinien wurden hier geboren.
+
+  atmosphere: "industrial_creative"
+  visual_theme: "mecha_workshop"
+
+starting_scenario:
+  title: "Den ersten Mech erwecken"
+  description: |
+    Werkstatt-Ältester Servo stellt dir die drei Säulen der Robotik vor: Sensorik,
+    Entscheidungsfindung und Aktorik. Doch ein außer Kontrolle geratener Prototyp namens
+    Haywire rast durch die Werkstatt. Du musst seine Sensordaten verstehen, um ihn
+    sicher zum Stehen zu bringen.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_actuators
+    - first_robot_control
+
+skill_tree:
+  core_skills:
+    - id: mechanical_design
+      name: "Mechanisches Design"
+      description: "Das Skelett, die Gelenke und Getriebemechanismen des Roboters entwerfen"
+      max_level: 10
+      unlocks:
+        - 3d_modeling
+        - material_selection
+
+    - id: embedded_systems
+      name: "Eingebettete Systeme"
+      description: "Firmware zur Steuerung von Motoren und Sensoren schreiben"
+      max_level: 10
+      unlocks:
+        - microcontroller_programming
+        - rtos_basics
+
+    - id: sensor_fusion
+      name: "Sensorfusion"
+      description: "Vision, LiDAR, IMU und Multi-Sensordaten integrieren"
+      max_level: 10
+      unlocks:
+        - computer_vision
+        - lidar_processing
+
+    - id: motion_planning
+      name: "Bewegungsplanung"
+      description: "Pfade und Aktionssequenzen des Roboters planen"
+      max_level: 10
+      unlocks:
+        - path_planning
+        - trajectory_optimization
+
+  advanced_skills:
+    - id: robot_learning
+      name: "Roboterlernen"
+      description: "Reinforcement Learning nutzen, damit Roboter autonom neue Fähigkeiten erwerben"
+      max_level: 15
+      requires: [motion_planning, sensor_fusion]
+
+    - id: multi_robot_systems
+      name: "Multi-Roboter-Koordination"
+      description: "Teams aus mehreren Robotern koordinieren, um Missionen auszuführen"
+      max_level: 15
+      requires: [embedded_systems, motion_planning]
+
+    - id: humanoid_design
+      name: "Humanoide Robotik"
+      description: "Zweibeiniges Gehen, geschickte Hände und andere anthropomorphe Systeme entwerfen"
+      max_level: 15
+      requires: [mechanical_design, robot_learning]
+
+milestone_quests:
+  - id: first_movement
+    name: "Der erste Schritt"
+    description: "Lass deinen Roboter seinen ersten Bewegungsbefehl erfolgreich ausführen"
+    required_level: 5
+    skills_tested: [embedded_systems, mechanical_design]
+    xp_reward: 500
+    unlocks:
+      - movement_badge
+      - workshop_access
+
+  - id: haywire_tamer
+    name: "Bändiger des Durchgedrehten"
+    description: "Nutze Sensorfusion, um den außer Kontrolle geratenen Roboter sicher einzufangen"
+    required_level: 10
+    skills_tested: [sensor_fusion, motion_planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_master_title
+      - advanced_lab
+
+  - id: factory_commander
+    name: "Smarter Fabrik-Kommandeur"
+    description: "Eine vollautomatisierte Produktionslinie entwerfen und einsetzen"
+    required_level: 20
+    skills_tested: [multi_robot_systems, robot_learning]
+    xp_reward: 2500
+    unlocks:
+      - commander_title
+      - workshop_leadership
+
+achievements:
+  - id: first_servo
+    name: "Erster Servomotor"
+    description: "Deinen ersten Servomotor erfolgreich steuern"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: obstacle_navigator
+    name: "Hindernisnavigator"
+    description: "Der Roboter navigiert autonom durch eine komplexe Umgebung"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: arm_master
+    name: "Roboterarm-Meister"
+    description: "Präzise Montageoperationen mit einem 6-Achs-Roboterarm abschließen"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "Mech-Legende"
+    description: "Alle Robotik-Engineering-Herausforderungen abschließen"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: servo_control
+      type: interaction
+      title: "Servomotor-Grundlagen"
+      description: "PWM-Signale verwenden, um einen Motor auf einen bestimmten Winkel zu drehen"
+      skills_improved: [embedded_systems]
+      xp_reward: 60
+
+    - id: sensor_reading
+      type: analysis
+      title: "Sensordaten-Interpretation"
+      description: "Entfernungsdaten von Ultraschall- und Infrarotsensoren lesen"
+      skills_improved: [sensor_fusion]
+      xp_reward: 50
+
+  intermediate:
+    - id: robot_arm
+      type: creation
+      title: "Roboterarm-Design"
+      description: "Einen Desktop-Roboterarm mit 3 Freiheitsgraden entwerfen"
+      skills_improved: [mechanical_design, motion_planning]
+      xp_reward: 180
+
+    - id: slam_navigation
+      type: creation
+      title: "SLAM-Navigations-Herausforderung"
+      description: "Der Roboter kartiert und lokalisiert sich gleichzeitig in einer unbekannten Umgebung"
+      skills_improved: [sensor_fusion, motion_planning]
+      xp_reward: 200
+
+  advanced:
+    - id: factory_automation
+      type: creation
+      title: "Smarte Produktionslinie entwerfen"
+      description: "Eine kollaborative Multi-Roboter-Montagelinie entwerfen"
+      skills_improved: [multi_robot_systems, robot_learning]
+      xp_reward: 350
+
+    - id: humanoid_walk
+      type: creation
+      title: "Zweibeinige Gang-Herausforderung"
+      description: "Einen humanoiden Roboter stabil auf unebenem Gelände laufen lassen"
+      skills_improved: [humanoid_design, motion_planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Mechanisches Design und Kinematik von Robotern verstehen"
+  - "Eingebettete Systeme und Echtzeit-Steuerung meistern"
+  - "Mehrere Sensoren zur Umgebungswahrnehmung integrieren"
+  - "Pfadplanungs- und Bewegungssteuerungsalgorithmen implementieren"
+  - "Reinforcement Learning zum Trainieren von Robotern anwenden"
+  - "Multi-Roboter-Kollaborationssysteme entwerfen"
+  - "Sicherheitsstandards für die Mensch-Roboter-Zusammenarbeit verstehen"
+  - "Das Ökosystem der Smart-Manufacturing-Industrie kennenlernen"
+
+career_outcomes:
+  - "Robotik-Ingenieur"
+  - "Automatisierungssystem-Integrationsigenieur"
+  - "Roboterarm-Programmierer"
+  - "Embedded-Systems-Ingenieur"
+  - "ROS-Entwickler"
+  - "Smart-Manufacturing-Berater"
+  - "Mensch-Roboter-Interaktionsdesigner"
+  - "Drohnensysteme-Ingenieur"

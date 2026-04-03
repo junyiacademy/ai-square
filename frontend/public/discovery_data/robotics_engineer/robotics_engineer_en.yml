@@ -1,0 +1,223 @@
+# Robotics Engineer Discovery Path - English
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Mecha Workshop Master - Robotics Engineer"
+  short_description: "Build robots that work alongside humans in the factory of the future"
+  long_description: |
+    You are an apprentice mechanic at the Mecha Workshop, where engineers design
+    robots that assemble cars, harvest crops, assist surgeons, and explore disaster
+    zones. Robotics is where mechanics meets coding meets AI — and the machines you
+    build could change how billions of people work and live. Taiwan's manufacturing
+    giants like Foxconn are deploying thousands of robots — and need engineers
+    who can design, program, and improve them.
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "Mecha Workshop"
+  description: |
+    The Mecha Workshop is a high-energy innovation lab where robots of all shapes
+    and sizes are built, tested, and sent into the real world. From tiny drones
+    to massive industrial arms, every machine starts as an idea in this workshop.
+    The challenge: build robots that are strong, precise, safe — and smart enough
+    to work alongside humans without accidents.
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "The Workshop Awakens"
+  description: |
+    Chief Engineer Chen gives you your first assignment: a factory robot on the
+    assembly line keeps bumping into workers because it can't sense them properly.
+    Fix the robot's sensor system and re-program its movement to avoid people —
+    your introduction to the two most important skills in robotics: sensing the
+    world and responding intelligently.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "Sensor Systems"
+      description: "Learn how robots 'see' the world using cameras, distance sensors, and touch sensors — robots need sensors like we need eyes and ears"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "Motion Control"
+      description: "Program motors and joints to move smoothly and precisely — like teaching a robot to walk, reach, and pick things up without dropping them"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "Robot Programming"
+      description: "Write code that tells robots what to do, when to do it, and how to react to unexpected situations — the brain behind the brawn"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "Human-Robot Teamwork"
+      description: "Design systems where robots and people work safely side by side — the robot must slow down, stop, or adjust when a human is nearby"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "AI-Powered Perception"
+      description: "Give robots the ability to recognize objects, understand environments, and make decisions using AI — like teaching a robot to sort fruits by size and ripeness"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "Autonomous Navigation"
+      description: "Program robots to find their own path through a factory or warehouse, avoiding obstacles without human guidance"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "Robot Swarms"
+      description: "Coordinate multiple robots working together like a colony of ants — each robot is simple, but together they accomplish complex tasks"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "First Steps"
+    description: "Program a robot arm to pick up an object, move it, and place it precisely in a target location"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "The Avoidance Challenge"
+    description: "Build a robot that can detect a moving person and automatically adjust its path to avoid collision"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "Lights-Out Factory"
+    description: "Design a complete robot system that runs an assembly line autonomously for 1 hour without human intervention"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "First Task Done"
+    description: "Program a robot to complete a simple task from start to finish without errors"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "Safety Champion"
+    description: "Design a robot that passes all 10 human-safety tests without a single failure"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "Precision Master"
+    description: "Achieve positioning accuracy within 1 millimeter on a robotic arm task"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "Mecha Workshop Legend"
+    description: "Complete all robotics challenges and build a fully autonomous robot system"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "Read the Room"
+      description: "Connect a distance sensor to a robot and program it to stop when an obstacle is within 30 cm"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "Smooth Moves"
+      description: "Program a robot to move forward, turn left 90 degrees, and return to its starting point"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "Pick and Place Challenge"
+      description: "Program a robot arm to pick up objects of different sizes and sort them into correct bins"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "Obstacle Course"
+      description: "Guide a robot through a maze of obstacles using only its sensors — no manual control allowed"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "Smart Sorter"
+      description: "Train a robot to identify and sort objects by shape and color using a camera and AI"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "Robot Handshake"
+      description: "Design a system where a robot passes an object to a human worker safely and precisely"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "Understand how robots sense their environment using different types of sensors"
+  - "Program basic robot movements with precision and smooth control"
+  - "Design robot systems that work safely alongside human workers"
+  - "Apply AI techniques to give robots object recognition abilities"
+  - "Navigate robots autonomously through complex real-world environments"
+  - "Coordinate multiple robots to complete collaborative tasks"
+  - "Understand the role of robotics in modern manufacturing like Foxconn's factories"
+  - "Evaluate robot performance trade-offs between speed, precision, and safety"
+
+career_outcomes:
+  - "Robotics Engineer"
+  - "Automation Engineer"
+  - "Robot Programmer"
+  - "Manufacturing Systems Engineer"
+  - "AI Robotics Researcher"
+  - "Industrial Safety Engineer"
+  - "Robot System Integrator"
+  - "Human-Robot Interaction Designer"

@@ -1,0 +1,218 @@
+# ロボット工学エンジニア探索パス - 日本語
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "メカワークショップマスター - ロボット工学エンジニア"
+  short_description: "未来の工場で人間と共に働くロボットを作る"
+  long_description: |
+    あなたはメカワークショップの見習い技師。エンジニアたちが車の組み立て、農作物の収穫、
+    外科手術の補助、災害現場の探索に使うロボットを設計する場所です。ロボット工学は
+    機械・プログラミング・AIが交差する分野——あなたが作る機械が数十億人の働き方や
+    生活を変えるかもしれません。台湾の製造大手フォックスコンは何千台ものロボットを
+    導入しており、設計・プログラム・改善できるエンジニアを必要としています！
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "メカワークショップ"
+  description: |
+    メカワークショップはあらゆる形やサイズのロボットを作り、テストし、実世界へ送り出す
+    エネルギーあふれるイノベーションラボです。挑戦：強く、精密で、安全なロボットを作る——
+    そして事故なく人間と並んで働けるほど賢いロボットを。
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "ワークショップが目覚める"
+  description: |
+    チーフエンジニアのチェンさんが最初の課題を与えます：組み立てラインのロボットが
+    作業員にぶつかり続けています。センサーシステムを修理し、人を避けるよう動作を
+    再プログラムしてください。
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "センサーシステム"
+      description: "ロボットがカメラ・距離センサー・触覚センサーで世界を「見る」方法を学ぶ——ロボットにとってのセンサーは、私たちの目や耳と同じ"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "モーション制御"
+      description: "モーターと関節をプログラムして滑らかで正確な動きを実現——ロボットに歩き方・物の取り方を教えるようなもの"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "ロボットプログラミング"
+      description: "ロボットに何をすべきか、いつすべきか、予期しない状況にどう対応するかをコードで伝える——力の背後にある頭脳"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "人間とロボットの協働"
+      description: "ロボットと人間が安全に並んで働けるシステムを設計する——人間が近づいたときにロボットが減速・停止・調整する"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "AI知覚"
+      description: "ロボットがAIを使って物体を認識し、環境を理解し、判断できるようにする——果物の大きさや熟度で仕分けるよう教えるようなもの"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "自律ナビゲーション"
+      description: "ロボットが工場や倉庫内で人の案内なしに自分でルートを見つけ、障害物を避けられるよう設定する"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "スウォームロボティクス"
+      description: "アリのコロニーのように協力する複数ロボットをコーディネートする——個々は単純でも、一緒に複雑なタスクをこなす"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "初めての一歩"
+    description: "ロボットアームが物体をつかみ、移動させ、目標の場所に正確に置けるようプログラムする"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "回避チャレンジ"
+    description: "動いている人を検出して衝突を避けるよう自動で経路調整できるロボットを作る"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "ライツアウト工場"
+    description: "人間の介入なしに1時間自律的に組み立てラインを動かせる完全なロボットシステムを設計する"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "最初のタスク完了"
+    description: "ロボットがエラーなくシンプルなタスクを最初から最後まで完了する"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "安全チャンピオン"
+    description: "10項目の人間安全テストすべてに一度も失敗せず合格するロボットを設計する"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "精度マスター"
+    description: "ロボットアームのタスクで1ミリ以内の位置精度を達成する"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "メカワークショップの伝説"
+    description: "すべてのロボット工学チャレンジを完了し、完全自律型ロボットシステムを構築する"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "センサーシステム"
+      description: "ロボットがカメラ・距離センサー・触覚センサーで世界を「見る」方法を学ぶ——ロボットにとってのセンサーは、私たちの目や耳と同じ"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "モーション制御"
+      description: "モーターと関節をプログラムして滑らかで正確な動きを実現——ロボットに歩き方・物の取り方を教えるようなもの"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "初めての一歩"
+      description: "ロボットアームが物体をつかみ、移動させ、目標の場所に正確に置けるようプログラムする"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "回避チャレンジ"
+      description: "動いている人を検出して衝突を避けるよう自動で経路調整できるロボットを作る"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "AI知覚"
+      description: "ロボットがAIを使って物体を認識し、環境を理解し、判断できるようにする——果物の大きさや熟度で仕分けるよう教えるようなもの"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "自律ナビゲーション"
+      description: "ロボットが工場や倉庫内で人の案内なしに自分でルートを見つけ、障害物を避けられるよう設定する"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "ロボットが異なる種類のセンサーを使って環境を感知する方法を理解する"
+  - "基本的なロボット動作を正確かつ滑らかにプログラムする"
+  - "人間の作業員と安全に協働できるロボットシステムを設計する"
+  - "ロボットに物体認識能力を与えるAI技術を適用する"
+  - "複雑な実世界環境でロボットを自律的にナビゲートする"
+  - "複数のロボットを協調させて協働タスクを完了する"
+  - "フォックスコンの工場など現代製造業におけるロボット工学の役割を理解する"
+  - "速度・精度・安全性のロボット性能トレードオフを評価する"
+
+career_outcomes:
+  - "ロボット工学エンジニア"
+  - "自動化エンジニア"
+  - "ロボットプログラマー"
+  - "製造システムエンジニア"
+  - "AIロボティクス研究者"
+  - "産業安全エンジニア"
+  - "ロボットシステムインテグレーター"
+  - "ヒューマン・ロボット・インタラクションデザイナー"

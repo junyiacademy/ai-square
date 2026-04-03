@@ -1,0 +1,220 @@
+# Entdeckungspfad: Smart Manufacturing Engineer - Deutsch
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Industrie-Alchemist - Smart Manufacturing Engineer"
+  short_description: "Nutze KI und Daten, um Fabriken in selbstdenkende Lebewesen zu verwandeln"
+  long_description: |
+    Du bist ein Lehrlings-Alchemist in der «Digitalen Fabrik», begabt mit der Fähigkeit,
+    Produktionslinien zur Selbstevolution zu bringen. In dieser Fabrik der Zukunft, die
+    IoT, KI und digitale Zwillinge kombiniert, helfen die Daten jedes Sensors den Maschinen,
+    autonome Entscheidungen zu treffen — und deine Mission ist es, die nie stoppende
+    intelligente Produktionslinie zu bauen.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Digitale Fabrik"
+  description: |
+    Die Digitale Fabrik ist eine Produktionsbasis, in der die physische und die virtuelle
+    Welt perfekt gespiegelt werden. Jede Maschine hat ihren digitalen Zwilling, jeder
+    Prozess wird durch Daten angetrieben. Foxconns Lights-out-Fabrik ist die ultimative
+    Ausdrucksform dieses Systems.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "Das Digitale Erwachen der Fabrik"
+  description: |
+    Fabrikleiter Forge führt dich in eine traditionelle Fabrik — Produktionslinien sind
+    ineffizient und Ausbeuten instabil. Plötzlich sendet eine Kernmaschine namens
+    Breakdown eine abnormale Vibration aus. Du musst die Sensordaten nutzen, um
+    vorherzusagen, wann sie ausfallen wird.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "Industrielles IoT"
+      description: "Sensornetzwerke einsetzen, um Produktionsdaten zu sammeln"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Fertigungsdatenanalyse"
+      description: "Produktionsdaten analysieren, um Engpässe und Anomalien zu finden"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Automatisierungssteuerung"
+      description: "PLC- und SCADA-Automatisierungssysteme entwerfen"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Digitaler Zwilling"
+      description: "Virtuelle Replikate von Produktionslinien zur Simulation erstellen"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Vorausschauende Wartung"
+      description: "KI einsetzen, um vor Geräteausfällen Frühwarnungen zu geben"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "KI-Qualitätskontrolle"
+      description: "Computer Vision nutzen, um Produktfehler automatisch zu erkennen"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Lights-out-Fabrik"
+      description: "Ein vollständig mannloses autonomes Produktionssystem entwerfen"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "Erster Sensor"
+    description: "Erfolgreich einen Sensor einsetzen und bedeutungsvolle Produktionsdaten sammeln"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Ausfall-Prophet"
+    description: "Erfolgreich einen Geräteausfall 24 Stunden im Voraus vorhersagen"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Smart-Factory-Architekt"
+    description: "Eine vollständige Smart Factory entwerfen und einsetzen"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "Erstes Dashboard"
+    description: "Ein Echtzeit-Überwachungs-Dashboard für die Produktionslinie erstellen"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Ausbeute-Steigerer"
+    description: "Die Produktionslinien-Ausbeute von 90% auf 99% steigern"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Null-Ausfallzeit-Rekord"
+    description: "90 aufeinanderfolgende Tage ohne ungeplante Produktionsstopps"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Fabrik-Legende"
+    description: "Alle Smart-Manufacturing-Herausforderungen abschließen"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Sensorinstallation"
+      description: "Vibrations- und Temperatursensoren an einer CNC-Drehmaschine installieren"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Produktionslinien-Datenanalyse"
+      description: "Eine Woche Produktionsdaten analysieren, um Effizienz-Engpässe zu finden"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Digitale-Zwilling-Modellierung"
+      description: "Ein digitales Zwillingsmodell für eine SMT-Produktionslinie erstellen"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "KI-Sichtprüfsystem"
+      description: "Ein Modell trainieren, um Lötfehler auf PCB-Platinen automatisch zu erkennen"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Vorausschauendes Wartungssystem"
+      description: "Ein Gesundheits-Scoring- und Ausfallvorhersage-System für alle Fabrikgeräte erstellen"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Autonome Fabrikgestaltung"
+      description: "Eine Lights-out-Fabrik entwerfen, die von der Planung bis zur Inspektion vollautomatisch ist"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Die Architektur des industriellen IoT und die Sensortechnologie verstehen"
+  - "Methoden zur Erfassung und Analyse von Fertigungsdaten beherrschen"
+  - "PLC- und SCADA-Automatisierungssysteme entwerfen"
+  - "Digitale Zwillingsmodelle von Produktionslinien erstellen"
+  - "KI für vorausschauende Wartung einsetzen"
+  - "Qualitätsprüfung durch Computer Vision implementieren"
+  - "Mannlose Lights-out-Fabriken entwerfen"
+  - "Die Entwicklung von Smart Manufacturing und Industrie 4.0 verstehen"
+
+career_outcomes:
+  - "Smart Manufacturing Engineer"
+  - "Industrieller IoT-Architekt"
+  - "Digitaler-Zwilling-Ingenieur"
+  - "Fertigungs-Data-Scientist"
+  - "Automatisierungssystem-Integrator"
+  - "Vorausschauender Wartungsingenieur"
+  - "KI-Qualitätsingenieur"
+  - "Smart-Factory-Berater"

@@ -1,0 +1,219 @@
+# Quantum-Ingenieur Entdeckungspfad - Deutsch
+path_id: quantum_engineer
+category: quantum_technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Quanten-Traumweber - Quantentechnologie-Ingenieur"
+  short_description: "Beherrsche Superposition und Verschränkung, um das Unmögliche zu lösen"
+  long_description: |
+    Du bist ein Lehrling des Traumwebers im „Quantenlabyrinth" und besitzt die Intuition,
+    zu verstehen, dass Teilchen gleichzeitig in mehreren Zuständen existieren.
+    In diesem Bereich, der die klassische Rechenlogik auf den Kopf stellt, könnte jede
+    Qubit-Operation Probleme entschlüsseln, für die herkömmliche Computer zehntausend
+    Jahre bräuchten.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "Quantenlabyrinth"
+  description: |
+    Das Quantenlabyrinth ist eine Forschungsanlage, die in Superposition existiert,
+    wobei ihre Korridore gleichzeitig in mehrere Richtungen führen.
+    Quanteningenieure lernen hier, Qubits zu manipulieren und Quantenalgorithmen zu entwerfen.
+    Die fortschrittlichsten quantentechnologischen Innovationen werden zwischen diesen Mauern geschmiedet.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "Schrödingers erste Lektion"
+  description: |
+    Der Quanten-Mentor Qubit nutzt Schrödingers Katze, um das Konzept der Superposition zu erklären.
+    Doch das Quantendekohärenz-Monster, das im Labyrinth lauert, zerstört Quantenzustände.
+    Du musst Quantenfehlerkorrektur erlernen, um deine Qubits zu schützen.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "Grundlagen der Quantenmechanik"
+      description: "Die Kernkonzepte Superposition, Verschränkung und Messung verstehen"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "Quantenschaltkreise"
+      description: "Quantengatter kombinieren, um Quantenschaltkreise aufzubauen"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "Quantenprogrammierung"
+      description: "Quantenprogramme mit Qiskit / Cirq schreiben"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "Quantenalgorithmen"
+      description: "Algorithmen wie Grover, Shor und VQE implementieren"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "Quantenfehlerkorrektur"
+      description: "Quantenfehlerkorrekturcodes entwerfen und implementieren"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "Quantenkryptographie"
+      description: "Quantenschlüsselverteilung und Post-Quanten-Verschlüsselungssysteme aufbauen"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "Quanten-Maschinelles Lernen"
+      description: "Hybridalgorithmen, die Quantencomputing und maschinelles Lernen kombinieren"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "Erster Superpositionszustand"
+    description: "Ein Qubit erfolgreich in Superposition bringen und messen"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "Dekohärenz-Kämpfer"
+    description: "Einen Algorithmus erfolgreich auf einem verrauschten Quantencomputer ausführen"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "Quantenvorteil Erreicht"
+    description: "Ein Problem lösen, das klassische Computer nicht effizient lösen können"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "Bell-Zustand Präparation"
+    description: "Dein erstes verschränktes Qubit-Paar erfolgreich präparieren"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "Algorithmus-Ausführer"
+    description: "Grovers Suche auf einem echten Quantencomputer erfolgreich ausführen"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "Quantenfehlerkorrektur-Meister"
+    description: "Einen vollständigen Quantenfehlerkorrekturcode implementieren"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "Quantenlegende"
+    description: "Alle Quantentechnologie-Herausforderungen abschließen"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "Erste Begegnung mit Qubits"
+      description: "Den Zustand eines einzelnen Qubits mit der Bloch-Kugel visualisieren"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "Erster Quantenschaltkreis"
+      description: "Einen verschränkten Zustand mit Hadamard- und CNOT-Gattern präparieren"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Grover-Suche Challenge"
+      description: "Den Quantensuchalgorithmus implementieren, um eine versteckte Antwort zu finden"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "Rausch-Simulationsexperiment"
+      description: "Simulieren, wie sich Rauschen in echten Quantencomputern auf Ergebnisse auswirkt"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "Quantenschlüsselverteilung"
+      description: "Das BB84-Protokoll implementieren, um einen abhörsicheren verschlüsselten Kanal aufzubauen"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "Quanten-Klassisches Hybridlernen"
+      description: "VQE verwenden, um Optimierungsprobleme bei der Molekülsimulation zu lösen"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "Die Kernkonzepte der Quantenmechanik verstehen: Superposition, Verschränkung, Messung"
+  - "Das Design von Quantengattern und Quantenschaltkreisen meistern"
+  - "Quantenprogramme mit Qiskit oder Cirq schreiben"
+  - "Grovers Such- und Shors Faktorisierungsalgorithmen implementieren"
+  - "Die Prinzipien und Implementierung der Quantenfehlerkorrektur verstehen"
+  - "Quantenkryptographie und Post-Quanten-Sicherheit erkunden"
+  - "Quantencomputing mit maschinellem Lernen kombinieren"
+  - "Die Spitzenforschungsrichtungen der Quantentechnologie kennenlernen"
+
+career_outcomes:
+  - "Quanten-Software-Ingenieur"
+  - "Quantenalgorithmus-Forscher"
+  - "Quanten-Hardware-Ingenieur"
+  - "Post-Quanten-Kryptographie-Ingenieur"
+  - "Quanten-Anwendungswissenschaftler"
+  - "Quanten-Maschinelles-Lernen-Forscher"
+  - "Quantencomputing-Berater"
+  - "Quantentechnologie-Produktmanager"

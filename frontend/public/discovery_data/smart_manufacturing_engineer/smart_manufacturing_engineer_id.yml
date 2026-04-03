@@ -1,0 +1,218 @@
+# Jalur Penemuan: Insinyur Manufaktur Cerdas - Bahasa Indonesia
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Alkemis Industri - Insinyur Manufaktur Cerdas"
+  short_description: "Gunakan AI dan data untuk mengubah pabrik menjadi organisme yang berpikir sendiri"
+  long_description: |
+    Kamu adalah alkemis magang di «Pabrik Digital», dibekali bakat untuk membuat
+    lini produksi berevolusi sendiri. Di pabrik masa depan yang menggabungkan IoT,
+    AI, dan digital twin ini, data setiap sensor membantu mesin membuat keputusan
+    otonom — dan misimu adalah membangun lini produksi cerdas yang tak pernah berhenti.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Pabrik Digital"
+  description: |
+    Pabrik Digital adalah basis produksi di mana dunia fisik dan virtual tercermin
+    dengan sempurna. Setiap mesin memiliki digital twin-nya, setiap proses digerakkan
+    oleh data. Pabrik tanpa lampu Foxconn adalah ekspresi tertinggi dari sistem ini.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "Kebangkitan Digital Pabrik"
+  description: |
+    Direktur pabrik Forge membawamu ke pabrik tradisional — lini produksi tidak efisien
+    dan tingkat hasil tidak stabil. Tiba-tiba sebuah mesin inti bernama Breakdown
+    mengeluarkan getaran abnormal. Kamu harus menggunakan data sensor untuk memprediksi
+    kapan mesin itu akan rusak.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "IoT Industri"
+      description: "Menerapkan jaringan sensor untuk mengumpulkan data produksi"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Analitik Data Manufaktur"
+      description: "Menganalisis data produksi untuk menemukan hambatan dan anomali"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Kontrol Otomasi"
+      description: "Merancang sistem otomasi PLC dan SCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Digital Twin"
+      description: "Membangun replika virtual lini produksi untuk simulasi"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Pemeliharaan Prediktif"
+      description: "Menggunakan AI untuk memberikan peringatan dini sebelum kegagalan peralatan"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "Kontrol Kualitas AI"
+      description: "Menggunakan computer vision untuk mendeteksi cacat produk secara otomatis"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Pabrik Tanpa Lampu"
+      description: "Merancang sistem produksi otonom yang sepenuhnya tanpa operator"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "Sensor Pertama"
+    description: "Berhasil menerapkan sensor dan mengumpulkan data produksi yang bermakna"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Nabi Kerusakan"
+    description: "Berhasil memprediksi kegagalan peralatan 24 jam sebelumnya"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Arsitek Pabrik Cerdas"
+    description: "Merancang dan menerapkan pabrik cerdas yang lengkap"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "Dasbor Pertama"
+    description: "Membangun dasbor pemantauan lini produksi secara real-time"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Pendorong Hasil"
+    description: "Meningkatkan tingkat hasil lini produksi dari 90% menjadi 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Rekor Nol Waktu Henti"
+    description: "90 hari berturut-turut tanpa henti produksi yang tidak direncanakan"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Legenda Pabrik"
+    description: "Menyelesaikan semua tantangan manufaktur cerdas"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Pemasangan Sensor"
+      description: "Memasang sensor getaran dan suhu pada mesin bubut CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Analisis Data Lini Produksi"
+      description: "Menganalisis data produksi selama satu minggu untuk menemukan hambatan efisiensi"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Pemodelan Digital Twin"
+      description: "Membangun model digital twin untuk lini produksi SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "Sistem Inspeksi Visual AI"
+      description: "Melatih model untuk mendeteksi cacat solder pada papan PCB secara otomatis"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Sistem Pemeliharaan Prediktif"
+      description: "Membangun sistem penilaian kesehatan dan prediksi kegagalan untuk semua peralatan pabrik"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Desain Pabrik Otonom"
+      description: "Merancang pabrik tanpa lampu yang sepenuhnya otomatis dari penjadwalan hingga inspeksi"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami arsitektur IoT industri dan teknologi sensor"
+  - "Menguasai metode pengumpulan dan analisis data manufaktur"
+  - "Merancang sistem otomasi PLC dan SCADA"
+  - "Membangun model digital twin lini produksi"
+  - "Menerapkan AI untuk pemeliharaan prediktif"
+  - "Mengimplementasikan inspeksi kualitas menggunakan computer vision"
+  - "Merancang pabrik tanpa operator"
+  - "Memahami perkembangan manufaktur cerdas dan Industri 4.0"
+
+career_outcomes:
+  - "Insinyur Manufaktur Cerdas"
+  - "Arsitek IoT Industri"
+  - "Insinyur Digital Twin"
+  - "Ilmuwan Data Manufaktur"
+  - "Integrator Sistem Otomasi"
+  - "Insinyur Pemeliharaan Prediktif"
+  - "Insinyur Kualitas AI"
+  - "Konsultan Pabrik Cerdas"
