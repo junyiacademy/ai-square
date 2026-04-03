@@ -1,0 +1,218 @@
+# Insinyur Robotika - Jalur Penemuan - Bahasa Indonesia
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Pengrajin Meka - Insinyur Robotika"
+  short_description: "Bangun mesin cerdas yang bisa merasakan, berpikir, dan bertindak"
+  long_description: |
+    Kamu adalah pengrajin magang di «Bengkel Meka», lahir dengan naluri untuk
+    menghidupkan mesin. Di bengkel lintas disiplin ini tempat mekanika, elektronika,
+    dan perangkat lunak bertemu, setiap putaran motor membawa misi membuat robot
+    melayani umat manusia.
+
+  estimated_hours: 55
+  skill_focus:
+    - mechanical_design
+    - sensor_fusion
+    - motion_planning
+    - human_robot_interaction
+
+world_setting:
+  name: "Bengkel Meka"
+  description: |
+    Bengkel Meka adalah basis R&D robotika terkemuka di dunia, dari lengan industri
+    hingga robot layanan, dari drone hingga humanoid. Para insinyur di sini mengubah
+    imajinasi menjadi kenyataan — lini manufaktur cerdas lahir di sini.
+
+  atmosphere: "industrial_creative"
+  visual_theme: "mecha_workshop"
+
+starting_scenario:
+  title: "Membangunkan Meka Pertama"
+  description: |
+    Tetua Bengkel, Servo, memperkenalkanmu pada tiga pilar robotika: sensing,
+    pengambilan keputusan, dan aktuasi. Tapi sebuah prototipe liar bernama Haywire
+    sedang menghantam ke mana-mana di bengkel. Kamu harus memahami data sensornya
+    untuk menghentikannya dengan aman.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_actuators
+    - first_robot_control
+
+skill_tree:
+  core_skills:
+    - id: mechanical_design
+      name: "Desain Mekanik"
+      description: "Merancang kerangka, sendi, dan mekanisme transmisi robot"
+      max_level: 10
+      unlocks:
+        - 3d_modeling
+        - material_selection
+
+    - id: embedded_systems
+      name: "Sistem Tertanam"
+      description: "Menulis firmware untuk mengendalikan motor dan sensor"
+      max_level: 10
+      unlocks:
+        - microcontroller_programming
+        - rtos_basics
+
+    - id: sensor_fusion
+      name: "Fusi Sensor"
+      description: "Mengintegrasikan data visi, LiDAR, IMU, dan multi-sensor"
+      max_level: 10
+      unlocks:
+        - computer_vision
+        - lidar_processing
+
+    - id: motion_planning
+      name: "Perencanaan Gerak"
+      description: "Merencanakan jalur dan urutan tindakan robot"
+      max_level: 10
+      unlocks:
+        - path_planning
+        - trajectory_optimization
+
+  advanced_skills:
+    - id: robot_learning
+      name: "Pembelajaran Robot"
+      description: "Menggunakan reinforcement learning agar robot mandiri menguasai keterampilan baru"
+      max_level: 15
+      requires: [motion_planning, sensor_fusion]
+
+    - id: multi_robot_systems
+      name: "Koordinasi Multi-Robot"
+      description: "Mengkoordinasikan tim beberapa robot untuk menjalankan misi"
+      max_level: 15
+      requires: [embedded_systems, motion_planning]
+
+    - id: humanoid_design
+      name: "Robotika Humanoid"
+      description: "Merancang berjalan dua kaki, tangan terampil, dan sistem antropomorfik lainnya"
+      max_level: 15
+      requires: [mechanical_design, robot_learning]
+
+milestone_quests:
+  - id: first_movement
+    name: "Langkah Pertama"
+    description: "Buat robotmu berhasil menjalankan perintah gerakan pertamanya"
+    required_level: 5
+    skills_tested: [embedded_systems, mechanical_design]
+    xp_reward: 500
+    unlocks:
+      - movement_badge
+      - workshop_access
+
+  - id: haywire_tamer
+    name: "Penakluk Haywire"
+    description: "Gunakan fusi sensor untuk menangkap robot liar dengan aman"
+    required_level: 10
+    skills_tested: [sensor_fusion, motion_planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_master_title
+      - advanced_lab
+
+  - id: factory_commander
+    name: "Komandan Pabrik Cerdas"
+    description: "Rancang dan terapkan lini produksi yang sepenuhnya otomatis"
+    required_level: 20
+    skills_tested: [multi_robot_systems, robot_learning]
+    xp_reward: 2500
+    unlocks:
+      - commander_title
+      - workshop_leadership
+
+achievements:
+  - id: first_servo
+    name: "Motor Servo Pertama"
+    description: "Berhasil mengendalikan motor servo pertamamu"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: obstacle_navigator
+    name: "Navigator Rintangan"
+    description: "Robot menavigasi secara otonom melalui lingkungan yang kompleks"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: arm_master
+    name: "Master Lengan Robot"
+    description: "Menyelesaikan operasi perakitan presisi dengan lengan robot 6 sumbu"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "Legenda Meka"
+    description: "Menyelesaikan semua tantangan rekayasa robotika"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: servo_control
+      type: interaction
+      title: "Dasar-Dasar Motor Servo"
+      description: "Menggunakan sinyal PWM untuk memutar motor ke sudut tertentu"
+      skills_improved: [embedded_systems]
+      xp_reward: 60
+
+    - id: sensor_reading
+      type: analysis
+      title: "Interpretasi Data Sensor"
+      description: "Membaca data jarak dari sensor ultrasonik dan inframerah"
+      skills_improved: [sensor_fusion]
+      xp_reward: 50
+
+  intermediate:
+    - id: robot_arm
+      type: creation
+      title: "Desain Lengan Robot"
+      description: "Merancang lengan robot desktop dengan 3 derajat kebebasan"
+      skills_improved: [mechanical_design, motion_planning]
+      xp_reward: 180
+
+    - id: slam_navigation
+      type: creation
+      title: "Tantangan Navigasi SLAM"
+      description: "Robot memetakan dan melokalisasi diri secara bersamaan di lingkungan tak dikenal"
+      skills_improved: [sensor_fusion, motion_planning]
+      xp_reward: 200
+
+  advanced:
+    - id: factory_automation
+      type: creation
+      title: "Desain Lini Produksi Cerdas"
+      description: "Merancang lini perakitan kolaboratif multi-robot"
+      skills_improved: [multi_robot_systems, robot_learning]
+      xp_reward: 350
+
+    - id: humanoid_walk
+      type: creation
+      title: "Tantangan Berjalan Dua Kaki"
+      description: "Membuat robot humanoid berjalan stabil di medan tidak rata"
+      skills_improved: [humanoid_design, motion_planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami desain mekanik dan kinematika robot"
+  - "Menguasai sistem tertanam dan kontrol real-time"
+  - "Mengintegrasikan berbagai sensor untuk persepsi lingkungan"
+  - "Mengimplementasikan algoritma perencanaan jalur dan kontrol gerak"
+  - "Menerapkan reinforcement learning untuk melatih robot"
+  - "Merancang sistem kolaborasi multi-robot"
+  - "Memahami standar keselamatan untuk kolaborasi manusia-robot"
+  - "Mempelajari ekosistem industri manufaktur cerdas"
+
+career_outcomes:
+  - "Insinyur Robotika"
+  - "Insinyur Integrasi Sistem Otomasi"
+  - "Pemrogram Lengan Robot"
+  - "Insinyur Sistem Tertanam"
+  - "Pengembang ROS"
+  - "Konsultan Manufaktur Cerdas"
+  - "Desainer Interaksi Manusia-Robot"
+  - "Insinyur Sistem Drone"

@@ -1,0 +1,219 @@
+# 機器人工程師探索路徑 - 繁體中文
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "機甲工坊大師 - 機器人工程師"
+  short_description: "打造與人類並肩工作的未來工廠機器人"
+  long_description: |
+    你是「機甲工坊」的見習技師，這裡的工程師設計用於組裝汽車、採收農作物、
+    協助外科手術和探索災難現場的機器人。機器人工程是機械、程式設計和AI的
+    交會點——你打造的機器可能改變數十億人的工作和生活方式。台灣製造業巨頭
+    如富士康正在部署數千台機器人，急需能夠設計、程式設計和改良它們的工程師。
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "機甲工坊"
+  description: |
+    機甲工坊是一個充滿活力的創新實驗室，各種形狀和大小的機器人在這裡被建造、
+    測試並送入真實世界。從微型無人機到巨型工業機械臂，每台機器都從這個工坊的
+    一個想法開始。挑戰：打造強壯、精準、安全的機器人——還要足夠聰明，能在
+    不發生事故的情況下與人類並肩工作。
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "工坊甦醒"
+  description: |
+    首席工程師陳師傅交給你第一個任務：生產線上的一台工廠機器人一直撞到工人，
+    因為它無法正確感知人的存在。修復機器人的感測系統並重新設定它的動作程式，
+    讓它能夠避開人——這是你進入機器人工程最重要兩項技能的入門：感知世界和
+    智能回應。
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "感測器系統"
+      description: "學習機器人如何用攝影機、距離感測器和觸覺感測器「看」世界——機器人需要感測器，就像我們需要眼睛和耳朵一樣"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "運動控制"
+      description: "為馬達和關節寫程式，讓機器人平順而精確地移動——就像教機器人走路、伸手拿東西，而不會把東西掉落"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "機器人程式設計"
+      description: "撰寫程式碼告訴機器人要做什麼、何時做，以及如何應對意外情況——這是機器力量背後的大腦"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "人機協作"
+      description: "設計讓機器人和人類安全並肩工作的系統——當人類靠近時，機器人必須減速、停止或調整"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "AI感知"
+      description: "讓機器人能夠辨識物體、理解環境並使用AI做出決策——就像教機器人依大小和成熟度分揀水果"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "自主導航"
+      description: "讓機器人能在工廠或倉庫中自己找路，在無人引導的情況下避開障礙物"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "機器人群集"
+      description: "協調多台機器人像螞蟻一樣協同工作——每台機器人都很簡單，但合在一起可以完成複雜任務"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "第一步"
+    description: "為機器臂撰寫程式，使其能夠夾取物體、移動，並精確放置到目標位置"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "迴避挑戰"
+    description: "建造一個能偵測移動中的人並自動調整路徑以避免碰撞的機器人"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "熄燈工廠"
+    description: "設計一個完整的機器人系統，能在無人介入的情況下自主運行生產線1小時"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "首個任務完成"
+    description: "讓機器人從頭到尾完成一項簡單任務而不出錯"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "安全冠軍"
+    description: "設計一台通過所有10項人機安全測試而零失敗的機器人"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "精準大師"
+    description: "在機械臂任務中達到1毫米以內的定位精度"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "機甲工坊傳說"
+    description: "完成所有機器人挑戰並打造一個完全自主的機器人系統"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "感知環境"
+      description: "將距離感測器連接到機器人，並為其設定程式讓它在障礙物距離30公分內時停止"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "平滑動作"
+      description: "為機器人設計程式：向前移動、左轉90度，然後回到起始點"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "取放挑戰"
+      description: "為機械臂設計程式，讓它能夾取不同大小的物體並分類放入正確的箱子"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "障礙賽"
+      description: "只靠感測器引導機器人穿越一個障礙物迷宮——不允許手動控制"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "智慧分揀機"
+      description: "訓練機器人用攝影機和AI依形狀和顏色識別並分揀物體"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "機器人交接"
+      description: "設計一個讓機器人安全精準地將物體遞交給人類工人的系統"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "了解機器人如何使用不同類型的感測器感知環境"
+  - "精確且平滑地為基本機器人動作撰寫程式"
+  - "設計能與人類工人安全協作的機器人系統"
+  - "應用AI技術賦予機器人物體辨識能力"
+  - "讓機器人在複雜的真實世界環境中自主導航"
+  - "協調多台機器人完成協作任務"
+  - "了解機器人在現代製造業（如富士康工廠）中的角色"
+  - "評估速度、精度和安全性之間的機器人性能取捨"
+
+career_outcomes:
+  - "機器人工程師"
+  - "自動化工程師"
+  - "機器人程式設計師"
+  - "製造系統工程師"
+  - "AI機器人研究員"
+  - "工業安全工程師"
+  - "機器人系統整合師"
+  - "人機互動設計師"

@@ -1,0 +1,220 @@
+# Caminho de Descoberta: Engenheiro de Manufatura Inteligente - Português
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Alquimista Industrial - Engenheiro de Manufatura Inteligente"
+  short_description: "Use IA e dados para transformar fábricas em organismos que pensam por si mesmos"
+  long_description: |
+    Você é um aprendiz alquimista na «Fábrica Digital», dotado do talento para fazer
+    as linhas de produção evoluírem por conta própria. Nesta fábrica do futuro que
+    combina IoT, IA e gêmeos digitais, os dados de cada sensor ajudam as máquinas a
+    tomar decisões autônomas — e sua missão é construir a linha de produção inteligente
+    que nunca para.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Fábrica Digital"
+  description: |
+    A Fábrica Digital é uma base de produção onde o mundo físico e o virtual se
+    espelham perfeitamente. Cada máquina tem seu gêmeo digital, cada processo é
+    conduzido por dados. A fábrica às escuras da Foxconn é a expressão máxima
+    deste sistema.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "O Despertar Digital da Fábrica"
+  description: |
+    O diretor de fábrica Forge leva você a uma fábrica tradicional — as linhas de
+    produção são ineficientes e as taxas de rendimento são instáveis. De repente
+    uma máquina central chamada Breakdown emite uma vibração anormal. Você deve
+    usar dados de sensores para prever quando ela vai falhar.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "IoT Industrial"
+      description: "Implantar redes de sensores para coletar dados de produção"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Análise de Dados de Manufatura"
+      description: "Analisar dados de produção para encontrar gargalos e anomalias"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Controle de Automação"
+      description: "Projetar sistemas de automação PLC e SCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Gêmeo Digital"
+      description: "Construir réplicas virtuais de linhas de produção para simulação"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Manutenção Preditiva"
+      description: "Usar IA para dar alertas antecipados antes da falha do equipamento"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "Controle de Qualidade com IA"
+      description: "Usar visão computacional para detectar defeitos automaticamente"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Fábrica às Escuras"
+      description: "Projetar um sistema de produção autônomo completamente sem operadores"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "Primeiro Sensor"
+    description: "Implantar com sucesso um sensor e coletar dados de produção significativos"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Profeta de Avarias"
+    description: "Prever com sucesso uma falha de equipamento com 24 horas de antecedência"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Arquiteto de Fábrica Inteligente"
+    description: "Projetar e implantar uma fábrica inteligente completa"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "Primeiro Painel de Controle"
+    description: "Construir um painel de monitoramento em tempo real da linha de produção"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Impulsionador de Rendimento"
+    description: "Elevar a taxa de rendimento da linha de 90% para 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Recorde de Zero Tempo de Inatividade"
+    description: "90 dias consecutivos sem paradas de produção não planejadas"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Lenda da Fábrica"
+    description: "Completar todos os desafios de manufatura inteligente"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Instalação de Sensores"
+      description: "Instalar sensores de vibração e temperatura em um torno CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Análise de Dados de Linha de Produção"
+      description: "Analisar uma semana de dados de produção para encontrar gargalos de eficiência"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Modelagem de Gêmeo Digital"
+      description: "Construir um modelo de gêmeo digital para uma linha de produção SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "Sistema de Inspeção Visual com IA"
+      description: "Treinar um modelo para detectar automaticamente defeitos de soldagem em placas PCB"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Sistema de Manutenção Preditiva"
+      description: "Construir um sistema de pontuação de saúde e previsão de falhas para todos os equipamentos"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Projeto de Fábrica Autônoma"
+      description: "Projetar uma fábrica às escuras totalmente automatizada do agendamento à inspeção"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Compreender a arquitetura IoT industrial e a tecnologia de sensores"
+  - "Dominar os métodos de coleta e análise de dados de manufatura"
+  - "Projetar sistemas de automação PLC e SCADA"
+  - "Construir modelos de gêmeo digital de linhas de produção"
+  - "Aplicar IA para manutenção preditiva"
+  - "Implementar inspeção de qualidade por visão computacional"
+  - "Projetar fábricas às escuras sem operadores"
+  - "Compreender o desenvolvimento da manufatura inteligente e Indústria 4.0"
+
+career_outcomes:
+  - "Engenheiro de Manufatura Inteligente"
+  - "Arquiteto de IoT Industrial"
+  - "Engenheiro de Gêmeo Digital"
+  - "Cientista de Dados de Manufatura"
+  - "Integrador de Sistemas de Automação"
+  - "Engenheiro de Manutenção Preditiva"
+  - "Engenheiro de Qualidade com IA"
+  - "Consultor de Fábrica Inteligente"

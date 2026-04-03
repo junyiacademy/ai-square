@@ -1,0 +1,224 @@
+# Parcours d'exploration Ingénieur en Conception IC - Français
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Forgeron du Bouclier de Silicium - Ingénieur en Conception IC"
+  short_description: "Forgez les minuscules puces qui alimentent le monde moderne"
+  long_description: |
+    Vous êtes apprenti à la Forge du Bouclier de Silicium, un atelier légendaire où
+    les ingénieurs conçoivent les circuits microscopiques qui font fonctionner chaque
+    smartphone, ordinateur et véhicule électrique. Chaque puce que vous concevez
+    ressemble à une ville miniature — avec des routes (fils), des bâtiments (portes
+    logiques) et des règles de circulation (synchronisation), le tout dans un espace
+    plus petit que votre ongle. Plus de 90% des puces les plus avancées du monde
+    sont fabriquées à Taïwan — vous pourriez faire partie de cette histoire !
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Forge du Bouclier de Silicium"
+  description: |
+    La Forge du Bouclier de Silicium est un atelier high-tech où des ingénieurs
+    experts et des apprentis collaborent pour concevoir des puces utilisées dans
+    des dispositifs médicaux, des satellites spatiaux et des téléphones quotidiens.
+    L'esprit de la forge : précision, créativité et travail d'équipe — une petite
+    erreur de conception peut affecter des millions d'appareils dans le monde.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "Premier Jour à la Forge"
+  description: |
+    L'Ingénieur Principal Lin vous accueille à la forge. Votre premier défi : un
+    atelier concurrent a lancé une puce avec un défaut caché qui cause la surchauffe
+    des téléphones. Vous devez apprendre les bases de la conception de puces pour
+    aider à créer une alternative plus sûre — comprendre comment les interrupteurs
+    logiques se combinent en fonctions plus grandes.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Conception Logique"
+      description: "Apprenez à combiner de simples interrupteurs ON/OFF (portes logiques) pour construire des fonctions complexes comme des calculatrices et des mémoires — comme construire avec des LEGO mais avec de l'électricité"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Architecture de Puce"
+      description: "Comprenez comment une puce s'organise en sections — comme une ville avec des quartiers de traitement, de mémoire et de communication — et planifiez leur collaboration"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "Tests de Circuits"
+      description: "Simulez et testez votre conception avec des outils logiciels pour détecter les erreurs avant la fabrication — comme corriger un essai avant d'en imprimer 10 millions d'exemplaires"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "Disposition Physique"
+      description: "Organisez les composants de circuit sur la puce comme un urbaniste — décidant où va chaque section et comment les connecter par les chemins les plus courts"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Ingénierie Basse Consommation"
+      description: "Concevez des puces qui utilisent le moins d'énergie possible — essentiel pour les smartphones et les wearables qui doivent fonctionner toute la journée sur une petite batterie"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "Maîtrise de la Qualité du Signal"
+      description: "Assurez que les signaux électriques voyagent proprement à travers la puce sans distorsion — comme garantir qu'un appel téléphonique sonne clair"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "Conception d'Accélérateur IA"
+      description: "Concevez des puces spéciales pour les tâches d'IA — comme la reconnaissance faciale ou la traduction — bien plus rapidement que les puces ordinaires"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "Premier Circuit Forgé"
+    description: "Concevez un circuit calculateur 4 bits et vérifiez qu'il donne des réponses correctes pour tous les cas de test"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "Le Défi du Plan"
+    description: "Créez un plan de disposition complet pour une puce simple et expliquez comment les sections communiquent"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "Le Bouclier de Silicium"
+    description: "Concevez, testez et optimisez une puce basse consommation complète prête pour la production"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "Première Étincelle"
+    description: "Exécutez votre première simulation de circuit et voyez votre conception prendre vie"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Chasseur de Bugs"
+    description: "Trouvez et corrigez 10 erreurs de conception avant qu'elles n'atteignent l'usine"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Gardien de l'Énergie"
+    description: "Réduisez la consommation d'énergie d'une puce de 30% grâce à des décisions de conception intelligentes"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Légende de la Forge"
+    description: "Complétez tous les défis de conception de puces et livrez un design prêt pour la production"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Puzzle de Portes"
+      description: "Connectez des interrupteurs logiques pour construire un circuit qui allume une lumière uniquement quand deux boutons sont pressés simultanément"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "Explorateur de la Carte de Puce"
+      description: "Observez un vrai diagramme de puce, identifiez les sections principales et expliquez en mots simples ce que fait chaque zone"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "Déboguer le Circuit"
+      description: "Un circuit simulé donne des réponses incorrectes — trouvez l'erreur logique et corrigez-la avant qu'elle n'arrive aux clients"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "Urbaniste"
+      description: "Réorganisez les sections de puce pour raccourcir les connexions et éviter les interférences entre composants"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "Régime Énergétique"
+      description: "Reconceptualisez une section de puce pour réduire la consommation de moitié tout en maintenant la même vitesse"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "Plan du Moteur IA"
+      description: "Concevez l'architecture d'une puce capable de reconnaître des visages 10 fois plus vite qu'un processeur normal"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "Comprendre comment de simples interrupteurs logiques se combinent pour construire des circuits numériques complexes"
+  - "Expliquer les principales sections fonctionnelles d'une puce moderne"
+  - "Utiliser des outils de simulation pour tester et trouver des erreurs dans les conceptions de circuits"
+  - "Appliquer les principes de planification de disposition pour organiser efficacement les composants de puce"
+  - "Concevoir des circuits qui équilibrent vitesse et consommation d'énergie"
+  - "Retracer le parcours de la conception de puce à la fabrication physique en usine"
+  - "Comprendre comment l'industrie des semi-conducteurs de Taïwan façonne l'économie mondiale"
+  - "Évaluer les compromis de conception entre performance, puissance et surface de puce"
+
+career_outcomes:
+  - "Ingénieur en Conception IC"
+  - "Concepteur de Logique Numérique"
+  - "Ingénieur en Vérification de Puces"
+  - "Ingénieur en Conception Physique"
+  - "Ingénieur Matériel IA"
+  - "Ingénieur en Systèmes Embarqués"
+  - "Chercheur R&D en Semi-conducteurs"
+  - "Responsable Produit Matériel"

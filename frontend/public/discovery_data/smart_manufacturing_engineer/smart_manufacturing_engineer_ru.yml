@@ -1,0 +1,220 @@
+# Путь открытия: Инженер умного производства - Русский
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Промышленный Алхимик - Инженер Умного Производства"
+  short_description: "Используй ИИ и данные, чтобы превратить заводы в самомыслящие организмы"
+  long_description: |
+    Ты ученик-алхимик на «Цифровом Заводе», наделённый талантом заставлять
+    производственные линии эволюционировать самостоятельно. На этом заводе будущего,
+    объединяющем IoT, ИИ и цифровые двойники, данные каждого датчика помогают
+    машинам принимать автономные решения — и твоя миссия состоит в том, чтобы
+    построить никогда не останавливающуюся умную производственную линию.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Цифровой Завод"
+  description: |
+    Цифровой Завод — производственная база, где физический и виртуальный миры
+    идеально отражают друг друга. У каждой машины есть цифровой двойник, каждый
+    процесс управляется данными. Безлюдный завод Foxconn — высшее воплощение
+    этой системы.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "Цифровое Пробуждение Завода"
+  description: |
+    Директор завода Forge проводит тебя по традиционному заводу — производственные
+    линии неэффективны, показатели выхода нестабильны. Внезапно ключевая машина
+    по имени Breakdown издаёт аномальную вибрацию. Тебе нужно использовать данные
+    датчиков, чтобы предсказать, когда она выйдет из строя.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "Промышленный IoT"
+      description: "Развернуть сети датчиков для сбора производственных данных"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Аналитика Производственных Данных"
+      description: "Анализировать производственные данные для выявления узких мест и аномалий"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Управление Автоматизацией"
+      description: "Проектировать системы автоматизации PLC и SCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Цифровой Двойник"
+      description: "Создавать виртуальные копии производственных линий для симуляции"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Предиктивное Обслуживание"
+      description: "Использовать ИИ для раннего предупреждения о неисправностях оборудования"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "Контроль Качества с ИИ"
+      description: "Использовать компьютерное зрение для автоматического обнаружения дефектов"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Безлюдный Завод"
+      description: "Разработать полностью автономную систему производства без персонала"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "Первый Датчик"
+    description: "Успешно развернуть датчик и собрать значимые производственные данные"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Пророк Поломок"
+    description: "Успешно предсказать поломку оборудования за 24 часа"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Архитектор Умного Завода"
+    description: "Спроектировать и развернуть полноценный умный завод"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "Первая Панель Управления"
+    description: "Создать панель мониторинга производственной линии в режиме реального времени"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Повышатель Выхода"
+    description: "Повысить выход производственной линии с 90% до 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Рекорд Нулевого Простоя"
+    description: "90 дней подряд без незапланированных остановок производства"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Легенда Завода"
+    description: "Выполнить все задания умного производства"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Установка Датчиков"
+      description: "Установить датчики вибрации и температуры на токарный станок CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Анализ Данных Производственной Линии"
+      description: "Проанализировать данные производства за неделю для выявления узких мест"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Моделирование Цифрового Двойника"
+      description: "Создать модель цифрового двойника для производственной линии SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "Система Визуального Контроля с ИИ"
+      description: "Обучить модель для автоматического обнаружения дефектов пайки на платах PCB"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Система Предиктивного Обслуживания"
+      description: "Создать систему оценки здоровья и прогнозирования поломок для всего оборудования"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Проект Автономного Завода"
+      description: "Спроектировать безлюдный завод с полной автоматизацией от планирования до контроля"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять архитектуру промышленного IoT и технологию датчиков"
+  - "Освоить методы сбора и анализа производственных данных"
+  - "Проектировать системы автоматизации PLC и SCADA"
+  - "Создавать модели цифровых двойников производственных линий"
+  - "Применять ИИ для предиктивного обслуживания"
+  - "Реализовывать контроль качества с помощью компьютерного зрения"
+  - "Проектировать безлюдные заводы"
+  - "Понимать развитие умного производства и Индустрии 4.0"
+
+career_outcomes:
+  - "Инженер Умного Производства"
+  - "Архитектор Промышленного IoT"
+  - "Инженер Цифрового Двойника"
+  - "Data Scientist в Производстве"
+  - "Интегратор Систем Автоматизации"
+  - "Инженер Предиктивного Обслуживания"
+  - "Инженер Качества с ИИ"
+  - "Консультант по Умным Заводам"

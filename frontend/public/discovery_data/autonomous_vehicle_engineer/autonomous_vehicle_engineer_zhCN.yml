@@ -1,0 +1,216 @@
+# 自动驾驶工程师探索路径 - 简体中文
+path_id: autonomous_vehicle_engineer
+category: autonomous_systems
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "无人驾驶者 - 自动驾驶工程师"
+  short_description: "教会汽车自己看路、思考、做决定"
+  long_description: |
+    你是「自驾领航塔」的见习领航员，拥有让车辆自主行驶的天赋
+    在这个结合 AI、传感器、地图的高科技基地中，每一毫秒的判断
+    都关乎乘客的安全，而你的使命是打造零事故的移动未来
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "自驾领航塔"
+  description: |
+    自驾领航塔是全球自驾技术的研发中心，从传感器融合到决策引擎
+    从高精地图到车联网，工程师们在此打造下一代智慧交通系统
+    自动驾驶巴士和物流车都从这里出发
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "第一次自动驾驶"
+  description: |
+    首席工程师 Navigator 带你体验自动驾驶车的感知世界：激光雷达点云、摄像头图像、雷达回波
+    但测试场上出现了一个 Ghost Signal — 虚假的障碍物探测
+    你必须分析传感器数据找出幻影的来源
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "环境感知"
+      description: "用激光雷达、摄像头、雷达感知周围环境"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "定位与地图"
+      description: "精准定位车辆在高精地图上的位置"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "路径规划"
+      description: "在复杂交通中找出最安全的行驶路线"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "车辆控制"
+      description: "精确控制方向盘、油门、刹车"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "端到端学习"
+      description: "用深度学习直接从传感器到控制"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "车联网 V2X"
+      description: "让车辆与基础设施和其他车辆通讯"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "安全验证"
+      description: "用模拟和实测验证自驾系统的安全性"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "第一次探测"
+    description: "成功探测并分类道路上的行人、车辆、信号"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "幻影猎人"
+    description: "找到并消除传感器融合中的虚假探测"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "城市领航者"
+    description: "在模拟城市中完成全自动驾驶测试"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "车道维持"
+    description: "让车辆在车道中央稳定行驶 1 公里"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "路口达人"
+    description: "安全通过 50 个不同类型的路口"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "零事故驾驶"
+    description: "完成 100 公里无事故自动驾驶"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "自驾传奇"
+    description: "完成所有自动驾驶工程挑战"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "摄像头物体探测"
+      description: "用 YOLO 模型探测道路上的车辆和行人"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "高精地图解读"
+      description: "理解车道线、路口、交通信号的地图标注"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "三合一传感融合"
+      description: "融合激光雷达、摄像头、雷达的探测结果"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "环形道路径规划"
+      description: "在环形交叉口规划安全的行驶轨迹"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "城市自驾挑战"
+      description: "在复杂的城市区域完成自动驾驶任务"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "自驾车队调度"
+      description: "管理 10 台自动驾驶巴士的即时路线调度"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解激光雷达、摄像头、雷达的感知原理"
+  - "掌握物体探测与语义分割技术"
+  - "精通高精地图与实时定位"
+  - "实现行为规划与轨迹生成"
+  - "理解车辆动力学与控制理论"
+  - "运用深度学习进行端到端驾驶"
+  - "设计自动驾驶系统的安全验证流程"
+  - "了解智慧交通发展与法规"
+
+career_outcomes:
+  - "自动驾驶系统工程师"
+  - "传感器融合工程师"
+  - "高精地图工程师"
+  - "车用 AI 工程师"
+  - "功能安全工程师"
+  - "智慧交通规划师"
+  - "V2X 通讯工程师"
+  - "自动驾驶测试验证工程师"

@@ -1,0 +1,216 @@
+# 智慧製造工程師探索路徑 - 繁體中文
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "工業煉金師 - 智慧製造工程師"
+  short_description: "用 AI 和數據把工廠變成會自己思考的生命體"
+  long_description: |
+    你是「數位工廠」的見習煉金師，擁有讓生產線自我進化的天賦
+    在這個結合 IoT、AI、數位孿生的未來工廠中，每一個感測器的數據
+    都在幫助機器自主決策，而你的使命是打造永不停機的智慧產線
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "數位工廠"
+  description: |
+    數位工廠是一座實體與虛擬完美對映的生產基地
+    每一台機器都有它的數位分身，每一個流程都被數據驅動
+    鴻海的關燈工廠就是這套系統的極致展現
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "工廠的數位覺醒"
+  description: |
+    廠長 Forge 帶你走進一座傳統工廠，生產線效率低落、良率不穩
+    突然一台核心設備 Breakdown 發出異常震動
+    你必須用感測器數據預測它什麼時候會故障
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "工業物聯網"
+      description: "部署感測器網路收集生產數據"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "製造數據分析"
+      description: "分析生產數據找出瓶頸和異常"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "自動化控制"
+      description: "設計 PLC 和 SCADA 自動化系統"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "數位孿生"
+      description: "建立生產線的虛擬複製品進行模擬"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "預測性維護"
+      description: "用 AI 在設備故障前提前預警"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "AI 品質檢測"
+      description: "用電腦視覺自動檢測產品瑕疵"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "關燈工廠"
+      description: "設計完全無人化的自主生產系統"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "第一個感測器"
+    description: "成功部署感測器並收集到有意義的生產數據"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "故障先知"
+    description: "在設備故障前 24 小時成功預警"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "智慧工廠建築師"
+    description: "設計並部署一座完整的智慧工廠"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "第一面看板"
+    description: "建立生產線即時監控儀表板"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "良率推進者"
+    description: "將產線良率從 90% 提升到 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "零停機紀錄"
+    description: "連續 90 天產線零非計劃停機"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "工廠傳奇"
+    description: "完成所有智慧製造挑戰"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "感測器佈建"
+      description: "在一台 CNC 車床上安裝震動和溫度感測器"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "產線數據分析"
+      description: "分析一週的生產數據找出效率瓶頸"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "數位孿生建模"
+      description: "為一條 SMT 產線建立數位孿生模型"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "AI 視覺檢測系統"
+      description: "訓練模型自動偵測 PCB 板上的焊接瑕疵"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "預測維護系統"
+      description: "建立整廠設備的健康度評分與故障預測系統"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "自主工廠設計"
+      description: "設計一座從排程到品檢全自動的關燈工廠"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解工業物聯網的架構與感測器技術"
+  - "掌握製造數據的收集與分析方法"
+  - "設計 PLC 和 SCADA 自動化系統"
+  - "建立生產線的數位孿生模型"
+  - "運用 AI 進行預測性維護"
+  - "實作電腦視覺品質檢測"
+  - "設計無人化關燈工廠"
+  - "了解台灣智慧製造與工業 4.0 發展"
+
+career_outcomes:
+  - "智慧製造工程師"
+  - "工業物聯網架構師"
+  - "數位孿生工程師"
+  - "製造數據科學家"
+  - "自動化系統整合工程師"
+  - "預測維護工程師"
+  - "AI 品質工程師"
+  - "智慧工廠顧問"

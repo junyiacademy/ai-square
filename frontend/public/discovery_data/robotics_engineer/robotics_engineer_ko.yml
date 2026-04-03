@@ -1,0 +1,218 @@
+# 로봇 공학 엔지니어 탐색 경로 - 한국어
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "메카 워크숍 마스터 - 로봇 공학 엔지니어"
+  short_description: "미래 공장에서 인간과 나란히 일하는 로봇을 만들다"
+  long_description: |
+    당신은 메카 워크숍의 견습 기술자입니다. 자동차 조립, 농작물 수확, 외과 수술 보조,
+    재난 현장 탐색에 사용되는 로봇을 설계하는 곳입니다. 로봇 공학은 기계·프로그래밍·AI가
+    만나는 분야——당신이 만드는 기계가 수십억 명의 일과 생활 방식을 바꿀 수 있습니다.
+    대만의 제조 거대 기업 폭스콘은 수천 대의 로봇을 배치하고 있으며, 설계·프로그래밍·
+    개선할 수 있는 엔지니어가 필요합니다!
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "메카 워크숍"
+  description: |
+    메카 워크숍은 모든 형태와 크기의 로봇이 제작·테스트되어 실제 세계로 파견되는
+    에너지 넘치는 혁신 실험실입니다. 도전: 강하고 정밀하며 안전한 로봇을 만들되
+    사고 없이 인간과 나란히 일할 만큼 똑똑한 로봇을 만드세요.
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "워크숍이 깨어나다"
+  description: |
+    수석 엔지니어 천 사부가 첫 번째 과제를 줍니다: 조립 라인의 공장 로봇이
+    작업자를 계속 들이받고 있습니다. 센서 시스템을 수리하고 사람을 피하도록
+    동작을 다시 프로그래밍하세요.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "센서 시스템"
+      description: "로봇이 카메라·거리 센서·촉각 센서로 세상을 '보는' 방법을 배웁니다——로봇에게 센서는 우리의 눈과 귀와 같습니다"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "동작 제어"
+      description: "모터와 관절을 프로그래밍해 부드럽고 정확하게 움직이게 합니다——로봇에게 걷기·물건 잡기·떨어뜨리지 않기를 가르치는 것"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "로봇 프로그래밍"
+      description: "로봇에게 무엇을 할지, 언제 할지, 예상치 못한 상황에 어떻게 반응할지 코드로 알려줍니다——힘 뒤의 두뇌"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "인간-로봇 협업"
+      description: "로봇과 인간이 안전하게 나란히 일하는 시스템을 설계합니다——인간이 가까이 오면 로봇이 속도를 줄이거나 멈추거나 조정해야 합니다"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "AI 인식"
+      description: "로봇이 AI를 사용해 물체를 인식하고 환경을 이해하고 결정을 내릴 수 있게 합니다——과일을 크기와 성숙도로 분류하도록 가르치는 것처럼"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "자율 내비게이션"
+      description: "로봇이 공장이나 창고에서 인간의 안내 없이 자체 경로를 찾고 장애물을 피하도록 프로그래밍합니다"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "로봇 군집"
+      description: "개미 군집처럼 협력하는 여러 로봇을 조정합니다——각 로봇은 단순하지만 함께 복잡한 작업을 수행합니다"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "첫 걸음"
+    description: "로봇 팔이 물체를 집어 이동시키고 목표 위치에 정확히 놓도록 프로그래밍합니다"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "회피 챌린지"
+    description: "움직이는 사람을 감지하고 충돌을 피하도록 자동으로 경로를 조정하는 로봇을 만듭니다"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "무인 공장"
+    description: "인간 개입 없이 1시간 동안 조립 라인을 자율적으로 운영할 수 있는 완전한 로봇 시스템을 설계합니다"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "첫 번째 작업 완료"
+    description: "로봇이 오류 없이 간단한 작업을 처음부터 끝까지 완료하도록 합니다"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "안전 챔피언"
+    description: "10개의 인간 안전 테스트를 단 한 번의 실패 없이 통과하는 로봇을 설계합니다"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "정밀도 마스터"
+    description: "로봇 팔 작업에서 1밀리미터 이내의 위치 정확도를 달성합니다"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "메카 워크숍의 전설"
+    description: "모든 로봇 공학 도전을 완료하고 완전 자율 로봇 시스템을 구축합니다"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "센서 시스템"
+      description: "로봇이 카메라·거리 센서·촉각 센서로 세상을 '보는' 방법을 배웁니다——로봇에게 센서는 우리의 눈과 귀와 같습니다"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "동작 제어"
+      description: "모터와 관절을 프로그래밍해 부드럽고 정확하게 움직이게 합니다——로봇에게 걷기·물건 잡기·떨어뜨리지 않기를 가르치는 것"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "첫 걸음"
+      description: "로봇 팔이 물체를 집어 이동시키고 목표 위치에 정확히 놓도록 프로그래밍합니다"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "회피 챌린지"
+      description: "움직이는 사람을 감지하고 충돌을 피하도록 자동으로 경로를 조정하는 로봇을 만듭니다"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "AI 인식"
+      description: "로봇이 AI를 사용해 물체를 인식하고 환경을 이해하고 결정을 내릴 수 있게 합니다——과일을 크기와 성숙도로 분류하도록 가르치는 것처럼"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "자율 내비게이션"
+      description: "로봇이 공장이나 창고에서 인간의 안내 없이 자체 경로를 찾고 장애물을 피하도록 프로그래밍합니다"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "로봇이 다양한 유형의 센서를 사용해 환경을 인식하는 방법을 이해한다"
+  - "기본 로봇 동작을 정밀하고 부드럽게 프로그래밍한다"
+  - "인간 작업자와 안전하게 협력하는 로봇 시스템을 설계한다"
+  - "로봇에 물체 인식 능력을 부여하는 AI 기술을 적용한다"
+  - "복잡한 실제 환경에서 로봇을 자율적으로 내비게이션한다"
+  - "여러 로봇을 조정해 협업 작업을 완료한다"
+  - "폭스콘 공장 같은 현대 제조업에서 로봇 공학의 역할을 이해한다"
+  - "속도·정밀도·안전성 간의 로봇 성능 트레이드오프를 평가한다"
+
+career_outcomes:
+  - "로봇 공학 엔지니어"
+  - "자동화 엔지니어"
+  - "로봇 프로그래머"
+  - "제조 시스템 엔지니어"
+  - "AI 로봇 공학 연구원"
+  - "산업 안전 엔지니어"
+  - "로봇 시스템 통합자"
+  - "인간-로봇 상호작용 디자이너"

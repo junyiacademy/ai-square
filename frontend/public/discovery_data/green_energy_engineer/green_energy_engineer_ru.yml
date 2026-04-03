@@ -1,0 +1,220 @@
+# Путь исследования инженера зелёной энергетики - Русский
+path_id: green_energy_engineer
+category: sustainability
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Страж энергии - Инженер зелёной энергетики"
+  short_description: "Защити будущее планеты с помощью возобновляемой энергии и умных сетей"
+  long_description: |
+    Ты — ученик-хранитель «Башни устойчивой энергии», наделённый даром
+    укрощать ветер, свет и воду. В этом мире, где судьба Земли висит
+    на волоске, каждый киловатт зелёной энергии покупает драгоценное
+    время в борьбе с изменением климата
+
+  estimated_hours: 50
+  skill_focus:
+    - renewable_energy
+    - energy_storage
+    - smart_grid
+    - carbon_management
+
+world_setting:
+  name: "Башня устойчивой энергии"
+  description: |
+    Башня устойчивой энергии возвышается на побережье, её ветряные турбины
+    и солнечные панели на вершине снабжают электричеством целый город.
+    Инженеры зелёной энергетики учатся здесь делать возобновляемую энергию
+    стабильной, эффективной и надёжной.
+    Путь к нулевым чистым выбросам к 2050 году начинается здесь
+
+  atmosphere: "eco_futuristic"
+  visual_theme: "energy_tower"
+
+starting_scenario:
+  title: "Первый зелёный киловатт"
+  description: |
+    Энергетический Старейшина Вольт проводит тебя через текущий энергетический
+    ландшафт и вызовы перехода. Но внезапная «Энергетическая буря» по имени
+    Blackout угрожает стабильности сети. Ты должен овладеть балансом между
+    предложением и спросом, чтобы спасти весь город от тьмы
+
+  initial_tasks:
+    - learn_energy_basics
+    - understand_renewables
+    - first_solar_design
+
+skill_tree:
+  core_skills:
+    - id: solar_energy
+      name: "Солнечная инженерия"
+      description: "Проектирование и оптимизация фотовольтаических систем генерации"
+      max_level: 10
+      unlocks:
+        - pv_system_design
+        - solar_forecasting
+
+    - id: wind_energy
+      name: "Ветроэнергетика"
+      description: "Понимание конструкции турбин, выбора площадки и эксплуатации"
+      max_level: 10
+      unlocks:
+        - turbine_aerodynamics
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Технологии хранения энергии"
+      description: "Освой литиевые аккумуляторы, проточные батареи и хранение водорода"
+      max_level: 10
+      unlocks:
+        - battery_management
+        - hydrogen_systems
+
+    - id: smart_grid
+      name: "Умная электросеть"
+      description: "Используй ИИ для управления подачей, спросом, диспетчеризацией и торговлей энергией"
+      max_level: 10
+      unlocks:
+        - demand_response
+        - grid_optimization
+
+  advanced_skills:
+    - id: carbon_engineering
+      name: "Инженерия управления углеродом"
+      description: "Улавливание углерода, торговля углеродными квотами и корпоративный углеродный аудит"
+      max_level: 15
+      requires: [solar_energy, wind_energy]
+
+    - id: microgrid_design
+      name: "Проектирование микросетей"
+      description: "Проектирование автономных или общественных независимых энергосистем"
+      max_level: 15
+      requires: [energy_storage, smart_grid]
+
+    - id: green_hydrogen
+      name: "Технология зелёного водорода"
+      description: "Полные системы производства водорода методом возобновляемого электролиза"
+      max_level: 15
+      requires: [energy_storage, carbon_engineering]
+
+milestone_quests:
+  - id: first_kilowatt
+    name: "Первый киловатт"
+    description: "Спроектировать и смоделировать солнечную систему, способную генерировать 1 кВт"
+    required_level: 5
+    skills_tested: [solar_energy, smart_grid]
+    xp_reward: 500
+    unlocks:
+      - solar_badge
+      - field_access
+
+  - id: blackout_preventer
+    name: "Истребитель блэкаутов"
+    description: "Использовать накопление энергии и реакцию на спрос для предотвращения коллапса сети"
+    required_level: 10
+    skills_tested: [energy_storage, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - grid_master_title
+      - control_room_access
+
+  - id: net_zero_architect
+    name: "Архитектор нулевых выбросов"
+    description: "Спроектировать умное сообщество, достигающее нулевых чистых выбросов углерода"
+    required_level: 20
+    skills_tested: [microgrid_design, carbon_engineering]
+    xp_reward: 2500
+    unlocks:
+      - net_zero_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_panel
+    name: "Первая панель"
+    description: "Завершить проектирование установки системы солнечных панелей"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: wind_rider
+    name: "Наездник ветра"
+    description: "Оптимизировать морской ветропарк до достижения 95% эффективности генерации"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Мастер баланса сети"
+    description: "Поддерживать нулевое отклонение между предложением и спросом в сети в течение 30 дней подряд"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: energy_legend
+    name: "Легенда энергетики"
+    description: "Выполнить все вызовы инженерии зелёной энергетики"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calculator
+      type: analysis
+      title: "Калькулятор солнечной выработки"
+      description: "Оценить годовую выработку энергии с использованием региональных данных солнечного излучения"
+      skills_improved: [solar_energy]
+      xp_reward: 60
+
+    - id: energy_audit
+      type: analysis
+      title: "Домашний энергетический аудит"
+      description: "Проанализировать модели потребления электроэнергии домохозяйства и предложить меры экономии"
+      skills_improved: [smart_grid]
+      xp_reward: 50
+
+  intermediate:
+    - id: hybrid_system
+      type: creation
+      title: "Солнечно-ветровая гибридная система"
+      description: "Спроектировать гибридную систему генерации, сочетающую солнечную и ветровую энергию"
+      skills_improved: [solar_energy, wind_energy]
+      xp_reward: 180
+
+    - id: battery_sizing
+      type: creation
+      title: "Проектирование системы хранения энергии"
+      description: "Спроектировать оптимизированную конфигурацию хранения энергии для школы"
+      skills_improved: [energy_storage, smart_grid]
+      xp_reward: 200
+
+  advanced:
+    - id: smart_community
+      type: creation
+      title: "Сеть умного сообщества"
+      description: "Спроектировать общественную микросеть с солнечными панелями, хранилищем и зарядкой электромобилей"
+      skills_improved: [microgrid_design, smart_grid]
+      xp_reward: 350
+
+    - id: carbon_neutral
+      type: creation
+      title: "Корпоративный план углеродной нейтральности"
+      description: "Спланировать путь к углеродной нейтральности для производственной компании"
+      skills_improved: [carbon_engineering, green_hydrogen]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять принципы и проектирование солнечной и ветровой энергетики"
+  - "Освоить выбор технологий хранения и проектирование систем"
+  - "Использовать ИИ для оптимизации диспетчеризации умной сети"
+  - "Внедрить реакцию на спрос и торговлю электроэнергией"
+  - "Понять углеродный аудит, торговлю квотами и улавливание углерода"
+  - "Проектировать системы микросетей общественного масштаба"
+  - "Исследовать потенциал и вызовы технологии зелёного водорода"
+  - "Изучить политику энергетического перехода и цели нулевых чистых выбросов к 2050 году"
+
+career_outcomes:
+  - "Инженер возобновляемой энергетики"
+  - "Инженер систем хранения энергии"
+  - "Инженер умных электросетей"
+  - "Консультант по управлению углеродом"
+  - "ESG-аналитик"
+  - "Исследователь энергетической политики"
+  - "Дизайнер микросетей"
+  - "Инженер технологии зелёного водорода"

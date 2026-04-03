@@ -1,0 +1,218 @@
+# مسار الاكتشاف: مهندس التصنيع الذكي - العربية
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "الخيميائي الصناعي - مهندس التصنيع الذكي"
+  short_description: "استخدم الذكاء الاصطناعي والبيانات لتحويل المصانع إلى كائنات تفكر بنفسها"
+  long_description: |
+    أنت خيميائي متدرب في «المصنع الرقمي»، موهوب بالقدرة على جعل
+    خطوط الإنتاج تتطور بمفردها. في هذا المصنع المستقبلي الذي يجمع بين
+    إنترنت الأشياء والذكاء الاصطناعي والتوائم الرقمية، تساعد بيانات كل
+    مستشعر الآلات على اتخاذ قرارات مستقلة — ومهمتك هي بناء خط الإنتاج
+    الذكي الذي لا يتوقف أبدًا.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "المصنع الرقمي"
+  description: |
+    المصنع الرقمي هو قاعدة إنتاج حيث يتطابق العالم الفيزيائي والعالم الافتراضي
+    بشكل مثالي. كل آلة لها توأمها الرقمي، كل عملية مدفوعة بالبيانات.
+    مصنع فوكسكون المطفأ هو التعبير الأقصى عن هذا النظام.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "الصحوة الرقمية للمصنع"
+  description: |
+    يأخذك مدير المصنع Forge إلى مصنع تقليدي — خطوط الإنتاج غير فعّالة
+    ومعدلات الإنتاج غير مستقرة. فجأة تصدر آلة رئيسية تسمى Breakdown اهتزازات
+    غير طبيعية. يجب عليك استخدام بيانات المستشعرات للتنبؤ بموعد عطلها.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "إنترنت الأشياء الصناعي"
+      description: "نشر شبكات المستشعرات لجمع بيانات الإنتاج"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "تحليل بيانات التصنيع"
+      description: "تحليل بيانات الإنتاج للعثور على الاختناقات والشذوذات"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "التحكم في الأتمتة"
+      description: "تصميم أنظمة الأتمتة PLC وSCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "التوأم الرقمي"
+      description: "بناء نسخ افتراضية من خطوط الإنتاج للمحاكاة"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "الصيانة التنبؤية"
+      description: "استخدام الذكاء الاصطناعي لإعطاء تحذيرات مبكرة قبل عطل المعدات"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "مراقبة الجودة بالذكاء الاصطناعي"
+      description: "استخدام رؤية الحاسوب للكشف التلقائي عن عيوب المنتجات"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "المصنع المطفأ"
+      description: "تصميم نظام إنتاج مستقل بالكامل دون عمال"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "أول مستشعر"
+    description: "نشر مستشعر بنجاح وجمع بيانات إنتاج ذات معنى"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "نبي الأعطال"
+    description: "التنبؤ بنجاح بعطل المعدات قبل 24 ساعة"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "مهندس المصنع الذكي"
+    description: "تصميم ونشر مصنع ذكي متكامل"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "أول لوحة تحكم"
+    description: "بناء لوحة مراقبة لخط الإنتاج في الوقت الفعلي"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "معزز الإنتاجية"
+    description: "رفع معدل إنتاجية خط الإنتاج من 90% إلى 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "سجل وقت توقف صفري"
+    description: "90 يومًا متتاليًا دون توقف إنتاج غير مخطط له"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "أسطورة المصنع"
+    description: "إكمال جميع تحديات التصنيع الذكي"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "تركيب المستشعرات"
+      description: "تركيب مستشعرات اهتزاز وحرارة على مخرطة CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "تحليل بيانات خط الإنتاج"
+      description: "تحليل بيانات الإنتاج لمدة أسبوع للعثور على اختناقات الكفاءة"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "نمذجة التوأم الرقمي"
+      description: "بناء نموذج توأم رقمي لخط إنتاج SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "نظام الفحص البصري بالذكاء الاصطناعي"
+      description: "تدريب نموذج للكشف التلقائي عن عيوب اللحام على لوحات PCB"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "نظام الصيانة التنبؤية"
+      description: "بناء نظام تسجيل صحة وتنبؤ بالأعطال لجميع معدات المصنع"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "تصميم المصنع المستقل"
+      description: "تصميم مصنع مطفأ مؤتمت بالكامل من الجدولة إلى الفحص"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم بنية إنترنت الأشياء الصناعي وتقنية المستشعرات"
+  - "إتقان أساليب جمع وتحليل بيانات التصنيع"
+  - "تصميم أنظمة الأتمتة PLC وSCADA"
+  - "بناء نماذج التوأم الرقمي لخطوط الإنتاج"
+  - "تطبيق الذكاء الاصطناعي للصيانة التنبؤية"
+  - "تنفيذ فحص الجودة باستخدام رؤية الحاسوب"
+  - "تصميم مصانع مطفأة بدون عمال"
+  - "فهم تطور التصنيع الذكي والثورة الصناعية 4.0"
+
+career_outcomes:
+  - "مهندس التصنيع الذكي"
+  - "مهندس معماري لإنترنت الأشياء الصناعي"
+  - "مهندس التوأم الرقمي"
+  - "عالم بيانات التصنيع"
+  - "مكامل أنظمة الأتمتة"
+  - "مهندس الصيانة التنبؤية"
+  - "مهندس الجودة بالذكاء الاصطناعي"
+  - "مستشار المصنع الذكي"

@@ -1,0 +1,224 @@
+# Percorso di Esplorazione Ingegnere di Progettazione IC - Italiano
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Forgiatore dello Scudo di Silicio - Ingegnere di Progettazione IC"
+  short_description: "Forgia i piccoli chip che alimentano il mondo moderno"
+  long_description: |
+    Sei apprendista alla Fucina dello Scudo di Silicio, un laboratorio leggendario dove
+    gli ingegneri progettano i circuiti microscopici che fanno funzionare ogni smartphone,
+    computer e veicolo elettrico. Ogni chip che progetti è come una città in miniatura —
+    con strade (fili), edifici (porte logiche) e regole del traffico (temporizzazione),
+    il tutto in uno spazio più piccolo della tua unghia. Più del 90% dei chip più avanzati
+    del mondo è prodotto a Taiwan — potresti far parte di questa storia!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Fucina dello Scudo di Silicio"
+  description: |
+    La Fucina dello Scudo di Silicio è un laboratorio high-tech dove ingegneri esperti
+    e apprendisti collaborano per progettare chip usati in dispositivi medici, satelliti
+    spaziali e telefoni quotidiani. Lo spirito della fucina: precisione, creatività e
+    lavoro di squadra — un piccolo errore di progettazione può influenzare milioni di
+    dispositivi in tutto il mondo.
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "Primo Giorno alla Fucina"
+  description: |
+    L'Ingegnere Capo Lin ti accoglie alla fucina. La tua prima sfida: un laboratorio
+    rivale ha rilasciato un chip con un difetto nascosto che causa il surriscaldamento
+    dei telefoni. Devi imparare le basi della progettazione di chip per contribuire a
+    creare un'alternativa più sicura — capire come gli interruttori logici si combinano
+    in funzioni più grandi e come i designer trovano gli errori prima di inviare i
+    design alla fabbrica.
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Progettazione Logica"
+      description: "Impara a combinare semplici interruttori ON/OFF (porte logiche) per costruire funzioni complesse come calcolatrici e memorie — come costruire con i LEGO ma con l'elettricità"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Architettura del Chip"
+      description: "Comprendi come un chip è organizzato in sezioni — come una città con quartieri per elaborazione, memoria e comunicazione — e pianifica come lavorano insieme"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "Test dei Circuiti"
+      description: "Simula e testa il tuo design con strumenti software per rilevare errori prima della produzione — come correggere un saggio prima di stamparne 10 milioni di copie"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "Layout Fisico"
+      description: "Organizza i componenti del circuito sul chip come un urbanista — decidendo dove va ogni sezione e connettendoli per i percorsi più brevi"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Ingegneria a Basso Consumo"
+      description: "Progetta chip che usino il meno possibile di energia — essenziale per smartphone e wearable che devono funzionare tutto il giorno con una piccola batteria"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "Maestria nella Qualità del Segnale"
+      description: "Assicura che i segnali elettrici viaggino puliti attraverso il chip senza distorsioni — come garantire che una telefonata suoni cristallina"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "Progettazione di Acceleratori IA"
+      description: "Progetta chip speciali per attività di IA — come il riconoscimento facciale o la traduzione linguistica — molto più velocemente dei chip normali"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "Primo Circuito Forgiato"
+    description: "Progetta un circuito calcolatore a 4 bit e verifica che dia risposte corrette per tutti i casi di test"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "La Sfida del Progetto"
+    description: "Crea un piano di layout completo per un chip semplice e spiega come le sezioni comunicano"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "Lo Scudo di Silicio"
+    description: "Progetta, testa e ottimizza un chip a basso consumo completo pronto per la produzione"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "Prima Scintilla"
+    description: "Esegui la tua prima simulazione di circuito e vedi il tuo design prendere vita"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Cacciatore di Bug"
+    description: "Trova e correggi 10 errori di progettazione prima che raggiungano la fabbrica"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Guardiano dell'Energia"
+    description: "Riduci il consumo energetico di un chip del 30% attraverso decisioni di progettazione intelligenti"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Leggenda della Fucina"
+    description: "Completa tutte le sfide di progettazione chip e consegna un design pronto per la produzione"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Puzzle di Porte"
+      description: "Connetti interruttori logici per costruire un circuito che accende una luce solo quando due pulsanti sono premuti contemporaneamente"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "Esploratore della Mappa del Chip"
+      description: "Osserva un vero diagramma di chip, identifica le sezioni principali e spiega in parole semplici cosa fa ogni area"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "Debug del Circuito"
+      description: "Un circuito simulato sta dando risposte errate — trova l'errore logico e correggilo prima che arrivi ai clienti"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "Urbanista"
+      description: "Riorganizza le sezioni del chip per accorciare le connessioni dei fili ed evitare interferenze tra componenti"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "Dieta Energetica"
+      description: "Riprogetta una sezione del chip per dimezzare il consumo energetico mantenendo la stessa velocità"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "Progetto del Motore IA"
+      description: "Progetta l'architettura di un chip che riconosca i volti 10 volte più velocemente di un processore normale"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "Capire come semplici interruttori logici si combinano per costruire circuiti digitali complessi"
+  - "Spiegare le principali sezioni funzionali all'interno di un chip moderno"
+  - "Usare strumenti di simulazione per testare e trovare errori nei design di circuiti"
+  - "Applicare principi di pianificazione del layout per organizzare efficientemente i componenti del chip"
+  - "Progettare circuiti che bilancino velocità e consumo energetico"
+  - "Tracciare il percorso dalla progettazione del chip alla fabbricazione fisica in una fonderia"
+  - "Capire come l'industria dei semiconduttori di Taiwan plasma l'economia globale"
+  - "Valutare i compromessi di progettazione tra prestazioni, potenza e area del chip"
+
+career_outcomes:
+  - "Ingegnere di Progettazione IC"
+  - "Designer di Logica Digitale"
+  - "Ingegnere di Verifica Chip"
+  - "Ingegnere di Progettazione Fisica"
+  - "Ingegnere Hardware IA"
+  - "Ingegnere di Sistemi Embedded"
+  - "Ricercatore R&S in Semiconduttori"
+  - "Product Manager Hardware"

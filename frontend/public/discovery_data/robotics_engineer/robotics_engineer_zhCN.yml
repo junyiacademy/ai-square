@@ -1,0 +1,216 @@
+# 机器人工程师探索路径 - 简体中文
+path_id: robotics_engineer
+category: robotics
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "机甲工坊大师 - 机器人工程师"
+  short_description: "打造与人类并肩工作的未来工厂机器人"
+  long_description: |
+    你是「机甲工坊」的见习技师，这里的工程师设计用于组装汽车、采收农作物、
+    协助外科手术和探索灾难现场的机器人。机器人工程是机械、程序设计和AI的
+    交汇点——你打造的机器可能改变数十亿人的工作和生活方式。台湾制造业巨头
+    如富士康正在部署数千台机器人，急需能够设计、编程和改良它们的工程师。
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "机甲工坊"
+  description: |
+    机甲工坊是一个充满活力的创新实验室，各种形状和大小的机器人在这里被建造、
+    测试并送入真实世界。挑战：打造强壮、精准、安全的机器人——还要足够聪明，
+    能在不发生事故的情况下与人类并肩工作。
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "工坊苏醒"
+  description: |
+    首席工程师陈师傅交给你第一个任务：生产线上的工厂机器人一直撞到工人，
+    因为它无法正确感知人的存在。修复感测系统并重新设计动作程序让它能避开人。
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "传感器系统"
+      description: "学习机器人如何用摄像头、距离传感器和触觉传感器「看」世界——机器人需要传感器，就像我们需要眼睛和耳朵"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "运动控制"
+      description: "为电机和关节编程，让机器人平顺而精确地移动——就像教机器人走路、伸手拿东西而不掉落"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "机器人编程"
+      description: "编写代码告诉机器人做什么、何时做，以及如何应对意外情况——力量背后的大脑"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "人机协作"
+      description: "设计让机器人和人类安全并肩工作的系统——当人类靠近时，机器人必须减速、停止或调整"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "AI感知"
+      description: "让机器人能够识别物体、理解环境并使用AI做出决策——就像教机器人依大小和成熟度分拣水果"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "自主导航"
+      description: "让机器人能在工厂或仓库中自己找路，在无人引导的情况下避开障碍物"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "机器人集群"
+      description: "协调多台机器人像蚂蚁一样协同工作——每台机器人都很简单，但合在一起可以完成复杂任务"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "第一步"
+    description: "为机械臂编写程序，使其能够夹取物体、移动，并精确放置到目标位置"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "回避挑战"
+    description: "建造一个能侦测移动中的人并自动调整路径以避免碰撞的机器人"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "熄灯工厂"
+    description: "设计完整机器人系统，能在无人介入的情况下自主运行生产线1小时"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "首个任务完成"
+    description: "让机器人从头到尾完成一项简单任务而不出错"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "安全冠军"
+    description: "设计一台通过所有10项人机安全测试而零失败的机器人"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "精准大师"
+    description: "在机械臂任务中达到1毫米以内的定位精度"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "机甲工坊传说"
+    description: "完成所有机器人挑战并打造一个完全自主的机器人系统"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "传感器系统"
+      description: "学习机器人如何用摄像头、距离传感器和触觉传感器「看」世界——机器人需要传感器，就像我们需要眼睛和耳朵"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "运动控制"
+      description: "为电机和关节编程，让机器人平顺而精确地移动——就像教机器人走路、伸手拿东西而不掉落"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "第一步"
+      description: "为机械臂编写程序，使其能够夹取物体、移动，并精确放置到目标位置"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "回避挑战"
+      description: "建造一个能侦测移动中的人并自动调整路径以避免碰撞的机器人"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "AI感知"
+      description: "让机器人能够识别物体、理解环境并使用AI做出决策——就像教机器人依大小和成熟度分拣水果"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "自主导航"
+      description: "让机器人能在工厂或仓库中自己找路，在无人引导的情况下避开障碍物"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "了解机器人如何使用不同类型的传感器感知环境"
+  - "精确且平滑地为基本机器人动作编程"
+  - "设计能与人类工人安全协作的机器人系统"
+  - "应用AI技术赋予机器人物体识别能力"
+  - "让机器人在复杂的真实世界环境中自主导航"
+  - "协调多台机器人完成协作任务"
+  - "了解机器人在现代制造业（如富士康工厂）中的角色"
+  - "评估速度、精度和安全性之间的机器人性能取舍"
+
+career_outcomes:
+  - "机器人工程师"
+  - "自动化工程师"
+  - "机器人程序员"
+  - "制造系统工程师"
+  - "AI机器人研究员"
+  - "工业安全工程师"
+  - "机器人系统集成商"
+  - "人机交互设计师"

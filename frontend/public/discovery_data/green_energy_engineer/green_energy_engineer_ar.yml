@@ -1,0 +1,218 @@
+# مسار استكشاف مهندس الطاقة الخضراء - العربية
+path_id: green_energy_engineer
+category: sustainability
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "حارس الطاقة - مهندس الطاقة الخضراء"
+  short_description: "احمِ مستقبل الكوكب بالطاقة المتجددة والشبكات الذكية"
+  long_description: |
+    أنت حارس متدرب في «برج الطاقة المستدامة»، موهوب بقدرة التحكم
+    في الرياح والضوء والماء. في هذا العالم الذي يتوقف عليه مصير الأرض،
+    كل كيلوواط من الطاقة الخضراء المنتجة يكسب وقتاً ثميناً
+    في معركة مكافحة التغير المناخي
+
+  estimated_hours: 50
+  skill_focus:
+    - renewable_energy
+    - energy_storage
+    - smart_grid
+    - carbon_management
+
+world_setting:
+  name: "برج الطاقة المستدامة"
+  description: |
+    يقف برج الطاقة المستدامة شامخاً على الساحل، توفر توربيناته الريحية
+    وألواحه الشمسية الكهرباء لمدينة بأكملها. يتعلم مهندسو الطاقة الخضراء
+    هنا كيفية جعل الطاقة المتجددة مستقرة وفعالة وموثوقة.
+    رحلة الوصول إلى صافي انبعاثات صفري بحلول عام 2050 تبدأ من هنا
+
+  atmosphere: "eco_futuristic"
+  visual_theme: "energy_tower"
+
+starting_scenario:
+  title: "أول كيلوواط أخضر"
+  description: |
+    يرشدك شيخ الطاقة فولت عبر المشهد الطاقوي الحالي وتحديات التحول.
+    لكن «عاصفة طاقة» مفاجئة تُدعى Blackout تهدد استقرار الشبكة.
+    يجب أن تتقن التوازن بين العرض والطلب لإنقاذ المدينة بأكملها من الظلام
+
+  initial_tasks:
+    - learn_energy_basics
+    - understand_renewables
+    - first_solar_design
+
+skill_tree:
+  core_skills:
+    - id: solar_energy
+      name: "الهندسة الشمسية"
+      description: "تصميم وتحسين أنظمة توليد الكهرباء الكهروضوئية"
+      max_level: 10
+      unlocks:
+        - pv_system_design
+        - solar_forecasting
+
+    - id: wind_energy
+      name: "طاقة الرياح"
+      description: "فهم تصميم التوربينات واختيار المواقع والعمليات"
+      max_level: 10
+      unlocks:
+        - turbine_aerodynamics
+        - offshore_wind
+
+    - id: energy_storage
+      name: "تكنولوجيا تخزين الطاقة"
+      description: "إتقان بطاريات الليثيوم وبطاريات التدفق وتخزين الهيدروجين"
+      max_level: 10
+      unlocks:
+        - battery_management
+        - hydrogen_systems
+
+    - id: smart_grid
+      name: "الشبكة الكهربائية الذكية"
+      description: "استخدام الذكاء الاصطناعي لإدارة العرض والطلب والتوزيع وتداول الطاقة"
+      max_level: 10
+      unlocks:
+        - demand_response
+        - grid_optimization
+
+  advanced_skills:
+    - id: carbon_engineering
+      name: "هندسة إدارة الكربون"
+      description: "احتجاز الكربون وتداول الكربون ومراجعة الكربون للشركات"
+      max_level: 15
+      requires: [solar_energy, wind_energy]
+
+    - id: microgrid_design
+      name: "تصميم الشبكة الصغيرة"
+      description: "تصميم أنظمة طاقة مستقلة معزولة أو على مستوى المجتمع"
+      max_level: 15
+      requires: [energy_storage, smart_grid]
+
+    - id: green_hydrogen
+      name: "تكنولوجيا الهيدروجين الأخضر"
+      description: "أنظمة متكاملة لإنتاج الهيدروجين عبر التحليل الكهربائي للطاقة المتجددة"
+      max_level: 15
+      requires: [energy_storage, carbon_engineering]
+
+milestone_quests:
+  - id: first_kilowatt
+    name: "أول كيلوواط"
+    description: "تصميم ومحاكاة نظام شمسي قادر على توليد 1kW"
+    required_level: 5
+    skills_tested: [solar_energy, smart_grid]
+    xp_reward: 500
+    unlocks:
+      - solar_badge
+      - field_access
+
+  - id: blackout_preventer
+    name: "مُبيد الانقطاعات"
+    description: "استخدام تخزين الطاقة والاستجابة للطلب لوقف انهيار الشبكة"
+    required_level: 10
+    skills_tested: [energy_storage, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - grid_master_title
+      - control_room_access
+
+  - id: net_zero_architect
+    name: "مهندس الانبعاثات الصفرية"
+    description: "تصميم مجتمع ذكي يحقق صافي انبعاثات كربون صفري"
+    required_level: 20
+    skills_tested: [microgrid_design, carbon_engineering]
+    xp_reward: 2500
+    unlocks:
+      - net_zero_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_panel
+    name: "أول لوح"
+    description: "إتمام تصميم تركيب نظام الألواح الشمسية"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: wind_rider
+    name: "فارس الرياح"
+    description: "تحسين مزرعة رياح بحرية للوصول إلى كفاءة توليد 95%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "أستاذ توازن الشبكة"
+    description: "الحفاظ على انحراف صفري بين العرض والطلب في الشبكة لمدة 30 يوماً متتالية"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: energy_legend
+    name: "أسطورة الطاقة"
+    description: "إتمام جميع تحديات هندسة الطاقة الخضراء"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calculator
+      type: analysis
+      title: "حاسبة إنتاج الطاقة الشمسية"
+      description: "تقدير الإنتاج السنوي للطاقة باستخدام بيانات الإشعاع الشمسي الإقليمي"
+      skills_improved: [solar_energy]
+      xp_reward: 60
+
+    - id: energy_audit
+      type: analysis
+      title: "مراجعة الطاقة المنزلية"
+      description: "تحليل أنماط استهلاك الكهرباء لمنزل واقتراح تدابير توفير الطاقة"
+      skills_improved: [smart_grid]
+      xp_reward: 50
+
+  intermediate:
+    - id: hybrid_system
+      type: creation
+      title: "النظام الهجين الشمسي-الريحي"
+      description: "تصميم نظام توليد هجين يجمع بين الطاقة الشمسية وطاقة الرياح"
+      skills_improved: [solar_energy, wind_energy]
+      xp_reward: 180
+
+    - id: battery_sizing
+      type: creation
+      title: "تصميم نظام تخزين الطاقة"
+      description: "تصميم تكوين تخزين أمثل لمدرسة"
+      skills_improved: [energy_storage, smart_grid]
+      xp_reward: 200
+
+  advanced:
+    - id: smart_community
+      type: creation
+      title: "شبكة المجتمع الذكي"
+      description: "تصميم شبكة صغيرة للمجتمع تشمل الطاقة الشمسية والتخزين وشحن المركبات الكهربائية"
+      skills_improved: [microgrid_design, smart_grid]
+      xp_reward: 350
+
+    - id: carbon_neutral
+      type: creation
+      title: "خطة حياد الكربون للشركات"
+      description: "التخطيط لمسار حياد الكربون لشركة تصنيعية"
+      skills_improved: [carbon_engineering, green_hydrogen]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم مبادئ وتصميم الطاقة الشمسية وطاقة الرياح"
+  - "إتقان اختيار تقنيات التخزين وتصميم الأنظمة"
+  - "استخدام الذكاء الاصطناعي لتحسين توزيع الشبكة الذكية"
+  - "تطبيق الاستجابة للطلب وتداول الكهرباء"
+  - "فهم مراجعة الكربون وتداول الكربون واحتجاز الكربون"
+  - "تصميم أنظمة شبكات صغيرة على مستوى المجتمع"
+  - "استكشاف إمكانات وتحديات تكنولوجيا الهيدروجين الأخضر"
+  - "التعرف على سياسات التحول الطاقوي وأهداف صافي انبعاثات صفري لعام 2050"
+
+career_outcomes:
+  - "مهندس الطاقة المتجددة"
+  - "مهندس أنظمة تخزين الطاقة"
+  - "مهندس الشبكات الكهربائية الذكية"
+  - "مستشار إدارة الكربون"
+  - "محلل ESG"
+  - "باحث سياسات الطاقة"
+  - "مصمم الشبكات الصغيرة"
+  - "مهندس تكنولوجيا الهيدروجين الأخضر"

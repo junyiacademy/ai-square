@@ -1,0 +1,219 @@
+# เส้นทางสำรวจวิศวกรออกแบบ IC - ภาษาไทย
+path_id: ic_design_engineer
+category: semiconductor
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "ช่างตีดาบซิลิคอน - วิศวกรออกแบบ IC"
+  short_description: "ตีดาบชิปเล็กๆ ที่ขับเคลื่อนโลกยุคใหม่"
+  long_description: |
+    คุณคือลูกมือในโรงตีดาบซิลิคอน โรงงานตำนานที่วิศวกรออกแบบวงจรจิ๋วที่ทำให้
+    สมาร์ทโฟน คอมพิวเตอร์ และรถยนต์ไฟฟ้าทำงานได้ ชิปแต่ละตัวที่คุณออกแบบ
+    เหมือนเมืองจิ๋ว มีถนน (สายไฟ) ตึก (ลอจิกเกต) และกฎจราจร (ไทมิ่ง) ทั้งหมดนี้
+    บรรจุในพื้นที่เล็กกว่าเล็บมือคุณ กว่า 90% ของชิปล้ำสมัยโลกผลิตในไต้หวัน
+    คุณก็เป็นส่วนหนึ่งของเรื่องราวนี้ได้!
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "โรงตีดาบซิลิคอน"
+  description: |
+    โรงตีดาบซิลิคอนคือโรงงานไฮเทคที่วิศวกรมืออาชีพและลูกมือร่วมกันออกแบบชิป
+    สำหรับอุปกรณ์การแพทย์ ดาวเทียม และโทรศัพท์มือถือ จิตวิญญาณของโรงตีดาบ
+    คือความแม่นยำ ความคิดสร้างสรรค์ และการทำงานเป็นทีม ข้อผิดพลาดเล็กน้อย
+    อาจส่งผลต่ออุปกรณ์หลายล้านเครื่องทั่วโลก
+
+  atmosphere: "high_tech_collaborative"
+  visual_theme: "futuristic_foundry"
+
+starting_scenario:
+  title: "วันแรกที่โรงตีดาบ"
+  description: |
+    วิศวกรหัวหน้าหลินต้อนรับคุณสู่โรงตีดาบ ความท้าทายแรก: โรงงานคู่แข่งปล่อยชิป
+    ที่มีข้อบกพร่องซ่อนเร้นทำให้โทรศัพท์ร้อนเกินไป คุณต้องเรียนรู้พื้นฐานการออกแบบชิป
+    เพื่อช่วยสร้างทางเลือกที่ปลอดภัยกว่า
+
+  initial_tasks:
+    - learn_logic_basics
+    - explore_chip_layers
+    - first_design_check
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "การออกแบบลอจิก"
+      description: "เรียนรู้การรวมสวิตช์เปิด/ปิดง่ายๆ (ลอจิกเกต) เพื่อสร้างฟังก์ชันซับซ้อน เช่น เครื่องคิดเลขและหน่วยความจำ เหมือนเล่น LEGO แต่ใช้ไฟฟ้า"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "สถาปัตยกรรมชิป"
+      description: "เข้าใจว่าชิปถูกจัดเป็นส่วนต่างๆ เหมือนเมืองที่มีย่านประมวลผล หน่วยความจำ และการสื่อสาร แล้ววางแผนให้ทำงานร่วมกัน"
+      max_level: 10
+      unlocks:
+        - pipeline_design
+        - memory_hierarchy
+
+    - id: circuit_verification
+      name: "การทดสอบวงจร"
+      description: "จำลองและทดสอบการออกแบบด้วยซอฟต์แวร์เพื่อหาข้อผิดพลาดก่อนผลิต เหมือนตรวจทานเรียงความก่อนพิมพ์ 10 ล้านฉบับ"
+      max_level: 10
+      unlocks:
+        - simulation_testing
+        - formal_checking
+
+    - id: physical_layout
+      name: "การจัดวางทางกายภาพ"
+      description: "จัดวางชิ้นส่วนวงจรบนชิปเหมือนนักวางผังเมือง ตัดสินใจว่าแต่ละส่วนอยู่ที่ไหนและเชื่อมต่อกันด้วยเส้นทางสั้นที่สุด"
+      max_level: 10
+      unlocks:
+        - floor_planning
+        - routing_optimization
+
+  advanced_skills:
+    - id: low_power_design
+      name: "วิศวกรรมพลังงานต่ำ"
+      description: "ออกแบบชิปที่ใช้พลังงานน้อยที่สุด สำคัญมากสำหรับสมาร์ทโฟนและอุปกรณ์สวมใส่ที่ต้องทำงานทั้งวันด้วยแบตเตอรี่ขนาดเล็ก"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: signal_integrity
+      name: "ความเชี่ยวชาญด้านคุณภาพสัญญาณ"
+      description: "ให้แน่ใจว่าสัญญาณไฟฟ้าเดินทางผ่านชิปอย่างสะอาด ไม่มีการบิดเบือน เหมือนการทำให้การโทรศัพท์ชัดเจนไม่มีสัญญาณรบกวน"
+      max_level: 15
+      requires: [physical_layout, circuit_verification]
+
+    - id: ai_chip_design
+      name: "การออกแบบชิปเร่ง AI"
+      description: "ออกแบบชิปพิเศษสำหรับงาน AI เช่น การจดจำใบหน้าหรือการแปลภาษา เร็วกว่าชิปธรรมดามาก"
+      max_level: 15
+      requires: [chip_architecture, low_power_design]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "วงจรแรกสำเร็จ"
+    description: "ออกแบบวงจรคำนวณ 4 บิตที่ทำงานได้และผ่านกรณีทดสอบทั้งหมด"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - junior_forger_badge
+      - simulation_lab_access
+
+  - id: chip_blueprint
+    name: "ความท้าทายแบบพิมพ์เขียว"
+    description: "สร้างแผนผังการจัดวางสมบูรณ์สำหรับชิปง่ายๆ และอธิบายว่าแต่ละส่วนสื่อสารกันอย่างไร"
+    required_level: 10
+    skills_tested: [chip_architecture, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - architect_title
+      - advanced_forge_access
+
+  - id: silicon_shield_complete
+    name: "ดาบซิลิคอนสมบูรณ์"
+    description: "ออกแบบ ทดสอบ และปรับแต่งชิปพลังงานต่ำสมบูรณ์ที่พร้อมสำหรับการผลิต"
+    required_level: 20
+    skills_tested: [low_power_design, ai_chip_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "ประกายแรก"
+    description: "รันการจำลองวงจรครั้งแรกสำเร็จและเห็นการออกแบบมีชีวิต"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "นักล่าบั๊ก"
+    description: "ค้นพบและแก้ไขข้อผิดพลาดในการออกแบบ 10 รายการก่อนถึงโรงงาน"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "ผู้พิทักษ์พลังงาน"
+    description: "ลดการใช้พลังงานของชิป 30% ผ่านการตัดสินใจออกแบบที่ชาญฉลาด"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "ตำนานโรงตีดาบ"
+    description: "ผ่านความท้าทายการออกแบบชิปทั้งหมดและส่งมอบการออกแบบที่พร้อมผลิต"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "ปริศนาลอจิกเกต"
+      description: "เชื่อมต่อสวิตช์ลอจิกเพื่อสร้างวงจรที่จุดไฟเฉพาะเมื่อกดปุ่มสองปุ่มพร้อมกัน"
+      skills_improved: [logic_design]
+      xp_reward: 50
+
+    - id: chip_map_drawing
+      type: analysis
+      title: "นักสำรวจแผนที่ชิป"
+      description: "ดูไดอะแกรมชิปจริง ระบุส่วนหลัก และอธิบายง่ายๆ ว่าแต่ละพื้นที่ทำอะไร"
+      skills_improved: [chip_architecture]
+      xp_reward: 60
+
+  intermediate:
+    - id: simulation_run
+      type: verification
+      title: "ดีบักวงจร"
+      description: "วงจรจำลองให้คำตอบผิด ค้นหาข้อผิดพลาดลอจิกและแก้ไขก่อนส่งถึงลูกค้า"
+      skills_improved: [circuit_verification, logic_design]
+      xp_reward: 180
+
+    - id: layout_puzzle
+      type: design
+      title: "นักวางผังเมือง"
+      description: "จัดเรียงส่วนชิปใหม่เพื่อลดความยาวการเชื่อมต่อสายและหลีกเลี่ยงการรบกวนระหว่างชิ้นส่วน"
+      skills_improved: [physical_layout, chip_architecture]
+      xp_reward: 200
+
+  advanced:
+    - id: power_optimization
+      type: creation
+      title: "ไดเอทพลังงาน"
+      description: "ออกแบบส่วนชิปใหม่เพื่อลดการใช้พลังงานครึ่งหนึ่งโดยยังคงความเร็วเท่าเดิม"
+      skills_improved: [low_power_design, signal_integrity]
+      xp_reward: 350
+
+    - id: ai_accelerator_plan
+      type: creation
+      title: "แบบพิมพ์เขียวเครื่องยนต์ AI"
+      description: "ออกแบบสถาปัตยกรรมชิปที่จดจำใบหน้าได้เร็วกว่าโปรเซสเซอร์ธรรมดา 10 เท่า"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 400
+
+learning_objectives:
+  - "เข้าใจว่าสวิตช์ลอจิกง่ายๆ รวมกันสร้างวงจรดิจิทัลซับซ้อนได้อย่างไร"
+  - "อธิบายส่วนทำงานหลักในชิปสมัยใหม่"
+  - "ใช้เครื่องมือจำลองเพื่อทดสอบและหาข้อผิดพลาดในการออกแบบวงจร"
+  - "ใช้หลักการวางผังเพื่อจัดระเบียบชิ้นส่วนชิปอย่างมีประสิทธิภาพ"
+  - "ออกแบบวงจรที่สมดุลระหว่างความเร็วและการใช้พลังงาน"
+  - "ติดตามเส้นทางจากการออกแบบชิปไปสู่การผลิตทางกายภาพในโรงงาน"
+  - "เข้าใจว่าอุตสาหกรรมเซมิคอนดักเตอร์ของไต้หวันส่งผลต่อเศรษฐกิจโลกอย่างไร"
+  - "ประเมินการแลกเปลี่ยนการออกแบบระหว่างประสิทธิภาพ พลังงาน และพื้นที่ชิป"
+
+career_outcomes:
+  - "วิศวกรออกแบบ IC"
+  - "นักออกแบบลอจิกดิจิทัล"
+  - "วิศวกรยืนยันชิป"
+  - "วิศวกรออกแบบทางกายภาพ"
+  - "วิศวกรฮาร์ดแวร์ AI"
+  - "วิศวกรระบบฝังตัว"
+  - "นักวิจัย R&D เซมิคอนดักเตอร์"
+  - "ผู้จัดการผลิตภัณฑ์ฮาร์ดแวร์"

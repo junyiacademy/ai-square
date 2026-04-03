@@ -1,0 +1,220 @@
+# Chemin de Découverte : Ingénieur en Fabrication Intelligente - Français
+path_id: smart_manufacturing_engineer
+category: manufacturing
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Alchimiste Industriel - Ingénieur en Fabrication Intelligente"
+  short_description: "Utilise l'IA et les données pour transformer les usines en organismes pensants"
+  long_description: |
+    Tu es un apprenti alchimiste dans l'« Usine Numérique », doté du talent pour faire
+    évoluer les lignes de production par elles-mêmes. Dans cette usine du futur combinant
+    IoT, IA et jumeaux numériques, les données de chaque capteur aident les machines à
+    prendre des décisions autonomes — et ta mission est de construire la ligne de
+    production intelligente qui ne s'arrête jamais.
+
+  estimated_hours: 50
+  skill_focus:
+    - industrial_iot
+    - digital_twin
+    - predictive_maintenance
+    - production_optimization
+
+world_setting:
+  name: "Usine Numérique"
+  description: |
+    L'Usine Numérique est une base de production où le monde physique et le monde
+    virtuel se reflètent parfaitement. Chaque machine possède son jumeau numérique,
+    chaque processus est piloté par les données. L'usine éteinte de Foxconn est
+    l'expression ultime de ce système.
+
+  atmosphere: "industrial_digital"
+  visual_theme: "digital_factory"
+
+starting_scenario:
+  title: "L'Éveil Numérique de l'Usine"
+  description: |
+    Le directeur d'usine Forge vous emmène dans une usine traditionnelle — les lignes
+    de production sont inefficaces et les taux de rendement sont instables. Soudain
+    une machine centrale appelée Breakdown émet une vibration anormale. Vous devez
+    utiliser les données des capteurs pour prédire quand elle va tomber en panne.
+
+  initial_tasks:
+    - learn_iot_basics
+    - understand_sensors
+    - first_data_collection
+
+skill_tree:
+  core_skills:
+    - id: industrial_iot
+      name: "IoT Industriel"
+      description: "Déployer des réseaux de capteurs pour collecter des données de production"
+      max_level: 10
+      unlocks:
+        - sensor_deployment
+        - edge_computing
+
+    - id: data_analytics
+      name: "Analyse de Données de Fabrication"
+      description: "Analyser les données de production pour identifier les goulots d'étranglement et anomalies"
+      max_level: 10
+      unlocks:
+        - spc_analysis
+        - yield_optimization
+
+    - id: automation
+      name: "Contrôle d'Automatisation"
+      description: "Concevoir des systèmes d'automatisation PLC et SCADA"
+      max_level: 10
+      unlocks:
+        - plc_programming
+        - scada_design
+
+    - id: digital_twin
+      name: "Jumeau Numérique"
+      description: "Construire des répliques virtuelles de lignes de production pour la simulation"
+      max_level: 10
+      unlocks:
+        - 3d_simulation
+        - process_modeling
+
+  advanced_skills:
+    - id: predictive_maintenance
+      name: "Maintenance Prédictive"
+      description: "Utiliser l'IA pour donner des alertes précoces avant la panne d'équipement"
+      max_level: 15
+      requires: [industrial_iot, data_analytics]
+
+    - id: ai_quality_control
+      name: "Contrôle Qualité par IA"
+      description: "Utiliser la vision par ordinateur pour détecter automatiquement les défauts"
+      max_level: 15
+      requires: [data_analytics, automation]
+
+    - id: lights_out_factory
+      name: "Usine Éteinte"
+      description: "Concevoir un système de production autonome entièrement sans personnel"
+      max_level: 15
+      requires: [digital_twin, predictive_maintenance]
+
+milestone_quests:
+  - id: first_sensor
+    name: "Premier Capteur"
+    description: "Déployer avec succès un capteur et collecter des données de production significatives"
+    required_level: 5
+    skills_tested: [industrial_iot, data_analytics]
+    xp_reward: 500
+    unlocks:
+      - iot_badge
+      - factory_floor_access
+
+  - id: breakdown_preventer
+    name: "Prophète des Pannes"
+    description: "Prédire avec succès une panne d'équipement 24 heures à l'avance"
+    required_level: 10
+    skills_tested: [predictive_maintenance, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - maintenance_master_title
+      - control_room_access
+
+  - id: factory_architect
+    name: "Architecte d'Usine Intelligente"
+    description: "Concevoir et déployer une usine intelligente complète"
+    required_level: 20
+    skills_tested: [lights_out_factory, ai_quality_control]
+    xp_reward: 2500
+    unlocks:
+      - architect_legend_title
+      - factory_leadership
+
+achievements:
+  - id: first_dashboard
+    name: "Premier Tableau de Bord"
+    description: "Construire un tableau de bord de surveillance en temps réel de la ligne de production"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: yield_booster
+    name: "Amplificateur de Rendement"
+    description: "Augmenter le taux de rendement de la ligne de 90% à 99%"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_downtime
+    name: "Record Zéro Temps d'Arrêt"
+    description: "90 jours consécutifs sans arrêt de production non planifié"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Légende de l'Usine"
+    description: "Compléter tous les défis de fabrication intelligente"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: interaction
+      title: "Installation des Capteurs"
+      description: "Installer des capteurs de vibration et de température sur un tour CNC"
+      skills_improved: [industrial_iot]
+      xp_reward: 60
+
+    - id: production_analysis
+      type: analysis
+      title: "Analyse des Données de Ligne de Production"
+      description: "Analyser une semaine de données de production pour trouver les goulots d'étranglement"
+      skills_improved: [data_analytics]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_creation
+      type: creation
+      title: "Modélisation du Jumeau Numérique"
+      description: "Construire un modèle de jumeau numérique pour une ligne de production SMT"
+      skills_improved: [digital_twin, data_analytics]
+      xp_reward: 180
+
+    - id: aoi_system
+      type: creation
+      title: "Système d'Inspection Visuelle par IA"
+      description: "Entraîner un modèle pour détecter automatiquement les défauts de soudure sur les PCB"
+      skills_improved: [ai_quality_control, automation]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Système de Maintenance Prédictive"
+      description: "Construire un système de score de santé et de prédiction de pannes pour tous les équipements"
+      skills_improved: [predictive_maintenance, industrial_iot]
+      xp_reward: 350
+
+    - id: autonomous_factory
+      type: creation
+      title: "Conception d'Usine Autonome"
+      description: "Concevoir une usine éteinte entièrement automatisée de la planification à l'inspection"
+      skills_improved: [lights_out_factory, digital_twin]
+      xp_reward: 400
+
+learning_objectives:
+  - "Comprendre l'architecture IoT industrielle et la technologie des capteurs"
+  - "Maîtriser les méthodes de collecte et d'analyse des données de fabrication"
+  - "Concevoir des systèmes d'automatisation PLC et SCADA"
+  - "Construire des modèles de jumeaux numériques de lignes de production"
+  - "Appliquer l'IA pour la maintenance prédictive"
+  - "Implémenter l'inspection qualité par vision par ordinateur"
+  - "Concevoir des usines éteintes sans opérateurs"
+  - "Comprendre le développement de la fabrication intelligente et l'Industrie 4.0"
+
+career_outcomes:
+  - "Ingénieur en Fabrication Intelligente"
+  - "Architecte IoT Industriel"
+  - "Ingénieur Jumeau Numérique"
+  - "Data Scientist en Fabrication"
+  - "Intégrateur de Systèmes d'Automatisation"
+  - "Ingénieur en Maintenance Prédictive"
+  - "Ingénieur Qualité IA"
+  - "Consultant Usine Intelligente"

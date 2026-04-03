@@ -14,6 +14,12 @@ import {
   Briefcase,
   Megaphone,
   Users,
+  CircuitBoard,
+  Bot,
+  Car,
+  Atom,
+  Leaf,
+  Factory,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -44,6 +50,12 @@ const careerIcons: Record<
   biotech_researcher: Lightbulb,
   cybersecurity_specialist: Code,
   environmental_scientist: BarChart,
+  ic_design_engineer: CircuitBoard,
+  robotics_engineer: Bot,
+  autonomous_vehicle_engineer: Car,
+  quantum_engineer: Atom,
+  green_energy_engineer: Leaf,
+  smart_manufacturing_engineer: Factory,
 };
 
 // Color mapping for career types
@@ -64,6 +76,12 @@ const careerColors: Record<string, string> = {
   biotech_researcher: "from-green-500 to-emerald-500",
   cybersecurity_specialist: "from-gray-600 to-gray-800",
   environmental_scientist: "from-green-600 to-teal-600",
+  ic_design_engineer: "from-cyan-500 to-blue-600",
+  robotics_engineer: "from-orange-500 to-red-500",
+  autonomous_vehicle_engineer: "from-emerald-500 to-cyan-500",
+  quantum_engineer: "from-violet-500 to-purple-600",
+  green_energy_engineer: "from-green-500 to-yellow-500",
+  smart_manufacturing_engineer: "from-slate-500 to-blue-500",
 };
 
 const categoryFilters = [
@@ -72,6 +90,12 @@ const categoryFilters = [
   { id: "technology", name: "技術", icon: Code },
   { id: "business", name: "商業", icon: Briefcase },
   { id: "science", name: "科學", icon: Lightbulb },
+  { id: "semiconductor", name: "半導體", icon: CircuitBoard },
+  { id: "robotics", name: "機器人", icon: Bot },
+  { id: "autonomous_systems", name: "自駕", icon: Car },
+  { id: "quantum_technology", name: "量子", icon: Atom },
+  { id: "sustainability", name: "綠能", icon: Leaf },
+  { id: "manufacturing", name: "製造", icon: Factory },
 ];
 
 export default function ScenariosPage() {
@@ -90,6 +114,7 @@ export default function ScenariosPage() {
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     color: string;
     skills: string[];
+    bannerImage?: string;
     userPrograms?: {
       active?: {
         progress: number;
@@ -128,11 +153,20 @@ export default function ScenariosPage() {
                 ((scenario.discovery_data as Record<string, unknown>)
                   ?.careerType as string) || "general";
 
+              // Derive sourceId for banner image lookup
+              const sourceId = (
+                (scenario.sourceId as string) ||
+                (scenario.source_id as string) ||
+                ((scenario.sourceMetadata as Record<string, unknown>)?.careerDir as string) ||
+                careerType
+              );
+
               return {
                 id: careerType,
                 scenarioId: scenario.id, // Store the actual scenario UUID
                 title: scenario.title as string, // API now returns localized string
                 subtitle: scenario.description as string, // API now returns localized string
+                bannerImage: `/images/discovery-banners/${sourceId}.webp`,
                 category:
                   ((scenario.discovery_data as Record<string, unknown>)
                     ?.category as string) ||
