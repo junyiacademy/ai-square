@@ -1,10 +1,10 @@
-# Robotik-Ingenieur Entdeckungspfad - Deutsch
+# Robotik-Produktdesigner Entdeckungspfad - Deutsch
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Mechan-Erschaffer - Robotik-Ingenieur"
+  title: "Mechan-Erschaffer - Robotik-Produktdesigner"
   short_description: "Baue intelligente Maschinen, die wahrnehmen, denken und handeln können"
   long_description: |
     Du bist ein Lehrling-Erschaffer in der «Mech-Werkstatt», mit dem angeborenen Instinkt,
@@ -208,7 +208,7 @@ learning_objectives:
   - "Das Ökosystem der Smart-Manufacturing-Industrie kennenlernen"
 
 career_outcomes:
-  - "Robotik-Ingenieur"
+  - "Robotik-Produktdesigner"
   - "Automatisierungssystem-Integrationsigenieur"
   - "Roboterarm-Programmierer"
   - "Embedded-Systems-Ingenieur"

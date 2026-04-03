@@ -1,10 +1,10 @@
-# 機器人工程師探索路徑 - 繁體中文
+# 機器人產品設計師探索路徑 - 繁體中文
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "機甲工坊大師 - 機器人工程師"
+  title: "機甲工坊大師 - 機器人產品設計師"
   short_description: "打造與人類並肩工作的未來工廠機器人"
   long_description: |
     你是「機甲工坊」的見習技師，這裡的工程師設計用於組裝汽車、採收農作物、
@@ -209,7 +209,7 @@ learning_objectives:
   - "評估速度、精度和安全性之間的機器人性能取捨"
 
 career_outcomes:
-  - "機器人工程師"
+  - "機器人產品設計師"
   - "自動化工程師"
   - "機器人程式設計師"
   - "製造系統工程師"

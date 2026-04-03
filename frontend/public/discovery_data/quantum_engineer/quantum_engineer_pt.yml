@@ -1,10 +1,10 @@
 # Caminho de Descoberta do Engenheiro Quântico - Português
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Tecedor de Sonhos Quânticos - Engenheiro de Tecnologia Quântica"
+  title: "Tecedor de Sonhos Quânticos - Pesquisador de Computação Quântica"
   short_description: "Domine a superposição e o entrelaçamento para resolver o impossível"
   long_description: |
     Você é um aprendiz de Tecedor de Sonhos no «Labirinto Quântico», possuindo a intuição

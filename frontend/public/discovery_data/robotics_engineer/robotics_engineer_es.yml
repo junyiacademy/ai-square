@@ -1,10 +1,10 @@
-# Camino de Exploración del Ingeniero de Robótica - Español
+# Camino de Exploración del Diseñador de Productos Robóticos - Español
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Maestro del Taller Mecha - Ingeniero de Robótica"
+  title: "Maestro del Taller Mecha - Diseñador de Productos Robóticos"
   short_description: "Construye robots que trabajen junto a humanos en la fábrica del futuro"
   long_description: |
     Eres aprendiz de mecánico en el Taller Mecha, donde los ingenieros diseñan robots
@@ -208,7 +208,7 @@ learning_objectives:
   - "Evaluar compromisos de rendimiento robótico entre velocidad, precisión y seguridad"
 
 career_outcomes:
-  - "Ingeniero de Robótica"
+  - "Diseñador de Productos Robóticos"
   - "Ingeniero de Automatización"
   - "Programador de Robots"
   - "Ingeniero de Sistemas de Fabricación"

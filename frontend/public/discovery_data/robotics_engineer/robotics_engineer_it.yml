@@ -1,10 +1,10 @@
-# Ingegnere di Robotica - Percorso di Scoperta - Italiano
+# Product Designer di Robotica - Percorso di Scoperta - Italiano
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Artigiano Meccanico - Ingegnere di Robotica"
+  title: "Artigiano Meccanico - Product Designer di Robotica"
   short_description: "Costruisci macchine intelligenti capaci di percepire, pensare e agire"
   long_description: |
     Sei un apprendista artigiano presso l'«Officina Meccanica», dotato dell'istinto
@@ -208,7 +208,7 @@ learning_objectives:
   - "Conoscere l'ecosistema dell'industria manifatturiera intelligente"
 
 career_outcomes:
-  - "Ingegnere di Robotica"
+  - "Product Designer di Robotica"
   - "Ingegnere di Integrazione di Sistemi di Automazione"
   - "Programmatore di Bracci Robotici"
   - "Ingegnere di Sistemi Embedded"

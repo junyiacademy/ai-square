@@ -1,220 +1,210 @@
-# Jalur Eksplorasi Insinyur Energi Hijau - Bahasa Indonesia
+# Green Energy Engineer Discovery Path - Indonesian
 path_id: green_energy_engineer
-category: sustainability
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Penjaga Energi - Insinyur Energi Hijau"
-  short_description: "Lindungi masa depan bumi dengan energi terbarukan dan jaringan listrik cerdas"
+  title: "Penjaga Energi Hijau - Konsultan Strategi Energi Hijau"
+  short_description: "Manfaatkan kekuatan matahari, angin, dan alam untuk masa depan berkelanjutan"
   long_description: |
-    Kamu adalah penjaga magang dari «Menara Energi Berkelanjutan», dianugerahi
-    bakat untuk menguasai angin, cahaya, dan air. Di alam yang menentukan nasib
-    bumi ini, setiap kilowatt energi hijau yang dihasilkan merebut waktu berharga
-    dalam perjuangan melawan perubahan iklim
+    Kamu adalah insinyur pemula di "Menara Energi Berkelanjutan", di mana kekuatan alam ditangkap dan diubah menjadi listrik bersih. Di menara berteknologi tinggi ini, kamu akan menemukan bagaimana sinar matahari menjadi energi, bagaimana angin memutar turbin, dan bagaimana sel bahan bakar hidrogen menyimpan energi untuk hari esok. Saat perubahan iklim mengancam dunia, inovasimu bisa membantu menyelamatkannya.
 
-  estimated_hours: 50
+  estimated_hours: 52
   skill_focus:
-    - renewable_energy
+    - solar_power
+    - wind_energy
     - energy_storage
     - smart_grid
-    - carbon_management
 
 world_setting:
   name: "Menara Energi Berkelanjutan"
   description: |
-    Menara Energi Berkelanjutan berdiri megah di tepi pantai, turbin angin dan
-    panel surya di puncaknya menyuplai listrik untuk seluruh kota. Para insinyur
-    energi hijau belajar di sini cara membuat energi terbarukan menjadi stabil,
-    efisien, dan andal.
-    Perjalanan menuju emisi nol bersih pada 2050 dimulai dari sini
+    Menara Energi Berkelanjutan adalah keajaiban rekayasa hijau yang menjulang di atas lanskap yang sepenuhnya ditenagai oleh sumber terbarukan. Para insinyur di sini memanfaatkan panel surya, turbin angin, dan sistem hidrogen untuk menyediakan energi bersih bagi seluruh kota. Setiap terobosan di sini mengurangi emisi karbon dan melindungi planet.
 
-  atmosphere: "eco_futuristic"
-  visual_theme: "energy_tower"
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
 
 starting_scenario:
-  title: "Kilowatt Hijau Pertama"
+  title: "Alarm Krisis Energi"
   description: |
-    Tetua Energi Volt membimbingmu melalui lanskap energi saat ini dan tantangan
-    transisi. Namun sebuah «Badai Daya» bernama Blackout tiba-tiba mengancam
-    stabilitas jaringan. Kamu harus menguasai keseimbangan antara pasokan dan
-    permintaan untuk menyelamatkan seluruh kota dari kegelapan
+    Insinyur Kepala Aurora membunyikan alarm: jaringan listrik kota gagal karena ketergantungan berlebihan pada bahan bakar fosil. Kamu harus merancang sistem energi terbarukan baru untuk menggantikan pembangkit listrik batu bara yang sudah tua. Perjalananmu dimulai dengan memahami bagaimana sinar matahari dan angin dapat menyuplai listrik ke seluruh kota secara bersih dan efisien.
 
   initial_tasks:
-    - learn_energy_basics
-    - understand_renewables
-    - first_solar_design
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
 
 skill_tree:
   core_skills:
-    - id: solar_energy
-      name: "Teknik Surya"
-      description: "Rancang dan optimalkan sistem pembangkit listrik fotovoltaik"
+    - id: solar_power
+      name: "Sistem Energi Surya"
+      description: "Kuasai bagaimana panel surya mengubah cahaya matahari menjadi listrik bersih"
       max_level: 10
       unlocks:
-        - pv_system_design
-        - solar_forecasting
+        - panel_optimization
+        - solar_farm_design
 
     - id: wind_energy
-      name: "Energi Angin"
-      description: "Pahami desain turbin, pemilihan lokasi, dan pengoperasian"
+      name: "Sistem Energi Angin"
+      description: "Pelajari bagaimana turbin angin menghasilkan listrik dari udara yang bergerak"
       max_level: 10
       unlocks:
-        - turbine_aerodynamics
+        - turbine_placement
         - offshore_wind
 
     - id: energy_storage
-      name: "Teknologi Penyimpanan Energi"
-      description: "Kuasai baterai litium, baterai alir, dan penyimpanan hidrogen"
+      name: "Penyimpanan Energi"
+      description: "Selesaikan masalah menyimpan energi terbarukan saat matahari dan angin tidak tersedia"
       max_level: 10
       unlocks:
-        - battery_management
-        - hydrogen_systems
+        - battery_systems
+        - hydrogen_fuel_cells
 
     - id: smart_grid
-      name: "Jaringan Listrik Cerdas"
-      description: "Gunakan AI untuk mengelola pasokan, permintaan, dispatch, dan perdagangan energi"
+      name: "Manajemen Jaringan Cerdas"
+      description: "Seimbangkan pasokan dan permintaan energi di kota menggunakan sistem cerdas"
       max_level: 10
       unlocks:
-        - demand_response
-        - grid_optimization
+        - grid_automation
+        - demand_forecasting
 
   advanced_skills:
-    - id: carbon_engineering
-      name: "Teknik Manajemen Karbon"
-      description: "Penangkapan karbon, perdagangan karbon, dan audit karbon perusahaan"
+    - id: hydrogen_tech
+      name: "Teknologi Hidrogen"
+      description: "Rancang sistem produksi hidrogen dan sel bahan bakar untuk penyimpanan energi bersih"
       max_level: 15
-      requires: [solar_energy, wind_energy]
+      requires: [solar_power, energy_storage]
 
-    - id: microgrid_design
-      name: "Desain Mikrogrid"
-      description: "Rancang sistem tenaga listrik mandiri off-grid atau skala komunitas"
+    - id: offshore_systems
+      name: "Sistem Energi Lepas Pantai"
+      description: "Bangun sistem energi angin dan ombak di lingkungan laut"
       max_level: 15
-      requires: [energy_storage, smart_grid]
+      requires: [wind_energy, smart_grid]
 
-    - id: green_hydrogen
-      name: "Teknologi Hidrogen Hijau"
-      description: "Sistem lengkap produksi hidrogen melalui elektrolisis energi terbarukan"
+    - id: carbon_reduction
+      name: "Perencanaan Pengurangan Karbon"
+      description: "Rancang rencana komprehensif untuk meminimalkan jejak karbon kota dan industri"
       max_level: 15
-      requires: [energy_storage, carbon_engineering]
+      requires: [smart_grid, solar_power]
 
 milestone_quests:
-  - id: first_kilowatt
-    name: "Kilowatt Pertama"
-    description: "Rancang dan simulasikan sistem surya yang mampu menghasilkan 1kW"
+  - id: first_panel
+    name: "Larik Surya Pertama"
+    description: "Rancang dan hitung sistem panel surya yang menyuplai listrik ke gedung sekolah"
     required_level: 5
-    skills_tested: [solar_energy, smart_grid]
+    skills_tested: [solar_power, energy_storage]
     xp_reward: 500
     unlocks:
-      - solar_badge
-      - field_access
+      - solar_champion_badge
+      - advanced_lab_access
 
-  - id: blackout_preventer
-    name: "Pembasmi Pemadaman"
-    description: "Gunakan penyimpanan energi dan respons permintaan untuk menghentikan keruntuhan jaringan"
+  - id: wind_farm
+    name: "Perancang Ladang Angin"
+    description: "Rencanakan tata letak ladang angin yang memaksimalkan output energi untuk wilayah pesisir"
     required_level: 10
-    skills_tested: [energy_storage, smart_grid]
+    skills_tested: [wind_energy, smart_grid]
     xp_reward: 1000
     unlocks:
-      - grid_master_title
-      - control_room_access
+      - wind_master_title
+      - coastal_project_access
 
-  - id: net_zero_architect
-    name: "Arsitek Nol Emisi Bersih"
-    description: "Rancang komunitas cerdas yang mencapai nol emisi karbon bersih"
+  - id: green_city
+    name: "Arsitek Kota Hijau"
+    description: "Rancang sistem energi terbarukan lengkap untuk seluruh distrik perkotaan"
     required_level: 20
-    skills_tested: [microgrid_design, carbon_engineering]
+    skills_tested: [hydrogen_tech, carbon_reduction]
     xp_reward: 2500
     unlocks:
-      - net_zero_legend_title
+      - green_city_architect_title
       - tower_leadership
 
 achievements:
-  - id: first_panel
-    name: "Panel Pertama"
-    description: "Menyelesaikan desain instalasi sistem panel surya"
+  - id: first_watt
+    name: "Watt Pertama"
+    description: "Hasilkan kilowatt pertama energi terbarukan simulasimu"
     xp_reward: 100
     badge_type: bronze
 
-  - id: wind_rider
-    name: "Penunggang Angin"
-    description: "Optimalkan ladang angin lepas pantai hingga mencapai efisiensi pembangkitan 95%"
+  - id: carbon_saver
+    name: "Penyelamat Karbon"
+    description: "Rancang sistem yang menghilangkan 100 ton emisi CO2"
     xp_reward: 250
     badge_type: silver
 
   - id: grid_balancer
-    name: "Master Penyeimbang Jaringan"
-    description: "Pertahankan deviasi nol antara pasokan dan permintaan di jaringan selama 30 hari berturut-turut"
+    name: "Penyeimbang Jaringan"
+    description: "Berhasil menyeimbangkan pasokan dan permintaan energi selama 24 jam"
     xp_reward: 500
     badge_type: gold
 
-  - id: energy_legend
-    name: "Legenda Energi"
-    description: "Menyelesaikan semua tantangan teknik energi hijau"
+  - id: green_legend
+    name: "Legenda Energi Hijau"
+    description: "Selesaikan semua tantangan energi terbarukan di Menara"
     xp_reward: 1000
     badge_type: platinum
 
 example_tasks:
   beginner:
-    - id: solar_calculator
+    - id: solar_calc
       type: analysis
-      title: "Kalkulator Output Surya"
-      description: "Estimasi pembangkitan energi tahunan menggunakan data iradiasi surya regional"
-      skills_improved: [solar_energy]
+      title: "Kalkulator Panel Surya"
+      description: "Hitung berapa banyak panel surya yang dibutuhkan sebuah rumah agar mandiri energi"
+      skills_improved: [solar_power]
       xp_reward: 60
 
-    - id: energy_audit
+    - id: wind_basics
       type: analysis
-      title: "Audit Energi Rumah Tangga"
-      description: "Analisis pola konsumsi listrik rumah tangga dan usulkan langkah penghematan energi"
-      skills_improved: [smart_grid]
+      title: "Dasar-Dasar Energi Angin"
+      description: "Analisis data kecepatan angin untuk menemukan lokasi terbaik memasang turbin angin"
+      skills_improved: [wind_energy]
       xp_reward: 50
 
   intermediate:
-    - id: hybrid_system
-      type: creation
-      title: "Sistem Hibrida Surya-Angin"
-      description: "Rancang sistem pembangkitan hibrida yang menggabungkan energi surya dan angin"
-      skills_improved: [solar_energy, wind_energy]
+    - id: battery_design
+      type: design
+      title: "Sistem Penyimpanan Baterai"
+      description: "Rancang sistem baterai yang menyimpan energi surya untuk digunakan malam hari"
+      skills_improved: [energy_storage, solar_power]
       xp_reward: 180
 
-    - id: battery_sizing
-      type: creation
-      title: "Desain Sistem Penyimpanan Energi"
-      description: "Rancang konfigurasi penyimpanan yang optimal untuk sebuah sekolah"
-      skills_improved: [energy_storage, smart_grid]
+    - id: grid_sim
+      type: simulation
+      title: "Simulasi Jaringan Cerdas"
+      description: "Simulasikan bagaimana jaringan cerdas menyeimbangkan energi terbarukan di suatu lingkungan"
+      skills_improved: [smart_grid, energy_storage]
       xp_reward: 200
 
   advanced:
-    - id: smart_community
+    - id: hydrogen_plant
       type: creation
-      title: "Jaringan Komunitas Cerdas"
-      description: "Rancang mikrogrid komunitas dengan surya, penyimpanan, dan pengisian kendaraan listrik"
-      skills_improved: [microgrid_design, smart_grid]
+      title: "Pembangkit Hidrogen"
+      description: "Rancang fasilitas produksi hidrogen hijau menggunakan kelebihan energi surya"
+      skills_improved: [hydrogen_tech, solar_power]
       xp_reward: 350
 
-    - id: carbon_neutral
+    - id: zero_carbon
       type: creation
-      title: "Rencana Netralitas Karbon Perusahaan"
-      description: "Rencanakan jalur netralitas karbon untuk perusahaan manufaktur"
-      skills_improved: [carbon_engineering, green_hydrogen]
+      title: "Rencana Kota Nol Karbon"
+      description: "Buat rencana energi netral karbon yang komprehensif untuk kota berukuran sedang"
+      skills_improved: [carbon_reduction, smart_grid]
       xp_reward: 400
 
 learning_objectives:
-  - "Memahami prinsip dan desain energi surya dan angin"
-  - "Menguasai pemilihan teknologi penyimpanan dan desain sistem"
-  - "Menggunakan AI untuk mengoptimalkan dispatch jaringan cerdas"
-  - "Menerapkan respons permintaan dan perdagangan listrik"
-  - "Memahami audit karbon, perdagangan karbon, dan penangkapan karbon"
-  - "Merancang sistem mikrogrid berskala komunitas"
-  - "Menjelajahi potensi dan tantangan teknologi hidrogen hijau"
-  - "Mempelajari kebijakan transisi energi dan target nol emisi bersih 2050"
+  - "Memahami bagaimana panel surya mengubah cahaya matahari menjadi listrik"
+  - "Mempelajari bagaimana turbin angin menghasilkan energi bersih dari udara bergerak"
+  - "Menguasai teknologi penyimpanan energi termasuk baterai dan hidrogen"
+  - "Merancang sistem jaringan cerdas yang menyeimbangkan pasokan dan permintaan"
+  - "Menghitung kebutuhan energi dan merancang sistem terbarukan berukuran tepat"
+  - "Memahami dampak energi terbarukan dalam mengurangi emisi karbon"
+  - "Menjelajahi teknologi sel bahan bakar hidrogen sebagai solusi penyimpanan energi"
+  - "Mengembangkan keterampilan merencanakan transisi energi berkelanjutan skala kota"
 
 career_outcomes:
-  - "Insinyur Energi Terbarukan"
-  - "Insinyur Sistem Penyimpanan Energi"
-  - "Insinyur Jaringan Listrik Cerdas"
-  - "Konsultan Manajemen Karbon"
-  - "Analis ESG"
-  - "Peneliti Kebijakan Energi"
-  - "Desainer Mikrogrid"
-  - "Insinyur Teknologi Hidrogen Hijau"
+  - "Konsultan Strategi Energi Hijau"
+  - "Perancang Sistem Surya"
+  - "Spesialis Energi Angin"
+  - "Insinyur Penyimpanan Energi"
+  - "Insinyur Jaringan Cerdas"
+  - "Insinyur Sistem Hidrogen"
+  - "Konsultan Keberlanjutan"
+  - "Perencana Pengurangan Karbon"

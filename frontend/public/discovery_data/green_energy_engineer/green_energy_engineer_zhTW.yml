@@ -1,10 +1,10 @@
-# 綠能工程師探索路徑 - 繁體中文
+# 綠能策略顧問探索路徑 - 繁體中文
 path_id: green_energy_engineer
-category: sustainability
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "能源守護者 - 綠能工程師"
+  title: "能源守護者 - 綠能策略顧問"
   short_description: "用再生能源和智慧電網守護地球的未來"
   long_description: |
     你是「永續能源塔」的見習守護者，擁有駕馭風、光、水的天賦
@@ -22,7 +22,7 @@ world_setting:
   name: "永續能源塔"
   description: |
     永續能源塔矗立在台灣西海岸，塔頂的風機和太陽能板為整座城市供電
-    綠能工程師在此學習如何讓再生能源穩定、高效、可靠
+    綠能策略顧問在此學習如何讓再生能源穩定、高效、可靠
     台灣 2050 淨零碳排的目標就從這裡開始實現
 
   atmosphere: "eco_futuristic"

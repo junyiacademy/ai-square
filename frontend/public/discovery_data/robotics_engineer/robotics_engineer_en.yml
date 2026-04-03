@@ -1,10 +1,10 @@
-# Robotics Engineer Discovery Path - English
+# Robotics Product Designer Discovery Path - English
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Mecha Workshop Master - Robotics Engineer"
+  title: "Mecha Workshop Master - Robotics Product Designer"
   short_description: "Build robots that work alongside humans in the factory of the future"
   long_description: |
     You are an apprentice mechanic at the Mecha Workshop, where engineers design
@@ -213,7 +213,7 @@ learning_objectives:
   - "Evaluate robot performance trade-offs between speed, precision, and safety"
 
 career_outcomes:
-  - "Robotics Engineer"
+  - "Robotics Product Designer"
   - "Automation Engineer"
   - "Robot Programmer"
   - "Manufacturing Systems Engineer"

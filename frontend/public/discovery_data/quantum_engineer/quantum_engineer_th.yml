@@ -1,10 +1,10 @@
 # เส้นทางค้นพบวิศวกรควอนตัม - ภาษาไทย
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "ผู้ทอฝันควอนตัม - วิศวกรเทคโนโลยีควอนตัม"
+  title: "ผู้ทอฝันควอนตัม - นักวิจัยควอนตัมคอมพิวติง"
   short_description: "ควบคุมการซ้อนทับและการพัวพันเพื่อแก้ปัญหาที่เป็นไปไม่ได้"
   long_description: |
     คุณคือผู้ทอฝันฝึกหัดใน «เขาวงกตควอนตัม» ผู้ซึ่งมีสัญชาตญาณในการเข้าใจว่า

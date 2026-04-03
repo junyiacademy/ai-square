@@ -1,10 +1,10 @@
-# Engenheiro de Robótica - Caminho de Descoberta - Português
+# Designer de Produtos Robóticos - Caminho de Descoberta - Português
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Artífice Mecânico - Engenheiro de Robótica"
+  title: "Artífice Mecânico - Designer de Produtos Robóticos"
   short_description: "Construa máquinas inteligentes capazes de sentir, pensar e agir"
   long_description: |
     Você é um aprendiz artífice na «Oficina Mecânica», com o instinto inato de dar vida
@@ -208,7 +208,7 @@ learning_objectives:
   - "Conhecer o ecossistema da indústria de fabricação inteligente"
 
 career_outcomes:
-  - "Engenheiro de Robótica"
+  - "Designer de Produtos Robóticos"
   - "Engenheiro de Integração de Sistemas de Automação"
   - "Programador de Braços Robóticos"
   - "Engenheiro de Sistemas Embarcados"

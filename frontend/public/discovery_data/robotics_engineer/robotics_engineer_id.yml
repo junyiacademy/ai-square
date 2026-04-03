@@ -1,10 +1,10 @@
-# Insinyur Robotika - Jalur Penemuan - Bahasa Indonesia
+# Desainer Produk Robotika - Jalur Penemuan - Bahasa Indonesia
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Pengrajin Meka - Insinyur Robotika"
+  title: "Pengrajin Meka - Desainer Produk Robotika"
   short_description: "Bangun mesin cerdas yang bisa merasakan, berpikir, dan bertindak"
   long_description: |
     Kamu adalah pengrajin magang di «Bengkel Meka», lahir dengan naluri untuk
@@ -208,7 +208,7 @@ learning_objectives:
   - "Mempelajari ekosistem industri manufaktur cerdas"
 
 career_outcomes:
-  - "Insinyur Robotika"
+  - "Desainer Produk Robotika"
   - "Insinyur Integrasi Sistem Otomasi"
   - "Pemrogram Lengan Robot"
   - "Insinyur Sistem Tertanam"

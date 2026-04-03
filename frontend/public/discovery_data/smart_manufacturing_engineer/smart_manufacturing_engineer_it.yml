@@ -1,220 +1,210 @@
-# Percorso di Scoperta: Ingegnere della Produzione Intelligente - Italiano
+# Smart Manufacturing Engineer Discovery Path - Italian
 path_id: smart_manufacturing_engineer
-category: manufacturing
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Alchimista Industriale - Ingegnere della Produzione Intelligente"
-  short_description: "Usa l'IA e i dati per trasformare le fabbriche in organismi che pensano da soli"
+  title: "Comandante della Fabbrica Digitale - Responsabile Operazioni Fabbrica Intelligente"
+  short_description: "Trasforma le fabbriche tradizionali in sistemi di produzione intelligenti e autonomi"
   long_description: |
-    Sei un apprendista alchimista nella «Fabbrica Digitale», dotato del talento per far
-    evolvere le linee di produzione da sole. In questa fabbrica del futuro che combina
-    IoT, IA e gemelli digitali, i dati di ogni sensore aiutano le macchine a prendere
-    decisioni autonome — e la tua missione è costruire la linea di produzione intelligente
-    che non si ferma mai.
+    Sei un ingegnere alle prime armi nella "Fabbrica Digitale", dove le macchine comunicano tra loro, i robot lavorano tutta la notte senza intervento umano, e l'intelligenza artificiale rileva i difetti prima che si verifichino. In questa fabbrica futuristica ispirata all'automazione lights-out di Foxconn, imparerai come sensori, dati e algoritmi intelligenti si combinano per creare fabbriche che si gestiscono da sole. La produzione si sta reinventando — e tu guidi la rivoluzione.
 
-  estimated_hours: 50
+  estimated_hours: 55
   skill_focus:
-    - industrial_iot
+    - iot_sensors
     - digital_twin
+    - ai_quality_control
     - predictive_maintenance
-    - production_optimization
 
 world_setting:
   name: "Fabbrica Digitale"
   description: |
-    La Fabbrica Digitale è una base di produzione dove il mondo fisico e quello virtuale
-    si rispecchiano perfettamente. Ogni macchina ha il suo gemello digitale, ogni processo
-    è guidato dai dati. La fabbrica al buio di Foxconn è l'espressione massima di
-    questo sistema.
+    La Fabbrica Digitale è una struttura all'avanguardia dove ogni macchina è connessa, ogni processo è monitorato in tempo reale e l'IA prende decisioni più velocemente di qualsiasi essere umano. Gli ingeniieri qui progettano sistemi dove robot e umani lavorano fianco a fianco, i gemelli digitali simulano l'intera linea di produzione e i sistemi predittivi prevengono i problemi prima che si verifichino. Questa è la fabbrica del futuro.
 
-  atmosphere: "industrial_digital"
-  visual_theme: "digital_factory"
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
 
 starting_scenario:
-  title: "Il Risveglio Digitale della Fabbrica"
+  title: "Il Risveglio della Fabbrica"
   description: |
-    Il direttore di fabbrica Forge ti porta in una fabbrica tradizionale — le linee di
-    produzione sono inefficienti e i tassi di resa sono instabili. All'improvviso una
-    macchina centrale chiamata Breakdown emette una vibrazione anomala. Devi usare i
-    dati dei sensori per prevedere quando si guasterà.
+    Il Direttore di Fabbrica Titan annuncia una missione audace: trasformare la vecchia linea di assemblaggio in una smart factory completamente automatizzata in un anno. I concorrenti utilizzano già robot guidati dall'IA e controllo qualità in tempo reale. Devi imparare a connettere macchine con sensori, costruire gemelli digitali della linea di produzione e usare i dati per eliminare sprechi e difetti. Il futuro della produzione inizia ora.
 
   initial_tasks:
-    - learn_iot_basics
-    - understand_sensors
-    - first_data_collection
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
 
 skill_tree:
   core_skills:
-    - id: industrial_iot
-      name: "IoT Industriale"
-      description: "Distribuire reti di sensori per raccogliere dati di produzione"
+    - id: iot_sensors
+      name: "Reti di Sensori IoT"
+      description: "Connetti macchine e attrezzature con sensori che raccolgono dati di produzione in tempo reale"
       max_level: 10
       unlocks:
-        - sensor_deployment
-        - edge_computing
-
-    - id: data_analytics
-      name: "Analisi dei Dati di Produzione"
-      description: "Analizzare i dati di produzione per trovare colli di bottiglia e anomalie"
-      max_level: 10
-      unlocks:
-        - spc_analysis
-        - yield_optimization
-
-    - id: automation
-      name: "Controllo dell'Automazione"
-      description: "Progettare sistemi di automazione PLC e SCADA"
-      max_level: 10
-      unlocks:
-        - plc_programming
-        - scada_design
+        - network_protocols
+        - data_pipelines
 
     - id: digital_twin
-      name: "Gemello Digitale"
-      description: "Costruire repliche virtuali di linee di produzione per la simulazione"
+      name: "Sistemi di Gemello Digitale"
+      description: "Crea copie virtuali della fabbrica che rispecchiano le condizioni reali per test e ottimizzazione"
       max_level: 10
       unlocks:
-        - 3d_simulation
-        - process_modeling
-
-  advanced_skills:
-    - id: predictive_maintenance
-      name: "Manutenzione Predittiva"
-      description: "Usare l'IA per dare avvertimenti anticipati prima dei guasti alle apparecchiature"
-      max_level: 15
-      requires: [industrial_iot, data_analytics]
+        - simulation_modeling
+        - virtual_commissioning
 
     - id: ai_quality_control
       name: "Controllo Qualità con IA"
-      description: "Usare la visione artificiale per rilevare automaticamente i difetti dei prodotti"
-      max_level: 15
-      requires: [data_analytics, automation]
+      description: "Usa la visione artificiale e l'apprendimento automatico per rilevare automaticamente i difetti dei prodotti"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
 
-    - id: lights_out_factory
-      name: "Fabbrica al Buio"
-      description: "Progettare un sistema di produzione autonomo completamente senza personale"
+    - id: predictive_maintenance
+      name: "Manutenzione Predittiva"
+      description: "Analizza i dati delle macchine per prevedere guasti alle attrezzature prima che causino fermate produttive"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Automazione Robotica"
+      description: "Progetta e programma sistemi robotici che eseguono compiti complessi di assemblaggio e movimentazione"
       max_level: 15
-      requires: [digital_twin, predictive_maintenance]
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Intelligenza della Catena di Fornitura"
+      description: "Ottimizza il flusso di materiali e componenti usando la gestione della catena di fornitura guidata dall'IA"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Produzione Lights-Out"
+      description: "Progetta sistemi di produzione completamente automatizzati che possono operare 24/7 senza intervento umano"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
 
 milestone_quests:
-  - id: first_sensor
-    name: "Primo Sensore"
-    description: "Distribuire con successo un sensore e raccogliere dati di produzione significativi"
+  - id: first_connected_line
+    name: "Prima Linea Connessa"
+    description: "Connetti con successo un'intera linea di produzione con sensori IoT e visualizza i dati in tempo reale"
     required_level: 5
-    skills_tested: [industrial_iot, data_analytics]
+    skills_tested: [iot_sensors, digital_twin]
     xp_reward: 500
     unlocks:
-      - iot_badge
-      - factory_floor_access
+      - connected_factory_badge
+      - advanced_lab_access
 
-  - id: breakdown_preventer
-    name: "Profeta dei Guasti"
-    description: "Prevedere con successo un guasto dell'apparecchiatura 24 ore prima"
+  - id: zero_defect_challenge
+    name: "Sfida Zero Difetti"
+    description: "Implementa un sistema di controllo qualità IA che raggiunge il 99,9% di accuratezza nel rilevamento dei difetti"
     required_level: 10
-    skills_tested: [predictive_maintenance, digital_twin]
+    skills_tested: [ai_quality_control, digital_twin]
     xp_reward: 1000
     unlocks:
-      - maintenance_master_title
-      - control_room_access
+      - quality_guardian_title
+      - vision_lab_access
 
-  - id: factory_architect
-    name: "Architetto della Fabbrica Intelligente"
-    description: "Progettare e distribuire una fabbrica intelligente completa"
+  - id: lights_out_factory
+    name: "Fabbrica Lights-Out"
+    description: "Progetta un sistema di produzione che opera continuamente per 72 ore senza intervento umano"
     required_level: 20
-    skills_tested: [lights_out_factory, ai_quality_control]
+    skills_tested: [lights_out_manufacturing, robotic_automation]
     xp_reward: 2500
     unlocks:
-      - architect_legend_title
+      - factory_commander_title
       - factory_leadership
 
 achievements:
-  - id: first_dashboard
-    name: "Primo Cruscotto"
-    description: "Costruire un cruscotto di monitoraggio in tempo reale della linea di produzione"
+  - id: first_connection
+    name: "Prima Connessione"
+    description: "Connetti con successo la tua prima macchina alla rete IoT"
     xp_reward: 100
     badge_type: bronze
 
-  - id: yield_booster
-    name: "Potenziatore della Resa"
-    description: "Aumentare il tasso di resa della linea dal 90% al 99%"
+  - id: defect_detective
+    name: "Detective dei Difetti"
+    description: "Usa la visione IA per rilevare automaticamente 100 difetti dei prodotti"
     xp_reward: 250
     badge_type: silver
 
-  - id: zero_downtime
-    name: "Record Zero Fermo Macchina"
-    description: "90 giorni consecutivi senza fermi produzione non pianificati"
+  - id: uptime_champion
+    name: "Campione di Disponibilità"
+    description: "Previeni 5 guasti alle attrezzature usando avvisi di manutenzione predittiva"
     xp_reward: 500
     badge_type: gold
 
   - id: factory_legend
     name: "Leggenda della Fabbrica"
-    description: "Completare tutte le sfide di produzione intelligente"
+    description: "Completa tutte le sfide di produzione intelligente nella Fabbrica Digitale"
     xp_reward: 1000
     badge_type: platinum
 
 example_tasks:
   beginner:
     - id: sensor_setup
-      type: interaction
-      title: "Installazione dei Sensori"
-      description: "Installare sensori di vibrazione e temperatura su un tornio CNC"
-      skills_improved: [industrial_iot]
+      type: technical
+      title: "Configurazione Rete di Sensori"
+      description: "Connetti sensori di temperatura, vibrazione e velocità a una macchina di produzione simulata"
+      skills_improved: [iot_sensors]
       xp_reward: 60
 
-    - id: production_analysis
+    - id: data_dashboard
       type: analysis
-      title: "Analisi dei Dati della Linea di Produzione"
-      description: "Analizzare una settimana di dati di produzione per trovare colli di bottiglia di efficienza"
-      skills_improved: [data_analytics]
+      title: "Dashboard Dati di Produzione"
+      description: "Costruisci un dashboard in tempo reale che mostra i principali indicatori di produzione dai dati dei sensori"
+      skills_improved: [iot_sensors, digital_twin]
       xp_reward: 50
 
   intermediate:
-    - id: twin_creation
+    - id: twin_builder
       type: creation
-      title: "Modellazione del Gemello Digitale"
-      description: "Costruire un modello di gemello digitale per una linea di produzione SMT"
-      skills_improved: [digital_twin, data_analytics]
+      title: "Costruttore di Gemello Digitale"
+      description: "Crea un gemello digitale di una cella di produzione che rispecchi il comportamento reale della macchina"
+      skills_improved: [digital_twin, iot_sensors]
       xp_reward: 180
 
-    - id: aoi_system
+    - id: ai_inspector
       type: creation
-      title: "Sistema di Ispezione Visiva con IA"
-      description: "Addestrare un modello per rilevare automaticamente difetti di saldatura su schede PCB"
-      skills_improved: [ai_quality_control, automation]
+      title: "Ispettore Qualità IA"
+      description: "Addestra un modello di visione artificiale per identificare difetti superficiali su pezzi prodotti"
+      skills_improved: [ai_quality_control]
       xp_reward: 200
 
   advanced:
     - id: predictive_system
       type: creation
       title: "Sistema di Manutenzione Predittiva"
-      description: "Costruire un sistema di punteggio di salute e previsione guasti per tutte le apparecchiature"
-      skills_improved: [predictive_maintenance, industrial_iot]
+      description: "Progetta un sistema che prevede guasti alle macchine 48 ore prima usando dati di vibrazione"
+      skills_improved: [predictive_maintenance, iot_sensors]
       xp_reward: 350
 
-    - id: autonomous_factory
+    - id: autonomous_line
       type: creation
-      title: "Progetto di Fabbrica Autonoma"
-      description: "Progettare una fabbrica al buio completamente automatizzata dalla pianificazione all'ispezione"
-      skills_improved: [lights_out_factory, digital_twin]
+      title: "Linea di Produzione Autonoma"
+      description: "Progetta una sequenza di produzione completamente automatizzata con movimentazione robotica e controllo qualità IA"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
       xp_reward: 400
 
 learning_objectives:
-  - "Comprendere l'architettura IoT industriale e la tecnologia dei sensori"
-  - "Padroneggiare i metodi di raccolta e analisi dei dati di produzione"
-  - "Progettare sistemi di automazione PLC e SCADA"
-  - "Costruire modelli di gemello digitale di linee di produzione"
-  - "Applicare l'IA per la manutenzione predittiva"
-  - "Implementare l'ispezione qualità tramite visione artificiale"
-  - "Progettare fabbriche al buio senza operatori"
-  - "Comprendere lo sviluppo della produzione intelligente e dell'Industria 4.0"
+  - "Capire come i sensori IoT raccolgono e trasmettono dati di fabbrica in tempo reale"
+  - "Imparare a costruire simulazioni di gemello digitale di sistemi di produzione fisici"
+  - "Applicare visione artificiale e apprendimento automatico all'ispezione qualità automatizzata"
+  - "Progettare sistemi di manutenzione predittiva che prevengono costosi guasti alle attrezzature"
+  - "Capire come i sistemi robotici vengono programmati per compiti di produzione flessibili"
+  - "Analizzare i dati di produzione per identificare miglioramenti di efficienza e riduzione degli sprechi"
+  - "Progettare sistemi di fabbrica interconnessi dove le macchine comunicano e si auto-ottimizzano"
+  - "Esplorare il futuro della produzione lights-out e delle fabbriche completamente autonome"
 
 career_outcomes:
-  - "Ingegnere della Produzione Intelligente"
-  - "Architetto IoT Industriale"
-  - "Ingegnere del Gemello Digitale"
-  - "Data Scientist della Produzione"
-  - "Integratore di Sistemi di Automazione"
+  - "Responsabile Operazioni Fabbrica Intelligente"
+  - "Ingegnere IoT Industriale"
+  - "Specialista in Gemello Digitale"
+  - "Ingegnere di Automazione Robotica"
+  - "Ingegnere del Controllo Qualità IA"
   - "Ingegnere della Manutenzione Predittiva"
-  - "Ingegnere della Qualità con IA"
-  - "Consulente di Fabbrica Intelligente"
+  - "Data Scientist della Produzione"
+  - "Consulente Industria 4.0"

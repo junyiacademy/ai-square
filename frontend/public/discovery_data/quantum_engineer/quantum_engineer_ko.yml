@@ -1,10 +1,10 @@
 # 양자 엔지니어 탐색 경로 - 한국어
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "양자 드림위버 - 양자 기술 엔지니어"
+  title: "양자 드림위버 - 양자 컴퓨팅 연구원"
   short_description: "중첩과 얽힘을 지배하여 불가능한 문제를 해결하라"
   long_description: |
     당신은 「양자 미궁」의 견습 드림위버로, 입자가 여러 상태에 동시에 존재한다는

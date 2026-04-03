@@ -1,217 +1,210 @@
-# スマート製造エンジニア探索パス - 日本語
+# Smart Manufacturing Engineer Discovery Path - Japanese
 path_id: smart_manufacturing_engineer
-category: manufacturing
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "産業錬金師 - スマート製造エンジニア"
-  short_description: "AIとデータで工場を自ら考える生命体に変える"
+  title: "デジタルファクトリーコマンダー - スマートファクトリー運営マネージャー"
+  short_description: "伝統的な工場をインテリジェントな無人生産システムに変革する"
   long_description: |
-    あなたは「デジタル工場」の見習い錬金師です。生産ラインを自ら進化させる
-    才能を持っています。IoT・AI・デジタルツインを組み合わせたこの未来工場では
-    すべてのセンサーデータが機械の自律判断を助けており、あなたの使命は
-    止まらないスマート生産ラインを構築することです
+    あなたは「デジタルファクトリー」の新米エンジニアです。ここでは機械同士が通信し、ロボットが人の介入なく夜通し作業し、人工知能が不良品の発生を事前に予測します。フォックスコンのライツアウト自動化から着想を得たこの未来型工場で、センサー、データ、スマートアルゴリズムが組み合わさり、自己運営できる工場を創出する方法を学びます。製造業は再発明されつつあります。あなたがその革命をリードします。
 
-  estimated_hours: 50
+  estimated_hours: 55
   skill_focus:
-    - industrial_iot
+    - iot_sensors
     - digital_twin
+    - ai_quality_control
     - predictive_maintenance
-    - production_optimization
 
 world_setting:
-  name: "デジタル工場"
+  name: "デジタルファクトリー"
   description: |
-    デジタル工場は、物理とバーチャルが完璧に対応した生産拠点です
-    すべての機械がデジタルツインを持ち、すべてのプロセスがデータで
-    駆動されています。フォックスコンの無人工場はこのシステムの極致です
+    デジタルファクトリーは最先端の施設で、すべての機械が接続され、すべてのプロセスがリアルタイムで監視され、AIが人間よりも速く意思決定を行います。ここのエンジニアはロボットと人間が協働するシステムを設計し、デジタルツインが生産ライン全体をシミュレートし、予測システムが問題を事前に防止します。これが未来の工場です。
 
-  atmosphere: "industrial_digital"
-  visual_theme: "digital_factory"
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
 
 starting_scenario:
-  title: "工場のデジタル覚醒"
+  title: "ファクトリーの覚醒"
   description: |
-    工場長 Forge があなたを伝統的な工場に案内します。生産ラインの効率は低く
-    良品率も不安定です。突然、コア設備 Breakdown が異常な振動を発しました
-    あなたはセンサーデータを使って、いつ故障するかを予測しなければなりません
+    工場長Titanが大胆な使命を発表しました：1年以内に古い組み立てラインを完全自動化されたスマート工場に変革することです。競合他社はすでにAI搭載ロボットとリアルタイム品質管理を使っています。センサーで機械を接続し、生産ラインのデジタルツインを構築し、データを使って無駄と不良品を排除する方法を学ばなければなりません。製造の未来は今始まります。
 
   initial_tasks:
-    - learn_iot_basics
-    - understand_sensors
-    - first_data_collection
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
 
 skill_tree:
   core_skills:
-    - id: industrial_iot
-      name: "産業用IoT"
-      description: "センサーネットワークを展開して生産データを収集する"
+    - id: iot_sensors
+      name: "IoTセンサーネットワーク"
+      description: "リアルタイムの生産データを収集するセンサーで機械と設備を接続する"
       max_level: 10
       unlocks:
-        - sensor_deployment
-        - edge_computing
-
-    - id: data_analytics
-      name: "製造データ分析"
-      description: "生産データを分析してボトルネックと異常を発見する"
-      max_level: 10
-      unlocks:
-        - spc_analysis
-        - yield_optimization
-
-    - id: automation
-      name: "自動化制御"
-      description: "PLCとSCADA自動化システムを設計する"
-      max_level: 10
-      unlocks:
-        - plc_programming
-        - scada_design
+        - network_protocols
+        - data_pipelines
 
     - id: digital_twin
-      name: "デジタルツイン"
-      description: "生産ラインの仮想複製品を構築してシミュレーションを行う"
+      name: "デジタルツインシステム"
+      description: "テストと最適化のために実際の状況を反映する工場の仮想コピーを作成する"
       max_level: 10
       unlocks:
-        - 3d_simulation
-        - process_modeling
-
-  advanced_skills:
-    - id: predictive_maintenance
-      name: "予知保全"
-      description: "AIを使って設備故障前に早期警告を行う"
-      max_level: 15
-      requires: [industrial_iot, data_analytics]
+        - simulation_modeling
+        - virtual_commissioning
 
     - id: ai_quality_control
-      name: "AI品質検査"
-      description: "コンピュータビジョンで製品の欠陥を自動検出する"
-      max_level: 15
-      requires: [data_analytics, automation]
+      name: "AI品質管理"
+      description: "コンピュータービジョンと機械学習で製品の欠陥を自動検出する"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
 
-    - id: lights_out_factory
-      name: "無人工場"
-      description: "完全無人化の自律生産システムを設計する"
+    - id: predictive_maintenance
+      name: "予知保全"
+      description: "設備の故障が生産停止を引き起こす前に予測するために機械データを分析する"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "ロボット自動化"
+      description: "複雑な組み立てと材料搬送タスクを実行するロボットシステムを設計・プログラムする"
       max_level: 15
-      requires: [digital_twin, predictive_maintenance]
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "サプライチェーンインテリジェンス"
+      description: "AI搭載のサプライチェーン管理で材料と部品の流れを最適化する"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "ライツアウト製造"
+      description: "人の介入なく24時間365日稼働できる完全自動生産システムを設計する"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
 
 milestone_quests:
-  - id: first_sensor
-    name: "最初のセンサー"
-    description: "センサーを正常に展開し、意味のある生産データを収集する"
+  - id: first_connected_line
+    name: "初のコネクテッドライン"
+    description: "IoTセンサーで生産ライン全体を接続してリアルタイムデータを表示することに成功する"
     required_level: 5
-    skills_tested: [industrial_iot, data_analytics]
+    skills_tested: [iot_sensors, digital_twin]
     xp_reward: 500
     unlocks:
-      - iot_badge
-      - factory_floor_access
+      - connected_factory_badge
+      - advanced_lab_access
 
-  - id: breakdown_preventer
-    name: "故障の予言者"
-    description: "設備故障の24時間前に早期警告に成功する"
+  - id: zero_defect_challenge
+    name: "ゼロ欠陥チャレンジ"
+    description: "欠陥検出精度99.9%を達成するAI品質管理システムを実装する"
     required_level: 10
-    skills_tested: [predictive_maintenance, digital_twin]
+    skills_tested: [ai_quality_control, digital_twin]
     xp_reward: 1000
     unlocks:
-      - maintenance_master_title
-      - control_room_access
+      - quality_guardian_title
+      - vision_lab_access
 
-  - id: factory_architect
-    name: "スマート工場建築師"
-    description: "完全なスマート工場を設計・展開する"
+  - id: lights_out_factory
+    name: "ライツアウトファクトリー"
+    description: "人の介入なく72時間継続稼働できる生産システムを設計する"
     required_level: 20
-    skills_tested: [lights_out_factory, ai_quality_control]
+    skills_tested: [lights_out_manufacturing, robotic_automation]
     xp_reward: 2500
     unlocks:
-      - architect_legend_title
+      - factory_commander_title
       - factory_leadership
 
 achievements:
-  - id: first_dashboard
-    name: "最初のダッシュボード"
-    description: "生産ラインのリアルタイム監視ダッシュボードを構築する"
+  - id: first_connection
+    name: "初の接続"
+    description: "最初の機械のIoTネットワークへの接続に成功する"
     xp_reward: 100
     badge_type: bronze
 
-  - id: yield_booster
-    name: "良品率向上者"
-    description: "生産ライン良品率を90%から99%に向上させる"
+  - id: defect_detective
+    name: "欠陥探偵"
+    description: "AIビジョンで100個の製品欠陥を自動検出する"
     xp_reward: 250
     badge_type: silver
 
-  - id: zero_downtime
-    name: "ゼロダウンタイム記録"
-    description: "90日連続で計画外の生産停止ゼロを達成する"
+  - id: uptime_champion
+    name: "稼働率チャンピオン"
+    description: "予知保全アラートで5回の設備故障を防止する"
     xp_reward: 500
     badge_type: gold
 
   - id: factory_legend
-    name: "工場の伝説"
-    description: "すべてのスマート製造チャレンジを完了する"
+    name: "ファクトリーレジェンド"
+    description: "デジタルファクトリーのすべてのスマート製造チャレンジを完了する"
     xp_reward: 1000
     badge_type: platinum
 
 example_tasks:
   beginner:
     - id: sensor_setup
-      type: interaction
-      title: "センサー設置"
-      description: "CNC旋盤に振動・温度センサーを取り付ける"
-      skills_improved: [industrial_iot]
+      type: technical
+      title: "センサーネットワーク設定"
+      description: "温度、振動、速度センサーをシミュレート生産機械に接続する"
+      skills_improved: [iot_sensors]
       xp_reward: 60
 
-    - id: production_analysis
+    - id: data_dashboard
       type: analysis
-      title: "生産ラインデータ分析"
-      description: "1週間分の生産データを分析して効率ボトルネックを発見する"
-      skills_improved: [data_analytics]
+      title: "生産データダッシュボード"
+      description: "センサーデータから主要生産指標を表示するリアルタイムダッシュボードを構築する"
+      skills_improved: [iot_sensors, digital_twin]
       xp_reward: 50
 
   intermediate:
-    - id: twin_creation
+    - id: twin_builder
       type: creation
-      title: "デジタルツインモデリング"
-      description: "SMT生産ラインのデジタルツインモデルを構築する"
-      skills_improved: [digital_twin, data_analytics]
+      title: "デジタルツインビルダー"
+      description: "実際の機械動作を反映する生産セルのデジタルツインを作成する"
+      skills_improved: [digital_twin, iot_sensors]
       xp_reward: 180
 
-    - id: aoi_system
+    - id: ai_inspector
       type: creation
-      title: "AIビジュアル検査システム"
-      description: "PCB基板上の半田付け欠陥を自動検出するモデルを訓練する"
-      skills_improved: [ai_quality_control, automation]
+      title: "AI品質インスペクター"
+      description: "製造部品の表面欠陥を識別するコンピュータービジョンモデルを訓練する"
+      skills_improved: [ai_quality_control]
       xp_reward: 200
 
   advanced:
     - id: predictive_system
       type: creation
       title: "予知保全システム"
-      description: "工場全設備の健康スコアリングと故障予測システムを構築する"
-      skills_improved: [predictive_maintenance, industrial_iot]
+      description: "振動データを使用して48時間前に機械故障を予測するシステムを設計する"
+      skills_improved: [predictive_maintenance, iot_sensors]
       xp_reward: 350
 
-    - id: autonomous_factory
+    - id: autonomous_line
       type: creation
-      title: "自律工場設計"
-      description: "スケジューリングから品質検査まで全自動の無人工場を設計する"
-      skills_improved: [lights_out_factory, digital_twin]
+      title: "自律生産ライン"
+      description: "ロボット搬送とAI品質管理を備えた完全自動化生産シーケンスを設計する"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
       xp_reward: 400
 
 learning_objectives:
-  - "産業用IoTのアーキテクチャとセンサー技術を理解する"
-  - "製造データの収集・分析手法をマスターする"
-  - "PLCとSCADA自動化システムを設計する"
-  - "生産ラインのデジタルツインモデルを構築する"
-  - "AIを活用した予知保全を実施する"
-  - "コンピュータビジョンによる品質検査を実装する"
-  - "無人化無人工場を設計する"
-  - "スマート製造と第4次産業革命の発展を理解する"
+  - "IoTセンサーがリアルタイムの工場データを収集・送信する方法を理解する"
+  - "物理生産システムのデジタルツインシミュレーションを構築する方法を学ぶ"
+  - "コンピュータービジョンと機械学習を自動品質検査に適用する"
+  - "高価な設備故障を防ぐ予知保全システムを設計する"
+  - "ロボットシステムが柔軟な製造タスク向けにどのようにプログラムされるかを理解する"
+  - "生産データを分析して効率改善と無駄削減の機会を特定する"
+  - "機械が通信し自己最適化する相互接続工場システムを設計する"
+  - "ライツアウト製造と完全自律工場の未来を探求する"
 
 career_outcomes:
-  - "スマート製造エンジニア"
-  - "産業用IoTアーキテクト"
-  - "デジタルツインエンジニア"
-  - "製造データサイエンティスト"
-  - "自動化システムインテグレーター"
+  - "スマートファクトリー運営マネージャー"
+  - "産業用IoTエンジニア"
+  - "デジタルツインスペシャリスト"
+  - "ロボット自動化エンジニア"
+  - "AI品質管理エンジニア"
   - "予知保全エンジニア"
-  - "AI品質エンジニア"
-  - "スマート工場コンサルタント"
+  - "製造データサイエンティスト"
+  - "インダストリー4.0コンサルタント"

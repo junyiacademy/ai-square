@@ -1,10 +1,10 @@
-# Parcours d'exploration Ingénieur en Robotique - Français
+# Parcours d'exploration Designer Produit Robotique - Français
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Maître de l'Atelier Méca - Ingénieur en Robotique"
+  title: "Maître de l'Atelier Méca - Designer Produit Robotique"
   short_description: "Construisez des robots qui travaillent aux côtés des humains dans la fabrique du futur"
   long_description: |
     Vous êtes apprenti mécanicien à l'Atelier Méca, où des ingénieurs conçoivent des robots
@@ -210,7 +210,7 @@ learning_objectives:
   - "Évaluer les compromis de performance robotique entre vitesse, précision et sécurité"
 
 career_outcomes:
-  - "Ingénieur en Robotique"
+  - "Designer Produit Robotique"
   - "Ingénieur en Automatisation"
   - "Programmeur de Robots"
   - "Ingénieur en Systèmes de Fabrication"

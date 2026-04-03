@@ -1,10 +1,10 @@
 # Ruta de Descubrimiento del Ingeniero Cuántico - Español
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Tejedor de Sueños Cuánticos - Ingeniero de Tecnología Cuántica"
+  title: "Tejedor de Sueños Cuánticos - Investigador de Computación Cuántica"
   short_description: "Domina la superposición y el entrelazamiento para resolver lo imposible"
   long_description: |
     Eres un aprendiz de Tejedor de Sueños en el «Laberinto Cuántico», con la intuición

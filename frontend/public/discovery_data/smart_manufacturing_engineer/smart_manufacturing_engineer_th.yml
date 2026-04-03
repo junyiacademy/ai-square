@@ -1,217 +1,210 @@
-# เส้นทางการค้นพบ: วิศวกรการผลิตอัจฉริยะ - ภาษาไทย
+# Smart Manufacturing Engineer Discovery Path - Thai
 path_id: smart_manufacturing_engineer
-category: manufacturing
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "นักเล่นแร่แปรธาตุอุตสาหกรรม - วิศวกรการผลิตอัจฉริยะ"
-  short_description: "ใช้ AI และข้อมูลเพื่อเปลี่ยนโรงงานให้เป็นสิ่งมีชีวิตที่คิดได้เอง"
+  title: "ผู้บัญชาการโรงงานดิจิทัล - ผู้จัดการปฏิบัติการโรงงานอัจฉริยะ"
+  short_description: "แปลงโรงงานแบบดั้งเดิมให้เป็นระบบผลิตอัจฉริยะและอัตโนมัติ"
   long_description: |
-    คุณคือนักเล่นแร่แปรธาตุฝึกหัดใน «โรงงานดิจิทัล» ผู้มีพรสวรรค์ในการทำให้
-    สายการผลิตวิวัฒน์ด้วยตัวเอง ในโรงงานแห่งอนาคตที่รวม IoT, AI และ Digital Twin
-    ข้อมูลจากเซ็นเซอร์แต่ละตัวช่วยให้เครื่องจักรตัดสินใจได้อย่างอิสระ
-    และภารกิจของคุณคือการสร้างสายการผลิตอัจฉริยะที่ไม่มีวันหยุด
+    คุณเป็นวิศวกรมือใหม่ที่ "โรงงานดิจิทัล" ที่นี่เครื่องจักรสื่อสารกัน หุ่นยนต์ทำงานตลอดคืนโดยไม่ต้องมีคนเข้ามาดูแล และปัญญาประดิษฐ์ตรวจจับข้อบกพร่องก่อนที่จะเกิดขึ้น ในโรงงานแห่งอนาคตที่ได้แรงบันดาลใจจากระบบอัตโนมัติไฟดับของ Foxconn นี้ คุณจะเรียนรู้ว่าเซ็นเซอร์ ข้อมูล และอัลกอริทึมอัจฉริยะรวมกันสร้างโรงงานที่บริหารจัดการตัวเองได้อย่างไร การผลิตกำลังถูกสร้างใหม่ และคุณคือผู้นำการปฏิวัตินี้
 
-  estimated_hours: 50
+  estimated_hours: 55
   skill_focus:
-    - industrial_iot
+    - iot_sensors
     - digital_twin
+    - ai_quality_control
     - predictive_maintenance
-    - production_optimization
 
 world_setting:
   name: "โรงงานดิจิทัล"
   description: |
-    โรงงานดิจิทัลคือฐานการผลิตที่โลกทางกายภาพและโลกเสมือนสะท้อนกันอย่างสมบูรณ์แบบ
-    เครื่องจักรทุกเครื่องมีแฝดดิจิทัล ทุกกระบวนการขับเคลื่อนด้วยข้อมูล
-    โรงงานปิดไฟของ Foxconn คือตัวอย่างสูงสุดของระบบนี้
+    โรงงานดิจิทัลเป็นสถานที่ล้ำสมัยที่เครื่องจักรทุกเครื่องเชื่อมต่อกัน ทุกกระบวนการถูกตรวจสอบแบบเรียลไทม์ และ AI ตัดสินใจได้เร็วกว่ามนุษย์ วิศวกรที่นี่ออกแบบระบบที่หุ่นยนต์และมนุษย์ทำงานร่วมกัน digital twin จำลองสายการผลิตทั้งหมด และระบบทำนายป้องกันปัญหาก่อนเกิดขึ้น นี่คือโรงงานแห่งอนาคต
 
-  atmosphere: "industrial_digital"
-  visual_theme: "digital_factory"
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
 
 starting_scenario:
-  title: "การตื่นตัวดิจิทัลของโรงงาน"
+  title: "การตื่นขึ้นของโรงงาน"
   description: |
-    ผู้อำนวยการโรงงาน Forge พาคุณเข้าไปในโรงงานแบบดั้งเดิม สายการผลิตมีประสิทธิภาพต่ำ
-    และอัตราผลผลิตไม่เสถียร ทันใดนั้นเครื่องจักรหลักชื่อ Breakdown ก็สั่นผิดปกติ
-    คุณต้องใช้ข้อมูลเซ็นเซอร์เพื่อทำนายว่าเมื่อไหร่มันจะพัง
+    ผู้อำนวยการโรงงาน Titan ประกาศภารกิจที่กล้าหาญ: เปลี่ยนสายการประกอบเก่าให้กลายเป็นโรงงานอัจฉริยะอัตโนมัติเต็มรูปแบบภายในหนึ่งปี คู่แข่งใช้หุ่นยนต์ขับเคลื่อน AI และควบคุมคุณภาพแบบเรียลไทม์อยู่แล้ว คุณต้องเรียนรู้วิธีเชื่อมต่อเครื่องจักรด้วยเซ็นเซอร์ สร้าง digital twin ของสายการผลิต และใช้ข้อมูลกำจัดของเสียและข้อบกพร่อง อนาคตของการผลิตเริ่มต้นตอนนี้
 
   initial_tasks:
-    - learn_iot_basics
-    - understand_sensors
-    - first_data_collection
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
 
 skill_tree:
   core_skills:
-    - id: industrial_iot
-      name: "IoT อุตสาหกรรม"
-      description: "ติดตั้งเครือข่ายเซ็นเซอร์เพื่อเก็บข้อมูลการผลิต"
+    - id: iot_sensors
+      name: "เครือข่ายเซ็นเซอร์ IoT"
+      description: "เชื่อมต่อเครื่องจักรและอุปกรณ์ด้วยเซ็นเซอร์ที่เก็บข้อมูลการผลิตแบบเรียลไทม์"
       max_level: 10
       unlocks:
-        - sensor_deployment
-        - edge_computing
-
-    - id: data_analytics
-      name: "การวิเคราะห์ข้อมูลการผลิต"
-      description: "วิเคราะห์ข้อมูลการผลิตเพื่อค้นหาคอขวดและความผิดปกติ"
-      max_level: 10
-      unlocks:
-        - spc_analysis
-        - yield_optimization
-
-    - id: automation
-      name: "การควบคุมระบบอัตโนมัติ"
-      description: "ออกแบบระบบอัตโนมัติ PLC และ SCADA"
-      max_level: 10
-      unlocks:
-        - plc_programming
-        - scada_design
+        - network_protocols
+        - data_pipelines
 
     - id: digital_twin
-      name: "แฝดดิจิทัล"
-      description: "สร้างสำเนาเสมือนของสายการผลิตเพื่อจำลอง"
+      name: "ระบบ Digital Twin"
+      description: "สร้างสำเนาเสมือนของโรงงานที่สะท้อนสภาพจริงเพื่อการทดสอบและเพิ่มประสิทธิภาพ"
       max_level: 10
       unlocks:
-        - 3d_simulation
-        - process_modeling
-
-  advanced_skills:
-    - id: predictive_maintenance
-      name: "การบำรุงรักษาเชิงพยากรณ์"
-      description: "ใช้ AI เพื่อแจ้งเตือนล่วงหน้าก่อนที่อุปกรณ์จะขัดข้อง"
-      max_level: 15
-      requires: [industrial_iot, data_analytics]
+        - simulation_modeling
+        - virtual_commissioning
 
     - id: ai_quality_control
-      name: "การควบคุมคุณภาพด้วย AI"
-      description: "ใช้ Computer Vision ตรวจจับข้อบกพร่องของผลิตภัณฑ์โดยอัตโนมัติ"
-      max_level: 15
-      requires: [data_analytics, automation]
+      name: "ควบคุมคุณภาพด้วย AI"
+      description: "ใช้ computer vision และ machine learning ตรวจจับข้อบกพร่องของผลิตภัณฑ์โดยอัตโนมัติ"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
 
-    - id: lights_out_factory
-      name: "โรงงานปิดไฟ"
-      description: "ออกแบบระบบการผลิตอัตโนมัติโดยไม่มีพนักงานเลย"
+    - id: predictive_maintenance
+      name: "การบำรุงรักษาเชิงพยากรณ์"
+      description: "วิเคราะห์ข้อมูลเครื่องจักรเพื่อทำนายการเสียของอุปกรณ์ก่อนที่จะทำให้หยุดผลิต"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "ระบบอัตโนมัติด้วยหุ่นยนต์"
+      description: "ออกแบบและเขียนโปรแกรมหุ่นยนต์สำหรับงานประกอบและเคลื่อนย้ายวัสดุที่ซับซ้อน"
       max_level: 15
-      requires: [digital_twin, predictive_maintenance]
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "ห่วงโซ่อุปทานอัจฉริยะ"
+      description: "เพิ่มประสิทธิภาพการไหลของวัสดุและชิ้นส่วนด้วยการจัดการห่วงโซ่อุปทานที่ขับเคลื่อนด้วย AI"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "การผลิตแบบไฟดับ"
+      description: "ออกแบบระบบผลิตอัตโนมัติเต็มรูปแบบที่ทำงาน 24/7 โดยไม่ต้องมีคนเข้ามาดูแล"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
 
 milestone_quests:
-  - id: first_sensor
-    name: "เซ็นเซอร์ตัวแรก"
-    description: "ติดตั้งเซ็นเซอร์สำเร็จและเก็บข้อมูลการผลิตที่มีความหมาย"
+  - id: first_connected_line
+    name: "สายงานแรกที่เชื่อมต่อ"
+    description: "เชื่อมต่อสายการผลิตทั้งหมดด้วยเซ็นเซอร์ IoT และแสดงข้อมูลแบบเรียลไทม์ได้สำเร็จ"
     required_level: 5
-    skills_tested: [industrial_iot, data_analytics]
+    skills_tested: [iot_sensors, digital_twin]
     xp_reward: 500
     unlocks:
-      - iot_badge
-      - factory_floor_access
+      - connected_factory_badge
+      - advanced_lab_access
 
-  - id: breakdown_preventer
-    name: "ผู้พยากรณ์การขัดข้อง"
-    description: "ทำนายการขัดข้องของอุปกรณ์ล่วงหน้า 24 ชั่วโมงได้สำเร็จ"
+  - id: zero_defect_challenge
+    name: "ความท้าทายข้อบกพร่องเป็นศูนย์"
+    description: "ใช้ระบบควบคุมคุณภาพ AI ที่บรรลุความแม่นยำในการตรวจจับข้อบกพร่อง 99.9%"
     required_level: 10
-    skills_tested: [predictive_maintenance, digital_twin]
+    skills_tested: [ai_quality_control, digital_twin]
     xp_reward: 1000
     unlocks:
-      - maintenance_master_title
-      - control_room_access
+      - quality_guardian_title
+      - vision_lab_access
 
-  - id: factory_architect
-    name: "สถาปนิกโรงงานอัจฉริยะ"
-    description: "ออกแบบและติดตั้งโรงงานอัจฉริยะที่สมบูรณ์"
+  - id: lights_out_factory
+    name: "โรงงานแบบไฟดับ"
+    description: "ออกแบบระบบผลิตที่ทำงานต่อเนื่อง 72 ชั่วโมงโดยไม่ต้องมีคนเข้ามาดูแล"
     required_level: 20
-    skills_tested: [lights_out_factory, ai_quality_control]
+    skills_tested: [lights_out_manufacturing, robotic_automation]
     xp_reward: 2500
     unlocks:
-      - architect_legend_title
+      - factory_commander_title
       - factory_leadership
 
 achievements:
-  - id: first_dashboard
-    name: "แดชบอร์ดแรก"
-    description: "สร้างแดชบอร์ดติดตามสายการผลิตแบบเรียลไทม์"
+  - id: first_connection
+    name: "การเชื่อมต่อแรก"
+    description: "เชื่อมต่อเครื่องจักรเครื่องแรกกับเครือข่าย IoT ได้สำเร็จ"
     xp_reward: 100
     badge_type: bronze
 
-  - id: yield_booster
-    name: "ผู้เพิ่มอัตราผลผลิต"
-    description: "เพิ่มอัตราผลผลิตของสายการผลิตจาก 90% เป็น 99%"
+  - id: defect_detective
+    name: "นักสืบข้อบกพร่อง"
+    description: "ใช้ AI vision ตรวจจับข้อบกพร่องของผลิตภัณฑ์ 100 รายการโดยอัตโนมัติ"
     xp_reward: 250
     badge_type: silver
 
-  - id: zero_downtime
-    name: "สถิติหยุดทำงานศูนย์"
-    description: "90 วันติดต่อกันโดยไม่มีการหยุดการผลิตที่ไม่ได้วางแผน"
+  - id: uptime_champion
+    name: "แชมป์เวลาทำงาน"
+    description: "ป้องกันความล้มเหลวของอุปกรณ์ 5 ครั้งโดยใช้การแจ้งเตือนการบำรุงรักษาเชิงพยากรณ์"
     xp_reward: 500
     badge_type: gold
 
   - id: factory_legend
     name: "ตำนานโรงงาน"
-    description: "ทำความท้าทายด้านการผลิตอัจฉริยะทั้งหมดให้สำเร็จ"
+    description: "ทำความท้าทายการผลิตอัจฉริยะทั้งหมดในโรงงานดิจิทัลให้สำเร็จ"
     xp_reward: 1000
     badge_type: platinum
 
 example_tasks:
   beginner:
     - id: sensor_setup
-      type: interaction
-      title: "การติดตั้งเซ็นเซอร์"
-      description: "ติดตั้งเซ็นเซอร์การสั่นและอุณหภูมิบนเครื่องกลึง CNC"
-      skills_improved: [industrial_iot]
+      type: technical
+      title: "ตั้งค่าเครือข่ายเซ็นเซอร์"
+      description: "เชื่อมต่อเซ็นเซอร์อุณหภูมิ การสั่นสะเทือน และความเร็วกับเครื่องผลิตจำลอง"
+      skills_improved: [iot_sensors]
       xp_reward: 60
 
-    - id: production_analysis
+    - id: data_dashboard
       type: analysis
-      title: "การวิเคราะห์ข้อมูลสายการผลิต"
-      description: "วิเคราะห์ข้อมูลการผลิตหนึ่งสัปดาห์เพื่อค้นหาคอขวดด้านประสิทธิภาพ"
-      skills_improved: [data_analytics]
+      title: "แดชบอร์ดข้อมูลการผลิต"
+      description: "สร้างแดชบอร์ดเรียลไทม์แสดงตัวชี้วัดการผลิตหลักจากข้อมูลเซ็นเซอร์"
+      skills_improved: [iot_sensors, digital_twin]
       xp_reward: 50
 
   intermediate:
-    - id: twin_creation
+    - id: twin_builder
       type: creation
-      title: "การสร้างแบบจำลองแฝดดิจิทัล"
-      description: "สร้างแบบจำลองแฝดดิจิทัลสำหรับสายการผลิต SMT"
-      skills_improved: [digital_twin, data_analytics]
+      title: "สร้าง Digital Twin"
+      description: "สร้าง digital twin ของเซลการผลิตที่สะท้อนพฤติกรรมเครื่องจักรจริง"
+      skills_improved: [digital_twin, iot_sensors]
       xp_reward: 180
 
-    - id: aoi_system
+    - id: ai_inspector
       type: creation
-      title: "ระบบตรวจสอบด้วยภาพ AI"
-      description: "ฝึกโมเดลเพื่อตรวจจับข้อบกพร่องการบัดกรีบนแผงวงจร PCB โดยอัตโนมัติ"
-      skills_improved: [ai_quality_control, automation]
+      title: "ผู้ตรวจสอบคุณภาพ AI"
+      description: "ฝึกโมเดล computer vision เพื่อระบุข้อบกพร่องพื้นผิวบนชิ้นส่วนที่ผลิต"
+      skills_improved: [ai_quality_control]
       xp_reward: 200
 
   advanced:
     - id: predictive_system
       type: creation
-      title: "ระบบการบำรุงรักษาเชิงพยากรณ์"
-      description: "สร้างระบบคะแนนสุขภาพและการพยากรณ์ความขัดข้องสำหรับอุปกรณ์ทั้งโรงงาน"
-      skills_improved: [predictive_maintenance, industrial_iot]
+      title: "ระบบบำรุงรักษาเชิงพยากรณ์"
+      description: "ออกแบบระบบทำนายความล้มเหลวของเครื่องจักรล่วงหน้า 48 ชั่วโมงโดยใช้ข้อมูลการสั่นสะเทือน"
+      skills_improved: [predictive_maintenance, iot_sensors]
       xp_reward: 350
 
-    - id: autonomous_factory
+    - id: autonomous_line
       type: creation
-      title: "การออกแบบโรงงานอัตโนมัติ"
-      description: "ออกแบบโรงงานปิดไฟที่ระบบอัตโนมัติครบวงจรตั้งแต่การจัดตารางจนถึงการตรวจสอบ"
-      skills_improved: [lights_out_factory, digital_twin]
+      title: "สายการผลิตอัตโนมัติ"
+      description: "ออกแบบลำดับการผลิตอัตโนมัติเต็มรูปแบบพร้อมการจัดการหุ่นยนต์และควบคุมคุณภาพ AI"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
       xp_reward: 400
 
 learning_objectives:
-  - "เข้าใจสถาปัตยกรรม IoT อุตสาหกรรมและเทคโนโลยีเซ็นเซอร์"
-  - "เชี่ยวชาญวิธีการเก็บรวบรวมและวิเคราะห์ข้อมูลการผลิต"
-  - "ออกแบบระบบอัตโนมัติ PLC และ SCADA"
-  - "สร้างแบบจำลองแฝดดิจิทัลของสายการผลิต"
-  - "ประยุกต์ใช้ AI สำหรับการบำรุงรักษาเชิงพยากรณ์"
-  - "ดำเนินการตรวจสอบคุณภาพด้วย Computer Vision"
-  - "ออกแบบโรงงานปิดไฟไร้คนงาน"
-  - "เข้าใจการพัฒนาการผลิตอัจฉริยะและอุตสาหกรรม 4.0"
+  - "เข้าใจวิธีที่เซ็นเซอร์ IoT เก็บรวบรวมและส่งข้อมูลโรงงานแบบเรียลไทม์"
+  - "เรียนรู้วิธีสร้างการจำลอง digital twin ของระบบการผลิตทางกายภาพ"
+  - "นำ computer vision และ machine learning ไปใช้กับการตรวจสอบคุณภาพอัตโนมัติ"
+  - "ออกแบบระบบบำรุงรักษาเชิงพยากรณ์ที่ป้องกันความล้มเหลวของอุปกรณ์ที่มีค่าใช้จ่ายสูง"
+  - "เข้าใจวิธีที่ระบบหุ่นยนต์ถูกเขียนโปรแกรมสำหรับงานการผลิตที่ยืดหยุ่น"
+  - "วิเคราะห์ข้อมูลการผลิตเพื่อระบุการปรับปรุงประสิทธิภาพและลดของเสีย"
+  - "ออกแบบระบบโรงงานที่เชื่อมต่อกันซึ่งเครื่องจักรสื่อสารและเพิ่มประสิทธิภาพตัวเอง"
+  - "สำรวจอนาคตของการผลิตแบบไฟดับและโรงงานอัตโนมัติเต็มรูปแบบ"
 
 career_outcomes:
-  - "วิศวกรการผลิตอัจฉริยะ"
-  - "สถาปนิก IoT อุตสาหกรรม"
-  - "วิศวกรแฝดดิจิทัล"
-  - "นักวิทยาศาสตร์ข้อมูลการผลิต"
-  - "ผู้รวมระบบอัตโนมัติ"
+  - "ผู้จัดการปฏิบัติการโรงงานอัจฉริยะ"
+  - "วิศวกร IoT อุตสาหกรรม"
+  - "ผู้เชี่ยวชาญ Digital Twin"
+  - "วิศวกรระบบอัตโนมัติหุ่นยนต์"
+  - "วิศวกรควบคุมคุณภาพ AI"
   - "วิศวกรการบำรุงรักษาเชิงพยากรณ์"
-  - "วิศวกรคุณภาพ AI"
-  - "ที่ปรึกษาโรงงานอัจฉริยะ"
+  - "นักวิทยาศาสตร์ข้อมูลการผลิต"
+  - "ที่ปรึกษา Industry 4.0"

@@ -1,10 +1,10 @@
 # Путь открытия квантового инженера - Русский
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Квантовый Ткач Снов - Инженер квантовых технологий"
+  title: "Квантовый Ткач Снов - Исследователь Квантовых Вычислений"
   short_description: "Овладей суперпозицией и запутанностью, чтобы решать невозможное"
   long_description: |
     Ты — ученик Ткача Снов в «Квантовом Лабиринте», обладающий интуицией понимания того,

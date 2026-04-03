@@ -73,3 +73,4 @@ frontend/test-screenshots/*
 cloud_sql_proxy
 .project-status.json
 translation_report.json
+.gstack/

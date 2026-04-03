@@ -1,10 +1,10 @@
 # 量子エンジニア探索パス - 日本語
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "量子ドリームウィーバー - 量子技術エンジニア"
+  title: "量子ドリームウィーバー - 量子コンピューティング研究者"
   short_description: "重ね合わせと量子もつれを駆使して不可能な問題を解き明かせ"
   long_description: |
     あなたは「量子迷宮」の見習いドリームウィーバーです。粒子が複数の状態に

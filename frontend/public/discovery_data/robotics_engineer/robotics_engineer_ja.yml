@@ -1,10 +1,10 @@
-# ロボット工学エンジニア探索パス - 日本語
+# ロボティクス・プロダクトデザイナー探索パス - 日本語
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "メカワークショップマスター - ロボット工学エンジニア"
+  title: "メカワークショップマスター - ロボティクス・プロダクトデザイナー"
   short_description: "未来の工場で人間と共に働くロボットを作る"
   long_description: |
     あなたはメカワークショップの見習い技師。エンジニアたちが車の組み立て、農作物の収穫、
@@ -208,7 +208,7 @@ learning_objectives:
   - "速度・精度・安全性のロボット性能トレードオフを評価する"
 
 career_outcomes:
-  - "ロボット工学エンジニア"
+  - "ロボティクス・プロダクトデザイナー"
   - "自動化エンジニア"
   - "ロボットプログラマー"
   - "製造システムエンジニア"

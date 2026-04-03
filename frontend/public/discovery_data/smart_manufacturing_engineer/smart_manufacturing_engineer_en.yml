@@ -1,219 +1,210 @@
-# Smart Manufacturing Engineer Discovery Path - English
+# Smart Factory Operations Manager Discovery Path - English
 path_id: smart_manufacturing_engineer
-category: manufacturing
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Industrial Alchemist - Smart Manufacturing Engineer"
-  short_description: "Use AI and data to transform factories into self-thinking living systems"
+  title: "Digital Factory Commander - Smart Factory Operations Manager"
+  short_description: "Transform traditional factories into intelligent, lights-out production systems"
   long_description: |
-    You are an apprentice alchemist in the "Digital Factory," gifted with the power
-    to make production lines evolve on their own. In this future factory combining
-    IoT, AI, and digital twins, every sensor's data helps machines make autonomous
-    decisions — and your mission is to build the never-stopping smart production line.
+    You are a rookie engineer at the "Digital Factory", where machines talk to each other, robots work through the night without human intervention, and artificial intelligence catches defects before they happen. In this futuristic factory inspired by Foxconn's lights-out automation, you will learn how sensors, data, and smart algorithms combine to create factories that run themselves. Manufacturing is being reinvented — and you are leading the revolution.
 
-  estimated_hours: 50
+  estimated_hours: 55
   skill_focus:
-    - industrial_iot
+    - iot_sensors
     - digital_twin
+    - ai_quality_control
     - predictive_maintenance
-    - production_optimization
 
 world_setting:
   name: "Digital Factory"
   description: |
-    The Digital Factory is a production base where the physical and virtual worlds
-    are perfectly mirrored. Every machine has its digital twin, every process is
-    driven by data. Foxconn's lights-out factory is the ultimate expression of
-    this system.
+    The Digital Factory is a cutting-edge facility where every machine is connected, every process is monitored in real time, and artificial intelligence makes decisions faster than any human could. Engineers here design systems where robots and humans work side by side, digital twins simulate the entire production line, and predictive systems prevent problems before they occur. This is the factory of the future.
 
-  atmosphere: "industrial_digital"
-  visual_theme: "digital_factory"
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
 
 starting_scenario:
-  title: "The Digital Awakening of the Factory"
+  title: "The Factory Awakens"
   description: |
-    Factory Director Forge walks you into a traditional factory — production lines
-    are inefficient and yield rates are unstable. Suddenly a core machine called
-    Breakdown emits an abnormal vibration. You must use sensor data to predict
-    when it will fail.
+    Factory Director Titan announces a bold mission: transform the old assembly line into a fully automated smart factory within one year. Competitors are already using AI-powered robots and real-time quality control. You must learn how to connect machines with sensors, build digital twins of the production line, and use data to eliminate waste and defects. The future of manufacturing starts now.
 
   initial_tasks:
-    - learn_iot_basics
-    - understand_sensors
-    - first_data_collection
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
 
 skill_tree:
   core_skills:
-    - id: industrial_iot
-      name: "Industrial IoT"
-      description: "Deploy sensor networks to collect production data"
+    - id: iot_sensors
+      name: "IoT Sensor Networks"
+      description: "Connect machines and equipment with sensors that collect real-time production data"
       max_level: 10
       unlocks:
-        - sensor_deployment
-        - edge_computing
-
-    - id: data_analytics
-      name: "Manufacturing Data Analytics"
-      description: "Analyze production data to find bottlenecks and anomalies"
-      max_level: 10
-      unlocks:
-        - spc_analysis
-        - yield_optimization
-
-    - id: automation
-      name: "Automation Control"
-      description: "Design PLC and SCADA automation systems"
-      max_level: 10
-      unlocks:
-        - plc_programming
-        - scada_design
+        - network_protocols
+        - data_pipelines
 
     - id: digital_twin
-      name: "Digital Twin"
-      description: "Build virtual replicas of production lines for simulation"
+      name: "Digital Twin Systems"
+      description: "Create virtual copies of the factory that mirror real-world conditions for testing and optimization"
       max_level: 10
       unlocks:
-        - 3d_simulation
-        - process_modeling
-
-  advanced_skills:
-    - id: predictive_maintenance
-      name: "Predictive Maintenance"
-      description: "Use AI to give early warnings before equipment failure"
-      max_level: 15
-      requires: [industrial_iot, data_analytics]
+        - simulation_modeling
+        - virtual_commissioning
 
     - id: ai_quality_control
-      name: "AI Quality Inspection"
-      description: "Use computer vision to automatically detect product defects"
-      max_level: 15
-      requires: [data_analytics, automation]
+      name: "AI Quality Control"
+      description: "Use computer vision and machine learning to detect product defects automatically"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
 
-    - id: lights_out_factory
-      name: "Lights-Out Factory"
-      description: "Design a fully unmanned autonomous production system"
+    - id: predictive_maintenance
+      name: "Predictive Maintenance"
+      description: "Analyze machine data to predict equipment failures before they cause production stops"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Robotic Automation"
+      description: "Design and program robotic systems that perform complex assembly and material handling tasks"
       max_level: 15
-      requires: [digital_twin, predictive_maintenance]
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Supply Chain Intelligence"
+      description: "Optimize the flow of materials and components using AI-powered supply chain management"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Lights-Out Manufacturing"
+      description: "Design fully automated production systems that can operate 24/7 without human intervention"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
 
 milestone_quests:
-  - id: first_sensor
-    name: "First Sensor"
-    description: "Successfully deploy a sensor and collect meaningful production data"
+  - id: first_connected_line
+    name: "First Connected Line"
+    description: "Successfully connect an entire production line with IoT sensors and display real-time data"
     required_level: 5
-    skills_tested: [industrial_iot, data_analytics]
+    skills_tested: [iot_sensors, digital_twin]
     xp_reward: 500
     unlocks:
-      - iot_badge
-      - factory_floor_access
+      - connected_factory_badge
+      - advanced_lab_access
 
-  - id: breakdown_preventer
-    name: "Breakdown Prophet"
-    description: "Successfully predict an equipment failure 24 hours in advance"
+  - id: zero_defect_challenge
+    name: "Zero Defect Challenge"
+    description: "Implement an AI quality control system that achieves 99.9% defect detection accuracy"
     required_level: 10
-    skills_tested: [predictive_maintenance, digital_twin]
+    skills_tested: [ai_quality_control, digital_twin]
     xp_reward: 1000
     unlocks:
-      - maintenance_master_title
-      - control_room_access
+      - quality_guardian_title
+      - vision_lab_access
 
-  - id: factory_architect
-    name: "Smart Factory Architect"
-    description: "Design and deploy a complete smart factory"
+  - id: lights_out_factory
+    name: "Lights-Out Factory"
+    description: "Design a production system that operates continuously for 72 hours without human intervention"
     required_level: 20
-    skills_tested: [lights_out_factory, ai_quality_control]
+    skills_tested: [lights_out_manufacturing, robotic_automation]
     xp_reward: 2500
     unlocks:
-      - architect_legend_title
+      - factory_commander_title
       - factory_leadership
 
 achievements:
-  - id: first_dashboard
-    name: "First Dashboard"
-    description: "Build a real-time production line monitoring dashboard"
+  - id: first_connection
+    name: "First Connection"
+    description: "Successfully connect your first machine to the IoT network"
     xp_reward: 100
     badge_type: bronze
 
-  - id: yield_booster
-    name: "Yield Booster"
-    description: "Raise production line yield from 90% to 99%"
+  - id: defect_detective
+    name: "Defect Detective"
+    description: "Use AI vision to detect 100 product defects automatically"
     xp_reward: 250
     badge_type: silver
 
-  - id: zero_downtime
-    name: "Zero Downtime Record"
-    description: "90 consecutive days with zero unplanned production stoppages"
+  - id: uptime_champion
+    name: "Uptime Champion"
+    description: "Prevent 5 equipment failures using predictive maintenance alerts"
     xp_reward: 500
     badge_type: gold
 
   - id: factory_legend
     name: "Factory Legend"
-    description: "Complete all smart manufacturing challenges"
+    description: "Complete all smart manufacturing challenges in the Digital Factory"
     xp_reward: 1000
     badge_type: platinum
 
 example_tasks:
   beginner:
     - id: sensor_setup
-      type: interaction
-      title: "Sensor Deployment"
-      description: "Install vibration and temperature sensors on a CNC lathe"
-      skills_improved: [industrial_iot]
+      type: technical
+      title: "Sensor Network Setup"
+      description: "Connect temperature, vibration, and speed sensors to a simulated production machine"
+      skills_improved: [iot_sensors]
       xp_reward: 60
 
-    - id: production_analysis
+    - id: data_dashboard
       type: analysis
-      title: "Production Line Data Analysis"
-      description: "Analyze one week of production data to find efficiency bottlenecks"
-      skills_improved: [data_analytics]
+      title: "Production Data Dashboard"
+      description: "Build a real-time dashboard displaying key production metrics from sensor data"
+      skills_improved: [iot_sensors, digital_twin]
       xp_reward: 50
 
   intermediate:
-    - id: twin_creation
+    - id: twin_builder
       type: creation
-      title: "Digital Twin Modeling"
-      description: "Build a digital twin model for an SMT production line"
-      skills_improved: [digital_twin, data_analytics]
+      title: "Digital Twin Builder"
+      description: "Create a digital twin of a production cell that mirrors real machine behavior"
+      skills_improved: [digital_twin, iot_sensors]
       xp_reward: 180
 
-    - id: aoi_system
+    - id: ai_inspector
       type: creation
-      title: "AI Visual Inspection System"
-      description: "Train a model to automatically detect soldering defects on PCB boards"
-      skills_improved: [ai_quality_control, automation]
+      title: "AI Quality Inspector"
+      description: "Train a computer vision model to identify surface defects on manufactured parts"
+      skills_improved: [ai_quality_control]
       xp_reward: 200
 
   advanced:
     - id: predictive_system
       type: creation
       title: "Predictive Maintenance System"
-      description: "Build a health scoring and failure prediction system for all factory equipment"
-      skills_improved: [predictive_maintenance, industrial_iot]
+      description: "Design a system that predicts machine failures 48 hours in advance using vibration data"
+      skills_improved: [predictive_maintenance, iot_sensors]
       xp_reward: 350
 
-    - id: autonomous_factory
+    - id: autonomous_line
       type: creation
-      title: "Autonomous Factory Design"
-      description: "Design a lights-out factory with fully automated scheduling and quality inspection"
-      skills_improved: [lights_out_factory, digital_twin]
+      title: "Autonomous Production Line"
+      description: "Design a fully automated production sequence with robotic handling and AI quality control"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
       xp_reward: 400
 
 learning_objectives:
-  - "Understand Industrial IoT architecture and sensor technology"
-  - "Master manufacturing data collection and analysis methods"
-  - "Design PLC and SCADA automation systems"
-  - "Build digital twin models of production lines"
-  - "Apply AI for predictive maintenance"
-  - "Implement computer vision quality inspection"
-  - "Design unmanned lights-out factories"
-  - "Understand smart manufacturing and Industry 4.0 developments"
+  - "Understand how IoT sensors collect and transmit real-time factory data"
+  - "Learn to build digital twin simulations of physical production systems"
+  - "Apply computer vision and machine learning to automated quality inspection"
+  - "Design predictive maintenance systems that prevent costly equipment failures"
+  - "Understand how robotic systems are programmed for flexible manufacturing tasks"
+  - "Analyze production data to identify efficiency improvements and waste reduction"
+  - "Design interconnected factory systems where machines communicate and self-optimize"
+  - "Explore the future of lights-out manufacturing and fully autonomous factories"
 
 career_outcomes:
-  - "Smart Manufacturing Engineer"
-  - "Industrial IoT Architect"
-  - "Digital Twin Engineer"
-  - "Manufacturing Data Scientist"
-  - "Automation Systems Integrator"
+  - "Smart Factory Operations Manager"
+  - "Industrial IoT Engineer"
+  - "Digital Twin Specialist"
+  - "Robotics Automation Engineer"
+  - "AI Quality Control Engineer"
   - "Predictive Maintenance Engineer"
-  - "AI Quality Engineer"
-  - "Smart Factory Consultant"
+  - "Manufacturing Data Scientist"
+  - "Industry 4.0 Consultant"

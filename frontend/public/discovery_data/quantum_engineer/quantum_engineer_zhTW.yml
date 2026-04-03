@@ -1,10 +1,10 @@
-# 量子科技工程師探索路徑 - 繁體中文
+# 量子計算研究員探索路徑 - 繁體中文
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "量子織夢者 - 量子科技工程師"
+  title: "量子織夢者 - 量子計算研究員"
   short_description: "駕馭量子世界的疊加與糾纏來解決不可能的問題"
   long_description: |
     你是「量子迷宮」的見習織夢者，擁有理解粒子同時存在多種狀態的直覺

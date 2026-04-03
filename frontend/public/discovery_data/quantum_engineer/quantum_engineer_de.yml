@@ -1,10 +1,10 @@
 # Quantum-Ingenieur Entdeckungspfad - Deutsch
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Quanten-Traumweber - Quantentechnologie-Ingenieur"
+  title: "Quanten-Traumweber - Quantentechnologie-Forscher"
   short_description: "Beherrsche Superposition und Verschränkung, um das Unmögliche zu lösen"
   long_description: |
     Du bist ein Lehrling des Traumwebers im „Quantenlabyrinth" und besitzt die Intuition,

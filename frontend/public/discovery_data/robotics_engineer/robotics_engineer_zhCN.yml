@@ -1,10 +1,10 @@
-# 机器人工程师探索路径 - 简体中文
+# 机器人产品设计师探索路径 - 简体中文
 path_id: robotics_engineer
-category: robotics
+category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "机甲工坊大师 - 机器人工程师"
+  title: "机甲工坊大师 - 机器人产品设计师"
   short_description: "打造与人类并肩工作的未来工厂机器人"
   long_description: |
     你是「机甲工坊」的见习技师，这里的工程师设计用于组装汽车、采收农作物、
@@ -206,7 +206,7 @@ learning_objectives:
   - "评估速度、精度和安全性之间的机器人性能取舍"
 
 career_outcomes:
-  - "机器人工程师"
+  - "机器人产品设计师"
   - "自动化工程师"
   - "机器人程序员"
   - "制造系统工程师"

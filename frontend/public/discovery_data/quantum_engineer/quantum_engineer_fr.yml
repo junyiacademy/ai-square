@@ -1,10 +1,10 @@
 # Chemin de Découverte de l'Ingénieur Quantique - Français
 path_id: quantum_engineer
-category: quantum_technology
+category: science
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Tisseur de Rêves Quantiques - Ingénieur en Technologie Quantique"
+  title: "Tisseur de Rêves Quantiques - Chercheur en Informatique Quantique"
   short_description: "Maîtrisez la superposition et l'intrication pour résoudre l'impossible"
   long_description: |
     Vous êtes un apprenti Tisseur de Rêves dans le « Labyrinthe Quantique », doté de
