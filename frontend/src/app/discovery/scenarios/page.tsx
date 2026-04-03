@@ -192,17 +192,18 @@ export default function ScenariosPage() {
           // Transform the scenarios to match the expected format
           const transformedScenarios = scenarios.map(
             (scenario: Record<string, unknown>) => {
-              const careerType =
-                ((scenario.discovery_data as Record<string, unknown>)
-                  ?.careerType as string) || "general";
-
-              // Derive sourceId for banner image lookup
+              // Derive sourceId first (used for banner image and as careerType fallback)
               const sourceId = (
                 (scenario.sourceId as string) ||
                 (scenario.source_id as string) ||
                 ((scenario.sourceMetadata as Record<string, unknown>)?.careerDir as string) ||
-                careerType
+                ((scenario.discovery_data as Record<string, unknown>)?.careerType as string) ||
+                "general"
               );
+
+              const careerType =
+                ((scenario.discovery_data as Record<string, unknown>)
+                  ?.careerType as string) || sourceId;
 
               return {
                 id: careerType,
