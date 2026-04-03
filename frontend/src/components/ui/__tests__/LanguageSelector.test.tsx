@@ -52,9 +52,12 @@ describe("LanguageSelector", () => {
     expect(select).not.toHaveTextContent("🇺🇸");
     expect(select).not.toHaveTextContent("🇹🇼");
     expect(select).not.toHaveTextContent("🇨🇳");
-    // Check that disabled languages are not present
-    expect(select).not.toHaveTextContent("Español");
-    expect(select).not.toHaveTextContent("日本語");
+    // Check that all languages are present
+    expect(select).toHaveTextContent("Español");
+    expect(select).toHaveTextContent("日本語");
+    expect(select).toHaveTextContent("한국어");
+    expect(select).toHaveTextContent("Français");
+    expect(select).toHaveTextContent("Deutsch");
   });
 
   it("changes language when option is selected", () => {
