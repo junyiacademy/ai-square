@@ -38,6 +38,8 @@ jest.mock("next/server", () => ({
 describe("middleware", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Enable discovery in test environment so auth tests work correctly
+    process.env.DISCOVERY_ENABLED = "true";
   });
 
   describe("unprotected routes", () => {
