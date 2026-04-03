@@ -122,7 +122,7 @@ describe("ScenarioCard", () => {
     );
 
     // Check for progress indicators - component shows Chinese status
-    const progressElements = screen.getAllByText("學習中");
+    const progressElements = screen.getAllByText("card.statusInProgress");
     expect(progressElements.length).toBeGreaterThan(0);
   });
 
@@ -148,7 +148,7 @@ describe("ScenarioCard", () => {
     );
 
     // Component shows Chinese status
-    const masteredElements = screen.getAllByText("已達成");
+    const masteredElements = screen.getAllByText("card.statusMastered");
     expect(masteredElements.length).toBeGreaterThan(0);
   });
 
@@ -167,8 +167,8 @@ describe("ScenarioCard", () => {
       />,
     );
 
-    // Component shows "上次活動：" prefix with date
-    expect(screen.getByText(/上次活動/)).toBeInTheDocument();
+    // Component shows last activity via i18n key
+    expect(screen.getByText(/card\.lastActivity/)).toBeInTheDocument();
   });
 
   it("hides last activity when prop is false", async () => {
@@ -254,8 +254,8 @@ describe("ScenarioCard", () => {
       />,
     );
 
-    // Stats should be displayed in some form
-    expect(screen.getByText(/5/)).toBeInTheDocument();
+    // Stats should be displayed — i18n keys rendered via mock
+    expect(screen.getByText("card.totalAttempts")).toBeInTheDocument();
   });
 
   it("handles keyboard navigation", async () => {
