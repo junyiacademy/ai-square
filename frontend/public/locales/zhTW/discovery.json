@@ -385,5 +385,38 @@
     "requiredSkills": "所需技能",
     "technical": "技術技能",
     "soft": "軟技能"
+  },
+
+  "scenarios": {
+    "heading": "探索職業冒險",
+    "subheading": "選擇你的職業角色，開始獨特的學習冒險。每個職業都有精心設計的故事情境和挑戰任務",
+    "tabAll": "全部",
+    "tabMy": "我的冒險",
+    "filterIndustry": "產業",
+    "filterJobFunction": "職能",
+    "loadingAll": "載入職業冒險中...",
+    "loadingMy": "載入我的學習歷程...",
+    "emptyMyTitle": "還沒有開始任何學習歷程",
+    "emptyMySubtitle": "選擇一個職業路徑，開始你的探索之旅",
+    "browseAll": "瀏覽所有職業",
+    "emptyFilter": "沒有找到符合條件的職業冒險",
+    "industry": {
+      "all": "全部",
+      "technology": "科技",
+      "arts": "創意 / 媒體",
+      "business": "商業 / 創業",
+      "science": "科學 / 生技",
+      "hardware": "硬體 / 半導體",
+      "green": "能源 / 永續"
+    },
+    "jobFunction": {
+      "all": "全部",
+      "engineer": "工程師",
+      "designer": "設計師",
+      "researcher": "研究員",
+      "creator": "創作者",
+      "pm": "PM / 管理",
+      "business": "商業 / 創業"
+    }
   }
 }

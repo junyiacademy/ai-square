@@ -355,6 +355,39 @@
     "viewResults": "View Results"
   },
 
+  "scenarios": {
+    "heading": "Explore Career Adventures",
+    "subheading": "Choose your career role and start a unique learning adventure. Each career has carefully designed story scenarios and challenge tasks.",
+    "tabAll": "All",
+    "tabMy": "My Adventures",
+    "filterIndustry": "Industry",
+    "filterJobFunction": "Role",
+    "loadingAll": "Loading career adventures...",
+    "loadingMy": "Loading my learning journey...",
+    "emptyMyTitle": "No learning journeys started yet",
+    "emptyMySubtitle": "Choose a career path and begin your exploration",
+    "browseAll": "Browse All Careers",
+    "emptyFilter": "No career adventures found matching your filters",
+    "industry": {
+      "all": "All",
+      "technology": "Technology",
+      "arts": "Creative / Media",
+      "business": "Business / Startup",
+      "science": "Science / Biotech",
+      "hardware": "Hardware / Semiconductor",
+      "green": "Energy / Sustainability"
+    },
+    "jobFunction": {
+      "all": "All",
+      "engineer": "Engineer",
+      "designer": "Designer",
+      "researcher": "Researcher",
+      "creator": "Creator",
+      "pm": "PM / Management",
+      "business": "Business / Entrepreneur"
+    }
+  },
+
   "scenarioDetail": {
     "loading": "Loading...",
     "notFound": "Scenario not found",
