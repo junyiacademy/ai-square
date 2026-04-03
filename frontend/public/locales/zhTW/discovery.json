@@ -436,7 +436,8 @@
     "lastActivity": "上次活動：",
     "actionContinue": "繼續學習",
     "actionRetry": "再次挑戰",
-    "actionStart": "開始冒險"
+    "actionStart": "開始冒險",
+    "countTimes": "{{count}} 次"
   },
 
   "scenarioDetail": {

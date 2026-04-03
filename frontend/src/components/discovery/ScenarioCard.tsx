@@ -144,13 +144,13 @@ export default function ScenarioCard({
               <div className="bg-gray-50 rounded-lg p-3 space-y-2">
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-600">{t("card.totalAttempts")}</span>
-                  <span className="font-medium">{stats.totalAttempts} 次</span>
+                  <span className="font-medium">{t("card.countTimes", { count: stats.totalAttempts })}</span>
                 </div>
                 {stats.completedCount > 0 && (
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-600">{t("card.completedCount")}</span>
                     <span className="font-medium text-green-600">
-                      {stats.completedCount} 次
+                      {t("card.countTimes", { count: stats.completedCount })}
                     </span>
                   </div>
                 )}

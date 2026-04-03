@@ -289,7 +289,7 @@ export default function TaskDetailPage({
       }
     } catch (error) {
       console.error("Error completing task:", error);
-      alert("任務完成失敗，請稍後再試");
+      alert(t("task.completeFailed"));
     } finally {
       setCompletingTask(false);
     }
@@ -345,7 +345,7 @@ export default function TaskDetailPage({
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center space-x-2 text-gray-500">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-            <span>載入中...</span>
+            <span>{t("status.loading")}</span>
           </div>
         </div>
       </DiscoveryPageLayout>
@@ -356,7 +356,7 @@ export default function TaskDetailPage({
     return (
       <DiscoveryPageLayout>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <p className="text-gray-500">找不到此任務</p>
+          <p className="text-gray-500">{t("task.notFound")}</p>
           <button
             onClick={() =>
               router.push(
@@ -365,7 +365,7 @@ export default function TaskDetailPage({
             }
             className="mt-4 text-purple-600 hover:text-purple-700"
           >
-            返回學習歷程
+            {t("task.backToProgram")}
           </button>
         </div>
       </DiscoveryPageLayout>
@@ -410,7 +410,7 @@ export default function TaskDetailPage({
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>返回學習歷程</span>
+          <span>{t("task.backToProgram")}</span>
         </button>
 
         {/* Task Header */}
@@ -439,7 +439,7 @@ export default function TaskDetailPage({
             taskData.content.objectives.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  任務指引
+                  {t("task.objectives")}
                 </h3>
                 <ul className="space-y-2">
                   {taskData.content.objectives.map((objective, index) => (
@@ -460,7 +460,7 @@ export default function TaskDetailPage({
               <div className="bg-purple-50 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-purple-600" />
-                  <span>完成標準</span>
+                  <span>{t("task.completionCriteria")}</span>
                 </h3>
                 <ul className="space-y-2">
                   {taskData.content.completionCriteria.map(
@@ -482,9 +482,9 @@ export default function TaskDetailPage({
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
               {taskData.interactions && taskData.interactions.length > 0
                 ? hasPassedBefore
-                  ? `繼續挑戰 ${passCount > 1 ? `(已通過 ${passCount} 次)` : "(已通過)"}`
-                  : "繼續作答"
-                : "你的回答"}
+                  ? `${t("task.continueChallenge")} ${passCount > 1 ? `(${t("task.passedNTimes", { count: passCount })})` : `(${t("task.passed")})`}`
+                  : t("task.continueAnswering")
+                : t("task.yourAnswer")}
             </h3>
 
             <textarea
@@ -494,10 +494,10 @@ export default function TaskDetailPage({
                 taskData.interactions && taskData.interactions.length > 0
                   ? hasPassedBefore
                     ? passCount > 1
-                      ? `您已經通過 ${passCount} 次了！想要挑戰更高分嗎？`
-                      : "您已經通過了！可以嘗試其他解決方案或繼續優化..."
-                    : "根據 AI 的回饋，改進你的回答..."
-                  : "在這裡寫下你的回答..."
+                      ? t("task.placeholderPassedMultiple", { count: passCount })
+                      : t("task.placeholderPassedOnce")
+                    : t("task.placeholderImprove")
+                  : t("task.writeAnswerPlaceholder")
               }
               className="w-full h-48 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             />
@@ -508,7 +508,7 @@ export default function TaskDetailPage({
                 className="flex items-center space-x-2 text-purple-600 hover:text-purple-700"
               >
                 <Lightbulb className="w-5 h-5" />
-                <span>{showHints ? "隱藏提示" : "需要提示？"}</span>
+                <span>{showHints ? t("task.hideHints") : t("task.needHint")}</span>
               </button>
 
               <button

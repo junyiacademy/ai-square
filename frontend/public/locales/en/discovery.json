@@ -426,7 +426,8 @@
     "lastActivity": "Last activity: ",
     "actionContinue": "Continue Learning",
     "actionRetry": "Challenge Again",
-    "actionStart": "Start Adventure"
+    "actionStart": "Start Adventure",
+    "countTimes": "{{count}} times"
   },
 
   "scenarioDetail": {
