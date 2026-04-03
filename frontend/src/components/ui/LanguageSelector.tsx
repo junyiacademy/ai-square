@@ -9,20 +9,20 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: "zhTW", name: "繁體中文", flag: "" },
-  { code: "en", name: "English", flag: "" },
-  { code: "zhCN", name: "简体中文", flag: "" },
-  { code: "ja", name: "日本語", flag: "" },
-  { code: "ko", name: "한국어", flag: "" },
-  { code: "es", name: "Español", flag: "" },
-  { code: "fr", name: "Français", flag: "" },
-  { code: "de", name: "Deutsch", flag: "" },
-  { code: "pt", name: "Português", flag: "" },
-  { code: "it", name: "Italiano", flag: "" },
-  { code: "ru", name: "Русский", flag: "" },
-  { code: "th", name: "ภาษาไทย", flag: "" },
-  { code: "id", name: "Bahasa Indonesia", flag: "" },
-  { code: "ar", name: "العربية", flag: "" },
+  { code: "zhTW", name: "繁體中文", flag: "🇹🇼" },
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "zhCN", name: "简体中文", flag: "🇨🇳" },
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "ko", name: "한국어", flag: "🇰🇷" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "pt", name: "Português", flag: "🇧🇷" },
+  { code: "it", name: "Italiano", flag: "🇮🇹" },
+  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "th", name: "ภาษาไทย", flag: "🇹🇭" },
+  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
 ];
 
 interface LanguageSelectorProps {
@@ -85,7 +85,7 @@ export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
       >
         {languages.map((language) => (
           <option key={language.code} value={language.code}>
-            {language.name}
+            {language.flag} {language.name}
           </option>
         ))}
       </select>
