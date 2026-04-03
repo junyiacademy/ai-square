@@ -14,6 +14,12 @@ import {
   Briefcase,
   Megaphone,
   Users,
+  CircuitBoard,
+  Bot,
+  Car,
+  Atom,
+  Leaf,
+  Factory,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -44,6 +50,12 @@ const careerIcons: Record<
   biotech_researcher: Lightbulb,
   cybersecurity_specialist: Code,
   environmental_scientist: BarChart,
+  ic_design_engineer: CircuitBoard,
+  robotics_engineer: Bot,
+  autonomous_vehicle_engineer: Car,
+  quantum_engineer: Atom,
+  green_energy_engineer: Leaf,
+  smart_manufacturing_engineer: Factory,
 };
 
 // Color mapping for career types
@@ -64,22 +76,77 @@ const careerColors: Record<string, string> = {
   biotech_researcher: "from-green-500 to-emerald-500",
   cybersecurity_specialist: "from-gray-600 to-gray-800",
   environmental_scientist: "from-green-600 to-teal-600",
+  ic_design_engineer: "from-cyan-500 to-blue-600",
+  robotics_engineer: "from-orange-500 to-red-500",
+  autonomous_vehicle_engineer: "from-emerald-500 to-cyan-500",
+  quantum_engineer: "from-violet-500 to-purple-600",
+  green_energy_engineer: "from-green-500 to-yellow-500",
+  smart_manufacturing_engineer: "from-slate-500 to-blue-500",
 };
 
-const categoryFilters = [
+// Maps broad filter IDs to actual DB category values
+const categoryMapping: Record<string, string[]> = {
+  technology: ["technology"],
+  arts: ["arts"],
+  business: ["business"],
+  hardware: ["semiconductor", "manufacturing"],
+  science: ["science", "quantum_technology"],
+  green: ["sustainability"],
+  automation: ["robotics", "autonomous_systems"],
+};
+
+// Industry filters (Row 1)
+const industryFilters = [
   { id: "all", name: "全部", icon: Sparkles },
-  { id: "arts", name: "創意", icon: Paintbrush },
-  { id: "technology", name: "技術", icon: Code },
-  { id: "business", name: "商業", icon: Briefcase },
-  { id: "science", name: "科學", icon: Lightbulb },
+  { id: "technology", name: "科技 / AI", icon: Code },
+  { id: "arts", name: "創意 / 媒體", icon: Paintbrush },
+  { id: "business", name: "商業 / 創業", icon: Briefcase },
+  { id: "hardware", name: "半導體 / 硬體", icon: CircuitBoard },
+  { id: "science", name: "科學 / 生技", icon: Lightbulb },
+  { id: "green", name: "能源 / 永續", icon: Leaf },
+  { id: "automation", name: "自動化 / 交通", icon: Bot },
 ];
+
+// Job function filters (Row 2)
+const jobFunctionFilters = [
+  { id: "all", name: "全部", icon: Sparkles },
+  { id: "engineer", name: "工程師", icon: Cpu },
+  { id: "designer", name: "設計師", icon: Paintbrush },
+  { id: "researcher", name: "研究員", icon: Lightbulb },
+  { id: "creator", name: "創作者", icon: Video },
+  { id: "pm", name: "PM / 管理", icon: Users },
+  { id: "business", name: "商業 / 創業", icon: Briefcase },
+];
+
+// Map career types to job functions
+const careerJobFunctions: Record<string, string> = {
+  app_developer: "engineer",
+  autonomous_vehicle_engineer: "engineer",
+  ic_design_engineer: "engineer",
+  cybersecurity_specialist: "engineer",
+  ux_designer: "designer",
+  game_designer: "designer",
+  robotics_engineer: "designer",
+  biotech_researcher: "researcher",
+  environmental_scientist: "researcher",
+  quantum_engineer: "researcher",
+  data_analyst: "researcher",
+  content_creator: "creator",
+  youtuber: "creator",
+  product_manager: "pm",
+  smart_manufacturing_engineer: "pm",
+  startup_founder: "business",
+  tech_entrepreneur: "business",
+  green_energy_engineer: "business",
+};
 
 export default function ScenariosPage() {
   const router = useRouter();
   const { i18n } = useTranslation(["discovery", "skills"]);
   const { isLoggedIn } = useAuth();
   useUserData(); // Trigger user data loading
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedIndustry, setSelectedIndustry] = useState("all");
+  const [selectedJobFunction, setSelectedJobFunction] = useState("all");
   const [activeTab, setActiveTab] = useState<"all" | "my">("all"); // Default to 'all' since v2 doesn't track discovery in userData
   interface Scenario {
     id: string;
@@ -90,6 +157,7 @@ export default function ScenariosPage() {
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     color: string;
     skills: string[];
+    bannerImage?: string;
     userPrograms?: {
       active?: {
         progress: number;
@@ -124,15 +192,25 @@ export default function ScenariosPage() {
           // Transform the scenarios to match the expected format
           const transformedScenarios = scenarios.map(
             (scenario: Record<string, unknown>) => {
+              // Derive sourceId first (used for banner image and as careerType fallback)
+              const sourceId = (
+                (scenario.sourceId as string) ||
+                (scenario.source_id as string) ||
+                ((scenario.sourceMetadata as Record<string, unknown>)?.careerDir as string) ||
+                ((scenario.discovery_data as Record<string, unknown>)?.careerType as string) ||
+                "general"
+              );
+
               const careerType =
                 ((scenario.discovery_data as Record<string, unknown>)
-                  ?.careerType as string) || "general";
+                  ?.careerType as string) || sourceId;
 
               return {
                 id: careerType,
                 scenarioId: scenario.id, // Store the actual scenario UUID
                 title: scenario.title as string, // API now returns localized string
                 subtitle: scenario.description as string, // API now returns localized string
+                bannerImage: `/images/discovery-banners/${sourceId}.webp`,
                 category:
                   ((scenario.discovery_data as Record<string, unknown>)
                     ?.category as string) ||
@@ -273,9 +351,13 @@ export default function ScenariosPage() {
   const filteredScenarios =
     activeTab === "my"
       ? myScenarios
-      : selectedCategory === "all"
-        ? scenarios
-        : scenarios.filter((s) => s.category === selectedCategory);
+      : scenarios.filter((s) => {
+          const industryMatch =
+            selectedIndustry === "all" ||
+            (categoryMapping[selectedIndustry]?.includes(s.category) ?? false);
+          const jobMatch = selectedJobFunction === "all" || careerJobFunctions[s.id] === selectedJobFunction;
+          return industryMatch && jobMatch;
+        });
 
   const handleScenarioSelect = async (scenarioOrCareer: Scenario | string) => {
     if (!isLoggedIn) {
@@ -358,30 +440,60 @@ export default function ScenariosPage() {
           </div>
         </div>
 
-        {/* Category Filters - Only show when viewing all */}
+        {/* Dual Filter Rows - Only show when viewing all */}
         {activeTab === "all" && (
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex rounded-lg border border-gray-200 bg-white p-1">
-              {categoryFilters.map((filter) => {
-                const Icon = filter.icon;
-                return (
-                  <button
-                    key={filter.id}
-                    onClick={() => setSelectedCategory(filter.id)}
-                    className={`
-                      flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all
-                      ${
-                        selectedCategory === filter.id
-                          ? "bg-purple-600 text-white shadow-sm"
-                          : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                      }
-                    `}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{filter.name}</span>
-                  </button>
-                );
-              })}
+          <div className="flex flex-col items-center gap-3 mb-8">
+            {/* Row 1: Industry */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">產業</span>
+              <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
+                {industryFilters.map((filter) => {
+                  const Icon = filter.icon;
+                  return (
+                    <button
+                      key={filter.id}
+                      onClick={() => setSelectedIndustry(filter.id)}
+                      className={`
+                        flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all
+                        ${
+                          selectedIndustry === filter.id
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                        }
+                      `}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      <span>{filter.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {/* Row 2: Job Function */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">職能</span>
+              <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
+                {jobFunctionFilters.map((filter) => {
+                  const Icon = filter.icon;
+                  return (
+                    <button
+                      key={filter.id}
+                      onClick={() => setSelectedJobFunction(filter.id)}
+                      className={`
+                        flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all
+                        ${
+                          selectedJobFunction === filter.id
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                        }
+                      `}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      <span>{filter.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}

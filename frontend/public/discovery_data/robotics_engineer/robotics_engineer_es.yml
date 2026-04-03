@@ -1,0 +1,218 @@
+# Camino de Exploración del Diseñador de Productos Robóticos - Español
+path_id: robotics_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Maestro del Taller Mecha - Diseñador de Productos Robóticos"
+  short_description: "Construye robots que trabajen junto a humanos en la fábrica del futuro"
+  long_description: |
+    Eres aprendiz de mecánico en el Taller Mecha, donde los ingenieros diseñan robots
+    que ensamblan autos, cosechan cultivos, asisten a cirujanos y exploran zonas de desastre.
+    La robótica es donde la mecánica, el código y la IA se encuentran — y las máquinas que
+    construyas podrían cambiar cómo trabajan y viven miles de millones de personas.
+
+  estimated_hours: 55
+  skill_focus:
+    - sensor_systems
+    - motion_control
+    - robot_programming
+    - human_robot_collaboration
+
+world_setting:
+  name: "Taller Mecha"
+  description: |
+    El Taller Mecha es un laboratorio de innovación de alta energía donde robots de todos
+    los tamaños se construyen, prueban y envían al mundo real. Desafío: construir robots
+    fuertes, precisos y seguros — y suficientemente inteligentes para trabajar junto a
+    humanos sin accidentes.
+
+  atmosphere: "industrial_innovative"
+  visual_theme: "robot_workshop"
+
+starting_scenario:
+  title: "El Taller Despierta"
+  description: |
+    El Ingeniero Jefe Chen te da tu primera tarea: un robot de fábrica en la línea de
+    ensamblaje sigue chocando con los trabajadores porque no los detecta correctamente.
+    Repara su sistema de sensores y reprograma su movimiento para evitar personas.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_motors
+    - first_program
+
+skill_tree:
+  core_skills:
+    - id: sensor_systems
+      name: "Sistemas de Sensores"
+      description: "Aprende cómo los robots 'ven' el mundo usando cámaras, sensores de distancia y sensores táctiles — los robots necesitan sensores como nosotros necesitamos ojos y oídos"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - proximity_sensing
+
+    - id: motion_control
+      name: "Control de Movimiento"
+      description: "Programa motores y articulaciones para moverse con fluidez y precisión — como enseñar a un robot a caminar, alcanzar y recoger cosas sin dejarlas caer"
+      max_level: 10
+      unlocks:
+        - trajectory_planning
+        - balance_control
+
+    - id: robot_programming
+      name: "Programación de Robots"
+      description: "Escribe código que dice a los robots qué hacer, cuándo hacerlo y cómo reaccionar ante situaciones inesperadas — el cerebro detrás de la fuerza"
+      max_level: 10
+      unlocks:
+        - task_sequencing
+        - error_recovery
+
+    - id: human_robot_collaboration
+      name: "Trabajo en Equipo Humano-Robot"
+      description: "Diseña sistemas donde robots y personas trabajen seguramente codo a codo — el robot debe frenar, detenerse o ajustarse cuando hay un humano cerca"
+      max_level: 10
+      unlocks:
+        - safety_systems
+        - collaborative_tasks
+
+  advanced_skills:
+    - id: ai_perception
+      name: "Percepción con IA"
+      description: "Da a los robots la capacidad de reconocer objetos, entender entornos y tomar decisiones usando IA — como enseñar a un robot a clasificar frutas por tamaño y madurez"
+      max_level: 15
+      requires: [sensor_systems, robot_programming]
+
+    - id: autonomous_navigation
+      name: "Navegación Autónoma"
+      description: "Programa robots para que encuentren su propio camino en fábricas o almacenes, evitando obstáculos sin guía humana"
+      max_level: 15
+      requires: [motion_control, sensor_systems]
+
+    - id: swarm_robotics
+      name: "Enjambres de Robots"
+      description: "Coordina múltiples robots trabajando juntos como una colonia de hormigas — cada robot es simple, pero juntos logran tareas complejas"
+      max_level: 15
+      requires: [robot_programming, human_robot_collaboration]
+
+milestone_quests:
+  - id: first_robot_move
+    name: "Primeros Pasos"
+    description: "Programa un brazo robótico para recoger un objeto, moverlo y colocarlo precisamente en un lugar objetivo"
+    required_level: 5
+    skills_tested: [motion_control, robot_programming]
+    xp_reward: 500
+    unlocks:
+      - junior_mechanic_badge
+      - workshop_access
+
+  - id: sense_and_avoid
+    name: "El Desafío de la Evasión"
+    description: "Construye un robot que detecte a una persona en movimiento y ajuste automáticamente su trayectoria para evitar la colisión"
+    required_level: 10
+    skills_tested: [sensor_systems, human_robot_collaboration]
+    xp_reward: 1000
+    unlocks:
+      - safety_engineer_title
+      - advanced_lab_access
+
+  - id: full_assembly_line
+    name: "Fábrica sin Luces"
+    description: "Diseña un sistema robótico completo que opere una línea de ensamblaje autónomamente durante 1 hora sin intervención humana"
+    required_level: 20
+    skills_tested: [autonomous_navigation, ai_perception]
+    xp_reward: 2500
+    unlocks:
+      - master_mechanic_title
+      - workshop_leadership
+
+achievements:
+  - id: first_task_completed
+    name: "Primera Tarea Completada"
+    description: "Programa un robot para completar una tarea simple de principio a fin sin errores"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: safety_champion
+    name: "Campeón de Seguridad"
+    description: "Diseña un robot que pase las 10 pruebas de seguridad humana sin ni un solo fallo"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: precision_master
+    name: "Maestro de Precisión"
+    description: "Logra una precisión de posicionamiento de 1 milímetro en una tarea de brazo robótico"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "Leyenda del Taller Mecha"
+    description: "Completa todos los desafíos de robótica y construye un sistema robótico completamente autónomo"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_reading
+      type: analysis
+      title: "Sistemas de Sensores"
+      description: "Aprende cómo los robots 'ven' el mundo usando cámaras, sensores de distancia y sensores táctiles — los robots necesitan sensores como nosotros necesitamos ojos y oídos"
+      skills_improved: [sensor_systems]
+      xp_reward: 50
+
+    - id: motor_control
+      type: design
+      title: "Control de Movimiento"
+      description: "Programa motores y articulaciones para moverse con fluidez y precisión — como enseñar a un robot a caminar, alcanzar y recoger cosas sin dejarlas caer"
+      skills_improved: [motion_control]
+      xp_reward: 60
+
+  intermediate:
+    - id: pick_and_place
+      type: creation
+      title: "Primeros Pasos"
+      description: "Programa un brazo robótico para recoger un objeto, moverlo y colocarlo precisamente en un lugar objetivo"
+      skills_improved: [motion_control, robot_programming]
+      xp_reward: 180
+
+    - id: collision_avoidance
+      type: verification
+      title: "El Desafío de la Evasión"
+      description: "Construye un robot que detecte a una persona en movimiento y ajuste automáticamente su trayectoria para evitar la colisión"
+      skills_improved: [sensor_systems, autonomous_navigation]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_sorting
+      type: creation
+      title: "Percepción con IA"
+      description: "Da a los robots la capacidad de reconocer objetos, entender entornos y tomar decisiones usando IA — como enseñar a un robot a clasificar frutas por tamaño y madurez"
+      skills_improved: [ai_perception, robot_programming]
+      xp_reward: 350
+
+    - id: human_handoff
+      type: creation
+      title: "Navegación Autónoma"
+      description: "Programa robots para que encuentren su propio camino en fábricas o almacenes, evitando obstáculos sin guía humana"
+      skills_improved: [human_robot_collaboration, sensor_systems]
+      xp_reward: 400
+
+learning_objectives:
+  - "Entender cómo los robots perciben su entorno usando diferentes tipos de sensores"
+  - "Programar movimientos básicos de robots con precisión y control suave"
+  - "Diseñar sistemas robóticos que trabajen de manera segura junto a trabajadores humanos"
+  - "Aplicar técnicas de IA para dar a los robots capacidades de reconocimiento de objetos"
+  - "Navegar robots de manera autónoma en entornos complejos del mundo real"
+  - "Coordinar múltiples robots para completar tareas colaborativas"
+  - "Entender el papel de la robótica en la manufactura moderna como las fábricas de Foxconn"
+  - "Evaluar compromisos de rendimiento robótico entre velocidad, precisión y seguridad"
+
+career_outcomes:
+  - "Diseñador de Productos Robóticos"
+  - "Ingeniero de Automatización"
+  - "Programador de Robots"
+  - "Ingeniero de Sistemas de Fabricación"
+  - "Investigador de Robótica con IA"
+  - "Ingeniero de Seguridad Industrial"
+  - "Integrador de Sistemas Robóticos"
+  - "Diseñador de Interacción Humano-Robot"

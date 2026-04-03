@@ -1,0 +1,219 @@
+# Percorso di Scoperta dell'Ingegnere di Veicoli Autonomi - Italiano
+path_id: autonomous_vehicle_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Navigatore Autonomo - Ingegnere di Veicoli Autonomi"
+  short_description: "Insegna alle auto a vedere la strada, pensare e prendere decisioni da sole"
+  long_description: |
+    Sei un navigatore apprendista alla «Torre di Navigazione Autonoma», dotato del
+    talento per far guidare i veicoli da soli. In questa base ad alta tecnologia che
+    combina IA, sensori e mappe, ogni millisecondo di giudizio incide sulla sicurezza
+    dei passeggeri. La tua missione è costruire un futuro della mobilità senza incidenti.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "Torre di Navigazione Autonoma"
+  description: |
+    La Torre di Navigazione Autonoma è l'hub globale di R&S per la tecnologia di guida
+    autonoma. Dalla fusione dei sensori ai motori decisionali, dalle mappe HD alle reti
+    V2X, gli ingenierie qui costruiscono la prossima generazione di sistemi di trasporto
+    intelligente.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "Prima Guida Autonoma"
+  description: |
+    L'Ingegnere Capo Navigator ti guida nel mondo percettivo del veicolo autonomo:
+    nuvole di punti LiDAR, immagini della telecamera, echi radar. Ma sulla pista di
+    prova appare un Ghost Signal — un falso rilevamento di ostacolo. Devi analizzare
+    i dati dei sensori per trovare l'origine del fantasma.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "Percezione Ambientale"
+      description: "Rilevare l'ambiente usando LiDAR, telecamere e radar"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "Localizzazione e Mappatura"
+      description: "Localizzare con precisione il veicolo su mappe ad alta definizione"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "Pianificazione del Percorso"
+      description: "Trovare il percorso di guida più sicuro nel traffico complesso"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "Controllo del Veicolo"
+      description: "Controllare con precisione il volante, l'acceleratore e i freni"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "Apprendimento End-to-End"
+      description: "Usare il deep learning per andare direttamente dal sensore al controllo"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "Comunicazione V2X"
+      description: "Consentire ai veicoli di comunicare con l'infrastruttura e altri veicoli"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "Validazione della Sicurezza"
+      description: "Validare la sicurezza del sistema autonomo tramite simulazione e test reali"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "Prima Rilevazione"
+    description: "Rilevare e classificare con successo pedoni, veicoli e segnali sulla strada"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "Cacciafantasmi"
+    description: "Trovare ed eliminare i falsi rilevamenti nella fusione dei sensori"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "Navigatore Urbano"
+    description: "Completare un test di guida completamente autonoma in una città simulata"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "Mantenimento di Corsia"
+    description: "Mantenere il veicolo stabile al centro della corsia per 1 chilometro"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "Maestro delle Intersezioni"
+    description: "Attraversare in sicurezza 50 tipi diversi di intersezioni"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "Conducente Zero Incidenti"
+    description: "Completare 100 km di guida autonoma senza alcun incidente"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "Leggenda Autonoma"
+    description: "Completare tutte le sfide dell'ingegneria dei veicoli autonomi"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "Rilevazione di Oggetti con Telecamera"
+      description: "Usare un modello YOLO per rilevare veicoli e pedoni sulla strada"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "Lettura di Mappe HD"
+      description: "Comprendere le marcature delle corsie, le intersezioni e le annotazioni dei segnali nelle mappe"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "Fusione Tripla di Sensori"
+      description: "Fondere i risultati di rilevamento di LiDAR, telecamera e radar"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "Pianificazione del Percorso in Rotatoria"
+      description: "Pianificare una traiettoria di guida sicura in una rotatoria"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "Sfida di Guida Urbana Autonoma"
+      description: "Completare compiti di guida autonoma in un ambiente urbano complesso"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "Gestione della Flotta Autonoma"
+      description: "Gestire la pianificazione dei percorsi in tempo reale per 10 autobus autonomi"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Comprendere i principi di percezione di LiDAR, telecamere e radar"
+  - "Padroneggiare le tecniche di rilevamento di oggetti e segmentazione semantica"
+  - "Sviluppare competenze in mappatura HD e localizzazione in tempo reale"
+  - "Implementare la pianificazione del comportamento e la generazione di traiettorie"
+  - "Comprendere la dinamica del veicolo e la teoria del controllo"
+  - "Applicare il deep learning per la guida autonoma end-to-end"
+  - "Progettare processi di validazione della sicurezza per sistemi autonomi"
+  - "Comprendere lo sviluppo del trasporto intelligente e la regolamentazione"
+
+career_outcomes:
+  - "Ingegnere di Sistemi Autonomi"
+  - "Ingegnere di Fusione Sensori"
+  - "Ingegnere di Mappatura HD"
+  - "Ingegnere AI Automotive"
+  - "Ingegnere della Sicurezza Funzionale"
+  - "Pianificatore di Trasporto Intelligente"
+  - "Ingegnere della Comunicazione V2X"
+  - "Ingegnere di Test e Validazione di Veicoli Autonomi"

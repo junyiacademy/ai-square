@@ -1,0 +1,216 @@
+# 自駕車工程師探索路徑 - 繁體中文
+path_id: autonomous_vehicle_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "無人駕駛者 - 自駕車工程師"
+  short_description: "教會車子自己看路、思考、做決定"
+  long_description: |
+    你是「自駕領航塔」的見習領航員，擁有讓車輛自主行駛的天賦
+    在這個結合 AI、感測器、地圖的高科技基地中，每一毫秒的判斷
+    都關乎乘客的安全，而你的使命是打造零事故的移動未來
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "自駕領航塔"
+  description: |
+    自駕領航塔是全球自駕技術的研發中心，從感測器融合到決策引擎
+    從高精地圖到車聯網，工程師們在此打造下一代智慧交通系統
+    台灣的自駕巴士和物流車都從這裡出發
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "第一次自動駕駛"
+  description: |
+    首席工程師 Navigator 帶你體驗自駕車的感知世界：光達點雲、攝影機影像、雷達回波
+    但測試場上出現了一個 Ghost Signal — 虛假的障礙物偵測
+    你必須分析感測器數據找出幻影的來源
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "環境感知"
+      description: "用光達、攝影機、雷達感知周圍環境"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "定位與地圖"
+      description: "精準定位車輛在高精地圖上的位置"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "路徑規劃"
+      description: "在複雜交通中找出最安全的行駛路線"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "車輛控制"
+      description: "精確控制方向盤、油門、煞車"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "端到端學習"
+      description: "用深度學習直接從感測器到控制"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "車聯網 V2X"
+      description: "讓車輛與基礎設施和其他車輛通訊"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "安全驗證"
+      description: "用模擬和實測驗證自駕系統的安全性"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "第一次偵測"
+    description: "成功偵測並分類道路上的行人、車輛、號誌"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "幻影獵人"
+    description: "找到並消除感測器融合中的虛假偵測"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "城市領航者"
+    description: "在模擬城市中完成全自動駕駛測試"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "車道維持"
+    description: "讓車輛在車道中央穩定行駛 1 公里"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "路口達人"
+    description: "安全通過 50 個不同類型的路口"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "零事故駕駛"
+    description: "完成 100 公里無事故自動駕駛"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "自駕傳奇"
+    description: "完成所有自駕車工程挑戰"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "攝影機物件偵測"
+      description: "用 YOLO 模型偵測道路上的車輛和行人"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "高精地圖解讀"
+      description: "理解車道線、路口、交通號誌的地圖標註"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "三合一感測融合"
+      description: "融合光達、攝影機、雷達的偵測結果"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "迴轉道路徑規劃"
+      description: "在圓環中規劃安全的行駛軌跡"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "城市自駕挑戰"
+      description: "在複雜的台北市區完成自動駕駛任務"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "自駕車隊調度"
+      description: "管理 10 台自駕巴士的即時路線調度"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "理解光達、攝影機、雷達的感知原理"
+  - "掌握物件偵測與語義分割技術"
+  - "精通高精地圖與即時定位"
+  - "實作行為規劃與軌跡生成"
+  - "理解車輛動力學與控制理論"
+  - "運用深度學習進行端到端駕駛"
+  - "設計自駕系統的安全驗證流程"
+  - "了解台灣智慧交通發展與法規"
+
+career_outcomes:
+  - "自駕系統工程師"
+  - "感測器融合工程師"
+  - "高精地圖工程師"
+  - "車用 AI 工程師"
+  - "功能安全工程師"
+  - "智慧交通規劃師"
+  - "V2X 通訊工程師"
+  - "自駕車測試驗證工程師"

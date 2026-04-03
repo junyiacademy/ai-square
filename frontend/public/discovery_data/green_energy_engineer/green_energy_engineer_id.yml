@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Indonesian
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Penjaga Energi Hijau - Konsultan Strategi Energi Hijau"
+  short_description: "Manfaatkan kekuatan matahari, angin, dan alam untuk masa depan berkelanjutan"
+  long_description: |
+    Kamu adalah insinyur pemula di "Menara Energi Berkelanjutan", di mana kekuatan alam ditangkap dan diubah menjadi listrik bersih. Di menara berteknologi tinggi ini, kamu akan menemukan bagaimana sinar matahari menjadi energi, bagaimana angin memutar turbin, dan bagaimana sel bahan bakar hidrogen menyimpan energi untuk hari esok. Saat perubahan iklim mengancam dunia, inovasimu bisa membantu menyelamatkannya.
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "Menara Energi Berkelanjutan"
+  description: |
+    Menara Energi Berkelanjutan adalah keajaiban rekayasa hijau yang menjulang di atas lanskap yang sepenuhnya ditenagai oleh sumber terbarukan. Para insinyur di sini memanfaatkan panel surya, turbin angin, dan sistem hidrogen untuk menyediakan energi bersih bagi seluruh kota. Setiap terobosan di sini mengurangi emisi karbon dan melindungi planet.
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "Alarm Krisis Energi"
+  description: |
+    Insinyur Kepala Aurora membunyikan alarm: jaringan listrik kota gagal karena ketergantungan berlebihan pada bahan bakar fosil. Kamu harus merancang sistem energi terbarukan baru untuk menggantikan pembangkit listrik batu bara yang sudah tua. Perjalananmu dimulai dengan memahami bagaimana sinar matahari dan angin dapat menyuplai listrik ke seluruh kota secara bersih dan efisien.
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "Sistem Energi Surya"
+      description: "Kuasai bagaimana panel surya mengubah cahaya matahari menjadi listrik bersih"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "Sistem Energi Angin"
+      description: "Pelajari bagaimana turbin angin menghasilkan listrik dari udara yang bergerak"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Penyimpanan Energi"
+      description: "Selesaikan masalah menyimpan energi terbarukan saat matahari dan angin tidak tersedia"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "Manajemen Jaringan Cerdas"
+      description: "Seimbangkan pasokan dan permintaan energi di kota menggunakan sistem cerdas"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "Teknologi Hidrogen"
+      description: "Rancang sistem produksi hidrogen dan sel bahan bakar untuk penyimpanan energi bersih"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "Sistem Energi Lepas Pantai"
+      description: "Bangun sistem energi angin dan ombak di lingkungan laut"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "Perencanaan Pengurangan Karbon"
+      description: "Rancang rencana komprehensif untuk meminimalkan jejak karbon kota dan industri"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "Larik Surya Pertama"
+    description: "Rancang dan hitung sistem panel surya yang menyuplai listrik ke gedung sekolah"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "Perancang Ladang Angin"
+    description: "Rencanakan tata letak ladang angin yang memaksimalkan output energi untuk wilayah pesisir"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "Arsitek Kota Hijau"
+    description: "Rancang sistem energi terbarukan lengkap untuk seluruh distrik perkotaan"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "Watt Pertama"
+    description: "Hasilkan kilowatt pertama energi terbarukan simulasimu"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "Penyelamat Karbon"
+    description: "Rancang sistem yang menghilangkan 100 ton emisi CO2"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Penyeimbang Jaringan"
+    description: "Berhasil menyeimbangkan pasokan dan permintaan energi selama 24 jam"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "Legenda Energi Hijau"
+    description: "Selesaikan semua tantangan energi terbarukan di Menara"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "Kalkulator Panel Surya"
+      description: "Hitung berapa banyak panel surya yang dibutuhkan sebuah rumah agar mandiri energi"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "Dasar-Dasar Energi Angin"
+      description: "Analisis data kecepatan angin untuk menemukan lokasi terbaik memasang turbin angin"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "Sistem Penyimpanan Baterai"
+      description: "Rancang sistem baterai yang menyimpan energi surya untuk digunakan malam hari"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "Simulasi Jaringan Cerdas"
+      description: "Simulasikan bagaimana jaringan cerdas menyeimbangkan energi terbarukan di suatu lingkungan"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "Pembangkit Hidrogen"
+      description: "Rancang fasilitas produksi hidrogen hijau menggunakan kelebihan energi surya"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "Rencana Kota Nol Karbon"
+      description: "Buat rencana energi netral karbon yang komprehensif untuk kota berukuran sedang"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami bagaimana panel surya mengubah cahaya matahari menjadi listrik"
+  - "Mempelajari bagaimana turbin angin menghasilkan energi bersih dari udara bergerak"
+  - "Menguasai teknologi penyimpanan energi termasuk baterai dan hidrogen"
+  - "Merancang sistem jaringan cerdas yang menyeimbangkan pasokan dan permintaan"
+  - "Menghitung kebutuhan energi dan merancang sistem terbarukan berukuran tepat"
+  - "Memahami dampak energi terbarukan dalam mengurangi emisi karbon"
+  - "Menjelajahi teknologi sel bahan bakar hidrogen sebagai solusi penyimpanan energi"
+  - "Mengembangkan keterampilan merencanakan transisi energi berkelanjutan skala kota"
+
+career_outcomes:
+  - "Konsultan Strategi Energi Hijau"
+  - "Perancang Sistem Surya"
+  - "Spesialis Energi Angin"
+  - "Insinyur Penyimpanan Energi"
+  - "Insinyur Jaringan Cerdas"
+  - "Insinyur Sistem Hidrogen"
+  - "Konsultan Keberlanjutan"
+  - "Perencana Pengurangan Karbon"

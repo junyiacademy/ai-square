@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Spanish
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Guardián de la Energía Verde - Consultor de Estrategia de Energía Verde"
+  short_description: "Aprovecha el poder del sol, el viento y la naturaleza para un futuro sostenible"
+  long_description: |
+    Eres un ingeniero novato en la "Torre de Energía Sostenible", donde las fuerzas de la naturaleza se capturan y transforman en electricidad limpia. En esta torre de alta tecnología, descubrirás cómo la luz solar se convierte en energía, cómo el viento hace girar las turbinas, y cómo las celdas de combustible de hidrógeno almacenan energía para mañana. Con el cambio climático amenazando al mundo, tus innovaciones podrían ayudar a salvarlo.
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "Torre de Energía Sostenible"
+  description: |
+    La Torre de Energía Sostenible es una maravilla de la ingeniería verde que se eleva sobre un paisaje impulsado completamente por fuentes renovables. Los ingenieros aquí aprovechan paneles solares, turbinas eólicas y sistemas de hidrógeno para proporcionar energía limpia a ciudades enteras. Cada avance aquí reduce las emisiones de carbono y protege el planeta.
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "La Alarma de Crisis Energética"
+  description: |
+    La Ingeniera Jefa Aurora hace sonar la alarma: la red eléctrica de la ciudad está fallando por la dependencia excesiva de los combustibles fósiles. Debes diseñar un nuevo sistema de energía renovable para reemplazar las viejas plantas de carbón. Tu viaje comienza con entender cómo la luz solar y el viento pueden alimentar una ciudad entera de forma limpia y eficiente.
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "Sistemas de Energía Solar"
+      description: "Domina cómo los paneles solares convierten la luz solar en electricidad limpia"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "Sistemas de Energía Eólica"
+      description: "Aprende cómo las turbinas eólicas generan energía del aire en movimiento"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Almacenamiento de Energía"
+      description: "Resuelve el problema de almacenar energía renovable cuando el sol y el viento no están disponibles"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "Gestión de Red Inteligente"
+      description: "Equilibra la oferta y demanda de energía en una ciudad usando sistemas inteligentes"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "Tecnología del Hidrógeno"
+      description: "Diseña sistemas de producción de hidrógeno y celdas de combustible para almacenamiento de energía limpia"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "Sistemas de Energía Offshore"
+      description: "Construye sistemas de energía eólica y de olas en entornos oceánicos"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "Planificación de Reducción de Carbono"
+      description: "Diseña planes integrales para minimizar la huella de carbono de ciudades e industrias"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "Primer Arreglo Solar"
+    description: "Diseña y calcula un sistema de paneles solares que alimente un edificio escolar"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "Diseñador de Parque Eólico"
+    description: "Planifica un parque eólico que maximice la producción de energía para una región costera"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "Arquitecto de Ciudad Verde"
+    description: "Diseña un sistema completo de energía renovable para un distrito urbano entero"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "Primer Vatio"
+    description: "Genera tu primer kilovatio de energía renovable simulada"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "Ahorrador de Carbono"
+    description: "Diseña un sistema que elimine 100 toneladas de emisiones de CO2"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Equilibrador de Red"
+    description: "Equilibra con éxito la oferta y demanda de energía durante 24 horas"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "Leyenda de Energía Verde"
+    description: "Completa todos los desafíos de energía renovable en la Torre"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "Calculadora de Paneles Solares"
+      description: "Calcula cuántos paneles solares necesita una casa para ser energéticamente independiente"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "Fundamentos de Energía Eólica"
+      description: "Analiza datos de velocidad del viento para encontrar el mejor lugar para una turbina eólica"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "Sistema de Almacenamiento de Baterías"
+      description: "Diseña un sistema de baterías que almacene energía solar para uso nocturno"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "Simulación de Red Inteligente"
+      description: "Simula cómo una red inteligente equilibra la energía renovable en un vecindario"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "Planta de Hidrógeno"
+      description: "Diseña una instalación de producción de hidrógeno verde usando exceso de energía solar"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "Plan de Ciudad Cero Carbono"
+      description: "Crea un plan integral de energía neutral en carbono para una ciudad de tamaño mediano"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "Entender cómo los paneles solares convierten la luz solar en electricidad"
+  - "Aprender cómo las turbinas eólicas generan energía limpia del aire en movimiento"
+  - "Dominar tecnologías de almacenamiento de energía incluyendo baterías e hidrógeno"
+  - "Diseñar sistemas de red inteligente que equilibren oferta y demanda"
+  - "Calcular necesidades energéticas y diseñar sistemas renovables de tamaño apropiado"
+  - "Comprender el impacto de la energía renovable en la reducción de emisiones de carbono"
+  - "Explorar la tecnología de celdas de combustible de hidrógeno como solución de almacenamiento"
+  - "Desarrollar habilidades para planificar transiciones energéticas sostenibles en ciudades"
+
+career_outcomes:
+  - "Consultor de Estrategia de Energía Verde"
+  - "Diseñador de Sistemas Solares"
+  - "Especialista en Energía Eólica"
+  - "Ingeniero de Almacenamiento de Energía"
+  - "Ingeniero de Red Inteligente"
+  - "Ingeniero de Sistemas de Hidrógeno"
+  - "Consultor de Sostenibilidad"
+  - "Planificador de Reducción de Carbono"

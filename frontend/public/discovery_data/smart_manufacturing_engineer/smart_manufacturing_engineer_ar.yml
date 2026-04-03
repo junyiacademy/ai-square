@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Arabic
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "قائد المصنع الرقمي - مدير عمليات التصنيع الذكي"
+  short_description: "حوّل المصانع التقليدية إلى أنظمة إنتاج ذكية ومستقلة"
+  long_description: |
+    أنت مهندس مبتدئ في "المصنع الرقمي"، حيث تتواصل الآلات مع بعضها، تعمل الروبوتات طوال الليل دون تدخل بشري، والذكاء الاصطناعي يكتشف العيوب قبل حدوثها. في هذا المصنع المستقبلي المستوحى من أتمتة إطفاء الأضواء في فوكسكون، ستتعلم كيف تتحد أجهزة الاستشعار والبيانات والخوارزميات الذكية لإنشاء مصانع تدير نفسها. يُعاد اختراع التصنيع، وأنت تقود الثورة.
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "المصنع الرقمي"
+  description: |
+    المصنع الرقمي منشأة متطورة حيث كل آلة متصلة، كل عملية مراقبة في الوقت الفعلي، والذكاء الاصطناعي يتخذ القرارات أسرع من أي إنسان. يصمم المهندسون هنا أنظمة تعمل فيها الروبوتات والبشر جنبًا إلى جنب، التوأم الرقمي يحاكي خط الإنتاج بالكامل، والأنظمة التنبؤية تمنع المشاكل قبل حدوثها. هذا هو مصنع المستقبل.
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "صحوة المصنع"
+  description: |
+    يُعلن مدير المصنع تيتان عن مهمة جريئة: تحويل خط التجميع القديم إلى مصنع ذكي مؤتمت بالكامل في غضون عام. المنافسون يستخدمون بالفعل روبوتات مدعومة بالذكاء الاصطناعي وضبط الجودة في الوقت الفعلي. يجب عليك تعلم كيفية ربط الآلات بأجهزة الاستشعار، وبناء توائم رقمية لخط الإنتاج، واستخدام البيانات للقضاء على الهدر والعيوب. مستقبل التصنيع يبدأ الآن.
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "شبكات حساسات إنترنت الأشياء"
+      description: "ربط الآلات والمعدات بحساسات تجمع بيانات الإنتاج في الوقت الفعلي"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "أنظمة التوأم الرقمي"
+      description: "إنشاء نسخ افتراضية من المصنع تعكس الأوضاع الواقعية للاختبار والتحسين"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "ضبط الجودة بالذكاء الاصطناعي"
+      description: "استخدام الرؤية الحاسوبية والتعلم الآلي لاكتشاف عيوب المنتجات تلقائيًا"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "الصيانة التنبؤية"
+      description: "تحليل بيانات الآلات للتنبؤ بأعطال المعدات قبل أن تتسبب في توقف الإنتاج"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "الأتمتة الروبوتية"
+      description: "تصميم وبرمجة أنظمة روبوتية تؤدي مهام تجميع ومناولة مواد معقدة"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "ذكاء سلسلة التوريد"
+      description: "تحسين تدفق المواد والمكونات باستخدام إدارة سلسلة توريد مدعومة بالذكاء الاصطناعي"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "التصنيع بإطفاء الأضواء"
+      description: "تصميم أنظمة إنتاج مؤتمتة بالكامل يمكنها العمل 24/7 دون تدخل بشري"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "أول خط متصل"
+    description: "ربط خط إنتاج كامل بنجاح بحساسات إنترنت الأشياء وعرض البيانات في الوقت الفعلي"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "تحدي صفر عيوب"
+    description: "تطبيق نظام ضبط جودة بالذكاء الاصطناعي يحقق دقة 99.9% في اكتشاف العيوب"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "مصنع إطفاء الأضواء"
+    description: "تصميم نظام إنتاج يعمل بشكل مستمر لمدة 72 ساعة دون تدخل بشري"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "أول اتصال"
+    description: "ربط أول آلة بنجاح بشبكة إنترنت الأشياء"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "محقق العيوب"
+    description: "استخدام رؤية الذكاء الاصطناعي لاكتشاف 100 عيب في المنتجات تلقائيًا"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "بطل وقت التشغيل"
+    description: "منع 5 أعطال في المعدات باستخدام تنبيهات الصيانة التنبؤية"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "أسطورة المصنع"
+    description: "إكمال جميع تحديات التصنيع الذكي في المصنع الرقمي"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "إعداد شبكة الحساسات"
+      description: "ربط حساسات الحرارة والاهتزاز والسرعة بآلة إنتاج محاكاة"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "لوحة بيانات الإنتاج"
+      description: "بناء لوحة معلومات في الوقت الفعلي تعرض مقاييس الإنتاج الرئيسية من بيانات الحساسات"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "مُنشئ التوأم الرقمي"
+      description: "إنشاء توأم رقمي لخلية إنتاج يعكس سلوك الآلة الفعلي"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "مفتش الجودة بالذكاء الاصطناعي"
+      description: "تدريب نموذج رؤية حاسوبية لتحديد عيوب السطح في القطع المصنعة"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "نظام الصيانة التنبؤية"
+      description: "تصميم نظام يتنبأ بأعطال الآلات قبل 48 ساعة باستخدام بيانات الاهتزاز"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "خط الإنتاج المستقل"
+      description: "تصميم تسلسل إنتاج مؤتمت بالكامل مع مناولة روبوتية وضبط جودة بالذكاء الاصطناعي"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم كيفية جمع حساسات إنترنت الأشياء وإرسال بيانات المصنع في الوقت الفعلي"
+  - "تعلم بناء محاكاة التوأم الرقمي لأنظمة الإنتاج المادية"
+  - "تطبيق الرؤية الحاسوبية والتعلم الآلي على فحص الجودة الآلي"
+  - "تصميم أنظمة صيانة تنبؤية تمنع أعطال المعدات المكلفة"
+  - "فهم كيفية برمجة الأنظمة الروبوتية لمهام التصنيع المرنة"
+  - "تحليل بيانات الإنتاج لتحديد تحسينات الكفاءة وتقليل الهدر"
+  - "تصميم أنظمة مصنع مترابطة حيث تتواصل الآلات وتحسّن نفسها"
+  - "استكشاف مستقبل التصنيع بإطفاء الأضواء والمصانع المستقلة بالكامل"
+
+career_outcomes:
+  - "مدير عمليات التصنيع الذكي"
+  - "مهندس إنترنت الأشياء الصناعي"
+  - "متخصص التوأم الرقمي"
+  - "مهندس الأتمتة الروبوتية"
+  - "مهندس ضبط الجودة بالذكاء الاصطناعي"
+  - "مهندس الصيانة التنبؤية"
+  - "عالم بيانات التصنيع"
+  - "مستشار الصناعة 4.0"

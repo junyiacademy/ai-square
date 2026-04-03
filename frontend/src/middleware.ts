@@ -22,10 +22,9 @@ export function middleware(request: NextRequest) {
 
   // Block discovery routes on production to prevent AI quota abuse
   // Discovery AI chat/evaluation has no per-user rate limit yet
-  const isProduction = process.env.NODE_ENV === "production" &&
-    !request.nextUrl.hostname.includes("staging") &&
-    !request.nextUrl.hostname.includes("preview");
-  if (isProduction && (pathname.startsWith("/discovery") || pathname.startsWith("/api/discovery"))) {
+  // Use DISCOVERY_ENABLED env var (staging=true, production=false)
+  const discoveryEnabled = process.env.DISCOVERY_ENABLED === "true";
+  if (!discoveryEnabled && (pathname.startsWith("/discovery") || pathname.startsWith("/api/discovery"))) {
     if (pathname.startsWith("/api/")) {
       return NextResponse.json({ error: "Discovery is temporarily unavailable" }, { status: 503 });
     }

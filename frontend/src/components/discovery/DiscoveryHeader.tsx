@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { GraduationCap, BarChart, Sparkles, Rocket } from "lucide-react";
+import { GraduationCap, Sparkles, Rocket } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 interface NavigationItem {
@@ -31,13 +31,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
       icon: GraduationCap,
       href: "/discovery/overview",
     },
-    {
-      id: "evaluation",
-      label: t("discovery:navigation.evaluation"),
-      icon: BarChart,
-      href: "/discovery/evaluation",
-    },
-    {
+{
       id: "scenarios",
       label: t("discovery:navigation.scenarios"),
       icon: Rocket,

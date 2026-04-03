@@ -31,30 +31,32 @@ describe("LanguageSelector", () => {
     });
   });
 
-  it("renders language selector without flags", () => {
+  it("renders language selector", () => {
     render(<LanguageSelector />);
 
-    // Check if the select element is rendered
     const select = screen.getByLabelText("選擇語言");
     expect(select).toBeInTheDocument();
   });
 
-  it("displays supported language options without flags", () => {
+  it("displays supported language options with flags", () => {
     render(<LanguageSelector />);
 
     const select = screen.getByLabelText("選擇語言");
 
-    // Check if supported language options are present without flags
+    // Check if supported language options are present with flags
     expect(select).toHaveTextContent("English");
     expect(select).toHaveTextContent("繁體中文");
     expect(select).toHaveTextContent("简体中文");
-    // Check that flags are not present
-    expect(select).not.toHaveTextContent("🇺🇸");
-    expect(select).not.toHaveTextContent("🇹🇼");
-    expect(select).not.toHaveTextContent("🇨🇳");
-    // Check that disabled languages are not present
-    expect(select).not.toHaveTextContent("Español");
-    expect(select).not.toHaveTextContent("日本語");
+    // Check that flags are present
+    expect(select).toHaveTextContent("🇺🇸");
+    expect(select).toHaveTextContent("🇹🇼");
+    expect(select).toHaveTextContent("🇨🇳");
+    // Check that all languages are present
+    expect(select).toHaveTextContent("Español");
+    expect(select).toHaveTextContent("日本語");
+    expect(select).toHaveTextContent("한국어");
+    expect(select).toHaveTextContent("Français");
+    expect(select).toHaveTextContent("Deutsch");
   });
 
   it("changes language when option is selected", () => {

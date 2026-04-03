@@ -1,0 +1,217 @@
+# مصمم منتجات الروبوتات - مسار الاكتشاف - العربية
+path_id: robotics_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "صانع الميكا - مصمم منتجات الروبوتات"
+  short_description: "ابنِ آلات ذكية قادرة على الإحساس والتفكير والتصرف"
+  long_description: |
+    أنت صانع متدرب في «ورشة الميكا»، مولود بغريزة إحياء الآلات.
+    في هذه الورشة متعددة التخصصات حيث تتقاطع الميكانيكا والإلكترونيات والبرمجيات،
+    كل دورة محرك تحمل مهمة جعل الروبوتات تخدم البشرية.
+
+  estimated_hours: 55
+  skill_focus:
+    - mechanical_design
+    - sensor_fusion
+    - motion_planning
+    - human_robot_interaction
+
+world_setting:
+  name: "ورشة الميكا"
+  description: |
+    ورشة الميكا هي قاعدة البحث والتطوير الرائدة في مجال الروبوتات عالميًا،
+    من الأذرع الصناعية إلى روبوتات الخدمة، ومن الطائرات المسيّرة إلى الروبوتات
+    الإنسانية. يحوّل المهندسون هنا الخيال إلى واقع — خطوط التصنيع الذكية
+    وُلدت هنا.
+
+  atmosphere: "industrial_creative"
+  visual_theme: "mecha_workshop"
+
+starting_scenario:
+  title: "إيقاظ أول ميكا"
+  description: |
+    يعرّفك شيخ الورشة Servo على الركائز الثلاث للروبوتات: الاستشعار واتخاذ القرار
+    والتشغيل. لكن نموذجًا أوليًا خارج السيطرة يُدعى Haywire يتحطم عبر الورشة.
+    يجب أن تفهم بيانات مستشعراته لإيقافه بأمان.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_actuators
+    - first_robot_control
+
+skill_tree:
+  core_skills:
+    - id: mechanical_design
+      name: "التصميم الميكانيكي"
+      description: "تصميم هيكل الروبوت ومفاصله وآليات نقل الحركة"
+      max_level: 10
+      unlocks:
+        - 3d_modeling
+        - material_selection
+
+    - id: embedded_systems
+      name: "الأنظمة المدمجة"
+      description: "كتابة البرامج الثابتة للتحكم في المحركات والمستشعرات"
+      max_level: 10
+      unlocks:
+        - microcontroller_programming
+        - rtos_basics
+
+    - id: sensor_fusion
+      name: "دمج المستشعرات"
+      description: "دمج بيانات الرؤية وLiDAR وIMU والمستشعرات المتعددة"
+      max_level: 10
+      unlocks:
+        - computer_vision
+        - lidar_processing
+
+    - id: motion_planning
+      name: "تخطيط الحركة"
+      description: "تخطيط مسارات الروبوت وتسلسلات الأفعال"
+      max_level: 10
+      unlocks:
+        - path_planning
+        - trajectory_optimization
+
+  advanced_skills:
+    - id: robot_learning
+      name: "تعلم الروبوتات"
+      description: "استخدام التعلم المعزز لإتقان الروبوتات مهارات جديدة بصورة مستقلة"
+      max_level: 15
+      requires: [motion_planning, sensor_fusion]
+
+    - id: multi_robot_systems
+      name: "تنسيق الروبوتات المتعددة"
+      description: "تنسيق فرق من روبوتات متعددة لتنفيذ المهام"
+      max_level: 15
+      requires: [embedded_systems, motion_planning]
+
+    - id: humanoid_design
+      name: "الروبوتات الإنسانية"
+      description: "تصميم المشي ثنائي الأرجل والأيدي الماهرة وأنظمة إنسانية أخرى"
+      max_level: 15
+      requires: [mechanical_design, robot_learning]
+
+milestone_quests:
+  - id: first_movement
+    name: "الخطوة الأولى"
+    description: "اجعل روبوتك ينفّذ أمر حركته الأول بنجاح"
+    required_level: 5
+    skills_tested: [embedded_systems, mechanical_design]
+    xp_reward: 500
+    unlocks:
+      - movement_badge
+      - workshop_access
+
+  - id: haywire_tamer
+    name: "مروّض الفوضى"
+    description: "استخدم دمج المستشعرات لاصطياد الروبوت الخارج عن السيطرة بأمان"
+    required_level: 10
+    skills_tested: [sensor_fusion, motion_planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_master_title
+      - advanced_lab
+
+  - id: factory_commander
+    name: "قائد المصنع الذكي"
+    description: "صمّم ونشر خط إنتاج آلي بالكامل"
+    required_level: 20
+    skills_tested: [multi_robot_systems, robot_learning]
+    xp_reward: 2500
+    unlocks:
+      - commander_title
+      - workshop_leadership
+
+achievements:
+  - id: first_servo
+    name: "أول محرك سيرفو"
+    description: "التحكم في أول محرك سيرفو بنجاح"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: obstacle_navigator
+    name: "ملاح العقبات"
+    description: "الروبوت يتجول بصورة مستقلة عبر بيئة معقدة"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: arm_master
+    name: "أستاذ الذراع الروبوتية"
+    description: "إتمام عمليات تجميع دقيقة بذراع روبوتية ذات 6 محاور"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "أسطورة الميكا"
+    description: "إتمام جميع تحديات هندسة الروبوتات"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: servo_control
+      type: interaction
+      title: "أساسيات محرك السيرفو"
+      description: "استخدام إشارات PWM لتدوير المحرك إلى زاوية محددة"
+      skills_improved: [embedded_systems]
+      xp_reward: 60
+
+    - id: sensor_reading
+      type: analysis
+      title: "تفسير بيانات المستشعرات"
+      description: "قراءة بيانات المسافة من مستشعرات الموجات فوق الصوتية والأشعة تحت الحمراء"
+      skills_improved: [sensor_fusion]
+      xp_reward: 50
+
+  intermediate:
+    - id: robot_arm
+      type: creation
+      title: "تصميم الذراع الروبوتية"
+      description: "تصميم ذراع روبوتية مكتبية بثلاث درجات حرية"
+      skills_improved: [mechanical_design, motion_planning]
+      xp_reward: 180
+
+    - id: slam_navigation
+      type: creation
+      title: "تحدي الملاحة SLAM"
+      description: "الروبوت يرسم الخرائط ويحدد موقعه في آن واحد في بيئة مجهولة"
+      skills_improved: [sensor_fusion, motion_planning]
+      xp_reward: 200
+
+  advanced:
+    - id: factory_automation
+      type: creation
+      title: "تصميم خط الإنتاج الذكي"
+      description: "تصميم خط تجميع تعاوني متعدد الروبوتات"
+      skills_improved: [multi_robot_systems, robot_learning]
+      xp_reward: 350
+
+    - id: humanoid_walk
+      type: creation
+      title: "تحدي المشي ثنائي الأرجل"
+      description: "جعل روبوت إنساني يمشي بثبات على تضاريس وعرة"
+      skills_improved: [humanoid_design, motion_planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "فهم التصميم الميكانيكي والحركية للروبوتات"
+  - "إتقان الأنظمة المدمجة والتحكم في الوقت الفعلي"
+  - "دمج مستشعرات متعددة لإدراك البيئة"
+  - "تنفيذ خوارزميات تخطيط المسار والتحكم في الحركة"
+  - "تطبيق التعلم المعزز لتدريب الروبوتات"
+  - "تصميم أنظمة التعاون بين الروبوتات المتعددة"
+  - "فهم معايير السلامة للتعاون بين الإنسان والروبوت"
+  - "التعرف على منظومة صناعة التصنيع الذكي"
+
+career_outcomes:
+  - "مهندس روبوتات"
+  - "مهندس تكامل أنظمة الأتمتة"
+  - "مبرمج الأذرع الروبوتية"
+  - "مهندس الأنظمة المدمجة"
+  - "مطور ROS"
+  - "مستشار التصنيع الذكي"
+  - "مصمم التفاعل بين الإنسان والروبوت"
+  - "مهندس أنظمة الطائرات المسيّرة"

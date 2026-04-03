@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Russian
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Командир Цифрового Завода - Операционный Менеджер Умного Производства"
+  short_description: "Превращай традиционные заводы в интеллектуальные, автономные производственные системы"
+  long_description: |
+    Ты — начинающий инженер на «Цифровом Заводе», где машины общаются между собой, роботы работают круглосуточно без вмешательства человека, а искусственный интеллект обнаруживает дефекты до их появления. На этом футуристическом заводе, вдохновлённом автоматизацией lights-out компании Foxconn, ты узнаешь, как датчики, данные и умные алгоритмы объединяются для создания заводов, которые управляют сами собой. Производство переизобретается — и ты ведёшь революцию.
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "Цифровой Завод"
+  description: |
+    Цифровой Завод — передовое предприятие, где каждая машина подключена, каждый процесс отслеживается в реальном времени, а ИИ принимает решения быстрее любого человека. Инженеры здесь проектируют системы, где роботы и люди работают бок о бок, цифровые двойники симулируют всю производственную линию, а прогностические системы предотвращают проблемы до их возникновения. Это завод будущего.
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "Пробуждение Завода"
+  description: |
+    Директор завода Титан объявляет смелую миссию: за один год превратить старую сборочную линию в полностью автоматизированный умный завод. Конкуренты уже используют ИИ-роботов и контроль качества в реальном времени. Нужно научиться подключать машины датчиками, строить цифровые двойники производственной линии и использовать данные для устранения потерь и дефектов. Будущее производства начинается сейчас.
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "Сети IoT-Датчиков"
+      description: "Подключай машины и оборудование датчиками, которые собирают данные о производстве в реальном времени"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "Системы Цифровых Двойников"
+      description: "Создавай виртуальные копии завода, отражающие реальные условия для тестирования и оптимизации"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "ИИ-Контроль Качества"
+      description: "Используй компьютерное зрение и машинное обучение для автоматического обнаружения дефектов продукции"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "Предиктивное Обслуживание"
+      description: "Анализируй данные машин для прогнозирования отказов оборудования до производственных остановок"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Роботизация"
+      description: "Проектируй и программируй роботизированные системы для сложных задач сборки и транспортировки"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Интеллект Цепочки Поставок"
+      description: "Оптимизируй поток материалов и компонентов с ИИ-управлением цепочкой поставок"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Производство Lights-Out"
+      description: "Проектируй полностью автоматизированные производственные системы для круглосуточной работы без людей"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "Первая Подключённая Линия"
+    description: "Успешно подключи всю производственную линию датчиками IoT и отобрази данные в реальном времени"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "Вызов Нулевых Дефектов"
+    description: "Внедри систему ИИ-контроля качества с точностью обнаружения дефектов 99,9%"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "Завод Lights-Out"
+    description: "Спроектируй производственную систему, работающую непрерывно 72 часа без людей"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "Первое Подключение"
+    description: "Успешно подключи свою первую машину к сети IoT"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "Детектив Дефектов"
+    description: "Используй ИИ-зрение для автоматического обнаружения 100 дефектов продукции"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "Чемпион Доступности"
+    description: "Предотврати 5 отказов оборудования с помощью предиктивных предупреждений"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Легенда Завода"
+    description: "Выполни все задания умного производства на Цифровом Заводе"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "Настройка Сети Датчиков"
+      description: "Подключи датчики температуры, вибрации и скорости к симулированной производственной машине"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "Панель Производственных Данных"
+      description: "Создай панель реального времени с ключевыми производственными показателями из данных датчиков"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "Создатель Цифрового Двойника"
+      description: "Создай цифровой двойник производственной ячейки, отражающий реальное поведение машины"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "ИИ-Инспектор Качества"
+      description: "Обучи модель компьютерного зрения для идентификации поверхностных дефектов деталей"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Система Предиктивного Обслуживания"
+      description: "Спроектируй систему, предсказывающую отказы машин за 48 часов по данным вибрации"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "Автономная Производственная Линия"
+      description: "Спроектируй полностью автоматизированную производственную последовательность с роботизацией и ИИ-контролем"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понять, как IoT-датчики собирают и передают данные завода в реальном времени"
+  - "Научиться строить симуляции цифрового двойника физических производственных систем"
+  - "Применять компьютерное зрение и машинное обучение к автоматизированному контролю качества"
+  - "Проектировать системы предиктивного обслуживания, предотвращающие дорогостоящие отказы"
+  - "Понять, как роботизированные системы программируются для гибких производственных задач"
+  - "Анализировать производственные данные для выявления улучшений эффективности и снижения потерь"
+  - "Проектировать взаимосвязанные заводские системы, где машины общаются и самооптимизируются"
+  - "Исследовать будущее производства lights-out и полностью автономных заводов"
+
+career_outcomes:
+  - "Операционный Менеджер Умного Производства"
+  - "Промышленный IoT-Инженер"
+  - "Специалист по Цифровым Двойникам"
+  - "Инженер Роботизации"
+  - "ИИ-Инженер Контроля Качества"
+  - "Инженер Предиктивного Обслуживания"
+  - "Data Scientist Производства"
+  - "Консультант Индустрии 4.0"

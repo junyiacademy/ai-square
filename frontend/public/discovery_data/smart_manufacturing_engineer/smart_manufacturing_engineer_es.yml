@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Spanish
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Comandante de la Fábrica Digital - Gerente de Operaciones de Fábrica Inteligente"
+  short_description: "Transforma fábricas tradicionales en sistemas de producción inteligentes y autónomos"
+  long_description: |
+    Eres un ingeniero novato en la "Fábrica Digital", donde las máquinas se comunican entre sí, los robots trabajan toda la noche sin intervención humana, y la inteligencia artificial detecta defectos antes de que ocurran. En esta fábrica futurista inspirada en la automatización lights-out de Foxconn, aprenderás cómo sensores, datos y algoritmos inteligentes se combinan para crear fábricas que se gestionan solas. La manufactura se está reinventando — y tú lideras la revolución.
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "Fábrica Digital"
+  description: |
+    La Fábrica Digital es una instalación de vanguardia donde cada máquina está conectada, cada proceso se monitorea en tiempo real y la IA toma decisiones más rápido que cualquier humano. Los ingenieros aquí diseñan sistemas donde robots y humanos trabajan codo a codo, los gemelos digitales simulan toda la línea de producción y los sistemas predictivos previenen problemas antes de que ocurran. Esta es la fábrica del futuro.
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "El Despertar de la Fábrica"
+  description: |
+    El Director de Fábrica Titan anuncia una misión audaz: transformar la antigua línea de ensamblaje en una fábrica inteligente completamente automatizada en un año. Los competidores ya usan robots impulsados por IA y control de calidad en tiempo real. Debes aprender a conectar máquinas con sensores, construir gemelos digitales de la línea de producción y usar datos para eliminar desperdicio y defectos. El futuro de la manufactura comienza ahora.
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "Redes de Sensores IoT"
+      description: "Conecta máquinas y equipos con sensores que recopilan datos de producción en tiempo real"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "Sistemas de Gemelo Digital"
+      description: "Crea copias virtuales de la fábrica que reflejan condiciones del mundo real para pruebas y optimización"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "Control de Calidad con IA"
+      description: "Usa visión computacional y aprendizaje automático para detectar defectos de productos automáticamente"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "Mantenimiento Predictivo"
+      description: "Analiza datos de máquinas para predecir fallos de equipos antes de que causen paradas de producción"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Automatización Robótica"
+      description: "Diseña y programa sistemas robóticos que realizan tareas complejas de ensamblaje y manejo de materiales"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Inteligencia de Cadena de Suministro"
+      description: "Optimiza el flujo de materiales y componentes usando gestión de cadena de suministro impulsada por IA"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Manufactura Lights-Out"
+      description: "Diseña sistemas de producción completamente automatizados que pueden operar 24/7 sin intervención humana"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "Primera Línea Conectada"
+    description: "Conecta exitosamente una línea de producción completa con sensores IoT y muestra datos en tiempo real"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "Desafío Cero Defectos"
+    description: "Implementa un sistema de control de calidad IA que logre 99.9% de precisión en detección de defectos"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "Fábrica Lights-Out"
+    description: "Diseña un sistema de producción que opere continuamente por 72 horas sin intervención humana"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "Primera Conexión"
+    description: "Conecta exitosamente tu primera máquina a la red IoT"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "Detective de Defectos"
+    description: "Usa visión IA para detectar 100 defectos de productos automáticamente"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "Campeón de Disponibilidad"
+    description: "Previene 5 fallos de equipos usando alertas de mantenimiento predictivo"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Leyenda de la Fábrica"
+    description: "Completa todos los desafíos de manufactura inteligente en la Fábrica Digital"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "Configuración de Red de Sensores"
+      description: "Conecta sensores de temperatura, vibración y velocidad a una máquina de producción simulada"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "Panel de Datos de Producción"
+      description: "Construye un panel en tiempo real que muestre métricas clave de producción de datos de sensores"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "Constructor de Gemelo Digital"
+      description: "Crea un gemelo digital de una celda de producción que refleje el comportamiento real de la máquina"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "Inspector de Calidad IA"
+      description: "Entrena un modelo de visión computacional para identificar defectos superficiales en piezas fabricadas"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Sistema de Mantenimiento Predictivo"
+      description: "Diseña un sistema que prediga fallos de máquinas 48 horas antes usando datos de vibración"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "Línea de Producción Autónoma"
+      description: "Diseña una secuencia de producción completamente automatizada con manejo robótico y control de calidad IA"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "Comprender cómo los sensores IoT recopilan y transmiten datos de fábrica en tiempo real"
+  - "Aprender a construir simulaciones de gemelo digital de sistemas de producción físicos"
+  - "Aplicar visión computacional y aprendizaje automático a la inspección de calidad automatizada"
+  - "Diseñar sistemas de mantenimiento predictivo que prevengan costosos fallos de equipos"
+  - "Entender cómo los sistemas robóticos se programan para tareas de manufactura flexibles"
+  - "Analizar datos de producción para identificar mejoras de eficiencia y reducción de desperdicios"
+  - "Diseñar sistemas de fábrica interconectados donde las máquinas se comunican y auto-optimizan"
+  - "Explorar el futuro de la manufactura lights-out y las fábricas completamente autónomas"
+
+career_outcomes:
+  - "Gerente de Operaciones de Fábrica Inteligente"
+  - "Ingeniero IoT Industrial"
+  - "Especialista en Gemelo Digital"
+  - "Ingeniero de Automatización Robótica"
+  - "Ingeniero de Control de Calidad IA"
+  - "Ingeniero de Mantenimiento Predictivo"
+  - "Científico de Datos de Manufactura"
+  - "Consultor de Industria 4.0"

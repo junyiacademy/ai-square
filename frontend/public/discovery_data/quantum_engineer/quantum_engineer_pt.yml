@@ -1,0 +1,219 @@
+# Caminho de Descoberta do Engenheiro Quântico - Português
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Tecedor de Sonhos Quânticos - Pesquisador de Computação Quântica"
+  short_description: "Domine a superposição e o entrelaçamento para resolver o impossível"
+  long_description: |
+    Você é um aprendiz de Tecedor de Sonhos no «Labirinto Quântico», possuindo a intuição
+    de compreender que partículas existem em múltiplos estados simultaneamente.
+    Neste domínio que subverte a lógica da computação clássica, cada operação
+    em um qubit pode desbloquear problemas que levariam dez mil anos para serem
+    resolvidos por computadores tradicionais.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "Labirinto Quântico"
+  description: |
+    O Labirinto Quântico é uma instalação de pesquisa que existe em superposição,
+    onde seus corredores levam simultaneamente a múltiplas direções.
+    Os engenheiros quânticos aprendem aqui a manipular qubits e projetar algoritmos quânticos.
+    As mais avançadas inovações em tecnologia quântica são forjadas entre estas paredes.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "A Primeira Lição de Schrödinger"
+  description: |
+    O mentor quântico Qubit usa o gato de Schrödinger para explicar o conceito de superposição.
+    Mas o monstro da decoerência quântica que espreita no labirinto está destruindo estados quânticos.
+    Você deve aprender a correção de erros quânticos para proteger seus qubits.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "Fundamentos da Mecânica Quântica"
+      description: "Compreender os conceitos centrais de superposição, entrelaçamento e medição"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "Circuitos Quânticos"
+      description: "Combinar portas quânticas para construir circuitos quânticos"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "Programação Quântica"
+      description: "Escrever programas quânticos usando Qiskit / Cirq"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "Algoritmos Quânticos"
+      description: "Implementar algoritmos como Grover, Shor e VQE"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "Correção de Erros Quânticos"
+      description: "Projetar e implementar códigos de correção de erros quânticos"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "Criptografia Quântica"
+      description: "Construir sistemas de distribuição de chaves quânticas e criptografia pós-quântica"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "Aprendizado de Máquina Quântico"
+      description: "Algoritmos híbridos combinando computação quântica e aprendizado de máquina"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "Primeiro Estado de Superposição"
+    description: "Colocar com sucesso um qubit em superposição e medi-lo"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "Combatente da Decoerência"
+    description: "Executar com sucesso um algoritmo em um computador quântico ruidoso"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "Vantagem Quântica Alcançada"
+    description: "Resolver um problema que computadores clássicos não conseguem resolver eficientemente"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "Preparação do Estado de Bell"
+    description: "Preparar com sucesso seu primeiro par de qubits entrelaçados"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "Executor de Algoritmos"
+    description: "Executar com sucesso a busca de Grover em um computador quântico real"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "Mestre de Correção de Erros Quânticos"
+    description: "Implementar um código de correção de erros quânticos completo"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "Lenda Quântica"
+    description: "Completar todos os desafios de tecnologia quântica"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "Primeiro Encontro com Qubits"
+      description: "Visualizar o estado de um único qubit usando a esfera de Bloch"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "Primeiro Circuito Quântico"
+      description: "Preparar um estado entrelaçado usando portas Hadamard e CNOT"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Desafio de Busca de Grover"
+      description: "Implementar o algoritmo de busca quântica para encontrar uma resposta oculta"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "Experimento de Simulação de Ruído"
+      description: "Simular como o ruído em computadores quânticos reais afeta os resultados"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "Distribuição de Chaves Quânticas"
+      description: "Implementar o protocolo BB84 para construir um canal criptografado à prova de escutas"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "Aprendizado Híbrido Quântico-Clássico"
+      description: "Usar VQE para resolver problemas de otimização em simulação molecular"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "Compreender os conceitos centrais da mecânica quântica: superposição, entrelaçamento, medição"
+  - "Dominar o design de portas quânticas e circuitos quânticos"
+  - "Escrever programas quânticos usando Qiskit ou Cirq"
+  - "Implementar os algoritmos de busca de Grover e fatoração de Shor"
+  - "Compreender os princípios e implementação da correção de erros quânticos"
+  - "Explorar a criptografia quântica e a segurança pós-quântica"
+  - "Combinar computação quântica com aprendizado de máquina"
+  - "Conhecer as direções de pesquisa de ponta em tecnologia quântica"
+
+career_outcomes:
+  - "Engenheiro de Software Quântico"
+  - "Pesquisador de Algoritmos Quânticos"
+  - "Engenheiro de Hardware Quântico"
+  - "Engenheiro de Criptografia Pós-Quântica"
+  - "Cientista de Aplicações Quânticas"
+  - "Pesquisador de Aprendizado de Máquina Quântico"
+  - "Consultor de Computação Quântica"
+  - "Gerente de Produto de Tecnologia Quântica"

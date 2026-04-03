@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - German
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Grünenergie-Wächter - Grünenergie-Strategieberater"
+  short_description: "Nutze die Kraft von Sonne, Wind und Natur für eine nachhaltige Zukunft"
+  long_description: |
+    Du bist ein Nachwuchsingenieur im "Nachhaltigen Energieturm", wo die Kräfte der Natur eingefangen und in saubere Elektrizität umgewandelt werden. In diesem Hightech-Turm wirst du entdecken, wie Sonnenlicht zu Energie wird, wie Wind Turbinen antreibt, und wie Wasserstoff-Brennstoffzellen Energie für morgen speichern. Da der Klimawandel die Welt bedroht, könnten deine Innovationen helfen, sie zu retten.
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "Nachhaltiger Energieturm"
+  description: |
+    Der Nachhaltige Energieturm ist ein Wunderwerk der Grünen Technik, das sich über eine Landschaft erhebt, die vollständig aus erneuerbaren Quellen betrieben wird. Ingenieure hier nutzen Solarpanels, Windturbinen und Wasserstoffsysteme, um ganze Städte mit sauberer Energie zu versorgen. Jeder Durchbruch hier reduziert CO2-Emissionen und schützt den Planeten.
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "Der Energiekrise-Alarm"
+  description: |
+    Chefingenieurin Aurora schlägt Alarm: Das Stromnetz der Stadt versagt aufgrund übermäßiger Abhängigkeit von fossilen Brennstoffen. Du musst ein neues erneuerbares Energiesystem entwerfen, um alte Kohlekraftwerke zu ersetzen. Deine Reise beginnt damit zu verstehen, wie Sonnenlicht und Wind eine ganze Stadt sauber und effizient versorgen können.
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "Solarenergiesysteme"
+      description: "Meistere, wie Solarpanels Sonnenlicht in saubere Elektrizität umwandeln"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "Windenergiesysteme"
+      description: "Lerne, wie Windturbinen aus bewegter Luft Energie erzeugen"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "Energiespeicherung"
+      description: "Löse das Problem der Speicherung erneuerbarer Energie, wenn Sonne und Wind nicht verfügbar sind"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "Smart-Grid-Management"
+      description: "Balanciere Energieversorgung und -nachfrage in einer Stadt mit intelligenten Systemen"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "Wasserstofftechnologie"
+      description: "Entwirf Wasserstoffproduktions- und Brennstoffzellensysteme für saubere Energiespeicherung"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "Offshore-Energiesysteme"
+      description: "Baue Wind- und Wellenenergesysteme in ozeanischen Umgebungen"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "Kohlenstoffreduzierungsplanung"
+      description: "Entwirf umfassende Pläne zur Minimierung des CO2-Fußabdrucks von Städten und Industrien"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "Erste Solaranlage"
+    description: "Entwirf und berechne ein Solarpanelsystem, das ein Schulgebäude versorgt"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "Windpark-Designer"
+    description: "Plane ein Windpark-Layout, das die Energieproduktion für eine Küstenregion maximiert"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "Grünstadt-Architekt"
+    description: "Entwirf ein vollständiges erneuerbares Energiesystem für einen ganzen Stadtbezirk"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "Erstes Watt"
+    description: "Erzeuge dein erstes Kilowatt simulierter erneuerbarer Energie"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "CO2-Sparer"
+    description: "Entwirf ein System, das 100 Tonnen CO2-Emissionen eliminiert"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "Netz-Balancierer"
+    description: "Balanciere erfolgreich Energieversorgung und -nachfrage für 24 Stunden"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "Grünenergie-Legende"
+    description: "Schließe alle erneuerbaren Energieherausforderungen im Turm ab"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "Solarpanel-Rechner"
+      description: "Berechne, wie viele Solarpanels ein Haus braucht, um energieunabhängig zu sein"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "Windkraft-Grundlagen"
+      description: "Analysiere Windgeschwindigkeitsdaten, um den besten Standort für eine Windturbine zu finden"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "Batterie-Speichersystem"
+      description: "Entwirf ein Batteriesystem, das Solarenergie für nächtlichen Gebrauch speichert"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "Smart-Grid-Simulation"
+      description: "Simuliere, wie ein Smart Grid erneuerbare Energie in einer Nachbarschaft ausgleicht"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "Wasserstoffkraftwerk"
+      description: "Entwirf eine Anlage zur Produktion von grünem Wasserstoff aus überschüssiger Solarenergie"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "Nullkohlenstoff-Stadtplan"
+      description: "Erstelle einen umfassenden CO2-neutralen Energieplan für eine mittelgroße Stadt"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "Verstehen, wie Solarpanels Sonnenlicht in Elektrizität umwandeln"
+  - "Lernen, wie Windturbinen saubere Energie aus bewegter Luft erzeugen"
+  - "Energiespeichertechnologien einschließlich Batterien und Wasserstoff meistern"
+  - "Smart-Grid-Systeme entwerfen, die Angebot und Nachfrage ausgleichen"
+  - "Energiebedarf berechnen und entsprechend dimensionierte erneuerbare Systeme entwerfen"
+  - "Den Einfluss erneuerbarer Energie auf die Reduzierung von CO2-Emissionen verstehen"
+  - "Wasserstoff-Brennstoffzellentechnologie als Energiespeicherlösung erkunden"
+  - "Fähigkeiten zur Planung städtischer nachhaltiger Energiewenden entwickeln"
+
+career_outcomes:
+  - "Grünenergie-Strategieberater"
+  - "Solarenergiesystem-Designer"
+  - "Windenergie-Spezialist"
+  - "Energiespeicher-Ingenieur"
+  - "Smart-Grid-Ingenieur"
+  - "Wasserstoffsystem-Ingenieur"
+  - "Nachhaltigkeitsberater"
+  - "Kohlenstoffreduzierungsplaner"

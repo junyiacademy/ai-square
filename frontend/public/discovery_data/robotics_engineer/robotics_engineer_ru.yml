@@ -1,0 +1,219 @@
+# Продуктовый Дизайнер Робототехники - Путь Открытий - Русский
+path_id: robotics_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Механический Созидатель - Продуктовый Дизайнер Робототехники"
+  short_description: "Создавай интеллектуальные машины, способные воспринимать, мыслить и действовать"
+  long_description: |
+    Ты — ученик-созидатель в «Механической Мастерской», рождённый с инстинктом
+    оживлять машины. В этой межпредметной мастерской, где сходятся механика,
+    электроника и программное обеспечение, каждый оборот мотора несёт в себе
+    миссию заставить роботов служить человечеству.
+
+  estimated_hours: 55
+  skill_focus:
+    - mechanical_design
+    - sensor_fusion
+    - motion_planning
+    - human_robot_interaction
+
+world_setting:
+  name: "Механическая Мастерская"
+  description: |
+    Механическая Мастерская — ведущая мировая база НИОКР в области робототехники:
+    от промышленных манипуляторов до сервисных роботов, от дронов до гуманоидов.
+    Инженеры здесь превращают воображение в реальность — линии умного производства
+    родились именно здесь.
+
+  atmosphere: "industrial_creative"
+  visual_theme: "mecha_workshop"
+
+starting_scenario:
+  title: "Пробуждение Первого Меха"
+  description: |
+    Старейшина Мастерской Servo знакомит тебя с тремя столпами робототехники:
+    сенсорика, принятие решений и исполнение. Но вышедший из-под контроля прототип
+    по имени Haywire носится по мастерской. Ты должен понять данные его датчиков,
+    чтобы безопасно остановить его.
+
+  initial_tasks:
+    - learn_sensor_basics
+    - understand_actuators
+    - first_robot_control
+
+skill_tree:
+  core_skills:
+    - id: mechanical_design
+      name: "Механическое Проектирование"
+      description: "Проектировать скелет, суставы и передаточные механизмы робота"
+      max_level: 10
+      unlocks:
+        - 3d_modeling
+        - material_selection
+
+    - id: embedded_systems
+      name: "Встроенные Системы"
+      description: "Писать прошивку для управления моторами и датчиками"
+      max_level: 10
+      unlocks:
+        - microcontroller_programming
+        - rtos_basics
+
+    - id: sensor_fusion
+      name: "Слияние Данных Датчиков"
+      description: "Интегрировать данные зрения, LiDAR, IMU и множества датчиков"
+      max_level: 10
+      unlocks:
+        - computer_vision
+        - lidar_processing
+
+    - id: motion_planning
+      name: "Планирование Движения"
+      description: "Планировать маршруты и последовательности действий робота"
+      max_level: 10
+      unlocks:
+        - path_planning
+        - trajectory_optimization
+
+  advanced_skills:
+    - id: robot_learning
+      name: "Обучение Роботов"
+      description: "Использовать обучение с подкреплением для самостоятельного освоения роботом новых навыков"
+      max_level: 15
+      requires: [motion_planning, sensor_fusion]
+
+    - id: multi_robot_systems
+      name: "Координация Нескольких Роботов"
+      description: "Координировать команды из нескольких роботов для выполнения миссий"
+      max_level: 15
+      requires: [embedded_systems, motion_planning]
+
+    - id: humanoid_design
+      name: "Гуманоидная Робототехника"
+      description: "Проектировать двуногую ходьбу, ловкие руки и другие антропоморфные системы"
+      max_level: 15
+      requires: [mechanical_design, robot_learning]
+
+milestone_quests:
+  - id: first_movement
+    name: "Первый Шаг"
+    description: "Заставь своего робота успешно выполнить первую команду движения"
+    required_level: 5
+    skills_tested: [embedded_systems, mechanical_design]
+    xp_reward: 500
+    unlocks:
+      - movement_badge
+      - workshop_access
+
+  - id: haywire_tamer
+    name: "Укротитель Хаоса"
+    description: "Используй слияние данных датчиков для безопасной поимки вышедшего из строя робота"
+    required_level: 10
+    skills_tested: [sensor_fusion, motion_planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_master_title
+      - advanced_lab
+
+  - id: factory_commander
+    name: "Командир Умного Завода"
+    description: "Спроектируй и разверни полностью автоматизированную производственную линию"
+    required_level: 20
+    skills_tested: [multi_robot_systems, robot_learning]
+    xp_reward: 2500
+    unlocks:
+      - commander_title
+      - workshop_leadership
+
+achievements:
+  - id: first_servo
+    name: "Первый Сервомотор"
+    description: "Успешно управляй своим первым сервомотором"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: obstacle_navigator
+    name: "Навигатор Препятствий"
+    description: "Робот автономно преодолевает сложную среду с препятствиями"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: arm_master
+    name: "Мастер Роботизированного Манипулятора"
+    description: "Завершить прецизионные сборочные операции с 6-осевым роботизированным манипулятором"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: mecha_legend
+    name: "Легенда Мехов"
+    description: "Выполнить все задания по инженерии робототехники"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: servo_control
+      type: interaction
+      title: "Основы Сервомотора"
+      description: "Использовать ШИМ-сигналы для поворота мотора на заданный угол"
+      skills_improved: [embedded_systems]
+      xp_reward: 60
+
+    - id: sensor_reading
+      type: analysis
+      title: "Интерпретация Данных Датчиков"
+      description: "Считывать данные расстояния с ультразвуковых и инфракрасных датчиков"
+      skills_improved: [sensor_fusion]
+      xp_reward: 50
+
+  intermediate:
+    - id: robot_arm
+      type: creation
+      title: "Проектирование Роботизированного Манипулятора"
+      description: "Спроектировать настольный роботизированный манипулятор с 3 степенями свободы"
+      skills_improved: [mechanical_design, motion_planning]
+      xp_reward: 180
+
+    - id: slam_navigation
+      type: creation
+      title: "Задание по Навигации SLAM"
+      description: "Робот одновременно строит карту и определяет своё положение в неизвестной среде"
+      skills_improved: [sensor_fusion, motion_planning]
+      xp_reward: 200
+
+  advanced:
+    - id: factory_automation
+      type: creation
+      title: "Проектирование Умной Производственной Линии"
+      description: "Спроектировать коллаборативную сборочную линию с несколькими роботами"
+      skills_improved: [multi_robot_systems, robot_learning]
+      xp_reward: 350
+
+    - id: humanoid_walk
+      type: creation
+      title: "Задание по Двуногой Ходьбе"
+      description: "Заставить гуманоидного робота устойчиво ходить по неровной поверхности"
+      skills_improved: [humanoid_design, motion_planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Понимать механическое проектирование и кинематику роботов"
+  - "Осваивать встроенные системы и управление в реальном времени"
+  - "Интегрировать несколько датчиков для восприятия окружающей среды"
+  - "Реализовывать алгоритмы планирования маршрутов и управления движением"
+  - "Применять обучение с подкреплением для тренировки роботов"
+  - "Проектировать системы коллаборации нескольких роботов"
+  - "Понимать стандарты безопасности для совместной работы человека и робота"
+  - "Знакомиться с экосистемой индустрии умного производства"
+
+career_outcomes:
+  - "Продуктовый Дизайнер Робототехники"
+  - "Инженер по Интеграции Систем Автоматизации"
+  - "Программист Роботизированных Манипуляторов"
+  - "Инженер Встроенных Систем"
+  - "Разработчик ROS"
+  - "Консультант по Умному Производству"
+  - "Дизайнер Взаимодействия Человек-Робот"
+  - "Инженер Дроновых Систем"

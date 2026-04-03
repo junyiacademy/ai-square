@@ -45,36 +45,17 @@ export function Header() {
 
   // 主要導航連結（顯示在導航欄）
   const primaryNavLinks: NavLink[] = [
-    { href: "/relations", label: t("relations") },
-    { href: "/ksa", label: t("ksa") },
+    { href: "/assessment/scenarios", label: t("assessment") },
     { href: "/pbl/scenarios", label: t("pbl") },
+    { href: "/discovery/overview", label: t("discovery") },
   ];
 
   // 次要導航連結（放在「更多」選單中）
   const secondaryNavLinks: NavLink[] = [
-    {
-      href: "/assessment/scenarios",
-      label: t("assessment"),
-      disabled: false,
-    },
-    {
-      href: "/dashboard",
-      label: t("dashboard"),
-      disabled: true,
-      tooltip: t("comingSoon") || "即將發行",
-    },
-    {
-      href: "/history",
-      label: t("history"),
-      disabled: true,
-      tooltip: t("comingSoon") || "即將發行",
-    },
-    {
-      href: "/discovery/overview",
-      label: t("discovery"),
-      disabled: true,
-      tooltip: t("comingSoon") || "即將發行",
-    },
+    { href: "/relations", label: t("relations") },
+    { href: "/ksa", label: t("ksa") },
+    { href: "/dashboard", label: t("dashboard") },
+    { href: "/history", label: t("history") },
   ];
 
   // 所有導航連結（用於手機選單）

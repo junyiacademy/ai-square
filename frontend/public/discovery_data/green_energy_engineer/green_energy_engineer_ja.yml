@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Japanese
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "グリーンエネルギーガーディアン - グリーンエネルギー戦略コンサルタント"
+  short_description: "太陽、風、自然の力を活用して持続可能な未来を切り開く"
+  long_description: |
+    あなたは「サステナブルエネルギータワー」の新米エンジニアです。ここでは自然の力が捕捉され、クリーンな電力に変換されます。この最先端のタワーで、あなたは太陽光が電力になる仕組み、風がタービンを回す仕組み、水素燃料電池が明日のためにエネルギーを蓄える仕組みを学びます。気候変動が世界を脅かす中、あなたのイノベーションが地球を救うかもしれません。
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "サステナブルエネルギータワー"
+  description: |
+    サステナブルエネルギータワーは、完全に再生可能エネルギーで動く大地にそびえ立つグリーンエンジニアリングの奇跡です。ここのエンジニアたちは、太陽光パネル、風力タービン、水素システムを活用して、都市全体にクリーンエネルギーを供給します。ここでの革新は、炭素排放を減らし、地球を守ります。
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "エネルギー危機警報"
+  description: |
+    チーフエンジニアのAuroraが警報を発令しました。化石燃料への過度な依存から都市の電力網が崩壊しそうです。老朽化した石炭発電所を置き換える新しい再生可能エネルギーシステムを設計しなければなりません。太陽と風が都市全体にクリーンで効率的に電力を供給できることを理解するところから旅が始まります。
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "太陽光発電システム"
+      description: "太陽光パネルが太陽光をクリーンな電力に変換する仕組みをマスターする"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "風力エネルギーシステム"
+      description: "風力タービンが動く空気から電力を生成する仕組みを学ぶ"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "エネルギー貯蔵"
+      description: "太陽と風が利用できない時に再生可能エネルギーを貯蔵する課題を解決する"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "スマートグリッド管理"
+      description: "インテリジェントシステムを使って都市のエネルギー供給と需要を均衡させる"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "水素技術"
+      description: "クリーンエネルギー貯蔵のための水素製造と燃料電池システムを設計する"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "洋上エネルギーシステム"
+      description: "海洋環境で風力と波力エネルギーシステムを構築する"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "炭素削減計画"
+      description: "都市や産業のカーボンフットプリントを最小化する包括的な計画を設計する"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "初めての太陽光アレイ"
+    description: "学校の建物に電力を供給する太陽光パネルシステムを設計・計算する"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "ウィンドファームデザイナー"
+    description: "沿岸地域のエネルギー出力を最大化する風力発電所のレイアウトを計画する"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "グリーンシティアーキテクト"
+    description: "都市地区全体の完全な再生可能エネルギーシステムを設計する"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "最初の1ワット"
+    description: "最初の1キロワットのシミュレーション再生可能エネルギーを生成する"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "カーボンセーバー"
+    description: "100トンのCO2排出を削減するシステムを設計する"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "グリッドバランサー"
+    description: "24時間エネルギー供給と需要のバランスを成功させる"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "グリーンエネルギーレジェンド"
+    description: "タワーの全再生可能エネルギーチャレンジを完了する"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "太陽光パネル計算機"
+      description: "家がエネルギー自立するために必要な太陽光パネルの枚数を計算する"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "風力発電の基礎"
+      description: "風速データを分析して風力タービン設置の最適場所を見つける"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "電池貯蔵システム"
+      description: "夜間使用のために太陽エネルギーを蓄える電池システムを設計する"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "スマートグリッドシミュレーション"
+      description: "スマートグリッドが地域内で再生可能エネルギーをどう均衡させるかをシミュレーションする"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "水素発電所"
+      description: "余剰太陽エネルギーを使ってグリーン水素を製造する施設を設計する"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "ゼロカーボンシティ計画"
+      description: "中規模都市の包括的なカーボンニュートラルエネルギー計画を作成する"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "太陽光パネルが太陽光を電力に変換する仕組みを理解する"
+  - "風力タービンが動く空気からクリーンな電力を生成する仕組みを学ぶ"
+  - "電池と水素を含むエネルギー貯蔵技術をマスターする"
+  - "需要と供給を均衡させるスマートグリッドシステムを設計する"
+  - "エネルギー需要を計算し適切な規模の再生可能エネルギーシステムを設計する"
+  - "再生可能エネルギーが炭素排出削減に与える影響を理解する"
+  - "エネルギー貯蔵ソリューションとしての水素燃料電池技術を探求する"
+  - "都市規模の持続可能なエネルギー転換を計画するスキルを培う"
+
+career_outcomes:
+  - "グリーンエネルギー戦略コンサルタント"
+  - "太陽光発電システム設計者"
+  - "風力エネルギースペシャリスト"
+  - "エネルギー貯蔵エンジニア"
+  - "スマートグリッドエンジニア"
+  - "水素システムエンジニア"
+  - "サステナビリティコンサルタント"
+  - "炭素削減プランナー"

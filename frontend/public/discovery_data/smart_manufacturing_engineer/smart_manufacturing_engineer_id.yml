@@ -1,0 +1,210 @@
+# Smart Manufacturing Engineer Discovery Path - Indonesian
+path_id: smart_manufacturing_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Komandan Pabrik Digital - Manajer Operasi Pabrik Cerdas"
+  short_description: "Transformasi pabrik tradisional menjadi sistem produksi cerdas dan otonom"
+  long_description: |
+    Kamu adalah insinyur pemula di "Pabrik Digital", di mana mesin saling berkomunikasi, robot bekerja sepanjang malam tanpa intervensi manusia, dan kecerdasan buatan mendeteksi cacat sebelum terjadi. Di pabrik futuristik yang terinspirasi dari otomasi lights-out Foxconn ini, kamu akan belajar bagaimana sensor, data, dan algoritma cerdas digabungkan untuk menciptakan pabrik yang mengelola dirinya sendiri. Manufaktur sedang diciptakan ulang — dan kamu memimpin revolusinya.
+
+  estimated_hours: 55
+  skill_focus:
+    - iot_sensors
+    - digital_twin
+    - ai_quality_control
+    - predictive_maintenance
+
+world_setting:
+  name: "Pabrik Digital"
+  description: |
+    Pabrik Digital adalah fasilitas mutakhir di mana setiap mesin terhubung, setiap proses dipantau secara real-time, dan AI mengambil keputusan lebih cepat dari manusia mana pun. Para insinyur di sini merancang sistem di mana robot dan manusia bekerja berdampingan, digital twin mensimulasikan seluruh lini produksi, dan sistem prediktif mencegah masalah sebelum terjadi. Inilah pabrik masa depan.
+
+  atmosphere: "futuristic_precision"
+  visual_theme: "digital_factory_neon"
+
+starting_scenario:
+  title: "Kebangkitan Pabrik"
+  description: |
+    Direktur Pabrik Titan mengumumkan misi berani: mengubah lini perakitan lama menjadi pabrik cerdas yang sepenuhnya otomatis dalam satu tahun. Pesaing sudah menggunakan robot bertenaga AI dan kontrol kualitas real-time. Kamu harus belajar cara menghubungkan mesin dengan sensor, membangun digital twin dari lini produksi, dan menggunakan data untuk menghilangkan pemborosan dan cacat. Masa depan manufaktur dimulai sekarang.
+
+  initial_tasks:
+    - connect_first_sensor
+    - study_production_data
+    - map_factory_processes
+
+skill_tree:
+  core_skills:
+    - id: iot_sensors
+      name: "Jaringan Sensor IoT"
+      description: "Hubungkan mesin dan peralatan dengan sensor yang mengumpulkan data produksi real-time"
+      max_level: 10
+      unlocks:
+        - network_protocols
+        - data_pipelines
+
+    - id: digital_twin
+      name: "Sistem Digital Twin"
+      description: "Buat salinan virtual pabrik yang mencerminkan kondisi dunia nyata untuk pengujian dan optimasi"
+      max_level: 10
+      unlocks:
+        - simulation_modeling
+        - virtual_commissioning
+
+    - id: ai_quality_control
+      name: "Kontrol Kualitas dengan AI"
+      description: "Gunakan computer vision dan machine learning untuk mendeteksi cacat produk secara otomatis"
+      max_level: 10
+      unlocks:
+        - vision_systems
+        - defect_classification
+
+    - id: predictive_maintenance
+      name: "Pemeliharaan Prediktif"
+      description: "Analisis data mesin untuk memprediksi kegagalan peralatan sebelum menyebabkan penghentian produksi"
+      max_level: 10
+      unlocks:
+        - anomaly_detection
+        - maintenance_scheduling
+
+  advanced_skills:
+    - id: robotic_automation
+      name: "Otomasi Robotik"
+      description: "Rancang dan program sistem robotik yang melakukan tugas perakitan dan penanganan material yang kompleks"
+      max_level: 15
+      requires: [iot_sensors, digital_twin]
+
+    - id: supply_chain_intelligence
+      name: "Kecerdasan Rantai Pasokan"
+      description: "Optimalkan aliran material dan komponen menggunakan manajemen rantai pasokan berbasis AI"
+      max_level: 15
+      requires: [iot_sensors, ai_quality_control]
+
+    - id: lights_out_manufacturing
+      name: "Manufaktur Lights-Out"
+      description: "Rancang sistem produksi yang sepenuhnya otomatis yang bisa beroperasi 24/7 tanpa intervensi manusia"
+      max_level: 15
+      requires: [robotic_automation, predictive_maintenance]
+
+milestone_quests:
+  - id: first_connected_line
+    name: "Lini Pertama yang Terhubung"
+    description: "Berhasil menghubungkan seluruh lini produksi dengan sensor IoT dan menampilkan data real-time"
+    required_level: 5
+    skills_tested: [iot_sensors, digital_twin]
+    xp_reward: 500
+    unlocks:
+      - connected_factory_badge
+      - advanced_lab_access
+
+  - id: zero_defect_challenge
+    name: "Tantangan Zero Cacat"
+    description: "Implementasikan sistem kontrol kualitas AI yang mencapai akurasi deteksi cacat 99,9%"
+    required_level: 10
+    skills_tested: [ai_quality_control, digital_twin]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - vision_lab_access
+
+  - id: lights_out_factory
+    name: "Pabrik Lights-Out"
+    description: "Rancang sistem produksi yang beroperasi terus-menerus selama 72 jam tanpa intervensi manusia"
+    required_level: 20
+    skills_tested: [lights_out_manufacturing, robotic_automation]
+    xp_reward: 2500
+    unlocks:
+      - factory_commander_title
+      - factory_leadership
+
+achievements:
+  - id: first_connection
+    name: "Koneksi Pertama"
+    description: "Berhasil menghubungkan mesin pertamamu ke jaringan IoT"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: defect_detective
+    name: "Detektif Cacat"
+    description: "Gunakan visi AI untuk mendeteksi 100 cacat produk secara otomatis"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: uptime_champion
+    name: "Juara Uptime"
+    description: "Cegah 5 kegagalan peralatan menggunakan peringatan pemeliharaan prediktif"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: factory_legend
+    name: "Legenda Pabrik"
+    description: "Selesaikan semua tantangan manufaktur cerdas di Pabrik Digital"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: sensor_setup
+      type: technical
+      title: "Pengaturan Jaringan Sensor"
+      description: "Hubungkan sensor suhu, getaran, dan kecepatan ke mesin produksi simulasi"
+      skills_improved: [iot_sensors]
+      xp_reward: 60
+
+    - id: data_dashboard
+      type: analysis
+      title: "Dasbor Data Produksi"
+      description: "Bangun dasbor real-time yang menampilkan metrik produksi utama dari data sensor"
+      skills_improved: [iot_sensors, digital_twin]
+      xp_reward: 50
+
+  intermediate:
+    - id: twin_builder
+      type: creation
+      title: "Pembangun Digital Twin"
+      description: "Buat digital twin dari sel produksi yang mencerminkan perilaku mesin nyata"
+      skills_improved: [digital_twin, iot_sensors]
+      xp_reward: 180
+
+    - id: ai_inspector
+      type: creation
+      title: "Inspektur Kualitas AI"
+      description: "Latih model computer vision untuk mengidentifikasi cacat permukaan pada komponen yang diproduksi"
+      skills_improved: [ai_quality_control]
+      xp_reward: 200
+
+  advanced:
+    - id: predictive_system
+      type: creation
+      title: "Sistem Pemeliharaan Prediktif"
+      description: "Rancang sistem yang memprediksi kegagalan mesin 48 jam sebelumnya menggunakan data getaran"
+      skills_improved: [predictive_maintenance, iot_sensors]
+      xp_reward: 350
+
+    - id: autonomous_line
+      type: creation
+      title: "Lini Produksi Otonom"
+      description: "Rancang urutan produksi yang sepenuhnya otomatis dengan penanganan robotik dan kontrol kualitas AI"
+      skills_improved: [lights_out_manufacturing, robotic_automation]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami bagaimana sensor IoT mengumpulkan dan mengirimkan data pabrik secara real-time"
+  - "Belajar membangun simulasi digital twin sistem produksi fisik"
+  - "Menerapkan computer vision dan machine learning untuk inspeksi kualitas otomatis"
+  - "Merancang sistem pemeliharaan prediktif yang mencegah kegagalan peralatan yang mahal"
+  - "Memahami bagaimana sistem robotik diprogram untuk tugas manufaktur yang fleksibel"
+  - "Menganalisis data produksi untuk mengidentifikasi perbaikan efisiensi dan pengurangan pemborosan"
+  - "Merancang sistem pabrik yang saling terhubung di mana mesin berkomunikasi dan mengoptimalkan diri"
+  - "Mengeksplorasi masa depan manufaktur lights-out dan pabrik yang sepenuhnya otonom"
+
+career_outcomes:
+  - "Manajer Operasi Pabrik Cerdas"
+  - "Insinyur IoT Industri"
+  - "Spesialis Digital Twin"
+  - "Insinyur Otomasi Robotik"
+  - "Insinyur Kontrol Kualitas AI"
+  - "Insinyur Pemeliharaan Prediktif"
+  - "Ilmuwan Data Manufaktur"
+  - "Konsultan Industri 4.0"

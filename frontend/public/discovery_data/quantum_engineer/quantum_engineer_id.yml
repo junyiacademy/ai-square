@@ -1,0 +1,219 @@
+# Jalur Penemuan Insinyur Kuantum - Bahasa Indonesia
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Penenun Mimpi Kuantum - Peneliti Komputasi Kuantum"
+  short_description: "Kuasai superposisi dan keterikatan untuk memecahkan yang mustahil"
+  long_description: |
+    Kamu adalah Penenun Mimpi pemula di «Labirin Kuantum», dengan intuisi untuk memahami
+    bahwa partikel dapat berada dalam beberapa keadaan secara bersamaan.
+    Di domain yang membalikkan logika komputasi klasik ini, setiap operasi pada qubit
+    bisa membuka masalah yang memerlukan sepuluh ribu tahun bagi komputer tradisional
+    untuk diselesaikan.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "Labirin Kuantum"
+  description: |
+    Labirin Kuantum adalah fasilitas penelitian yang ada dalam superposisi,
+    di mana koridor-koridornya mengarah ke beberapa arah secara bersamaan.
+    Para insinyur kuantum belajar di sini untuk memanipulasi qubit dan merancang algoritma kuantum.
+    Inovasi teknologi kuantum paling mutakhir ditempa di antara tembok-tembok ini.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "Pelajaran Pertama Schrödinger"
+  description: |
+    Mentor kuantum Qubit menggunakan kucing Schrödinger untuk menjelaskan konsep superposisi.
+    Namun monster dekoherensi kuantum yang mengintai di labirin sedang menghancurkan keadaan kuantum.
+    Kamu harus mempelajari koreksi kesalahan kuantum untuk melindungi qubit-mu.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "Dasar Mekanika Kuantum"
+      description: "Memahami konsep inti superposisi, keterikatan, dan pengukuran"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "Sirkuit Kuantum"
+      description: "Menggabungkan gerbang kuantum untuk membangun sirkuit kuantum"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "Pemrograman Kuantum"
+      description: "Menulis program kuantum menggunakan Qiskit / Cirq"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "Algoritma Kuantum"
+      description: "Mengimplementasikan algoritma seperti Grover, Shor, dan VQE"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "Koreksi Kesalahan Kuantum"
+      description: "Merancang dan mengimplementasikan kode koreksi kesalahan kuantum"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "Kriptografi Kuantum"
+      description: "Membangun sistem distribusi kunci kuantum dan enkripsi pasca-kuantum"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "Pembelajaran Mesin Kuantum"
+      description: "Algoritma hibrid yang menggabungkan komputasi kuantum dan pembelajaran mesin"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "Keadaan Superposisi Pertama"
+    description: "Berhasil menempatkan qubit dalam superposisi dan mengukurnya"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "Petarung Dekoherensi"
+    description: "Berhasil menjalankan algoritma pada komputer kuantum yang berisik"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "Keunggulan Kuantum Tercapai"
+    description: "Memecahkan masalah yang tidak dapat diselesaikan secara efisien oleh komputer klasik"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "Persiapan Keadaan Bell"
+    description: "Berhasil mempersiapkan pasangan qubit terikat pertamamu"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "Pelaksana Algoritma"
+    description: "Berhasil menjalankan pencarian Grover pada komputer kuantum nyata"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "Master Koreksi Kesalahan Kuantum"
+    description: "Mengimplementasikan kode koreksi kesalahan kuantum yang lengkap"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "Legenda Kuantum"
+    description: "Menyelesaikan semua tantangan teknologi kuantum"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "Pertemuan Pertama dengan Qubit"
+      description: "Memvisualisasikan keadaan qubit tunggal menggunakan bola Bloch"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "Sirkuit Kuantum Pertama"
+      description: "Mempersiapkan keadaan terikat menggunakan gerbang Hadamard dan CNOT"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Tantangan Pencarian Grover"
+      description: "Mengimplementasikan algoritma pencarian kuantum untuk menemukan jawaban tersembunyi"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "Eksperimen Simulasi Kebisingan"
+      description: "Mensimulasikan bagaimana kebisingan pada komputer kuantum nyata memengaruhi hasil"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "Distribusi Kunci Kuantum"
+      description: "Mengimplementasikan protokol BB84 untuk membangun saluran terenkripsi yang tahan penyadapan"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "Pembelajaran Hibrid Kuantum-Klasik"
+      description: "Menggunakan VQE untuk memecahkan masalah optimasi dalam simulasi molekuler"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "Memahami konsep inti mekanika kuantum: superposisi, keterikatan, pengukuran"
+  - "Menguasai desain gerbang kuantum dan sirkuit kuantum"
+  - "Menulis program kuantum menggunakan Qiskit atau Cirq"
+  - "Mengimplementasikan algoritma pencarian Grover dan pemfaktoran Shor"
+  - "Memahami prinsip dan implementasi koreksi kesalahan kuantum"
+  - "Menjelajahi kriptografi kuantum dan keamanan pasca-kuantum"
+  - "Menggabungkan komputasi kuantum dengan pembelajaran mesin"
+  - "Mempelajari arah penelitian mutakhir dalam teknologi kuantum"
+
+career_outcomes:
+  - "Insinyur Perangkat Lunak Kuantum"
+  - "Peneliti Algoritma Kuantum"
+  - "Insinyur Perangkat Keras Kuantum"
+  - "Insinyur Kriptografi Pasca-Kuantum"
+  - "Ilmuwan Aplikasi Kuantum"
+  - "Peneliti Pembelajaran Mesin Kuantum"
+  - "Konsultan Komputasi Kuantum"
+  - "Manajer Produk Teknologi Kuantum"

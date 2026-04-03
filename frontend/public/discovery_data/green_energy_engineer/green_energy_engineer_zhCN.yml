@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Simplified Chinese
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "绿能守护者 - 绿能策略顾问"
+  short_description: "驾驭太阳、风力与自然的力量，开创可持续未来"
+  long_description: |
+    你是「可持续能源塔」的见习工程师，在这里自然的力量被捕捉并转化为清洁电能。在这座高科技塔中，你将发现阳光如何变成电力、风如何转动涡轮机，以及氢燃料电池如何为明天储存能源。当气候变化威胁着世界，你的创新或许能帮助拯救它。
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "可持续能源塔"
+  description: |
+    可持续能源塔是绿色工程的奇迹，耸立于完全由可再生能源驱动的大地之上。这里的工程师利用太阳能板、风力涡轮机和氢能系统为整座城市提供清洁能源。这里的每一个突破都能减少碳排放并保护地球。
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "能源危机警报"
+  description: |
+    首席工程师 Aurora 发出警报：城市电网因过度依赖化石燃料而即将崩溃。你必须设计新的可再生能源系统来取代老旧的燃煤电厂。你的旅程从了解阳光和风如何清洁、高效地为整座城市供电开始。
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "太阳能系统"
+      description: "掌握太阳能板如何将阳光转化为清洁电力"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "风能系统"
+      description: "学习风力涡轮机如何从流动的空气中产生电力"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "能源储存"
+      description: "解决在太阳和风不可用时储存可再生能源的难题"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "智慧电网管理"
+      description: "使用智慧系统平衡城市中的能源供需"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "氢能技术"
+      description: "设计氢气生产和燃料电池系统以实现清洁能源储存"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "离岸能源系统"
+      description: "在海洋环境中建立风能和波浪能系统"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "碳减排规划"
+      description: "为城市和工业设计全面的碳足迹最小化方案"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "首个太阳能阵列"
+    description: "设计并计算一个为学校建筑供电的太阳能板系统"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "风电场设计师"
+    description: "规划一个最大化沿海地区能源输出的风电场布局"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "绿色城市建筑师"
+    description: "为整个城市区设计完整的可再生能源系统"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "第一度电"
+    description: "产生你的第一千瓦模拟可再生能源"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "碳减排英雄"
+    description: "设计一个消除100吨二氧化碳排放的系统"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "电网平衡师"
+    description: "成功平衡24小时的能源供需"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "绿能传奇"
+    description: "完成能源塔中所有可再生能源挑战"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "太阳能板计算器"
+      description: "计算一栋房子需要多少太阳能板才能实现能源自给"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "风力发电基础"
+      description: "分析风速数据以找到安装风力涡轮机的最佳位置"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "电池储能系统"
+      description: "设计一个储存太阳能供夜间使用的电池系统"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "智慧电网模拟"
+      description: "模拟智慧电网如何在社区中平衡可再生能源"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "氢能发电厂"
+      description: "设计一个利用多余太阳能生产绿氢的设施"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "零碳城市计划"
+      description: "为中型城市制定全面的碳中和能源计划"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "了解太阳能板如何将阳光转化为电力"
+  - "学习风力涡轮机如何从流动空气中产生清洁电力"
+  - "掌握包括电池和氢能在内的能源储存技术"
+  - "设计平衡供需的智慧电网系统"
+  - "计算能源需求并设计适当规模的可再生能源系统"
+  - "了解可再生能源对减少碳排放的影响"
+  - "探索氢燃料电池技术作为能源储存解决方案"
+  - "培养规划城市可持续能源转型的技能"
+
+career_outcomes:
+  - "绿能策略顾问"
+  - "太阳能系统设计师"
+  - "风能专家"
+  - "能源储存工程师"
+  - "智慧电网工程师"
+  - "氢能系统工程师"
+  - "可持续发展顾问"
+  - "碳减排规划师"

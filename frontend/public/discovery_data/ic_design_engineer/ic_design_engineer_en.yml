@@ -1,0 +1,221 @@
+# IC Design Engineer Discovery Path - English
+path_id: ic_design_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Silicon Shield Forger - IC Design Engineer"
+  short_description: "Design the tiny chips that power the modern world"
+  long_description: |
+    You are a rookie engineer at the "Silicon Shield Forge," where microscopic circuits
+    are crafted to power everything from smartphones to satellites. In this high-tech
+    workshop, you will learn how logical thinking turns into real silicon chips that
+    billions of people rely on every day. Taiwan's semiconductor industry leads the world,
+    and your designs could be the next breakthrough.
+
+  estimated_hours: 55
+  skill_focus:
+    - logic_design
+    - chip_architecture
+    - circuit_verification
+    - physical_layout
+
+world_setting:
+  name: "Silicon Shield Forge"
+  description: |
+    The Silicon Shield Forge is a legendary workshop where engineers transform abstract
+    logic into physical chips. Masters here design circuits so small they are invisible
+    to the naked eye, yet powerful enough to run entire computers. Every chip forged
+    here protects the digital world.
+
+  atmosphere: "precision_craftsmanship"
+  visual_theme: "neon_circuit_forge"
+
+starting_scenario:
+  title: "The First Blueprint"
+  description: |
+    Master Forger Titan hands you a blank circuit diagram and says: "Every great chip
+    starts with a single gate." A crisis looms — a rival company is releasing a faster
+    processor next month. You must design a smarter, more efficient chip. Your journey
+    begins with understanding how simple ON/OFF switches combine to create intelligent
+    circuits.
+
+  initial_tasks:
+    - learn_logic_gates
+    - draw_first_circuit
+    - simulate_basic_design
+
+skill_tree:
+  core_skills:
+    - id: logic_design
+      name: "Logic Design"
+      description: "Master how AND, OR, NOT gates combine to create smart circuits"
+      max_level: 10
+      unlocks:
+        - combinational_circuits
+        - sequential_circuits
+
+    - id: chip_architecture
+      name: "Chip Architecture"
+      description: "Plan how different parts of a chip work together like a city blueprint"
+      max_level: 10
+      unlocks:
+        - processor_design
+        - memory_systems
+
+    - id: circuit_verification
+      name: "Circuit Verification"
+      description: "Test and prove your circuit works correctly before manufacturing"
+      max_level: 10
+      unlocks:
+        - simulation_tools
+        - formal_checking
+
+    - id: physical_layout
+      name: "Physical Layout"
+      description: "Arrange circuit elements on silicon like solving a precise puzzle"
+      max_level: 10
+      unlocks:
+        - timing_optimization
+        - power_reduction
+
+  advanced_skills:
+    - id: low_power_design
+      name: "Low Power Design"
+      description: "Create chips that do more while consuming less battery power"
+      max_level: 15
+      requires: [logic_design, chip_architecture]
+
+    - id: high_speed_design
+      name: "High Speed Design"
+      description: "Push chip performance to its absolute limits"
+      max_level: 15
+      requires: [chip_architecture, physical_layout]
+
+    - id: ai_chip_design
+      name: "AI Chip Design"
+      description: "Design specialized chips that accelerate artificial intelligence"
+      max_level: 15
+      requires: [logic_design, circuit_verification]
+
+milestone_quests:
+  - id: first_logic_block
+    name: "First Logic Block"
+    description: "Design and simulate a working logic circuit from scratch"
+    required_level: 5
+    skills_tested: [logic_design, circuit_verification]
+    xp_reward: 500
+    unlocks:
+      - apprentice_forger_badge
+      - advanced_tools_access
+
+  - id: chip_defender
+    name: "Chip Defender"
+    description: "Find and fix 5 critical bugs in a faulty chip design"
+    required_level: 10
+    skills_tested: [circuit_verification, physical_layout]
+    xp_reward: 1000
+    unlocks:
+      - quality_guardian_title
+      - expert_lab_access
+
+  - id: silicon_master
+    name: "Silicon Master"
+    description: "Design a complete chip that passes all performance and power tests"
+    required_level: 20
+    skills_tested: [low_power_design, high_speed_design]
+    xp_reward: 2500
+    unlocks:
+      - master_forger_title
+      - forge_leadership
+
+achievements:
+  - id: first_simulation
+    name: "First Spark"
+    description: "Run your first successful circuit simulation"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: bug_hunter
+    name: "Bug Hunter"
+    description: "Find and fix 10 design errors in circuit diagrams"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: power_saver
+    name: "Power Champion"
+    description: "Design a circuit that uses 30% less power than the baseline"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: silicon_legend
+    name: "Silicon Legend"
+    description: "Complete all chip design challenges in the Forge"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: logic_gate_puzzle
+      type: design
+      title: "Logic Gate Puzzle"
+      description: "Connect AND, OR, and NOT gates to build a simple calculator circuit"
+      skills_improved: [logic_design]
+      xp_reward: 60
+
+    - id: circuit_simulation
+      type: analysis
+      title: "Simulate Your First Circuit"
+      description: "Use simulation software to test if your circuit produces correct outputs"
+      skills_improved: [circuit_verification]
+      xp_reward: 50
+
+  intermediate:
+    - id: architecture_blueprint
+      type: design
+      title: "Chip Blueprint"
+      description: "Plan how a small processor chip should be organized internally"
+      skills_improved: [chip_architecture, logic_design]
+      xp_reward: 180
+
+    - id: layout_optimization
+      type: creation
+      title: "Layout Optimizer"
+      description: "Arrange circuit elements to minimize chip area and improve speed"
+      skills_improved: [physical_layout, circuit_verification]
+      xp_reward: 200
+
+  advanced:
+    - id: ai_accelerator
+      type: creation
+      title: "AI Accelerator Design"
+      description: "Design a specialized circuit block that speeds up image recognition"
+      skills_improved: [ai_chip_design, chip_architecture]
+      xp_reward: 350
+
+    - id: full_chip_tape_out
+      type: creation
+      title: "Tape-Out Ready"
+      description: "Prepare a complete chip design ready for factory manufacturing"
+      skills_improved: [physical_layout, low_power_design]
+      xp_reward: 400
+
+learning_objectives:
+  - "Understand how logic gates form the foundation of all digital chips"
+  - "Learn to plan and organize chip architecture like a system blueprint"
+  - "Master simulation tools to verify circuit behavior before manufacturing"
+  - "Apply physical layout techniques to optimize chip size and performance"
+  - "Design circuits that balance speed, power, and cost requirements"
+  - "Understand the semiconductor manufacturing process from design to factory"
+  - "Develop systematic debugging skills to find and fix circuit errors"
+  - "Explore cutting-edge AI chip design concepts and future trends"
+
+career_outcomes:
+  - "IC Design Engineer"
+  - "Digital Circuit Designer"
+  - "Chip Verification Engineer"
+  - "Semiconductor Process Engineer"
+  - "FPGA Design Engineer"
+  - "AI Hardware Engineer"
+  - "Physical Design Engineer"
+  - "Chip Architecture Researcher"

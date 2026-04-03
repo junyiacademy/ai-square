@@ -1,0 +1,210 @@
+# Green Energy Engineer Discovery Path - Korean
+path_id: green_energy_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "그린 에너지 수호자 - 그린 에너지 전략 컨설턴트"
+  short_description: "태양, 바람, 자연의 힘을 활용해 지속 가능한 미래를 만든다"
+  long_description: |
+    당신은 「지속 가능 에너지 타워」의 신입 엔지니어입니다. 이곳에서 자연의 힘이 포착되어 깨끗한 전력으로 변환됩니다. 이 첨단 타워에서 당신은 햇빛이 전력이 되는 방법, 바람이 터빈을 돌리는 방법, 수소 연료전지가 내일을 위해 에너지를 저장하는 방법을 배웁니다. 기후 변화가 세상을 위협하는 지금, 당신의 혁신이 지구를 구할 수 있습니다.
+
+  estimated_hours: 52
+  skill_focus:
+    - solar_power
+    - wind_energy
+    - energy_storage
+    - smart_grid
+
+world_setting:
+  name: "지속 가능 에너지 타워"
+  description: |
+    지속 가능 에너지 타워는 완전히 재생 가능 에너지로 구동되는 대지 위에 솟아오른 그린 엔지니어링의 경이입니다. 이곳 엔지니어들은 태양 전지판, 풍력 터빈, 수소 시스템을 활용해 도시 전체에 청정 에너지를 공급합니다. 이곳의 모든 혁신은 탄소 배출을 줄이고 지구를 보호합니다.
+
+  atmosphere: "hopeful_innovation"
+  visual_theme: "green_tech_tower"
+
+starting_scenario:
+  title: "에너지 위기 경보"
+  description: |
+    수석 엔지니어 Aurora가 경보를 울립니다. 화석 연료 과다 의존으로 도시 전력망이 붕괴 직전입니다. 노후 석탄 발전소를 대체할 새로운 재생 에너지 시스템을 설계해야 합니다. 태양과 바람이 도시 전체에 깨끗하고 효율적으로 전력을 공급할 수 있음을 이해하는 것부터 여정이 시작됩니다.
+
+  initial_tasks:
+    - learn_solar_basics
+    - study_wind_power
+    - calculate_energy_needs
+
+skill_tree:
+  core_skills:
+    - id: solar_power
+      name: "태양광 발전 시스템"
+      description: "태양 전지판이 햇빛을 청정 전력으로 변환하는 방법을 마스터한다"
+      max_level: 10
+      unlocks:
+        - panel_optimization
+        - solar_farm_design
+
+    - id: wind_energy
+      name: "풍력 에너지 시스템"
+      description: "풍력 터빈이 움직이는 공기에서 전력을 생성하는 방법을 배운다"
+      max_level: 10
+      unlocks:
+        - turbine_placement
+        - offshore_wind
+
+    - id: energy_storage
+      name: "에너지 저장"
+      description: "태양과 바람을 사용할 수 없을 때 재생 에너지를 저장하는 문제를 해결한다"
+      max_level: 10
+      unlocks:
+        - battery_systems
+        - hydrogen_fuel_cells
+
+    - id: smart_grid
+      name: "스마트 그리드 관리"
+      description: "지능형 시스템을 사용해 도시의 에너지 공급과 수요를 균형 잡는다"
+      max_level: 10
+      unlocks:
+        - grid_automation
+        - demand_forecasting
+
+  advanced_skills:
+    - id: hydrogen_tech
+      name: "수소 기술"
+      description: "청정 에너지 저장을 위한 수소 생산 및 연료전지 시스템을 설계한다"
+      max_level: 15
+      requires: [solar_power, energy_storage]
+
+    - id: offshore_systems
+      name: "해상 에너지 시스템"
+      description: "해양 환경에서 풍력과 파력 에너지 시스템을 구축한다"
+      max_level: 15
+      requires: [wind_energy, smart_grid]
+
+    - id: carbon_reduction
+      name: "탄소 감축 계획"
+      description: "도시와 산업의 탄소 발자국을 최소화하는 종합 계획을 설계한다"
+      max_level: 15
+      requires: [smart_grid, solar_power]
+
+milestone_quests:
+  - id: first_panel
+    name: "첫 태양광 어레이"
+    description: "학교 건물에 전력을 공급하는 태양 전지판 시스템을 설계하고 계산한다"
+    required_level: 5
+    skills_tested: [solar_power, energy_storage]
+    xp_reward: 500
+    unlocks:
+      - solar_champion_badge
+      - advanced_lab_access
+
+  - id: wind_farm
+    name: "풍력 발전단지 설계사"
+    description: "해안 지역의 에너지 출력을 극대화하는 풍력 발전단지 레이아웃을 계획한다"
+    required_level: 10
+    skills_tested: [wind_energy, smart_grid]
+    xp_reward: 1000
+    unlocks:
+      - wind_master_title
+      - coastal_project_access
+
+  - id: green_city
+    name: "그린 시티 건축가"
+    description: "도시 구역 전체를 위한 완전한 재생 에너지 시스템을 설계한다"
+    required_level: 20
+    skills_tested: [hydrogen_tech, carbon_reduction]
+    xp_reward: 2500
+    unlocks:
+      - green_city_architect_title
+      - tower_leadership
+
+achievements:
+  - id: first_watt
+    name: "첫 번째 와트"
+    description: "첫 번째 킬로와트의 시뮬레이션 재생 에너지를 생성한다"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: carbon_saver
+    name: "탄소 절감 영웅"
+    description: "100톤의 CO2 배출을 제거하는 시스템을 설계한다"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: grid_balancer
+    name: "그리드 밸런서"
+    description: "24시간 에너지 공급과 수요의 균형을 성공적으로 유지한다"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: green_legend
+    name: "그린 에너지 레전드"
+    description: "타워의 모든 재생 에너지 챌린지를 완료한다"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: solar_calc
+      type: analysis
+      title: "태양 전지판 계산기"
+      description: "집이 에너지 자립을 위해 필요한 태양 전지판 수를 계산한다"
+      skills_improved: [solar_power]
+      xp_reward: 60
+
+    - id: wind_basics
+      type: analysis
+      title: "풍력 발전 기초"
+      description: "풍속 데이터를 분석해 풍력 터빈 설치의 최적 위치를 찾는다"
+      skills_improved: [wind_energy]
+      xp_reward: 50
+
+  intermediate:
+    - id: battery_design
+      type: design
+      title: "배터리 저장 시스템"
+      description: "야간 사용을 위해 태양 에너지를 저장하는 배터리 시스템을 설계한다"
+      skills_improved: [energy_storage, solar_power]
+      xp_reward: 180
+
+    - id: grid_sim
+      type: simulation
+      title: "스마트 그리드 시뮬레이션"
+      description: "스마트 그리드가 지역 내 재생 에너지를 어떻게 균형 잡는지 시뮬레이션한다"
+      skills_improved: [smart_grid, energy_storage]
+      xp_reward: 200
+
+  advanced:
+    - id: hydrogen_plant
+      type: creation
+      title: "수소 발전소"
+      description: "잉여 태양 에너지를 사용해 그린 수소를 생산하는 시설을 설계한다"
+      skills_improved: [hydrogen_tech, solar_power]
+      xp_reward: 350
+
+    - id: zero_carbon
+      type: creation
+      title: "제로 탄소 도시 계획"
+      description: "중간 규모 도시를 위한 포괄적인 탄소 중립 에너지 계획을 수립한다"
+      skills_improved: [carbon_reduction, smart_grid]
+      xp_reward: 400
+
+learning_objectives:
+  - "태양 전지판이 햇빛을 전력으로 변환하는 방법을 이해한다"
+  - "풍력 터빈이 움직이는 공기에서 청정 전력을 생성하는 방법을 배운다"
+  - "배터리와 수소를 포함한 에너지 저장 기술을 마스터한다"
+  - "공급과 수요를 균형 잡는 스마트 그리드 시스템을 설계한다"
+  - "에너지 필요량을 계산하고 적절한 규모의 재생 에너지 시스템을 설계한다"
+  - "재생 에너지가 탄소 배출 감소에 미치는 영향을 이해한다"
+  - "에너지 저장 솔루션으로서 수소 연료전지 기술을 탐구한다"
+  - "도시 규모의 지속 가능한 에너지 전환 계획 수립 능력을 기른다"
+
+career_outcomes:
+  - "그린 에너지 전략 컨설턴트"
+  - "태양광 시스템 설계자"
+  - "풍력 에너지 전문가"
+  - "에너지 저장 엔지니어"
+  - "스마트 그리드 엔지니어"
+  - "수소 시스템 엔지니어"
+  - "지속 가능성 컨설턴트"
+  - "탄소 감축 계획가"

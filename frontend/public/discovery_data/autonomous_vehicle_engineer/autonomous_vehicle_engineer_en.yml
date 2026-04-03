@@ -1,0 +1,218 @@
+# Autonomous Vehicle Engineer Discovery Path - English
+path_id: autonomous_vehicle_engineer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Autonomous Navigator - Autonomous Vehicle Engineer"
+  short_description: "Teach cars to see the road, think, and make decisions on their own"
+  long_description: |
+    You are a trainee navigator at the "Autonomous Navigation Tower," gifted with the
+    ability to make vehicles drive themselves. In this high-tech base combining AI,
+    sensors, and maps, every millisecond of judgment affects passenger safety, and
+    your mission is to build a zero-accident future of mobility.
+
+  estimated_hours: 55
+  skill_focus:
+    - perception_systems
+    - decision_making
+    - vehicle_control
+    - safety_engineering
+
+world_setting:
+  name: "Autonomous Navigation Tower"
+  description: |
+    The Autonomous Navigation Tower is the global R&D hub for autonomous driving
+    technology. From sensor fusion to decision engines, from HD maps to V2X networks,
+    engineers here build the next generation of intelligent transportation systems.
+
+  atmosphere: "high_tech_precision"
+  visual_theme: "autonomous_tower"
+
+starting_scenario:
+  title: "First Autonomous Drive"
+  description: |
+    Chief Engineer Navigator walks you through the perception world of autonomous
+    vehicles: LiDAR point clouds, camera feeds, radar echoes. But a Ghost Signal
+    appears on the test track — a false obstacle detection. You must analyze sensor
+    data to find the source of the phantom.
+
+  initial_tasks:
+    - learn_perception_basics
+    - understand_sensor_types
+    - first_object_detection
+
+skill_tree:
+  core_skills:
+    - id: perception
+      name: "Environmental Perception"
+      description: "Sense the surrounding environment using LiDAR, cameras, and radar"
+      max_level: 10
+      unlocks:
+        - object_detection
+        - semantic_segmentation
+
+    - id: localization
+      name: "Localization & Mapping"
+      description: "Precisely locate the vehicle on high-definition maps"
+      max_level: 10
+      unlocks:
+        - hd_mapping
+        - gps_rtk_fusion
+
+    - id: planning
+      name: "Path Planning"
+      description: "Find the safest driving route through complex traffic"
+      max_level: 10
+      unlocks:
+        - behavior_planning
+        - trajectory_generation
+
+    - id: vehicle_control
+      name: "Vehicle Control"
+      description: "Precisely control the steering wheel, throttle, and brakes"
+      max_level: 10
+      unlocks:
+        - pid_control
+        - model_predictive_control
+
+  advanced_skills:
+    - id: end_to_end_learning
+      name: "End-to-End Learning"
+      description: "Use deep learning to go directly from sensor input to control output"
+      max_level: 15
+      requires: [perception, planning]
+
+    - id: v2x_communication
+      name: "V2X Communication"
+      description: "Enable vehicles to communicate with infrastructure and other vehicles"
+      max_level: 15
+      requires: [localization, vehicle_control]
+
+    - id: safety_validation
+      name: "Safety Validation"
+      description: "Validate autonomous system safety through simulation and real-world testing"
+      max_level: 15
+      requires: [planning, end_to_end_learning]
+
+milestone_quests:
+  - id: first_detection
+    name: "First Detection"
+    description: "Successfully detect and classify pedestrians, vehicles, and signals on the road"
+    required_level: 5
+    skills_tested: [perception, localization]
+    xp_reward: 500
+    unlocks:
+      - detection_badge
+      - simulator_access
+
+  - id: ghost_buster
+    name: "Ghost Buster"
+    description: "Find and eliminate false detections in sensor fusion"
+    required_level: 10
+    skills_tested: [perception, planning]
+    xp_reward: 1000
+    unlocks:
+      - safety_expert_title
+      - real_vehicle_access
+
+  - id: city_navigator
+    name: "City Navigator"
+    description: "Complete a fully autonomous driving test in a simulated city"
+    required_level: 20
+    skills_tested: [end_to_end_learning, safety_validation]
+    xp_reward: 2500
+    unlocks:
+      - navigator_legend_title
+      - tower_leadership
+
+achievements:
+  - id: first_lane_keep
+    name: "Lane Keeper"
+    description: "Keep the vehicle stable in the center of the lane for 1 kilometer"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: intersection_master
+    name: "Intersection Master"
+    description: "Safely navigate 50 different types of intersections"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: zero_incident
+    name: "Zero Incident Driver"
+    description: "Complete 100 km of autonomous driving without any incident"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: autonomous_legend
+    name: "Autonomous Legend"
+    description: "Complete all autonomous vehicle engineering challenges"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: camera_detection
+      type: analysis
+      title: "Camera Object Detection"
+      description: "Use a YOLO model to detect vehicles and pedestrians on the road"
+      skills_improved: [perception]
+      xp_reward: 60
+
+    - id: map_reading
+      type: analysis
+      title: "HD Map Reading"
+      description: "Understand lane markings, intersections, and traffic sign annotations in maps"
+      skills_improved: [localization]
+      xp_reward: 50
+
+  intermediate:
+    - id: sensor_fusion
+      type: creation
+      title: "Triple Sensor Fusion"
+      description: "Fuse detection results from LiDAR, camera, and radar"
+      skills_improved: [perception, localization]
+      xp_reward: 180
+
+    - id: path_planning
+      type: creation
+      title: "Roundabout Path Planning"
+      description: "Plan a safe driving trajectory through a roundabout"
+      skills_improved: [planning, vehicle_control]
+      xp_reward: 200
+
+  advanced:
+    - id: urban_driving
+      type: creation
+      title: "Urban Autonomous Driving Challenge"
+      description: "Complete autonomous driving tasks in a complex urban environment"
+      skills_improved: [end_to_end_learning, safety_validation]
+      xp_reward: 350
+
+    - id: fleet_management
+      type: creation
+      title: "Autonomous Fleet Dispatch"
+      description: "Manage real-time route scheduling for 10 autonomous buses"
+      skills_improved: [v2x_communication, planning]
+      xp_reward: 400
+
+learning_objectives:
+  - "Understand the perception principles of LiDAR, cameras, and radar"
+  - "Master object detection and semantic segmentation techniques"
+  - "Develop expertise in HD mapping and real-time localization"
+  - "Implement behavior planning and trajectory generation"
+  - "Understand vehicle dynamics and control theory"
+  - "Apply deep learning for end-to-end autonomous driving"
+  - "Design safety validation processes for autonomous systems"
+  - "Understand smart transportation development and regulations"
+
+career_outcomes:
+  - "Autonomous Systems Engineer"
+  - "Sensor Fusion Engineer"
+  - "HD Mapping Engineer"
+  - "Automotive AI Engineer"
+  - "Functional Safety Engineer"
+  - "Intelligent Transportation Planner"
+  - "V2X Communication Engineer"
+  - "Autonomous Vehicle Test & Validation Engineer"

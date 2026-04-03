@@ -1,0 +1,218 @@
+# 양자 엔지니어 탐색 경로 - 한국어
+path_id: quantum_engineer
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "양자 드림위버 - 양자 컴퓨팅 연구원"
+  short_description: "중첩과 얽힘을 지배하여 불가능한 문제를 해결하라"
+  long_description: |
+    당신은 「양자 미궁」의 견습 드림위버로, 입자가 여러 상태에 동시에 존재한다는
+    것을 이해하는 직관을 가지고 있습니다.
+    전통적인 연산 논리를 뒤엎는 이 영역에서, 각각의 큐비트 조작이
+    고전 컴퓨터로 만 년이 걸려도 풀 수 없는 문제의 열쇠가 될 수 있습니다.
+
+  estimated_hours: 50
+  skill_focus:
+    - quantum_fundamentals
+    - quantum_programming
+    - quantum_algorithms
+    - quantum_applications
+
+world_setting:
+  name: "양자 미궁"
+  description: |
+    양자 미궁은 중첩 상태로 존재하는 연구 시설로, 복도가 동시에 여러 방향으로
+    이어집니다.
+    양자 엔지니어들은 이곳에서 큐비트 조작과 양자 알고리즘 설계를 배웁니다.
+    양자 기술의 핵심 혁신이 이 벽 안에서 탄생합니다.
+
+  atmosphere: "surreal_scientific"
+  visual_theme: "quantum_labyrinth"
+
+starting_scenario:
+  title: "슈뢰딩거의 첫 번째 수업"
+  description: |
+    양자 멘토 Qubit은 슈뢰딩거의 고양이를 이용해 중첩의 개념을 설명합니다.
+    그러나 미궁 속에 숨어 있는 양자 결어긋남 괴물 Decoherence가 양자 상태를 파괴하고 있습니다.
+    큐비트를 보호하기 위해 양자 오류 수정을 배워야만 합니다.
+
+  initial_tasks:
+    - learn_superposition
+    - understand_entanglement
+    - first_quantum_circuit
+
+skill_tree:
+  core_skills:
+    - id: quantum_mechanics
+      name: "양자 역학 기초"
+      description: "중첩, 얽힘, 측정의 핵심 개념 이해"
+      max_level: 10
+      unlocks:
+        - superposition_mastery
+        - entanglement_control
+
+    - id: quantum_circuits
+      name: "양자 회로"
+      description: "양자 게이트를 조합하여 양자 회로 구성"
+      max_level: 10
+      unlocks:
+        - single_qubit_gates
+        - multi_qubit_gates
+
+    - id: quantum_programming
+      name: "양자 프로그래밍"
+      description: "Qiskit / Cirq를 사용하여 양자 프로그램 작성"
+      max_level: 10
+      unlocks:
+        - circuit_optimization
+        - noise_simulation
+
+    - id: quantum_algorithms
+      name: "양자 알고리즘"
+      description: "Grover, Shor, VQE 등의 알고리즘 구현"
+      max_level: 10
+      unlocks:
+        - search_speedup
+        - factoring_power
+
+  advanced_skills:
+    - id: quantum_error_correction
+      name: "양자 오류 수정"
+      description: "양자 오류 수정 코드 설계 및 구현"
+      max_level: 15
+      requires: [quantum_circuits, quantum_mechanics]
+
+    - id: quantum_cryptography
+      name: "양자 암호학"
+      description: "양자 키 분배 및 포스트 양자 암호화 시스템 구축"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_programming]
+
+    - id: quantum_ml
+      name: "양자 머신러닝"
+      description: "양자 컴퓨팅과 머신러닝을 결합한 하이브리드 알고리즘"
+      max_level: 15
+      requires: [quantum_algorithms, quantum_error_correction]
+
+milestone_quests:
+  - id: first_superposition
+    name: "첫 번째 중첩 상태"
+    description: "큐비트를 중첩 상태에 성공적으로 놓고 측정하기"
+    required_level: 5
+    skills_tested: [quantum_mechanics, quantum_circuits]
+    xp_reward: 500
+    unlocks:
+      - qubit_badge
+      - lab_access
+
+  - id: decoherence_fighter
+    name: "결어긋남 전사"
+    description: "잡음이 있는 양자 컴퓨터에서 알고리즘 성공적으로 실행"
+    required_level: 10
+    skills_tested: [quantum_programming, quantum_error_correction]
+    xp_reward: 1000
+    unlocks:
+      - noise_master_title
+      - quantum_computer_access
+
+  - id: quantum_advantage
+    name: "양자 우위 달성"
+    description: "고전 컴퓨터가 효율적으로 풀 수 없는 문제 해결"
+    required_level: 20
+    skills_tested: [quantum_ml, quantum_cryptography]
+    xp_reward: 2500
+    unlocks:
+      - quantum_legend_title
+      - labyrinth_leadership
+
+achievements:
+  - id: first_bell_state
+    name: "벨 상태 준비"
+    description: "첫 번째 얽힘 큐비트 쌍을 성공적으로 준비하기"
+    xp_reward: 100
+    badge_type: bronze
+
+  - id: algorithm_runner
+    name: "알고리즘 실행자"
+    description: "실제 양자 컴퓨터에서 Grover 탐색 성공적으로 실행"
+    xp_reward: 250
+    badge_type: silver
+
+  - id: error_corrector
+    name: "양자 오류 수정 마스터"
+    description: "완전한 양자 오류 수정 코드 구현"
+    xp_reward: 500
+    badge_type: gold
+
+  - id: quantum_legend
+    name: "양자 전설"
+    description: "모든 양자 기술 도전 완료"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: qubit_basics
+      type: exploration
+      title: "큐비트 첫 경험"
+      description: "블로흐 구면을 사용하여 단일 큐비트 상태 시각화"
+      skills_improved: [quantum_mechanics]
+      xp_reward: 60
+
+    - id: first_circuit
+      type: creation
+      title: "첫 번째 양자 회로"
+      description: "Hadamard 게이트와 CNOT 게이트를 사용하여 얽힘 상태 준비"
+      skills_improved: [quantum_circuits]
+      xp_reward: 50
+
+  intermediate:
+    - id: grover_search
+      type: creation
+      title: "Grover 탐색 도전"
+      description: "양자 탐색 알고리즘을 구현하여 숨겨진 답 찾기"
+      skills_improved: [quantum_algorithms, quantum_programming]
+      xp_reward: 180
+
+    - id: noise_simulation
+      type: analysis
+      title: "잡음 시뮬레이션 실험"
+      description: "실제 양자 컴퓨터의 잡음이 결과에 미치는 영향 시뮬레이션"
+      skills_improved: [quantum_programming, quantum_circuits]
+      xp_reward: 200
+
+  advanced:
+    - id: qkd_protocol
+      type: creation
+      title: "양자 키 분배"
+      description: "BB84 프로토콜을 구현하여 도청 불가능한 암호화 채널 구축"
+      skills_improved: [quantum_cryptography]
+      xp_reward: 350
+
+    - id: hybrid_ml
+      type: creation
+      title: "양자-고전 하이브리드 학습"
+      description: "VQE를 사용하여 분자 시뮬레이션 최적화 문제 해결"
+      skills_improved: [quantum_ml, quantum_algorithms]
+      xp_reward: 400
+
+learning_objectives:
+  - "양자 역학의 핵심 개념 이해: 중첩, 얽힘, 측정"
+  - "양자 게이트와 양자 회로 설계 습득"
+  - "Qiskit 또는 Cirq를 사용하여 양자 프로그램 작성"
+  - "Grover 탐색 및 Shor 인수분해 알고리즘 구현"
+  - "양자 오류 수정의 원리와 구현 이해"
+  - "양자 암호학과 포스트 양자 보안 탐색"
+  - "양자 컴퓨팅과 머신러닝 결합"
+  - "양자 기술의 최첨단 연구 방향 학습"
+
+career_outcomes:
+  - "양자 소프트웨어 엔지니어"
+  - "양자 알고리즘 연구원"
+  - "양자 하드웨어 엔지니어"
+  - "포스트 양자 암호학 엔지니어"
+  - "양자 응용 과학자"
+  - "양자 머신러닝 연구원"
+  - "양자 컴퓨팅 컨설턴트"
+  - "양자 기술 제품 매니저"

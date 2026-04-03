@@ -269,6 +269,16 @@
     }
   },
 
+  "evaluation": {
+    "completedTitle": "Assessment Complete!",
+    "completedDescription": "Here are your interest profile results",
+    "techInterest": "Technology Interest",
+    "creativeInterest": "Creative Interest",
+    "businessInterest": "Business Interest",
+    "viewScenarios": "Explore Career Scenarios",
+    "retakeAssessment": "Retake Assessment"
+  },
+
   "navigation": {
     "back": "Back",
     "next": "Next",
