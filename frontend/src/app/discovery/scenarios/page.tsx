@@ -29,6 +29,16 @@ import { useUserData } from "@/hooks/useUserData";
 import { useAuth } from "@/contexts/AuthContext";
 import { normalizeLanguageCode } from "@/lib/utils/language";
 import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+
+// Maps broad filter IDs to actual DB category values
+const categoryMapping: Record<string, string[]> = {
+  technology: ["technology"],
+  arts: ["arts"],
+  business: ["business"],
+  science: ["science", "quantum_technology"],
+  hardware: ["semiconductor", "robotics", "manufacturing", "autonomous_systems"],
+  green: ["sustainability"],
+};
 // Icon mapping for career types
 const careerIcons: Record<
   string,
@@ -84,24 +94,26 @@ const careerColors: Record<string, string> = {
   smart_manufacturing_engineer: "from-slate-500 to-blue-500",
 };
 
-// Industry filters (Row 1)
-const industryFilters = [
-  { id: "all", name: "全部", icon: Sparkles },
-  { id: "technology", name: "科技", icon: Code },
-  { id: "arts", name: "創意", icon: Paintbrush },
-  { id: "science", name: "科學", icon: Lightbulb },
-  { id: "business", name: "商業", icon: Briefcase },
+// Industry filter definitions (names resolved via i18n at render time)
+const industryFilterDefs = [
+  { id: "all", icon: Sparkles },
+  { id: "technology", icon: Code },
+  { id: "arts", icon: Paintbrush },
+  { id: "science", icon: Lightbulb },
+  { id: "business", icon: Briefcase },
+  { id: "hardware", icon: CircuitBoard },
+  { id: "green", icon: Leaf },
 ];
 
-// Job function filters (Row 2)
-const jobFunctionFilters = [
-  { id: "all", name: "全部", icon: Sparkles },
-  { id: "engineer", name: "工程師", icon: Cpu },
-  { id: "designer", name: "設計師", icon: Paintbrush },
-  { id: "researcher", name: "研究員", icon: Lightbulb },
-  { id: "creator", name: "創作者", icon: Video },
-  { id: "pm", name: "PM / 管理", icon: Users },
-  { id: "business", name: "商業 / 創業", icon: Briefcase },
+// Job function filter definitions (names resolved via i18n at render time)
+const jobFunctionFilterDefs = [
+  { id: "all", icon: Sparkles },
+  { id: "engineer", icon: Cpu },
+  { id: "designer", icon: Paintbrush },
+  { id: "researcher", icon: Lightbulb },
+  { id: "creator", icon: Video },
+  { id: "pm", icon: Users },
+  { id: "business", icon: Briefcase },
 ];
 
 // Map career types to job functions
@@ -128,7 +140,7 @@ const careerJobFunctions: Record<string, string> = {
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { i18n } = useTranslation(["discovery", "skills"]);
+  const { t, i18n } = useTranslation(["discovery", "skills"]);
   const { isLoggedIn } = useAuth();
   useUserData(); // Trigger user data loading
   const [selectedIndustry, setSelectedIndustry] = useState("all");
@@ -337,8 +349,13 @@ export default function ScenariosPage() {
     activeTab === "my"
       ? myScenarios
       : scenarios.filter((s) => {
-          const industryMatch = selectedIndustry === "all" || s.category === selectedIndustry;
-          const jobMatch = selectedJobFunction === "all" || careerJobFunctions[s.id] === selectedJobFunction;
+          const industryMatch =
+            selectedIndustry === "all" ||
+            (categoryMapping[selectedIndustry]?.includes(s.category) ??
+              s.category === selectedIndustry);
+          const jobMatch =
+            selectedJobFunction === "all" ||
+            careerJobFunctions[s.id] === selectedJobFunction;
           return industryMatch && jobMatch;
         });
 
@@ -376,10 +393,10 @@ export default function ScenariosPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            探索職業冒險
+            {t("scenarios.heading")}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            選擇你的職業角色，開始獨特的學習冒險。每個職業都有精心設計的故事情境和挑戰任務。
+            {t("scenarios.subheading")}
           </p>
         </div>
 
@@ -399,7 +416,7 @@ export default function ScenariosPage() {
             >
               <div className="flex items-center space-x-2">
                 <Sparkles className="w-4 h-4" />
-                <span>全部</span>
+                <span>{t("scenarios.tabAll")}</span>
               </div>
             </button>
             {isLoggedIn && (
@@ -416,7 +433,7 @@ export default function ScenariosPage() {
               >
                 <div className="flex items-center space-x-2">
                   <Rocket className="w-4 h-4" />
-                  <span>我的冒險</span>
+                  <span>{t("scenarios.tabMy")}</span>
                 </div>
               </button>
             )}
@@ -428,9 +445,9 @@ export default function ScenariosPage() {
           <div className="flex flex-col items-center gap-3 mb-8">
             {/* Row 1: Industry */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">產業</span>
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">{t("scenarios.filterIndustry")}</span>
               <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
-                {industryFilters.map((filter) => {
+                {industryFilterDefs.map((filter) => {
                   const Icon = filter.icon;
                   return (
                     <button
@@ -446,7 +463,7 @@ export default function ScenariosPage() {
                       `}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span>{filter.name}</span>
+                      <span>{t(`scenarios.industry.${filter.id}`)}</span>
                     </button>
                   );
                 })}
@@ -454,9 +471,9 @@ export default function ScenariosPage() {
             </div>
             {/* Row 2: Job Function */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">職能</span>
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">{t("scenarios.filterJobFunction")}</span>
               <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
-                {jobFunctionFilters.map((filter) => {
+                {jobFunctionFilterDefs.map((filter) => {
                   const Icon = filter.icon;
                   return (
                     <button
@@ -472,7 +489,7 @@ export default function ScenariosPage() {
                       `}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span>{filter.name}</span>
+                      <span>{t(`scenarios.jobFunction.${filter.id}`)}</span>
                     </button>
                   );
                 })}
@@ -487,7 +504,7 @@ export default function ScenariosPage() {
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
             <p className="text-gray-500">
-              {activeTab === "my" ? "載入我的學習歷程..." : "載入職業冒險中..."}
+              {activeTab === "my" ? t("scenarios.loadingMy") : t("scenarios.loadingAll")}
             </p>
           </div>
         )}
@@ -516,19 +533,19 @@ export default function ScenariosPage() {
               {activeTab === "my" ? (
                 <div>
                   <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">還沒有開始任何學習歷程</p>
+                  <p className="text-gray-500 mb-4">{t("scenarios.emptyMyTitle")}</p>
                   <p className="text-sm text-gray-400 mb-6">
-                    選擇一個職業路徑，開始你的探索之旅
+                    {t("scenarios.emptyMySubtitle")}
                   </p>
                   <button
                     onClick={() => setActiveTab("all")}
                     className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
                   >
-                    瀏覽所有職業
+                    {t("scenarios.browseAll")}
                   </button>
                 </div>
               ) : (
-                <p className="text-gray-500">沒有找到符合條件的職業冒險</p>
+                <p className="text-gray-500">{t("scenarios.emptyFilter")}</p>
               )}
             </div>
           )}
