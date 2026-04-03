@@ -4,7 +4,7 @@ import { EvaluateRequestBody, Conversation } from "@/types/pbl-evaluate";
 import { ErrorResponse } from "@/types/api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 import { LANGUAGE_NAMES } from "@/lib/utils/language";
-import { rateLimit } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
 
 const evaluateRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
@@ -31,6 +31,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json<ErrorResponse>(
         { error: "User authentication required" },
         { status: 401 },
+      );
+    }
+
+    // Check daily token budget
+    const budgetCheck = checkTokenBudget(session.user.id);
+    if (!budgetCheck.allowed) {
+      return NextResponse.json(
+        { success: false, error: budgetCheck.reason },
+        { status: 429, headers: { "Retry-After": "3600" } },
       );
     }
 
@@ -332,6 +341,13 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
 
     const response = result.response;
     const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    // Record token usage for daily budget tracking
+    const usage = response.usageMetadata;
+    if (usage) {
+      const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
+      recordTokenUsage(totalTokens, session.user.id);
+    }
 
     // Parse JSON response - should be clean JSON due to responseSchema
     let evaluation;

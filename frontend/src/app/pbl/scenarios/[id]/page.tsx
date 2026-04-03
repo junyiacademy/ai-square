@@ -98,22 +98,10 @@ export default function ScenarioDetailPage({
     });
   }, [params]);
 
+  // All PBL scenarios are accessible to all logged-in users (Issue #93)
   const isScenarioInteractive = useMemo(() => {
-    if (!scenario) return false;
-
-    const title =
-      typeof scenario.title === "string"
-        ? scenario.title
-        : scenario.title?.[i18n.language] || scenario.title?.en || "";
-
-    const normalizedTitle = title?.toLowerCase?.() || "";
-
-    if (normalizedTitle.includes("semiconductor")) return true;
-    if (title?.includes("半導體")) return true;
-    if (title?.includes("半导体")) return true;
-
-    return false;
-  }, [scenario, i18n.language]);
+    return !!scenario;
+  }, [scenario]);
 
   // Load Hour of Code tracking image for semiconductor scenario
   useEffect(() => {

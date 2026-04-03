@@ -5,7 +5,7 @@ import {
 } from "@/lib/auth/unified-auth";
 import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
 import { VertexAI } from "@google-cloud/vertexai";
-import { rateLimit } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
 
 const translateRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
@@ -30,6 +30,15 @@ export async function POST(
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
+    }
+
+    // Check daily token budget
+    const budgetCheck = checkTokenBudget(session.user.id);
+    if (!budgetCheck.allowed) {
+      return NextResponse.json(
+        { success: false, error: budgetCheck.reason },
+        { status: 429, headers: { "Retry-After": "3600" } },
+      );
     }
 
     const { taskId } = await params;
@@ -140,6 +149,14 @@ Return the same JSON structure with all text translated.`;
       });
 
       const response = result.response;
+
+      // Record token usage
+      const usage = response.usageMetadata;
+      if (usage) {
+        const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
+        recordTokenUsage(totalTokens, session.user.id);
+      }
+
       const translatedText =
         response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
       const translatedContent = JSON.parse(translatedText);

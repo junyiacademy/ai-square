@@ -6,7 +6,7 @@ import {
 } from "@/lib/auth/unified-auth";
 import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
 import { Task, Evaluation } from "@/lib/repositories/interfaces";
-import { rateLimit } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
 
 const generateFeedbackRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
@@ -245,6 +245,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "Access denied" },
         { status: 403 },
+      );
+    }
+
+    // Check daily token budget
+    const budgetCheck = checkTokenBudget(user.id);
+    if (!budgetCheck.allowed) {
+      return NextResponse.json(
+        { success: false, error: budgetCheck.reason },
+        { status: 429, headers: { "Retry-After": "3600" } },
       );
     }
 
@@ -552,6 +561,14 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     });
 
     const response = result.response;
+
+    // Record token usage
+    const usage = response.usageMetadata;
+    if (usage) {
+      const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
+      recordTokenUsage(totalTokens, user.id);
+    }
+
     const feedbackText =
       response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 

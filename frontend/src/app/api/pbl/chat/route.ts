@@ -3,7 +3,7 @@ import { VertexAI } from "@google-cloud/vertexai";
 import { ErrorResponse } from "@/types/api";
 import { ChatMessage } from "@/types/pbl-api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
-import { rateLimit } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
 
 const chatRateLimit = rateLimit(60000, 30); // 30 requests per minute per IP
 
@@ -60,6 +60,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json<ErrorResponse>(
         { error: "Authentication required" },
         { status: 401 },
+      );
+    }
+
+    // Check daily token budget
+    const budgetCheck = checkTokenBudget(session.user.id);
+    if (!budgetCheck.allowed) {
+      return NextResponse.json<ErrorResponse>(
+        { error: budgetCheck.reason || "AI 額度已用完" },
+        { status: 429, headers: { "Retry-After": "3600" } },
       );
     }
 
@@ -175,6 +184,13 @@ export async function POST(request: NextRequest) {
       const text =
         response.candidates?.[0]?.content?.parts?.[0]?.text ||
         "I apologize, but I was unable to generate a response.";
+
+      // Record token usage
+      const usage = response.usageMetadata;
+      if (usage) {
+        const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
+        recordTokenUsage(totalTokens, session.user.id);
+      }
 
       return NextResponse.json({
         response: text,
