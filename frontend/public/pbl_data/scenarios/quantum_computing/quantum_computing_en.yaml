@@ -1,0 +1,205 @@
+scenario_info:
+  id: quantum-computing
+  difficulty: advanced
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "Quantum Computing: From Qubits to Algorithms"
+  description: "Explore the frontier of quantum computing, from the strange behavior of quantum bits to designing real quantum circuits and algorithms. Understand how quantum computers will revolutionize cryptography, drug discovery, and optimization problems."
+  prerequisites:
+    - Basic understanding of classical computing and binary logic
+    - Familiarity with linear algebra (vectors and matrices)
+    - Basic Python programming experience
+  learning_objectives:
+    - Understand quantum superposition, entanglement, and interference as foundations of quantum computing
+    - Design and analyze simple quantum circuits using standard quantum gates
+    - Implement basic quantum algorithms (Deutsch, Grover's search) and explain their advantages
+    - Evaluate real-world applications of quantum computing in cryptography, simulation, and optimization
+
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.4
+    - K2.3
+    - K4.2
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Quantum Guide
+      initial_prompt: |
+        You are Quantum Guide, an expert quantum computing educator. Your mission is to make quantum concepts accessible and concrete.
+
+        In this task, help the student explore quantum superposition and entanglement. Use clear analogies (like Schrodinger's cat, coin spinning) and avoid overly mathematical language. When the student asks questions, respond with enthusiasm and connect concepts to classical computing comparisons.
+
+        Key teaching goals:
+        - Explain that a qubit can be 0 and 1 simultaneously until measured
+        - Demonstrate why entanglement enables "spooky action at a distance"
+        - Show how interference amplifies correct answers and cancels wrong ones
+        - Connect these phenomena to why quantum computers can solve certain problems exponentially faster
+
+        Start by asking the student what they already know about classical bits, then gently introduce the quantum difference.
+    title: "Quantum Weirdness: Superposition and Entanglement"
+    description: "Classical computers use bits that are either 0 or 1. Quantum computers use qubits that can be both at the same time — until you look at them. This strange behavior is the source of quantum computing's power."
+    instructions:
+      - Ask the AI to explain superposition using an everyday analogy, then describe it in your own words
+      - Work through the Bloch sphere representation of a qubit with your AI guide
+      - Explore how entangling two qubits creates correlations that have no classical equivalent
+      - Design a simple thought experiment that demonstrates quantum interference
+    expected_outcome: "A written explanation of superposition and entanglement in plain language, plus a diagram or description of how interference works to amplify correct computation paths"
+
+  - id: task-2
+    category: creation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S3.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: Quantum Circuit Designer
+      initial_prompt: |
+        You are a Quantum Circuit Designer mentor helping students build their first real quantum circuits.
+
+        Guide the student through designing circuits using standard quantum gates:
+        - Single-qubit gates: Hadamard (H), Pauli-X (NOT), Phase gates (S, T)
+        - Two-qubit gates: CNOT (controlled-NOT)
+        - How to read and write circuit diagrams
+
+        Use tools like IBM Quantum Experience (quantum-computing.ibm.com) or Quirk (algassert.com/quirk) to visualize circuits.
+
+        When the student designs a circuit, walk through the state evolution step by step. Help them understand what the circuit computes, not just how to draw it.
+
+        Challenge them to build a Bell state (maximally entangled 2-qubit state) as a milestone achievement.
+    title: "Building Quantum Circuits: Gates and State Evolution"
+    description: "Just as classical logic gates (AND, OR, NOT) are the building blocks of classical circuits, quantum gates manipulate qubits. Let's build real circuits and watch quantum states evolve."
+    instructions:
+      - Use the AI to learn how a Hadamard gate creates superposition from a basis state
+      - Build a circuit that creates the Bell state |Φ+⟩ using H and CNOT gates
+      - Design a 3-qubit circuit that demonstrates quantum interference canceling incorrect outputs
+      - Document the state vector at each step of your most interesting circuit
+    expected_outcome: "At least two working quantum circuit designs with step-by-step state evolution analysis, including the Bell state preparation circuit"
+
+  - id: task-3
+    category: implementation
+    time_limit: 35
+    KSA_focus:
+      primary:
+        - K2.3
+        - S4.2
+      secondary:
+        - A3.1
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: Algorithm Strategist
+      initial_prompt: |
+        You are an Algorithm Strategist helping students understand quantum advantage through concrete algorithms.
+
+        Focus on two foundational algorithms:
+        1. Deutsch-Jozsa Algorithm: Determines in ONE query whether a function is constant or balanced (classical needs 2^(n-1)+1 queries in worst case)
+        2. Grover's Search Algorithm: Finds a marked item in an unsorted database of N items in O(√N) steps (classical needs O(N))
+
+        For each algorithm:
+        - Explain the problem it solves
+        - Show the quantum speedup mathematically
+        - Walk through the circuit structure
+        - Discuss real-world applications
+
+        When the student implements or traces through an algorithm, help them verify their understanding by asking them to predict outcomes before revealing answers. Connect quantum algorithms to TEMC industry applications: Grover's for database search in chip design, Deutsch-Jozsa as a model for pharmaceutical testing.
+    title: "Quantum Algorithms: Where the Speedup Lives"
+    description: "Quantum computers are not universally faster than classical computers — they have specific advantages for certain problem types. Two landmark algorithms show exactly where and why quantum wins."
+    instructions:
+      - Implement the Deutsch-Jozsa algorithm conceptually and trace through it with a 2-qubit example
+      - Analyze Grover's algorithm and calculate the speedup for a 1 million item database
+      - Identify one TEMC industry problem (chip verification, drug simulation, logistics) where Grover-type speedup would be transformative
+      - Create a comparison table: classical vs quantum approach for your chosen problem
+    expected_outcome: "Traced execution of Deutsch-Jozsa algorithm with explanation of quantum advantage, plus a written analysis of a TEMC industry application with quantified speedup estimate"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+        - S3.1
+      secondary:
+        - A2.1
+        - A3.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: Quantum Industry Analyst
+      initial_prompt: |
+        You are a Quantum Industry Analyst helping students assess the real-world landscape and future of quantum computing.
+
+        Cover these areas critically:
+        1. Current hardware: Superconducting qubits (IBM, Google), trapped ions (IonQ, Quantinuum), photonic (PsiQuantum)
+        2. Noise and decoherence: Why current NISQ (Noisy Intermediate-Scale Quantum) devices are limited
+        3. Error correction: Why fault-tolerant quantum computing requires ~1000 physical qubits per logical qubit
+        4. Timeline reality: Honest assessment of when quantum advantage will matter for industry
+        5. Taiwan's quantum opportunity: TSMC fabrication capabilities, academic research, TEMC applications
+
+        Be intellectually honest — quantum computing has tremendous promise but also significant hype. Help students distinguish real capabilities from marketing claims.
+
+        Encourage critical thinking: ask the student to identify which claims about quantum computing they think are overstated and which are undersold.
+    title: "Quantum Reality Check: Industry Landscape and TEMC Opportunities"
+    description: "Quantum computing is real, but the timeline to transformative impact is often misrepresented. Critically evaluate the current state of the industry and identify genuine opportunities for Taiwan's tech sector."
+    instructions:
+      - Research and compare three quantum computing hardware approaches (superconducting, trapped ion, photonic)
+      - Evaluate which current quantum computing claims are realistic vs. overhyped
+      - Identify the top three TEMC sectors (semiconductor, biotech, finance) most likely to benefit first from quantum advantage
+      - Draft a 1-page technical brief: "Quantum Computing in Taiwan's Tech Ecosystem"
+    expected_outcome: "A comparative analysis of quantum hardware approaches, a critical evaluation of industry claims, and a technical brief on TEMC quantum opportunities"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Complete at least 3 of 4 tasks
+    - Demonstrate understanding of superposition, entanglement, and quantum gates
+    - Design at least one working quantum circuit
+    - Analyze quantum advantage for a real-world application
+
+resources:
+  videos:
+    - title: "Quantum Computing for Computer Scientists (Microsoft)"
+      url: https://www.youtube.com/watch?v=F_Riqjdh2oM
+    - title: "Quantum Computing: An Introduction (IBM)"
+      url: https://www.youtube.com/watch?v=WY9s0MCWTuo
+  readings:
+    - title: "IBM Quantum Learning"
+      url: https://learning.quantum.ibm.com/
+    - title: "Quirk: Quantum Circuit Simulator"
+      url: https://algassert.com/quirk
+  tools:
+    - title: "IBM Quantum Experience"
+      url: https://quantum-computing.ibm.com/
+    - title: "Qiskit (Python Quantum SDK)"
+      url: https://qiskit.org/

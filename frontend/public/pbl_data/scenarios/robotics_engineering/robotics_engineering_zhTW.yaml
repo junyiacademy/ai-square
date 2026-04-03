@@ -1,0 +1,211 @@
+scenario_info:
+  id: robotics-engineering
+  difficulty: intermediate
+  estimated_duration: 110
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "機器人工程：感測器、運動控制與人機協作"
+  description: "設計並建構能夠感知、移動並與人類協作的智慧機器人系統。從感測器融合與運動控制，到 AI 感知和人機協作，本情境涵蓋現代機器人工程的完整技術堆疊。"
+  prerequisites:
+    - 基礎物理學（運動學、力學）
+    - 程式設計入門（任何語言皆可）
+    - 熟悉基本電子學概念
+  learning_objectives:
+    - 設計多感測器系統並實作感測器融合，以實現穩健的環境感知
+    - 應用運動學和控制理論規劃並執行機器人運動
+    - 將 AI 感知（物件偵測、姿態估計）整合到機器人決策中
+    - 評估有效人機協作的安全性、倫理和設計原則
+
+ksa_mapping:
+  knowledge:
+    - K1.4
+    - K2.1
+    - K2.3
+    - K4.1
+  skills:
+    - S2.1
+    - S3.1
+    - S4.2
+    - S6.1
+  attitudes:
+    - A1.2
+    - A3.1
+    - A4.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K2.1
+        - S3.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 感測器系統專家
+      initial_prompt: |
+        你是「感測器系統專家」，幫助學生了解機器人如何感知世界。
+
+        引導學生探索現代機器人的感測器生態：
+        1. 視覺感測器：RGB 攝影機、深度攝影機（RealSense）、立體視覺
+        2. 測距感測器：2D/3D LiDAR、超音波、紅外線接近感測器
+        3. 本體感知感測器：IMU（加速度計 + 陀螺儀）、編碼器、力/扭矩感測器
+        4. 觸覺和環境感測器：壓力、溫度、濕度
+
+        核心教學重點：
+        - 每種感測器類型都有特定的優勢和故障模式
+        - 感測器融合（結合多種感測器）大幅提升可靠性
+        - 卡爾曼濾波器是經典的感測器融合演算法
+        - 現實世界的雜訊、校準漂移和遮擋是工程挑戰
+
+        使用具體情境：一個在工廠廠房導航的機器人。請學生找出哪些感測器最為關鍵及原因。討論當感測器數據不一致或故障時的處理方式。請用繁體中文回應。
+    title: "感測器系統：機器人如何感知世界"
+    description: "沒有感測器的機器人是盲目的。現代機器人結合攝影機、LiDAR、IMU 和觸覺感測器來建構豐富的環境模型。了解感測器能力和限制是可靠機器人工程的基礎。"
+    instructions:
+      - 列出現代協作機器人（cobot）上的所有感測器，並按功能分類
+      - 分析一個感測器故障情境：機器人的攝影機在強烈陽光下失效，哪些備援感測器可以補償？
+      - 為在醫院走廊導航的醫療配送機器人設計一套感測器配置
+      - 解釋卡爾曼濾波器如何融合 IMU 和 GPS 資料以提高定位精度
+    expected_outcome: "協作機器人的感測器分類圖、感測器故障分析、附理由說明的醫療機器人感測器套件設計，以及卡爾曼濾波器融合的白話解釋"
+
+  - id: task-2
+    category: creation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: 運動控制工程師
+      initial_prompt: |
+        你是「運動控制工程師」導師，引導學生學習機器人運動規劃與控制。
+
+        循序漸進地涵蓋以下核心概念：
+        1. 正向運動學：給定關節角度，末端執行器的位置是什麼？
+        2. 逆向運動學：給定目標位置，需要哪些關節角度？
+        3. 軌跡規劃：如何在速度和加速度限制下從 A 平滑移動到 B
+        4. PID 控制：讓機器人保持在軌道上的主要回饋控制器
+        5. 路徑規劃演算法：在充滿障礙物的空間中導航的 RRT、A*
+
+        以裝配線上撿取零件的機器手臂作為主要範例。用具體數字帶領學生完成數學推導（例如，2 連桿平面手臂）。
+
+        當學生犯計算錯誤時，引導他們找到錯誤，而不是直接給出答案。強調數學背後的物理意義。請用繁體中文回應。
+    title: "運動控制：從關節角度到平滑軌跡"
+    description: "讓機器人從 A 點精確移動到 B 點比看起來複雜得多。運動控制涵蓋從運動學數學到修正干擾的即時回饋控制器。"
+    instructions:
+      - 給定特定關節角度，計算 2 關節平面機器手臂的正向運動學
+      - 使用逆向運動學找出將手臂末端執行器放在目標點所需的關節配置
+      - 為兩個位置之間的線性運動設計梯形速度曲線
+      - 描述 PID 控制器如何從意外障礙物推開機器手臂的干擾中恢復
+    expected_outcome: "給定手臂配置的正向和逆向運動學計算結果、速度曲線圖，以及書面的 PID 干擾恢復分析"
+
+  - id: task-3
+    category: implementation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K2.3
+        - S2.1
+        - S4.2
+      secondary:
+        - A3.1
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: AI 感知教練
+      initial_prompt: |
+        你是「AI 感知教練」，引導學生將機器學習整合到機器人系統中。
+
+        聚焦於機器人的實用 AI 感知：
+        1. 物件偵測：YOLO、SSD — 用於機器人抓取的即時偵測
+        2. 語意分割：理解操控和導航的表面
+        3. 姿態估計：確定物件方向以實現精確抓取
+        4. 模擬到現實遷移：在模擬中訓練，在真實硬體上部署
+
+        關鍵工程考量：
+        - 推理延遲必須符合機器人的控制迴圈頻率（通常 10-100 Hz）
+        - 模型量化和邊緣部署（NVIDIA Jetson、Coral TPU）
+        - 客製化機器人應用的資料集收集和標記
+        - 處理模擬到現實的領域差距
+
+        使用料箱揀料機器人作為情境：機器手臂必須從料箱中識別並抓取隨機方向的零件。引導學生完成從攝影機到抓取姿態的完整感知流程。請用繁體中文回應。
+    title: "AI 感知：機器人如何看見並理解世界"
+    description: "現代機器人不只是偵測物件，更能理解場景、估計姿態，並做出關於如何與環境互動的智慧決策。AI 感知是區分智慧機器人和程式化機器的關鍵。"
+    instructions:
+      - 為料箱揀料機器人設計完整的感知流程（攝影機 → 偵測 → 姿態估計 → 抓取規劃）
+      - 分析即時機器人應用中模型精度和推理速度之間的取捨
+      - 找出模擬到現實遷移的三大挑戰並提出緩解策略
+      - 為特定工業零件的客製化物件偵測器訓練制定資料標記計畫
+    expected_outcome: "含元件規格的感知流程架構圖、量化的精度/速度取捨分析，以及模擬到現實挑戰緩解計畫"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K4.1
+        - S6.1
+      secondary:
+        - A4.1
+        - A3.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: 人機互動設計師
+      initial_prompt: |
+        你是「人機互動（HRI）設計師」，幫助學生批判性地思考機器人與人類如何安全有效地協作。
+
+        涵蓋以下面向：
+        1. 安全標準：協作機器人的 ISO/TS 15066、安全評級監控
+        2. 物理安全：力量限制、速度監控、碰撞偵測與反應
+        3. 認知安全：可預測的機器人行為、清晰的意圖溝通
+        4. 信任與採用：讓工人信任（或不信任）機器人同事的因素
+        5. 包容性設計：能與多元人類能力和人口統計共同工作的機器人
+
+        挑戰學生超越純技術工程思考。一個技術上完美但工人害怕或不信任的機器人是失敗的產品。
+
+        以亞馬遜倉庫機器人及其對工人滿意度和受傷率的影響作為討論錨點。也介紹正面案例，如手術機器人（達文西）和復健外骨骼。請用繁體中文回應。
+    title: "人機協作：安全、信任與包容性設計"
+    description: "最精密的機器人若無法讓人類安全舒適地在旁邊工作，就毫無價值。人機協作需要工程卓越，加上對人因工程、信任和包容性設計的深入理解。"
+    instructions:
+      - 評估一個真實的人機協作案例研究（亞馬遜倉庫或手術機器人）
+      - 找出製造環境中協作機器人的五個關鍵安全要求
+      - 設計一個溝通介面，讓機器人的意圖對附近工人清晰可見，且不依賴語音
+      - 評估：需要哪些改變才能讓現有協作機器人設計對年長工人或身障工人更友善？
+    expected_outcome: "突顯成功與失敗的案例研究評估、含技術規格的五項安全要求、意圖溝通介面設計，以及無障礙改進提案"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - 完成至少 4 個任務中的 3 個
+    - 為特定機器人應用設計有效的感測器配置
+    - 正確解決基礎運動學問題
+    - 評估人機安全和協作需求
+
+resources:
+  videos:
+    - title: "Boston Dynamics 機器人展示"
+      url: https://www.youtube.com/watch?v=fn3KWM1kuAw
+    - title: "機器人學入門（史丹佛大學）"
+      url: https://www.youtube.com/watch?v=0yD3uBshJB0
+  readings:
+    - title: "ROS（機器人作業系統）官方文件"
+      url: https://docs.ros.org/
+    - title: "現代機器人學教科書（西北大學）"
+      url: https://modernrobotics.northwestern.edu/
+  tools:
+    - title: "Gazebo 機器人模擬器"
+      url: https://gazebosim.org/
+    - title: "NVIDIA Isaac Sim"
+      url: https://developer.nvidia.com/isaac/sim

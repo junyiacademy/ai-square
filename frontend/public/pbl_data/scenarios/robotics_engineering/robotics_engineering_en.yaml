@@ -1,0 +1,211 @@
+scenario_info:
+  id: robotics-engineering
+  difficulty: intermediate
+  estimated_duration: 110
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: "Robotics Engineering: Sensors, Motion, and Human Collaboration"
+  description: "Design and build intelligent robotic systems that sense, move, and collaborate with humans. From sensor fusion and motion control to AI perception and human-robot teaming, this scenario covers the full engineering stack of modern robotics."
+  prerequisites:
+    - Basic physics (kinematics, forces)
+    - Introduction to programming (any language)
+    - Familiarity with basic electronics concepts
+  learning_objectives:
+    - Design multi-sensor systems and implement sensor fusion for robust environmental perception
+    - Apply kinematics and control theory to plan and execute robot motion
+    - Integrate AI perception (object detection, pose estimation) into robotic decision-making
+    - Evaluate safety, ethics, and design principles for effective human-robot collaboration
+
+ksa_mapping:
+  knowledge:
+    - K1.4
+    - K2.1
+    - K2.3
+    - K4.1
+  skills:
+    - S2.1
+    - S3.1
+    - S4.2
+    - S6.1
+  attitudes:
+    - A1.2
+    - A3.1
+    - A4.1
+
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K2.1
+        - S3.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Sensor Systems Specialist
+      initial_prompt: |
+        You are a Sensor Systems Specialist helping students understand how robots perceive the world.
+
+        Guide students through the sensor ecosystem of modern robots:
+        1. Vision sensors: RGB cameras, depth cameras (RealSense), stereo vision
+        2. Range sensors: 2D/3D LiDAR, ultrasonic, infrared proximity
+        3. Proprioceptive sensors: IMU (accelerometer + gyroscope), encoders, force/torque
+        4. Tactile and environmental sensors: pressure, temperature, humidity
+
+        Key teaching points:
+        - Each sensor type has specific strengths and failure modes
+        - Sensor fusion (combining multiple sensors) dramatically improves reliability
+        - Kalman Filter as the classic sensor fusion algorithm
+        - Real-world noise, calibration drift, and occlusion are engineering challenges
+
+        Use a concrete scenario: a robot navigating a factory floor. Ask students to identify which sensors would be most critical and why. Discuss what happens when sensors disagree or fail.
+    title: "Sensor Systems: How Robots Perceive the World"
+    description: "A robot without sensors is blind. Modern robots combine cameras, LiDAR, IMUs, and touch sensors to build rich models of their environment. Understanding sensor capabilities and limitations is the foundation of reliable robotics."
+    instructions:
+      - Map out all sensors on a modern collaborative robot (cobot) and classify them by function
+      - Analyze a sensor failure scenario: a robot's camera fails in bright sunlight. What backup sensors compensate?
+      - Design a sensor suite for a medical delivery robot navigating hospital corridors
+      - Explain how a Kalman Filter fuses IMU and GPS data to improve position accuracy
+    expected_outcome: "A sensor taxonomy diagram for a cobot, a sensor failure analysis, a medical robot sensor suite design with justification, and a plain-language explanation of Kalman Filter fusion"
+
+  - id: task-2
+    category: creation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K1.4
+        - S2.1
+        - S4.2
+      secondary:
+        - A1.2
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona: Motion Control Engineer
+      initial_prompt: |
+        You are a Motion Control Engineer mentoring students through robot motion planning and control.
+
+        Cover these core concepts progressively:
+        1. Forward kinematics: Given joint angles, what is the end-effector position?
+        2. Inverse kinematics: Given a target position, what joint angles are needed?
+        3. Trajectory planning: How to move smoothly from A to B while respecting velocity and acceleration limits
+        4. PID control: The workhorse feedback controller that keeps robots on track
+        5. Path planning algorithms: RRT, A* for navigating through obstacle-filled spaces
+
+        Use a robotic arm picking parts on an assembly line as the main example. Walk students through the math with concrete numbers (e.g., a 2-link planar arm).
+
+        When students make calculation errors, guide them to find the mistake rather than just giving the answer. Emphasize the physical meaning behind the math.
+    title: "Motion Control: From Joint Angles to Smooth Trajectories"
+    description: "Getting a robot to move precisely from point A to point B is deceptively complex. Motion control spans from the mathematics of kinematics to real-time feedback controllers that correct for disturbances."
+    instructions:
+      - Solve forward kinematics for a 2-joint planar robotic arm given specific joint angles
+      - Use inverse kinematics to find the joint configuration that places the arm's end-effector at a target point
+      - Design a trapezoidal velocity profile for a linear motion between two positions
+      - Describe how a PID controller would recover from an unexpected obstacle pushing the robot arm off course
+    expected_outcome: "Calculated forward and inverse kinematics solutions for the given arm configuration, a velocity profile diagram, and a written PID disturbance recovery analysis"
+
+  - id: task-3
+    category: implementation
+    time_limit: 30
+    KSA_focus:
+      primary:
+        - K2.3
+        - S2.1
+        - S4.2
+      secondary:
+        - A3.1
+    ai_module:
+      role: coach
+      model: gemini-2.5-flash
+      persona: AI Perception Coach
+      initial_prompt: |
+        You are an AI Perception Coach guiding students to integrate machine learning into robotic systems.
+
+        Focus on practical AI perception for robotics:
+        1. Object detection: YOLO, SSD — real-time detection for robotic grasping
+        2. Semantic segmentation: Understanding surfaces for manipulation and navigation
+        3. Pose estimation: Determining object orientation for precision grasping
+        4. Sim-to-real transfer: Training in simulation, deploying on real hardware
+
+        Key engineering considerations:
+        - Inference latency must match robot's control loop frequency (typically 10-100 Hz)
+        - Model quantization and edge deployment (NVIDIA Jetson, Coral TPU)
+        - Dataset collection and labeling for custom robotic applications
+        - Handling the sim-to-real domain gap
+
+        Use a bin-picking robot as the scenario: a robot arm must identify and grasp randomly oriented parts from a bin. Walk students through the full perception pipeline from camera to grasp pose.
+    title: "AI Perception: Seeing and Understanding the Robot's World"
+    description: "Modern robots don't just detect objects — they understand scenes, estimate poses, and make intelligent decisions about how to interact with their environment. AI perception is what separates smart robots from scripted machines."
+    instructions:
+      - Design the complete perception pipeline for a bin-picking robot (camera → detection → pose estimation → grasp planning)
+      - Analyze the tradeoffs between model accuracy and inference speed for a real-time robotics application
+      - Identify the three biggest challenges in sim-to-real transfer and propose mitigation strategies
+      - Create a data labeling plan for training a custom object detector for specific industrial parts
+    expected_outcome: "A perception pipeline architecture diagram with component specifications, a quantitative accuracy/speed tradeoff analysis, and a sim-to-real challenge mitigation plan"
+
+  - id: task-4
+    category: evaluation
+    time_limit: 25
+    KSA_focus:
+      primary:
+        - K4.1
+        - S6.1
+      secondary:
+        - A4.1
+        - A3.1
+    ai_module:
+      role: expert
+      model: gemini-2.5-flash
+      persona: Human-Robot Interaction Designer
+      initial_prompt: |
+        You are a Human-Robot Interaction (HRI) Designer helping students think critically about how robots and humans work together safely and effectively.
+
+        Cover these dimensions:
+        1. Safety standards: ISO/TS 15066 for collaborative robots, safety-rated monitoring
+        2. Physical safety: Force limiting, speed monitoring, collision detection and response
+        3. Cognitive safety: Predictable robot behavior, clear intent communication
+        4. Trust and adoption: Factors that make workers trust (or distrust) robotic coworkers
+        5. Inclusive design: Robots that work with diverse human abilities and demographics
+
+        Challenge students to think beyond pure engineering. A technically perfect robot that workers fear or distrust is a failed product.
+
+        Use the case of Amazon warehouse robots and their effect on worker satisfaction and injury rates as a discussion anchor. Also introduce positive cases like surgical robots (da Vinci) and rehabilitation exoskeletons.
+    title: "Human-Robot Collaboration: Safety, Trust, and Inclusive Design"
+    description: "The most sophisticated robot is worthless if humans can't work alongside it safely and comfortably. Human-robot collaboration requires engineering excellence AND deep understanding of human factors, trust, and inclusive design."
+    instructions:
+      - Evaluate a real case study of human-robot collaboration (Amazon warehouses OR surgical robotics)
+      - Identify the five critical safety requirements for a collaborative robot in a manufacturing setting
+      - Design a communication interface that makes a robot's intentions clear to nearby workers without relying on speech
+      - Assess: what changes are needed to make current cobot designs more accessible for older workers or workers with disabilities?
+    expected_outcome: "A case study evaluation highlighting both successes and failures, five safety requirements with technical specifications, an intent communication interface design, and an accessibility improvement proposal"
+
+evaluation_criteria:
+  completion_threshold: 75
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Complete at least 3 of 4 tasks
+    - Design a working sensor suite for a specific robotic application
+    - Solve a basic kinematics problem correctly
+    - Evaluate human-robot safety and collaboration requirements
+
+resources:
+  videos:
+    - title: "Boston Dynamics Robot Showcase"
+      url: https://www.youtube.com/watch?v=fn3KWM1kuAw
+    - title: "Introduction to Robotics (Stanford)"
+      url: https://www.youtube.com/watch?v=0yD3uBshJB0
+  readings:
+    - title: "ROS (Robot Operating System) Documentation"
+      url: https://docs.ros.org/
+    - title: "Modern Robotics Textbook (Northwestern)"
+      url: https://modernrobotics.northwestern.edu/
+  tools:
+    - title: "Gazebo Robot Simulator"
+      url: https://gazebosim.org/
+    - title: "NVIDIA Isaac Sim"
+      url: https://developer.nvidia.com/isaac/sim
