@@ -448,5 +448,42 @@
     "requiredSkills": "Required Skills",
     "technical": "Technical",
     "soft": "Soft Skills"
+  },
+
+  "skillTree": {
+    "coreSkills": "Core Skills",
+    "advancedSkills": "Advanced Skills",
+    "level": "Level",
+    "lastPracticed": "Last practiced",
+    "requires": "Requires",
+    "noData": "No skill tree available for this career"
+  },
+
+  "questLog": {
+    "noQuests": "No quests available yet",
+    "keepLearning": "Keep learning to unlock quests",
+    "completed": "Completed",
+    "active": "Active",
+    "available": "Available",
+    "skills": "Skills"
+  },
+
+  "world": {
+    "tabWorld": "World",
+    "tabSkills": "Skills",
+    "tabQuests": "Quests"
+  },
+
+  "gamification": {
+    "levelUp": "Level Up!",
+    "achievementUnlocked": "Achievement Unlocked",
+    "difficulty": "Difficulty",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert",
+    "scaffolding": "Guided Mode",
+    "targetSkills": "Target Skills",
+    "nextTask": "Generate Next Task"
   }
 }

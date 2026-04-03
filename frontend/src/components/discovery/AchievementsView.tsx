@@ -83,10 +83,10 @@ export default function AchievementsView({
     },
   ];
 
-  // Calculate next level XP requirement
-  const nextLevelXp = achievements.level * 100;
-  const currentLevelXp = achievements.totalXp - (achievements.level - 1) * 100;
-  const progressToNextLevel = (currentLevelXp / 100) * 100;
+  // Calculate next level XP requirement (500 XP per level)
+  const xpPerLevel = 500;
+  const currentLevelXp = achievements.totalXp - (achievements.level - 1) * xpPerLevel;
+  const progressToNextLevel = Math.min((currentLevelXp / xpPerLevel) * 100, 100);
 
   // Get level benefits
   const getLevelBenefits = (level: number): string[] => {
@@ -167,7 +167,7 @@ export default function AchievementsView({
             />
           </div>
           <div className="text-sm text-purple-100 mt-2">
-            還需要 {nextLevelXp - achievements.totalXp} XP 升級到等級{" "}
+            還需要 {xpPerLevel - currentLevelXp} XP 升級到等級{" "}
             {achievements.level + 1}
           </div>
         </div>

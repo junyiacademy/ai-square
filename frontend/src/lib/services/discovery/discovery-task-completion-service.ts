@@ -1,6 +1,7 @@
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 import { FeedbackGenerationService } from "./feedback-generation-service";
 import { ITask } from "@/types/unified-learning";
+import { GamificationService } from "./gamification-service";
 
 export interface TaskCompletionResult {
   evaluation: {
@@ -12,6 +13,14 @@ export interface TaskCompletionResult {
   xpEarned: number;
   feedback: string;
   feedbackVersions: Record<string, string>;
+  gamification?: {
+    leveledUp: boolean;
+    newLevel?: number;
+    totalXp: number;
+    skillLevelUps: string[];
+    newAchievements: Array<{ id: string; name: string; xpReward: number }>;
+    streak: { currentStreak: number; longestStreak: number };
+  };
 }
 
 /**
@@ -133,11 +142,28 @@ export class DiscoveryTaskCompletionService {
       },
     });
 
+    // === Gamification Pipeline ===
+    let gamification: TaskCompletionResult["gamification"];
+    try {
+      const gamificationService = new GamificationService();
+      gamification = await gamificationService.processTaskCompletion(
+        userId,
+        careerType,
+        bestXP,
+        Math.min(bestXP, 100), // score (0-100)
+        task.interactions.filter((i) => i.type === "user_input").length, // attempts
+        allSkillsImproved,
+      );
+    } catch (error) {
+      console.error("Gamification update failed (non-blocking):", error);
+    }
+
     return {
       evaluation,
       xpEarned: bestXP,
       feedback: comprehensiveFeedback,
       feedbackVersions,
+      gamification,
     };
   }
 

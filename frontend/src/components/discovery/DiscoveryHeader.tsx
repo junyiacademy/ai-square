@@ -4,6 +4,9 @@ import React from "react";
 import { GraduationCap, Sparkles, Rocket } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import GamificationBar from "./GamificationBar";
+import { useGamificationProfile } from "@/hooks/useGamificationProfile";
+
 interface NavigationItem {
   id: string;
   label: string;
@@ -23,6 +26,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation(["discovery", "navigation"]);
+  const { profile, loading: profileLoading } = useGamificationProfile();
 
   const navigationItems: NavigationItem[] = [
     {
@@ -57,6 +61,13 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
           <span>/</span>
           <span className="text-gray-900 font-medium">{t("title")}</span>
         </nav>
+
+        {/* Gamification Bar */}
+        {!profileLoading && profile.totalXp > 0 && (
+          <div className="mb-3">
+            <GamificationBar profile={profile} compact />
+          </div>
+        )}
 
         {/* Title and Quick Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
