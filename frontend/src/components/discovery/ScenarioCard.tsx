@@ -37,7 +37,7 @@ export default function ScenarioCard({
   showLastActivity = false,
   onSelect,
 }: ScenarioCardProps) {
-  const { t } = useTranslation("skills");
+  const { t } = useTranslation("discovery");
   const Icon = scenario.icon;
   const primaryStatus = scenario.primaryStatus || "new";
   const stats = scenario.stats || {
@@ -81,14 +81,14 @@ export default function ScenarioCard({
           {/* Status Badge */}
           {primaryStatus === "mastered" && (
             <div className="absolute top-3 right-3 px-3 py-1 bg-green-100 backdrop-blur rounded-full flex items-center gap-1">
-              <span className="text-xs font-medium text-green-700">已達成</span>
+              <span className="text-xs font-medium text-green-700">{t("card.statusMastered")}</span>
               <span className="text-lg">🏆</span>
             </div>
           )}
 
           {primaryStatus === "in-progress" && (
             <div className="absolute top-3 right-3 px-3 py-1 bg-blue-100 backdrop-blur rounded-full">
-              <span className="text-xs font-medium text-blue-700">學習中</span>
+              <span className="text-xs font-medium text-blue-700">{t("card.statusInProgress")}</span>
             </div>
           )}
         </div>
@@ -107,7 +107,7 @@ export default function ScenarioCard({
                 key={i}
                 className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
               >
-                {t(skill, { defaultValue: skill })}
+                {skill}
               </span>
             ))}
             {scenario.skills.length > 3 && (
@@ -121,7 +121,7 @@ export default function ScenarioCard({
           <div className="space-y-3">
             {/* Primary Status */}
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">狀態</span>
+              <span className="text-sm font-medium text-gray-700">{t("card.status")}</span>
               <div
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   primaryStatus === "mastered"
@@ -132,10 +132,10 @@ export default function ScenarioCard({
                 }`}
               >
                 {primaryStatus === "mastered"
-                  ? "已達成"
+                  ? t("card.statusMastered")
                   : primaryStatus === "in-progress"
-                    ? "學習中"
-                    : "尚未開始"}
+                    ? t("card.statusInProgress")
+                    : t("card.statusNew")}
               </div>
             </div>
 
@@ -143,20 +143,20 @@ export default function ScenarioCard({
             {stats.totalAttempts > 0 && (
               <div className="bg-gray-50 rounded-lg p-3 space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-600">總嘗試次數</span>
-                  <span className="font-medium">{stats.totalAttempts} 次</span>
+                  <span className="text-gray-600">{t("card.totalAttempts")}</span>
+                  <span className="font-medium">{t("card.countTimes", { count: stats.totalAttempts })}</span>
                 </div>
                 {stats.completedCount > 0 && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-600">完成次數</span>
+                    <span className="text-gray-600">{t("card.completedCount")}</span>
                     <span className="font-medium text-green-600">
-                      {stats.completedCount} 次
+                      {t("card.countTimes", { count: stats.completedCount })}
                     </span>
                   </div>
                 )}
                 {stats.bestScore > 0 && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-600">最佳成績</span>
+                    <span className="text-gray-600">{t("card.bestScore")}</span>
                     <span className="font-medium">{stats.bestScore}%</span>
                   </div>
                 )}
@@ -166,7 +166,7 @@ export default function ScenarioCard({
             {/* Last Activity */}
             {showLastActivity && scenario.lastActivity && (
               <div className="text-xs text-gray-500">
-                上次活動：
+                {t("card.lastActivity")}
                 {new Date(scenario.lastActivity).toLocaleDateString("zh-TW")}
               </div>
             )}
@@ -176,10 +176,10 @@ export default function ScenarioCard({
           <div className="pt-4 mt-4 border-t border-gray-100">
             <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
               {primaryStatus === "in-progress"
-                ? "繼續學習"
+                ? t("card.actionContinue")
                 : primaryStatus === "mastered"
-                  ? "再次挑戰"
-                  : "開始冒險"}
+                  ? t("card.actionRetry")
+                  : t("card.actionStart")}
             </button>
           </div>
         </div>

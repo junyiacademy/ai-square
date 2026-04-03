@@ -59,7 +59,7 @@ export default function TaskDetailPage({
   params: Promise<{ id: string; programId: string; taskId: string }>;
 }) {
   const router = useRouter();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("discovery");
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [taskData, setTaskData] = useState<TaskData | null>(null);
@@ -289,7 +289,7 @@ export default function TaskDetailPage({
       }
     } catch (error) {
       console.error("Error completing task:", error);
-      alert("任務完成失敗，請稍後再試");
+      alert(t("task.completeFailed"));
     } finally {
       setCompletingTask(false);
     }
@@ -345,7 +345,7 @@ export default function TaskDetailPage({
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center space-x-2 text-gray-500">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-            <span>載入中...</span>
+            <span>{t("status.loading")}</span>
           </div>
         </div>
       </DiscoveryPageLayout>
@@ -356,7 +356,7 @@ export default function TaskDetailPage({
     return (
       <DiscoveryPageLayout>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <p className="text-gray-500">找不到此任務</p>
+          <p className="text-gray-500">{t("task.notFound")}</p>
           <button
             onClick={() =>
               router.push(
@@ -365,7 +365,7 @@ export default function TaskDetailPage({
             }
             className="mt-4 text-purple-600 hover:text-purple-700"
           >
-            返回學習歷程
+            {t("task.backToProgram")}
           </button>
         </div>
       </DiscoveryPageLayout>
@@ -410,7 +410,7 @@ export default function TaskDetailPage({
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>返回學習歷程</span>
+          <span>{t("task.backToProgram")}</span>
         </button>
 
         {/* Task Header */}
@@ -439,7 +439,7 @@ export default function TaskDetailPage({
             taskData.content.objectives.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  任務指引
+                  {t("task.objectives")}
                 </h3>
                 <ul className="space-y-2">
                   {taskData.content.objectives.map((objective, index) => (
@@ -460,7 +460,7 @@ export default function TaskDetailPage({
               <div className="bg-purple-50 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-purple-600" />
-                  <span>完成標準</span>
+                  <span>{t("task.completionCriteria")}</span>
                 </h3>
                 <ul className="space-y-2">
                   {taskData.content.completionCriteria.map(
@@ -482,9 +482,9 @@ export default function TaskDetailPage({
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
               {taskData.interactions && taskData.interactions.length > 0
                 ? hasPassedBefore
-                  ? `繼續挑戰 ${passCount > 1 ? `(已通過 ${passCount} 次)` : "(已通過)"}`
-                  : "繼續作答"
-                : "你的回答"}
+                  ? `${t("task.continueChallenge")} ${passCount > 1 ? `(${t("task.passedNTimes", { count: passCount })})` : `(${t("task.passed")})`}`
+                  : t("task.continueAnswering")
+                : t("task.yourAnswer")}
             </h3>
 
             <textarea
@@ -494,10 +494,10 @@ export default function TaskDetailPage({
                 taskData.interactions && taskData.interactions.length > 0
                   ? hasPassedBefore
                     ? passCount > 1
-                      ? `您已經通過 ${passCount} 次了！想要挑戰更高分嗎？`
-                      : "您已經通過了！可以嘗試其他解決方案或繼續優化..."
-                    : "根據 AI 的回饋，改進你的回答..."
-                  : "在這裡寫下你的回答..."
+                      ? t("task.placeholderPassedMultiple", { count: passCount })
+                      : t("task.placeholderPassedOnce")
+                    : t("task.placeholderImprove")
+                  : t("task.writeAnswerPlaceholder")
               }
               className="w-full h-48 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             />
@@ -508,7 +508,7 @@ export default function TaskDetailPage({
                 className="flex items-center space-x-2 text-purple-600 hover:text-purple-700"
               >
                 <Lightbulb className="w-5 h-5" />
-                <span>{showHints ? "隱藏提示" : "需要提示？"}</span>
+                <span>{showHints ? t("task.hideHints") : t("task.needHint")}</span>
               </button>
 
               <button
@@ -526,12 +526,12 @@ export default function TaskDetailPage({
                 {submitting ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                    <span>提交中...</span>
+                    <span>{t("task.submitting")}</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle className="w-5 h-5" />
-                    <span>提交答案</span>
+                    <span>{t("task.submitAnswer")}</span>
                   </>
                 )}
               </button>
@@ -550,10 +550,10 @@ export default function TaskDetailPage({
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-green-900 mb-1">
-                    任務已完成！
+                    {t("task.taskCompleted")}
                   </h3>
                   <p className="text-green-700">
-                    恭喜您成功完成這個任務，繼續您的學習之旅。
+                    {t("task.taskCompletedMessage")}
                   </p>
                 </div>
               </div>
@@ -568,19 +568,19 @@ export default function TaskDetailPage({
                       ).length
                     }
                   </div>
-                  <div className="text-sm text-green-600">嘗試次數</div>
+                  <div className="text-sm text-green-600">{t("task.attemptCount")}</div>
                 </div>
                 <div className="bg-white/70 rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-green-800">
                     {passCount}
                   </div>
-                  <div className="text-sm text-green-600">通過次數</div>
+                  <div className="text-sm text-green-600">{t("task.passCount")}</div>
                 </div>
                 <div className="bg-white/70 rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-green-800">
                     {bestScore}
                   </div>
-                  <div className="text-sm text-green-600">最高分數 (XP)</div>
+                  <div className="text-sm text-green-600">{t("task.bestScore")}</div>
                 </div>
                 <div className="bg-white/70 rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-green-800">
@@ -593,7 +593,7 @@ export default function TaskDetailPage({
                     )}
                     %
                   </div>
-                  <div className="text-sm text-green-600">成功率</div>
+                  <div className="text-sm text-green-600">{t("task.successRate")}</div>
                 </div>
               </div>
             </div>
@@ -602,7 +602,7 @@ export default function TaskDetailPage({
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                 <Sparkles className="w-5 h-5 text-purple-600" />
-                <span>技能成長</span>
+                <span>{t("task.skillsGained")}</span>
               </h4>
               <div className="flex flex-wrap gap-2">
                 {(() => {
@@ -626,7 +626,7 @@ export default function TaskDetailPage({
                   if (skillsArray.length === 0) {
                     return (
                       <p className="text-gray-500 text-sm">
-                        完成任務時將顯示獲得的技能
+                        {t("task.noSkillsYet")}
                       </p>
                     );
                   }
@@ -651,7 +651,7 @@ export default function TaskDetailPage({
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
                   <MessageCircle className="w-5 h-5 text-blue-600" />
-                  <span>綜合評價</span>
+                  <span>{t("task.comprehensiveEvaluation")}</span>
                 </h4>
                 {/* Refresh button - only show in localhost */}
                 {typeof window !== "undefined" &&
@@ -661,13 +661,13 @@ export default function TaskDetailPage({
                       onClick={handleRegenerateEvaluation}
                       disabled={regeneratingEvaluation}
                       className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
-                      title="重新生成評價 (僅限開發環境)"
+                      title={t("task.regenerateEvaluationTitle")}
                     >
                       <RefreshCw
                         className={`w-4 h-4 ${regeneratingEvaluation ? "animate-spin" : ""}`}
                       />
                       <span>
-                        {regeneratingEvaluation ? "生成中..." : "重新生成"}
+                        {regeneratingEvaluation ? t("task.generating") : t("task.regenerate")}
                       </span>
                     </button>
                   )}
@@ -676,7 +676,7 @@ export default function TaskDetailPage({
                 <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900 prose-p:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700">
                   <ReactMarkdown>
                     {taskData.evaluation?.feedback ||
-                      `經過 ${taskData.interactions.filter((i) => i.type === "user_input").length} 次嘗試，你成功完成了這個任務！`}
+                      t("task.fallbackEvaluation", { count: taskData.interactions.filter((i) => i.type === "user_input").length })}
                   </ReactMarkdown>
                 </div>
               </div>
@@ -692,7 +692,7 @@ export default function TaskDetailPage({
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span>返回學習歷程</span>
+                <span>{t("task.backToProgram")}</span>
               </button>
             </div>
           </div>
@@ -706,16 +706,11 @@ export default function TaskDetailPage({
                 <Clock className="w-5 h-5 text-gray-600" />
                 <span>
                   {taskData.status === "completed"
-                    ? "完整學習歷程"
-                    : "學習歷程"}
+                    ? t("task.fullLearningHistory")
+                    : t("task.learningHistory")}
                 </span>
                 <span className="text-sm font-normal text-gray-500 ml-2">
-                  (共{" "}
-                  {
-                    taskData.interactions.filter((i) => i.type === "user_input")
-                      .length
-                  }{" "}
-                  次嘗試
+                  ({t("task.totalAttempts", { count: taskData.interactions.filter((i) => i.type === "user_input").length })}
                   {passCount > 0 && (
                     <>
                       ,
@@ -733,13 +728,13 @@ export default function TaskDetailPage({
                               });
                             }}
                             className="text-green-600 hover:text-green-700 hover:bg-green-100 px-1.5 py-0.5 rounded text-xs font-medium transition-colors"
-                            title={`跳轉到第 ${i + 1} 次通過`}
+                            title={t("task.jumpToPass", { n: i + 1 })}
                           >
                             ✓{i + 1}
                           </button>
                         ))}
                         <span className="text-gray-500 text-xs ml-1">
-                          次通過
+                          {t("task.timesPassed")}
                         </span>
                       </span>
                     </>
@@ -800,7 +795,7 @@ export default function TaskDetailPage({
                             <>
                               <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                                 <span className="text-sm font-medium text-gray-600">
-                                  你
+                                  {t("task.you")}
                                 </span>
                               </div>
                             </>
@@ -827,7 +822,7 @@ export default function TaskDetailPage({
                                     : "text-orange-700"
                                 }`}
                               >
-                                AI 回饋
+                                {t("task.aiFeedback")}
                                 {typeof interaction.content === "object" &&
                                 interaction.content !== null &&
                                 "completed" in interaction.content &&
@@ -893,7 +888,7 @@ export default function TaskDetailPage({
                                       <>
                                         <CheckCircle className="w-5 h-5 text-green-600" />
                                         <span className="text-sm font-medium text-green-700">
-                                          任務通過
+                                          {t("task.taskPassed")}
                                         </span>
                                         {((content as Record<string, unknown>)
                                           ?.xpEarned as number) > 0 && (
@@ -918,7 +913,7 @@ export default function TaskDetailPage({
                                       <>
                                         <AlertCircle className="w-5 h-5 text-orange-600" />
                                         <span className="text-sm font-medium text-orange-700">
-                                          需要改進
+                                          {t("task.needsImprovement")}
                                         </span>
                                       </>
                                     )}
@@ -941,7 +936,7 @@ export default function TaskDetailPage({
                                     )?.length > 0 && (
                                       <div className="bg-green-50 rounded-md p-3">
                                         <p className="text-sm font-medium text-green-800 mb-1">
-                                          優點：
+                                          {t("task.strengths")}
                                         </p>
                                         <ul className="text-sm text-green-700 space-y-1">
                                           {(
@@ -971,7 +966,7 @@ export default function TaskDetailPage({
                                     )?.length > 0 && (
                                       <div className="bg-orange-50 rounded-md p-3">
                                         <p className="text-sm font-medium text-orange-800 mb-1">
-                                          改進建議：
+                                          {t("task.improvements")}
                                         </p>
                                         <ul className="text-sm text-orange-700 space-y-1">
                                           {(
@@ -1043,8 +1038,8 @@ export default function TaskDetailPage({
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-green-900 mb-1">
                     {passCount > 1
-                      ? `任務已通過 ${passCount} 次！`
-                      : "恭喜達到通過標準！"}
+                      ? t("task.passedNTimesTitle", { count: passCount })
+                      : t("task.congratsPassedTitle")}
                   </h3>
 
                   {/* Pass Statistics */}
@@ -1053,13 +1048,13 @@ export default function TaskDetailPage({
                       <div className="flex items-center space-x-1 text-sm">
                         <Trophy className="w-4 h-4 text-yellow-600" />
                         <span className="text-green-800">
-                          最高分：{bestScore} XP
+                          {t("task.bestScoreLabel", { score: bestScore })}
                         </span>
                       </div>
                       <div className="flex items-center space-x-1 text-sm">
                         <Sparkles className="w-4 h-4 text-purple-600" />
                         <span className="text-green-800">
-                          最新分數：{latestPassScore} XP
+                          {t("task.latestScoreLabel", { score: latestPassScore })}
                         </span>
                       </div>
                     </div>
@@ -1067,8 +1062,8 @@ export default function TaskDetailPage({
 
                   <p className="text-green-700 mb-3">
                     {passCount > 1
-                      ? "您已經多次通過！可以隨時完成任務，或繼續挑戰更高分數。"
-                      : "您可以隨時完成此任務，或繼續改進您的答案以獲得更好的學習成果。"}
+                      ? t("task.passedMultipleMessage")
+                      : t("task.passedOnceMessage")}
                   </p>
                   <button
                     onClick={handleCompleteTask}
@@ -1078,12 +1073,12 @@ export default function TaskDetailPage({
                     {completingTask ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                        <span>處理中...</span>
+                        <span>{t("task.processing")}</span>
                       </>
                     ) : (
                       <>
                         <Trophy className="w-5 h-5" />
-                        <span>完成任務 →</span>
+                        <span>{t("task.completeTask")}</span>
                       </>
                     )}
                   </button>
@@ -1100,7 +1095,7 @@ export default function TaskDetailPage({
             <div className="bg-yellow-50 rounded-xl p-6 border border-yellow-200 mb-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
                 <Lightbulb className="w-5 h-5 text-yellow-600" />
-                <span>提示</span>
+                <span>{t("task.hints")}</span>
               </h4>
               <ul className="space-y-2">
                 {taskData.content.hints.map((hint, index) => (
@@ -1127,12 +1122,12 @@ export default function TaskDetailPage({
                 {feedback.completed ? (
                   <>
                     <CheckCircle className="w-6 h-6 text-green-600" />
-                    <span>任務完成！</span>
+                    <span>{t("task.taskCompleted")}</span>
                   </>
                 ) : (
                   <>
                     <AlertCircle className="w-6 h-6 text-orange-600" />
-                    <span>需要改進</span>
+                    <span>{t("task.needsImprovement")}</span>
                   </>
                 )}
               </h3>
@@ -1155,7 +1150,7 @@ export default function TaskDetailPage({
               {/* Strengths */}
               {feedback.strengths.length > 0 && (
                 <div className="bg-green-100 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-800 mb-2">優點</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">{t("task.strengthsLabel")}</h4>
                   <ul className="space-y-1">
                     {feedback.strengths.map((strength, index) => (
                       <li key={index} className="flex items-start space-x-2">
@@ -1171,7 +1166,7 @@ export default function TaskDetailPage({
               {feedback.improvements.length > 0 && (
                 <div className="bg-orange-100 rounded-lg p-4">
                   <h4 className="font-semibold text-orange-800 mb-2">
-                    改進建議
+                    {t("task.improvementsLabel")}
                   </h4>
                   <ul className="space-y-1">
                     {feedback.improvements.map((improvement, index) => (
@@ -1188,7 +1183,7 @@ export default function TaskDetailPage({
             {feedback.completed && !hasPassedBefore && (
               <div className="mt-6 text-center">
                 <p className="text-gray-600">
-                  任務通過！您現在可以選擇完成任務或繼續改進答案。
+                  {t("task.taskPassedChoiceMessage")}
                 </p>
               </div>
             )}
@@ -1199,13 +1194,13 @@ export default function TaskDetailPage({
         <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
           <div className="flex items-center space-x-3 mb-3">
             <MessageCircle className="w-6 h-6 text-purple-600" />
-            <h4 className="text-lg font-semibold text-gray-900">AI 學習助手</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t("task.aiAssistant")}</h4>
           </div>
           <p className="text-gray-700 mb-4">
-            需要更多協助嗎？AI 學習助手可以回答你的問題，提供個人化的學習建議。
+            {t("task.aiAssistantDescription")}
           </p>
           <button className="text-purple-600 hover:text-purple-700 font-medium">
-            開啟 AI 對話 →
+            {t("task.openAiChat")}
           </button>
         </div>
       </div>
