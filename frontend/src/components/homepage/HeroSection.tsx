@@ -1,102 +1,45 @@
 "use client";
 
-import React from "react";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
   const { t } = useTranslation("homepage");
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0363A7]/5 via-[#0363A7]/10 to-[#0363A7]/15 pt-24 pb-20">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#0363A7] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#EC6C1F] rounded-full opacity-20 blur-3xl"></div>
+    <section className="relative overflow-hidden bg-[#FAFBFC] pt-32 pb-24">
+      {/* Subtle background decoration */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0363A7]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#EC6C1F]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          {/* Hero Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E293B] tracking-tight leading-[1.1]">
             {t("hero.title")}
           </h1>
 
-          {/* Hero Subtitle */}
-          <p className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 mb-8 max-w-3xl mx-auto">
+          <p className="mt-6 text-lg sm:text-xl text-[#64748B] leading-relaxed max-w-2xl mx-auto">
             {t("hero.subtitle")}
           </p>
 
-          {/* Hero Description */}
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto">
-            {t("hero.description")}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/pbl"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-[#0363A7] rounded-full hover:bg-[#0363A7]/90 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+              href="/assessment"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white bg-[#0363A7] rounded-xl hover:bg-[#024e85] transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer"
             >
               {t("hero.cta.getStarted")}
-              <svg
-                className="ml-2 w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
+              <ArrowRight className="w-5 h-5" />
             </Link>
 
             <Link
-              href="/relations"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              href="/discovery"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-[#1E293B] bg-white border border-[#E2E8F0] rounded-xl hover:bg-[#F1F5F9] transition-colors duration-200 shadow-sm cursor-pointer"
             >
               {t("hero.cta.explore")}
-              <svg
-                className="ml-2 w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
             </Link>
-          </div>
-        </div>
-
-        {/* Visual representation */}
-        <div className="mt-16 relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent z-10"></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {[
-              { emoji: "🎯", key: "engaging" },
-              { emoji: "🎨", key: "creating" },
-              { emoji: "🎮", key: "managing" },
-              { emoji: "🏗️", key: "designing" },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200"
-              >
-                <div className="text-4xl mb-2">{item.emoji}</div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
-                  {t(`domains.items.${item.key}.name`)}
-                </p>
-                <div className="h-2 bg-gradient-to-r from-[#0363A7] to-[#0363A7]/60 rounded-full mt-2"></div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

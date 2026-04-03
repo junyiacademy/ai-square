@@ -1,14 +1,79 @@
 {
   "hero": {
     "title": "Master AI Literacy with AI Square",
-    "subtitle": "Your personalized journey to understanding and leveraging artificial intelligence",
-    "description": "AI Square is a revolutionary multi-agent learning platform that empowers you to develop essential AI competencies through interactive assessments, personalized learning paths, and real-time AI assistance.",
+    "subtitle": "Learn AI by using AI — the most effective way to build real-world AI skills",
     "cta": {
-      "getStarted": "Start Your Journey",
+      "getStarted": "Get Started Free",
       "explore": "Explore AI Domains",
       "assessment": "Take Assessment",
       "continueLearning": "Continue Learning",
       "takeAssessment": "Take Assessment"
+    }
+  },
+  "stats": {
+    "languages": "Languages",
+    "domains": "AI Domains",
+    "competencies": "Competencies",
+    "aiSupport": "AI Support"
+  },
+  "modes": {
+    "title": "Three Ways to Learn",
+    "subtitle": "Choose the learning mode that fits your goals",
+    "assessment": {
+      "title": "Assessment",
+      "description": "Evaluate your AI literacy level across four core domains with adaptive questions and detailed insights",
+      "cta": "Take Assessment"
+    },
+    "pbl": {
+      "title": "Project-Based Learning",
+      "description": "Apply AI skills through real-world scenarios and hands-on projects guided by AI tutors",
+      "cta": "Start a Project"
+    },
+    "discovery": {
+      "title": "Discovery",
+      "description": "Explore AI concepts freely at your own pace with interactive tasks and instant feedback",
+      "cta": "Start Exploring"
+    }
+  },
+  "domains": {
+    "title": "Four Core AI Literacy Domains",
+    "subtitle": "A comprehensive framework for understanding and working with AI",
+    "viewDetails": "View Details",
+    "items": {
+      "engaging": {
+        "name": "Engaging with AI",
+        "description": "Communicate effectively with AI systems through prompting and interaction"
+      },
+      "creating": {
+        "name": "Creating with AI",
+        "description": "Use AI as a creative partner for content, code, and design"
+      },
+      "managing": {
+        "name": "Managing AI",
+        "description": "Evaluate AI outputs critically and manage AI-assisted workflows"
+      },
+      "designing": {
+        "name": "Designing AI",
+        "description": "Understand how AI systems are built and design responsible AI solutions"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Start learning in three simple steps",
+    "steps": {
+      "assess": {
+        "title": "Assess",
+        "description": "Take a quick assessment to discover your current AI literacy level"
+      },
+      "learn": {
+        "title": "Learn",
+        "description": "Follow personalized learning paths with AI-powered guidance"
+      },
+      "grow": {
+        "title": "Grow",
+        "description": "Track your progress and earn achievements as you master new skills"
+      }
     }
   },
   "features": {
@@ -41,47 +106,6 @@
       }
     }
   },
-  "domains": {
-    "title": "Four Core AI Literacy Domains",
-    "subtitle": "Master every aspect of AI interaction and creation",
-    "viewDetails": "View Details",
-    "items": {
-      "engaging": {
-        "name": "Engaging with AI"
-      },
-      "creating": {
-        "name": "Creating with AI"
-      },
-      "managing": {
-        "name": "Managing AI"
-      },
-      "designing": {
-        "name": "Designing AI"
-      }
-    }
-  },
-  "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Your journey to AI mastery in simple steps",
-    "steps": {
-      "assessment": {
-        "title": "1. Take Initial Assessment",
-        "description": "Evaluate your current AI literacy level across four domains"
-      },
-      "personalized": {
-        "title": "2. Get Personalized Path",
-        "description": "Receive a customized learning journey based on your results"
-      },
-      "learn": {
-        "title": "3. Learn and Practice",
-        "description": "Engage with interactive content and AI-assisted tasks"
-      },
-      "track": {
-        "title": "4. Track Progress",
-        "description": "Monitor your growth and earn achievements"
-      }
-    }
-  },
   "target": {
     "title": "Who Is AI Square For?",
     "subtitle": "Designed for learners at every level",
@@ -102,7 +126,7 @@
   },
   "cta": {
     "title": "Ready to Start Your AI Learning Journey?",
-    "subtitle": "Join thousands of learners mastering AI literacy",
+    "subtitle": "Join learners from around the world mastering AI literacy in 14 languages",
     "button": "Get Started Free",
     "login": "Already have an account? Sign in"
   }
