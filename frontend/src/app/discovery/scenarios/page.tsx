@@ -84,13 +84,27 @@ const careerColors: Record<string, string> = {
   smart_manufacturing_engineer: "from-slate-500 to-blue-500",
 };
 
+// Maps broad filter IDs to actual DB category values
+const categoryMapping: Record<string, string[]> = {
+  technology: ["technology"],
+  arts: ["arts"],
+  business: ["business"],
+  hardware: ["semiconductor", "manufacturing"],
+  science: ["science", "quantum_technology"],
+  green: ["sustainability"],
+  automation: ["robotics", "autonomous_systems"],
+};
+
 // Industry filters (Row 1)
 const industryFilters = [
   { id: "all", name: "全部", icon: Sparkles },
-  { id: "technology", name: "科技", icon: Code },
-  { id: "arts", name: "創意", icon: Paintbrush },
-  { id: "science", name: "科學", icon: Lightbulb },
-  { id: "business", name: "商業", icon: Briefcase },
+  { id: "technology", name: "科技 / AI", icon: Code },
+  { id: "arts", name: "創意 / 媒體", icon: Paintbrush },
+  { id: "business", name: "商業 / 創業", icon: Briefcase },
+  { id: "hardware", name: "半導體 / 硬體", icon: CircuitBoard },
+  { id: "science", name: "科學 / 生技", icon: Lightbulb },
+  { id: "green", name: "能源 / 永續", icon: Leaf },
+  { id: "automation", name: "自動化 / 交通", icon: Bot },
 ];
 
 // Job function filters (Row 2)
@@ -337,7 +351,9 @@ export default function ScenariosPage() {
     activeTab === "my"
       ? myScenarios
       : scenarios.filter((s) => {
-          const industryMatch = selectedIndustry === "all" || s.category === selectedIndustry;
+          const industryMatch =
+            selectedIndustry === "all" ||
+            (categoryMapping[selectedIndustry]?.includes(s.category) ?? false);
           const jobMatch = selectedJobFunction === "all" || careerJobFunctions[s.id] === selectedJobFunction;
           return industryMatch && jobMatch;
         });
