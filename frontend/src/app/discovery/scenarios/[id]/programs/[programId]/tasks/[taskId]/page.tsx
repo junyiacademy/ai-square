@@ -1300,29 +1300,7 @@ export default function TaskDetailPage({
           </div>
         )}
 
-        {/* AI Assistant Section */}
-        <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
-          <div className="flex items-center space-x-3 mb-3">
-            <MessageCircle className="w-6 h-6 text-purple-600" />
-            <h4 className="text-lg font-semibold text-gray-900">{t("task.aiAssistant")}</h4>
-          </div>
-          <p className="text-gray-700 mb-4">
-            {t("task.aiAssistantDescription")}
-          </p>
-          <button
-            className="text-purple-600 hover:text-purple-700 font-medium"
-            onClick={() => {
-              // Scroll to the response textarea if task is active
-              const textarea = document.querySelector("textarea");
-              if (textarea) {
-                textarea.scrollIntoView({ behavior: "smooth", block: "center" });
-                textarea.focus();
-              }
-            }}
-          >
-            {t("task.openAiChat")}
-          </button>
-        </div>
+        {/* Future: AI chat assistant */}
       </div>
 
       {/* CSS Animation */}
