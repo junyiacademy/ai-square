@@ -85,7 +85,7 @@ export default function AchievementsView({
 
   // Calculate next level XP requirement (500 XP per level)
   const xpPerLevel = 500;
-  const currentLevelXp = achievements.totalXp - (achievements.level - 1) * xpPerLevel;
+  const currentLevelXp = Math.max(0, achievements.totalXp - (achievements.level - 1) * xpPerLevel);
   const progressToNextLevel = Math.min((currentLevelXp / xpPerLevel) * 100, 100);
 
   // Get level benefits

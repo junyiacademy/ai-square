@@ -164,25 +164,29 @@ describe("PostgreSQLDiscoveryRepository", () => {
       client.query.mockResolvedValueOnce({
         rows: [{ scenario_id: "sc1" }, { scenario_id: "sc2" }],
       });
-      // milestones
+      // milestones — now reads from users.achievements JSON column
       client.query.mockResolvedValueOnce({
         rows: [
           {
-            id: "m1",
-            name: "Milestone 1",
-            description: "desc",
-            achieved_at: "2024-01-01T00:00:00Z",
-            criteria: {},
-            rewards: { xp: 20, badges: ["b1"] },
+            achievements: [
+              {
+                id: "m1",
+                type: "milestone",
+                name: "Milestone 1",
+                description: "desc",
+                earnedAt: "2024-01-01T00:00:00Z",
+                xpReward: 20,
+              },
+              {
+                id: "m2",
+                type: "milestone",
+                name: "Milestone 2",
+                description: "desc",
+                earnedAt: "2024-01-02T00:00:00Z",
+                xpReward: 0,
+              },
+            ],
           },
-          {
-            id: "m2",
-            name: "Milestone 2",
-            description: "desc",
-            achieved_at: "2024-01-02T00:00:00Z",
-            criteria: {},
-            rewards: {},
-          }, // xp default 0
         ],
       });
 

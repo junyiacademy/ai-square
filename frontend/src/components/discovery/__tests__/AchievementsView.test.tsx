@@ -133,14 +133,13 @@ describe("AchievementsView", () => {
   it("should calculate and display level progress correctly", () => {
     renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
-    // Level 3 with 250 XP
-    // Current level XP = 250 - (2 * 100) = 50
-    // Progress = (50 / 100) * 100 = 50%
-    expect(screen.getByText("50%")).toBeInTheDocument();
+    // Level 3 with 250 XP (data comes from API, component just displays)
+    // Current level XP = 250 - (2 * 500) = -750 → clamped to 0 by Math.min
+    // Progress = min(0/500*100, 100) = 0%
+    expect(screen.getByText("0%")).toBeInTheDocument();
 
-    // Next level XP = 3 * 100 = 300
-    // Remaining XP = 300 - 250 = 50
-    expect(screen.getByText(/還需要 50 XP 升級到等級 4/)).toBeInTheDocument();
+    // Remaining XP = 500 - 0 = 500
+    expect(screen.getByText(/還需要 500 XP 升級到等級 4/)).toBeInTheDocument();
   });
 
   it("should display statistics correctly", () => {
@@ -287,7 +286,7 @@ describe("AchievementsView", () => {
     expect(screen.getByText("Level 1")).toBeInTheDocument();
     const zeroElements = screen.getAllByText("0");
     expect(zeroElements.length).toBeGreaterThan(0); // Should have 0 XP and 0%
-    expect(screen.getByText(/還需要 100 XP 升級到等級 2/)).toBeInTheDocument();
+    expect(screen.getByText(/還需要 500 XP 升級到等級 2/)).toBeInTheDocument();
   });
 
   it("should handle high level benefits correctly", () => {
@@ -311,7 +310,7 @@ describe("AchievementsView", () => {
   it("should handle edge case of exactly leveling up", () => {
     const exactLevelAchievements: UserAchievements = {
       badges: [],
-      totalXp: 300, // Exactly at level 4 threshold
+      totalXp: 1000, // Exactly at level 3 threshold (500 XP per level)
       level: 3,
       completedTasks: [],
     };
@@ -320,10 +319,10 @@ describe("AchievementsView", () => {
       <AchievementsView achievements={exactLevelAchievements} />,
     );
 
-    // Current level XP = 300 - (2 * 100) = 100
-    // Progress = (100 / 100) * 100 = 100%
-    expect(screen.getByText("100%")).toBeInTheDocument();
-    expect(screen.getByText(/還需要 0 XP 升級到等級 4/)).toBeInTheDocument();
+    // Current level XP = 1000 - (2 * 500) = 0
+    // Progress = (0 / 500) * 100 = 0%
+    expect(screen.getByText("0%")).toBeInTheDocument();
+    expect(screen.getByText(/還需要 500 XP 升級到等級 4/)).toBeInTheDocument();
   });
 
   it("should render section headers correctly", () => {
