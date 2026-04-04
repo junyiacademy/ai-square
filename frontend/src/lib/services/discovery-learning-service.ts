@@ -431,28 +431,37 @@ export class DiscoveryLearningService implements BaseLearningService {
       scenario.discoveryData as unknown as DiscoveryScenarioData;
     const tasks: ITask[] = [];
 
+    // Load YAML data for rich content (world_setting, skill_tree, starting_scenario)
+    const yamlLoader = new DiscoveryYAMLLoader();
+    const careerType =
+      discoveryData?.pathId ||
+      (scenario.sourceId as string) ||
+      "unknown";
+    const yamlData = await yamlLoader.loadPath(careerType, language);
+
     // 1. 歡迎任務
     const welcomeTask = await this.taskRepo.create({
       programId: program.id,
       scenarioId: scenario.id,
       mode: "discovery",
       taskIndex: 0,
-      title: {
-        en: "Welcome to Your Career Journey",
-        zh: "歡迎來到你的職涯旅程",
-        es: "Bienvenido a tu Viaje Profesional",
-      },
+      title: yamlData?.starting_scenario?.title
+        ? { [language]: yamlData.starting_scenario.title, en: yamlData.starting_scenario.title }
+        : { en: "Welcome to Your Career Journey", zh: "歡迎來到你的職涯旅程", es: "Bienvenido a tu Viaje Profesional" },
       type: "chat",
       status: "active",
       content: {
         instructions:
+          yamlData?.starting_scenario?.description ||
           discoveryData.worldSetting?.description?.[language] ||
           discoveryData.worldSetting?.description?.["en"] ||
           "Welcome to your career journey!",
         career:
           (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.["en"] || "Career Path",
         worldSetting:
+          yamlData?.world_setting?.name ||
           discoveryData.worldSetting?.name?.[language] || discoveryData.worldSetting?.name?.["en"] || "Adventure World",
+        objectives: yamlData?.starting_scenario?.initial_tasks || [],
       },
       interactions: [],
       interactionCount: 0,
@@ -476,8 +485,11 @@ export class DiscoveryLearningService implements BaseLearningService {
     });
     tasks.push(welcomeTask);
 
-    // 2. 生成初始技能挑戰（基於 core_skills）
-    const coreSkills = discoveryData.skillTree?.core_skills || [];
+    // 2. 生成初始技能挑戰（基於 core_skills from YAML, fallback to DB）
+    const coreSkills =
+      yamlData?.skill_tree?.core_skills ||
+      discoveryData.skillTree?.core_skills ||
+      [];
     const initialSkills = coreSkills.slice(0, 3); // 前3個核心技能
 
     for (let i = 0; i < initialSkills.length; i++) {
