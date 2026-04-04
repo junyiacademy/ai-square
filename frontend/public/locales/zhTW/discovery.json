@@ -383,6 +383,7 @@
     "hideHints": "隱藏提示",
     "submitAnswer": "提交答案",
     "submitting": "提交中...",
+    "aiAnalyzing": "AI 正在分析你的回答...",
     "taskCompleted": "任務已完成！",
     "taskCompletedMessage": "恭喜您成功完成這個任務，繼續您的學習之旅",
     "attemptCount": "嘗試次數",
@@ -465,7 +466,11 @@
     "startedOn": "開始於",
     "completedOn": "完成於",
     "taskCount": "個任務",
-    "completed": "完成"
+    "completed": "完成",
+    "estimatedHours": "預計 {{hours}} 小時",
+    "worldSetting": "世界設定",
+    "firstMission": "你的第一個任務",
+    "coreSkills": "你將學習的核心技能"
   },
 
   "skillTree": {

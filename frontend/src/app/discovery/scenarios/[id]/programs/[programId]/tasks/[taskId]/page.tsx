@@ -435,12 +435,30 @@ export default function TaskDetailPage({
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {taskData.title}
+                {typeof taskData.title === "object" && taskData.title !== null
+                  ? ((taskData.title as Record<string, string>)[i18n.language] ||
+                    (taskData.title as Record<string, string>)[
+                      i18n.language.replace("-", "")
+                    ] ||
+                    (taskData.title as Record<string, string>)["en"] ||
+                    String(taskData.title))
+                  : taskData.title}
               </h1>
               <p className="text-lg text-gray-600">
-                {taskData.content.description ||
-                  taskData.content.instructions ||
-                  ""}
+                {(() => {
+                  const desc =
+                    taskData.content.description ||
+                    taskData.content.instructions ||
+                    "";
+                  if (typeof desc === "object" && desc !== null) {
+                    return (
+                      (desc as Record<string, string>)[i18n.language] ||
+                      (desc as Record<string, string>)["en"] ||
+                      ""
+                    );
+                  }
+                  return desc;
+                })()}
               </p>
             </div>
             <div className="flex items-center space-x-2 px-3 py-1 bg-purple-100 text-purple-700 rounded-full">
@@ -543,30 +561,37 @@ export default function TaskDetailPage({
                 <span>{showHints ? t("task.hideHints") : t("task.needHint")}</span>
               </button>
 
-              <button
-                onClick={handleSubmit}
-                disabled={!userResponse.trim() || submitting || dailyLimitReached}
-                className={`
-                  flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all
-                  ${
-                    userResponse.trim() && !submitting && !dailyLimitReached
-                      ? "bg-purple-600 text-white hover:bg-purple-700"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }
-                `}
-              >
-                {submitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                    <span>{t("task.submitting")}</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    <span>{t("task.submitAnswer")}</span>
-                  </>
+              <div className="flex flex-col items-end space-y-1">
+                <button
+                  onClick={handleSubmit}
+                  disabled={!userResponse.trim() || submitting || dailyLimitReached}
+                  className={`
+                    flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all
+                    ${
+                      userResponse.trim() && !submitting && !dailyLimitReached
+                        ? "bg-purple-600 text-white hover:bg-purple-700"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    }
+                  `}
+                >
+                  {submitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      <span>{t("task.submitting")}</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-5 h-5" />
+                      <span>{t("task.submitAnswer")}</span>
+                    </>
+                  )}
+                </button>
+                {submitting && (
+                  <p className="text-xs text-gray-500 animate-pulse">
+                    {t("task.aiAnalyzing")}
+                  </p>
                 )}
-              </button>
+              </div>
             </div>
           </div>
         )}
@@ -951,13 +976,18 @@ export default function TaskDetailPage({
                                     )}
                                   </div>
 
-                                  {/* Feedback */}
-                                  <p className="text-gray-700">
-                                    {
-                                      (content as Record<string, unknown>)
-                                        ?.feedback as string
-                                    }
-                                  </p>
+                                  {/* Feedback - only show if no structured strengths/improvements exist */}
+                                  {!(
+                                    ((content as Record<string, unknown>)?.strengths as string[])?.length > 0 ||
+                                    ((content as Record<string, unknown>)?.improvements as string[])?.length > 0
+                                  ) && (
+                                    <p className="text-gray-700">
+                                      {
+                                        (content as Record<string, unknown>)
+                                          ?.feedback as string
+                                      }
+                                    </p>
+                                  )}
 
                                   {/* Strengths */}
                                   {(content as Record<string, unknown>)
@@ -1231,7 +1261,17 @@ export default function TaskDetailPage({
           <p className="text-gray-700 mb-4">
             {t("task.aiAssistantDescription")}
           </p>
-          <button className="text-purple-600 hover:text-purple-700 font-medium">
+          <button
+            className="text-purple-600 hover:text-purple-700 font-medium"
+            onClick={() => {
+              // Scroll to the response textarea if task is active
+              const textarea = document.querySelector("textarea");
+              if (textarea) {
+                textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+                textarea.focus();
+              }
+            }}
+          >
             {t("task.openAiChat")}
           </button>
         </div>

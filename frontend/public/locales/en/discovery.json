@@ -373,6 +373,7 @@
     "hideHints": "Hide hints",
     "submitAnswer": "Submit Answer",
     "submitting": "Submitting...",
+    "aiAnalyzing": "AI is analyzing your answer...",
     "taskCompleted": "Task Completed!",
     "taskCompletedMessage": "Congratulations on completing this task, continue your learning journey.",
     "attemptCount": "Attempts",
@@ -454,7 +455,11 @@
     "startedOn": "Started",
     "completedOn": "Completed",
     "taskCount": "tasks",
-    "completed": "completed"
+    "completed": "completed",
+    "estimatedHours": "Estimated {{hours}} hours",
+    "worldSetting": "World Setting",
+    "firstMission": "Your First Mission",
+    "coreSkills": "Core Skills You'll Learn"
   },
 
   "skillTree": {
