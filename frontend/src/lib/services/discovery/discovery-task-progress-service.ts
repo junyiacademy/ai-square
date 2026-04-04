@@ -65,7 +65,9 @@ export class DiscoveryTaskProgressService {
   }
 
   /**
-   * Update program's total XP
+   * Update program's total XP.
+   * Note: User-level XP + gamification is handled by GamificationService
+   * (called from DiscoveryTaskCompletionService after task evaluation).
    */
   static async updateProgramXP(
     programId: string,

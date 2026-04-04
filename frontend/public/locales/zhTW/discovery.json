@@ -460,5 +460,42 @@
     "requiredSkills": "所需技能",
     "technical": "技術技能",
     "soft": "軟技能"
+  },
+
+  "skillTree": {
+    "coreSkills": "核心技能",
+    "advancedSkills": "進階技能",
+    "level": "等級",
+    "lastPracticed": "上次練習",
+    "requires": "需要",
+    "noData": "此職涯尚無技能樹"
+  },
+
+  "questLog": {
+    "noQuests": "目前沒有可用任務",
+    "keepLearning": "繼續學習以解鎖任務",
+    "completed": "已完成",
+    "active": "進行中",
+    "available": "可開始",
+    "skills": "技能"
+  },
+
+  "world": {
+    "tabWorld": "世界觀",
+    "tabSkills": "技能樹",
+    "tabQuests": "任務書"
+  },
+
+  "gamification": {
+    "levelUp": "升級了！",
+    "achievementUnlocked": "成就解鎖",
+    "difficulty": "難度",
+    "beginner": "初級",
+    "intermediate": "中級",
+    "advanced": "進階",
+    "expert": "專家",
+    "scaffolding": "引導模式",
+    "targetSkills": "目標技能",
+    "nextTask": "生成下一個任務"
   }
 }

@@ -171,16 +171,24 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       const exploredResult = await client.query(exploredQuery, [userId]);
       const exploredCareers = exploredResult.rows.map((row) => row.scenario_id);
 
-      // 獲取已完成的里程碑
-      const milestonesQuery = `
-        SELECT * FROM user_achievements
-        WHERE user_id = $1 AND achievement_type = 'discovery_milestone'
-        ORDER BY earned_at DESC
+      // 獲取已完成的里程碑 — achievements stored in users.achievements JSON column
+      const achievementsQuery = `
+        SELECT achievements FROM users WHERE id = $1
       `;
-      const milestonesResult = await client.query(milestonesQuery, [userId]);
-      const completedMilestones = milestonesResult.rows.map(
-        this.mapToMilestone,
-      );
+      const achievementsResult = await client.query(achievementsQuery, [userId]);
+      const allAchievements = Array.isArray(achievementsResult.rows[0]?.achievements)
+        ? achievementsResult.rows[0].achievements
+        : [];
+      const completedMilestones: IDiscoveryMilestone[] = allAchievements
+        .filter((a: Record<string, unknown>) => a.type === "milestone")
+        .map((a: Record<string, unknown>) => ({
+          id: a.id as string,
+          name: a.name as string,
+          description: a.description as string,
+          achievedAt: a.earnedAt as string,
+          criteria: {},
+          rewards: { xp: (a.xpReward as number) || 0 },
+        }));
 
       // 獲取作品集項目 - TODO: Create portfolio_items table
       // Return mock data for tests
