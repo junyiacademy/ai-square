@@ -20,6 +20,7 @@ export interface TaskCompletionResult {
     skillLevelUps: string[];
     newAchievements: Array<{ id: string; name: string; xpReward: number }>;
     streak: { currentStreak: number; longestStreak: number };
+    isFirstWin?: boolean;
   };
 }
 
@@ -146,14 +147,44 @@ export class DiscoveryTaskCompletionService {
     let gamification: TaskCompletionResult["gamification"];
     try {
       const gamificationService = new GamificationService();
+
+      // Feature 6: First Win Acceleration
+      // If this is the user's very first completed task, award a 500 XP bonus
+      // so they immediately level up and feel the achievement.
+      let effectiveXP = bestXP;
+      let isFirstWin = false;
+      try {
+        const { GamificationRepository } = await import(
+          "@/lib/repositories/postgresql/gamification-repository"
+        );
+        const { getPool } = await import("@/lib/db/get-pool");
+        const repo = new GamificationRepository(getPool());
+        const profile = await repo.getProfile(userId);
+        // totalXp === 0 means no XP has ever been awarded → first ever task
+        if (profile.totalXp === 0) {
+          effectiveXP += 500;
+          isFirstWin = true;
+          console.log(
+            `[FirstWin] User ${userId} completed their first task. Granting +500 bonus XP.`,
+          );
+        }
+      } catch (firstWinErr) {
+        console.error("[FirstWin] Failed to check first-win status:", firstWinErr);
+      }
+
       gamification = await gamificationService.processTaskCompletion(
         userId,
         careerType,
-        bestXP,
-        Math.min(bestXP, 100), // score (0-100)
+        effectiveXP,
+        Math.min(effectiveXP, 100), // score (0-100)
         task.interactions.filter((i) => i.type === "user_input").length, // attempts
         allSkillsImproved,
       );
+
+      if (isFirstWin && gamification) {
+        // Surface first-win flag so the frontend can show special messaging
+        (gamification as typeof gamification & { isFirstWin: boolean }).isFirstWin = true;
+      }
     } catch (error) {
       console.error("Gamification update failed (non-blocking):", error);
     }

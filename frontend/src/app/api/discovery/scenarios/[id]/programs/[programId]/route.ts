@@ -146,21 +146,21 @@ export async function GET(
             | string
             | Record<string, string>
             | undefined;
+          // zh fallback: zhTW/zhCN → zh
+          const zhFallback = lang.startsWith("zh") ? "zh" : null;
           // Handle different types of title
           if (typeof titleObj === "string") {
-            // Check if it's a JSON string
             if (titleObj.startsWith("{")) {
               try {
                 const parsed = JSON.parse(titleObj);
-                return parsed[lang] || parsed["en"] || titleObj;
+                return parsed[lang] || (zhFallback && parsed[zhFallback]) || parsed["en"] || titleObj;
               } catch {
-                return titleObj; // Return as-is if parse fails
+                return titleObj;
               }
             }
             return titleObj;
           } else if (typeof titleObj === "object" && titleObj !== null) {
-            // It's already an object
-            return titleObj[lang] || titleObj["en"] || "";
+            return titleObj[lang] || (zhFallback && titleObj[zhFallback]) || titleObj["en"] || "";
           }
           return "";
         })(),

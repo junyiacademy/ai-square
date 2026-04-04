@@ -17,6 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import DiscoveryPageLayout from "@/components/discovery/DiscoveryPageLayout";
+import LevelUpModal from "@/components/discovery/LevelUpModal";
 import { useAuth } from "@/contexts/AuthContext";
 import ReactMarkdown from "react-markdown";
 import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
@@ -76,6 +77,10 @@ export default function TaskDetailPage({
   const [showHistory, setShowHistory] = useState(true);
   const [completingTask, setCompletingTask] = useState(false);
   const [regeneratingEvaluation, setRegeneratingEvaluation] = useState(false);
+  const [levelUpModal, setLevelUpModal] = useState<{ isOpen: boolean; newLevel: number; xpEarned?: number }>({
+    isOpen: false,
+    newLevel: 1,
+  });
   const [scenarioId, setScenarioId] = useState<string>("");
   const [programId, setProgramId] = useState<string>("");
   const [taskId, setTaskId] = useState<string>("");
@@ -284,6 +289,15 @@ export default function TaskDetailPage({
           evaluation: result.evaluation,
         });
 
+        // Show level-up modal if user leveled up
+        if (result.gamification?.leveledUp && result.gamification?.newLevel) {
+          setLevelUpModal({
+            isOpen: true,
+            newLevel: result.gamification.newLevel,
+            xpEarned: result.evaluation.xpEarned,
+          });
+        }
+
         // Scroll to evaluation section after a short delay
         setTimeout(() => {
           const evaluationElement = document.getElementById(
@@ -416,6 +430,14 @@ export default function TaskDetailPage({
 
   return (
     <DiscoveryPageLayout>
+      {/* Level-Up Modal */}
+      <LevelUpModal
+        isOpen={levelUpModal.isOpen}
+        newLevel={levelUpModal.newLevel}
+        xpEarned={levelUpModal.xpEarned}
+        onClose={() => setLevelUpModal((prev) => ({ ...prev, isOpen: false }))}
+      />
+
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Button */}
         <button
@@ -469,9 +491,10 @@ export default function TaskDetailPage({
             </div>
           </div>
 
-          {/* Instructions/Objectives */}
+          {/* Instructions/Objectives — hide raw snake_case IDs */}
           {taskData.content.objectives &&
-            taskData.content.objectives.length > 0 && (
+            taskData.content.objectives.length > 0 &&
+            !taskData.content.objectives[0]?.includes("_") && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   {t("task.objectives")}
@@ -523,6 +546,21 @@ export default function TaskDetailPage({
                 {t("dailyLimit.description")}
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Action Prompt — tell user what to do */}
+        {taskData.status !== "completed" && (
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 mb-6 border border-purple-100">
+            <h3 className="text-lg font-semibold text-purple-900 mb-2 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-purple-600" />
+              {t("task.actionPromptTitle")}
+            </h3>
+            <p className="text-gray-700">
+              {taskData.type === "chat"
+                ? t("task.actionPromptChat")
+                : t("task.actionPromptCreation")}
+            </p>
           </div>
         )}
 

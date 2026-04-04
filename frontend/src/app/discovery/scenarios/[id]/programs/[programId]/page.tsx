@@ -253,38 +253,22 @@ export default function ProgramDetailPage({
 
         {/* Career Info Card with Banner */}
         <div className="bg-white rounded-2xl shadow-md overflow-hidden mb-6">
-          <div className={`h-32 bg-gradient-to-br ${currentCareer.color} relative overflow-hidden`}>
-            <Image
-              src={`/images/discovery-banners/${programData.careerType || "general"}.webp`}
-              alt={currentCareer.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 800px"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = "none";
-              }}
-            />
-            <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <CareerIcon className="w-12 h-12 text-white/90" />
+          <div className="flex items-center gap-4 p-4">
+            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${currentCareer.color} relative overflow-hidden flex-shrink-0`}>
+              <Image
+                src={`/images/discovery-banners/${programData.careerType || "general"}.webp`}
+                alt={currentCareer.title}
+                fill
+                className="object-cover"
+                sizes="64px"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
             </div>
-          </div>
-          <div className="p-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-lg font-bold text-gray-900">
               {currentCareer.title}
             </h2>
-            {currentCareer.skills.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {currentCareer.skills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-md"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 

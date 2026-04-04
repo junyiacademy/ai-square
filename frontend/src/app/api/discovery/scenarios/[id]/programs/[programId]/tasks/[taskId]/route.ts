@@ -1064,6 +1064,66 @@ Return JSON:
         });
       }
 
+      // === Gamification Pipeline ===
+      let gamificationResult: {
+        leveledUp: boolean;
+        newLevel?: number;
+        totalXp: number;
+        skillLevelUps: string[];
+        newAchievements: Array<{ id: string; name: string; xpReward: number }>;
+        streak: { currentStreak: number; longestStreak: number };
+        isFirstWin?: boolean;
+      } | undefined;
+
+      try {
+        const { GamificationService } = await import(
+          "@/lib/services/discovery/gamification-service"
+        );
+        const { GamificationRepository } = await import(
+          "@/lib/repositories/postgresql/gamification-repository"
+        );
+        const { getPool } = await import("@/lib/db/get-pool");
+
+        const gamService = new GamificationService();
+        const gamRepo = new GamificationRepository(getPool());
+
+        // Feature 6: First Win Acceleration — +500 bonus XP for first-ever task
+        let effectiveXP = bestXP;
+        let isFirstWin = false;
+        try {
+          const profileCheck = await gamRepo.getProfile(userId);
+          if (profileCheck.totalXp === 0) {
+            effectiveXP += 500;
+            isFirstWin = true;
+          }
+        } catch { /* non-blocking */ }
+
+        const allSkillsImproved = new Set<string>();
+        allFeedback.forEach((f) => {
+          if (typeof f === "object" && f !== null) {
+            const rec = f as Record<string, unknown>;
+            if (rec.skillsImproved && Array.isArray(rec.skillsImproved)) {
+              rec.skillsImproved.forEach((s: unknown) => {
+                if (typeof s === "string") allSkillsImproved.add(s);
+              });
+            }
+          }
+        });
+
+        const gamResult = await gamService.processTaskCompletion(
+          userId,
+          careerType,
+          effectiveXP,
+          Math.min(effectiveXP, 100),
+          userAttempts,
+          Array.from(allSkillsImproved),
+        );
+
+        gamificationResult = { ...gamResult, isFirstWin };
+      } catch (gamErr) {
+        console.error("Gamification update failed (non-blocking):", gamErr);
+      }
+
       return NextResponse.json({
         success: true,
         taskCompleted: true,
@@ -1075,6 +1135,7 @@ Return JSON:
         },
         nextTaskId,
         programCompleted: completedTasks === orderedTasks.length,
+        gamification: gamificationResult,
       });
     } else if (action === "regenerate-evaluation") {
       // Only allow in localhost environment
