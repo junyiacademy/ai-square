@@ -438,12 +438,13 @@ export class DiscoveryLearningService implements BaseLearningService {
       status: "active",
       content: {
         instructions:
-          discoveryData.worldSetting.description[language] ||
+          discoveryData.worldSetting?.description?.[language] ||
+          discoveryData.worldSetting?.description?.["en"] ||
           "Welcome to your career journey!",
         career:
-          (scenario.title as Record<string, string>)[language] || "Career Path",
+          (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.["en"] || "Career Path",
         worldSetting:
-          discoveryData.worldSetting.name[language] || "Adventure World",
+          discoveryData.worldSetting?.name?.[language] || discoveryData.worldSetting?.name?.["en"] || "Adventure World",
       },
       interactions: [],
       interactionCount: 0,
