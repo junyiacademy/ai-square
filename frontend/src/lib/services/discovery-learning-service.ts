@@ -463,19 +463,10 @@ export class DiscoveryLearningService implements BaseLearningService {
           yamlData?.world_setting?.name ||
           discoveryData.worldSetting?.name?.[language] || discoveryData.worldSetting?.name?.["en"] || "Adventure World",
         objectives: (() => {
-          // Build skill name lookup from skill tree
-          const skillLookup = new Map<string, string>();
-          if (yamlData?.skill_tree) {
-            for (const s of [
-              ...(yamlData.skill_tree.core_skills || []),
-              ...(yamlData.skill_tree.advanced_skills || []),
-            ]) {
-              if (s.id && s.name) skillLookup.set(s.id, s.name);
-            }
-          }
-          return (yamlData?.starting_scenario?.initial_tasks || []).map(
-            (taskId: string) => skillLookup.get(taskId) || taskId,
-          );
+          // Map initial_tasks IDs to skill names from skill tree
+          const coreSkills = yamlData?.skill_tree?.core_skills || [];
+          // Use core skill names as objectives (user-facing)
+          return coreSkills.slice(0, 3).map((s: { name: string }) => s.name);
         })(),
       },
       interactions: [],
