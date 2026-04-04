@@ -95,27 +95,27 @@ const categoryMapping: Record<string, string[]> = {
   automation: ["robotics", "autonomous_systems"],
 };
 
-// Industry filters (Row 1)
-const industryFilters = [
-  { id: "all", name: "全部", icon: Sparkles },
-  { id: "technology", name: "科技 / AI", icon: Code },
-  { id: "arts", name: "創意 / 媒體", icon: Paintbrush },
-  { id: "business", name: "商業 / 創業", icon: Briefcase },
-  { id: "hardware", name: "半導體 / 硬體", icon: CircuitBoard },
-  { id: "science", name: "科學 / 生技", icon: Lightbulb },
-  { id: "green", name: "能源 / 永續", icon: Leaf },
-  { id: "automation", name: "自動化 / 交通", icon: Bot },
+// Industry filters (Row 1) - names are i18n keys
+const industryFilterDefs = [
+  { id: "all", nameKey: "discovery:scenarios.filters.all", icon: Sparkles },
+  { id: "technology", nameKey: "discovery:scenarios.filters.technology", icon: Code },
+  { id: "arts", nameKey: "discovery:scenarios.filters.arts", icon: Paintbrush },
+  { id: "business", nameKey: "discovery:scenarios.filters.business", icon: Briefcase },
+  { id: "hardware", nameKey: "discovery:scenarios.filters.hardware", icon: CircuitBoard },
+  { id: "science", nameKey: "discovery:scenarios.filters.science", icon: Lightbulb },
+  { id: "green", nameKey: "discovery:scenarios.filters.green", icon: Leaf },
+  { id: "automation", nameKey: "discovery:scenarios.filters.automation", icon: Bot },
 ];
 
-// Job function filters (Row 2)
-const jobFunctionFilters = [
-  { id: "all", name: "全部", icon: Sparkles },
-  { id: "engineer", name: "工程師", icon: Cpu },
-  { id: "designer", name: "設計師", icon: Paintbrush },
-  { id: "researcher", name: "研究員", icon: Lightbulb },
-  { id: "creator", name: "創作者", icon: Video },
-  { id: "pm", name: "PM / 管理", icon: Users },
-  { id: "business", name: "商業 / 創業", icon: Briefcase },
+// Job function filters (Row 2) - names are i18n keys
+const jobFunctionFilterDefs = [
+  { id: "all", nameKey: "discovery:scenarios.filters.all", icon: Sparkles },
+  { id: "engineer", nameKey: "discovery:scenarios.filters.engineer", icon: Cpu },
+  { id: "designer", nameKey: "discovery:scenarios.filters.designer", icon: Paintbrush },
+  { id: "researcher", nameKey: "discovery:scenarios.filters.researcher", icon: Lightbulb },
+  { id: "creator", nameKey: "discovery:scenarios.filters.creator", icon: Video },
+  { id: "pm", nameKey: "discovery:scenarios.filters.pm", icon: Users },
+  { id: "business", nameKey: "discovery:scenarios.filters.businessFunc", icon: Briefcase },
 ];
 
 // Map career types to job functions
@@ -142,7 +142,7 @@ const careerJobFunctions: Record<string, string> = {
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { i18n } = useTranslation(["discovery", "skills"]);
+  const { t, i18n } = useTranslation(["discovery", "skills"]);
   const { isLoggedIn } = useAuth();
   useUserData(); // Trigger user data loading
   const [selectedIndustry, setSelectedIndustry] = useState("all");
@@ -393,10 +393,10 @@ export default function ScenariosPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            探索職業冒險
+            {t("discovery:scenarios.heading")}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            選擇你的職業角色，開始獨特的學習冒險。每個職業都有精心設計的故事情境和挑戰任務。
+            {t("discovery:scenarios.subheading")}
           </p>
         </div>
 
@@ -416,7 +416,7 @@ export default function ScenariosPage() {
             >
               <div className="flex items-center space-x-2">
                 <Sparkles className="w-4 h-4" />
-                <span>全部</span>
+                <span>{t("discovery:scenarios.tabAll")}</span>
               </div>
             </button>
             {isLoggedIn && (
@@ -433,7 +433,7 @@ export default function ScenariosPage() {
               >
                 <div className="flex items-center space-x-2">
                   <Rocket className="w-4 h-4" />
-                  <span>我的冒險</span>
+                  <span>{t("discovery:scenarios.tabMy")}</span>
                 </div>
               </button>
             )}
@@ -445,9 +445,9 @@ export default function ScenariosPage() {
           <div className="flex flex-col items-center gap-3 mb-8">
             {/* Row 1: Industry */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">產業</span>
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">{t("discovery:scenarios.labelIndustry")}</span>
               <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
-                {industryFilters.map((filter) => {
+                {industryFilterDefs.map((filter) => {
                   const Icon = filter.icon;
                   return (
                     <button
@@ -463,7 +463,7 @@ export default function ScenariosPage() {
                       `}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span>{filter.name}</span>
+                      <span>{t(filter.nameKey)}</span>
                     </button>
                   );
                 })}
@@ -471,9 +471,9 @@ export default function ScenariosPage() {
             </div>
             {/* Row 2: Job Function */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">職能</span>
+              <span className="text-sm text-gray-500 font-medium w-12 text-right shrink-0">{t("discovery:scenarios.labelJobFunction")}</span>
               <div className="inline-flex flex-wrap justify-center rounded-lg border border-gray-200 bg-white p-1 gap-0.5">
-                {jobFunctionFilters.map((filter) => {
+                {jobFunctionFilterDefs.map((filter) => {
                   const Icon = filter.icon;
                   return (
                     <button
@@ -489,7 +489,7 @@ export default function ScenariosPage() {
                       `}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span>{filter.name}</span>
+                      <span>{t(filter.nameKey)}</span>
                     </button>
                   );
                 })}
@@ -504,7 +504,7 @@ export default function ScenariosPage() {
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
             <p className="text-gray-500">
-              {activeTab === "my" ? "載入我的學習歷程..." : "載入職業冒險中..."}
+              {activeTab === "my" ? t("discovery:scenarios.loadingMy") : t("discovery:scenarios.loadingAll")}
             </p>
           </div>
         )}
@@ -533,19 +533,19 @@ export default function ScenariosPage() {
               {activeTab === "my" ? (
                 <div>
                   <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">還沒有開始任何學習歷程</p>
+                  <p className="text-gray-500 mb-4">{t("discovery:scenarios.emptyMyTitle")}</p>
                   <p className="text-sm text-gray-400 mb-6">
-                    選擇一個職業路徑，開始你的探索之旅
+                    {t("discovery:scenarios.emptyMySubtitle")}
                   </p>
                   <button
                     onClick={() => setActiveTab("all")}
                     className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
                   >
-                    瀏覽所有職業
+                    {t("discovery:scenarios.browseAll")}
                   </button>
                 </div>
               ) : (
-                <p className="text-gray-500">沒有找到符合條件的職業冒險</p>
+                <p className="text-gray-500">{t("discovery:scenarios.emptyFiltered")}</p>
               )}
             </div>
           )}

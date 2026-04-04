@@ -3,7 +3,8 @@ import { VertexAI } from "@google-cloud/vertexai";
 import { ErrorResponse } from "@/types/api";
 import { ChatMessage } from "@/types/pbl-api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
-import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget } from "@/lib/api/optimization-utils";
+import { recordTokenUsage as recordTokenUsageDB } from "@/lib/middleware/ai-token-tracker";
 
 const chatRateLimit = rateLimit(60000, 30); // 30 requests per minute per IP
 
@@ -189,7 +190,7 @@ export async function POST(request: NextRequest) {
       const usage = response.usageMetadata;
       if (usage) {
         const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
-        recordTokenUsage(totalTokens, session.user.id);
+        await recordTokenUsageDB(session.user.id, totalTokens);
       }
 
       return NextResponse.json({

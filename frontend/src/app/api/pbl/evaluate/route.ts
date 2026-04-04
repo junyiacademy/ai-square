@@ -4,7 +4,8 @@ import { EvaluateRequestBody, Conversation } from "@/types/pbl-evaluate";
 import { ErrorResponse } from "@/types/api";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 import { LANGUAGE_NAMES } from "@/lib/utils/language";
-import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget } from "@/lib/api/optimization-utils";
+import { recordTokenUsage as recordTokenUsageDB } from "@/lib/middleware/ai-token-tracker";
 
 const evaluateRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
@@ -346,7 +347,7 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
     const usage = response.usageMetadata;
     if (usage) {
       const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
-      recordTokenUsage(totalTokens, session.user.id);
+      await recordTokenUsageDB(session.user.id, totalTokens);
     }
 
     // Parse JSON response - should be clean JSON due to responseSchema

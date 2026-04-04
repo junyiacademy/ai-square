@@ -499,11 +499,10 @@ export default function TaskDetailPage({
             <AlertCircle className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold text-amber-800">
-                今日 AI 使用額度已達上限
+                {t("dailyLimit.title")}
               </p>
               <p className="text-amber-700 text-sm mt-1">
-                你今天的 AI 互動額度（每日 200,000 tokens）已用完。額度將於明天
-                UTC 午夜重置，請明天再來繼續學習！📚
+                {t("dailyLimit.description")}
               </p>
             </div>
           </div>

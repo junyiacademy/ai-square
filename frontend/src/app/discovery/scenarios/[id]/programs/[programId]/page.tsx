@@ -57,7 +57,7 @@ export default function ProgramDetailPage({
   params: Promise<{ id: string; programId: string }>;
 }) {
   const router = useRouter();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("discovery");
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [programData, setProgramData] = useState<ProgramData | null>(null);
@@ -130,7 +130,7 @@ export default function ProgramDetailPage({
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center space-x-2 text-gray-500">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-            <span>載入中...</span>
+            <span>{t("scenarioDetail.loading")}</span>
           </div>
         </div>
       </DiscoveryPageLayout>
@@ -141,12 +141,12 @@ export default function ProgramDetailPage({
     return (
       <DiscoveryPageLayout>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <p className="text-gray-500">找不到此學習歷程</p>
+          <p className="text-gray-500">{t("program.notFound")}</p>
           <button
             onClick={() => router.push(`/discovery/scenarios/${scenarioId}`)}
             className="mt-4 text-purple-600 hover:text-purple-700"
           >
-            返回職業詳情
+            {t("program.backToScenario")}
           </button>
         </div>
       </DiscoveryPageLayout>
@@ -169,64 +169,64 @@ export default function ProgramDetailPage({
     }
   > = {
     content_creator: {
-      title: "數位魔法師 - 內容創作者",
+      title: t("careers.content_creator.title"),
       icon: Paintbrush,
       color: "from-purple-500 to-pink-500",
-      skills: ["內容魔法", "視覺咒語", "文字煉金術", "社群召喚術"],
+      skills: t("careers.content_creator.skills", { returnObjects: true }) as string[],
     },
     youtuber: {
-      title: "星際廣播員 - YouTuber",
+      title: t("careers.youtuber.title"),
       icon: Video,
       color: "from-red-500 to-orange-500",
-      skills: ["星際剪輯術", "觀眾心理學", "宇宙趨勢預測", "跨星系傳播"],
+      skills: t("careers.youtuber.skills", { returnObjects: true }) as string[],
     },
     app_developer: {
-      title: "數碼建築師 - 應用程式開發者",
+      title: t("careers.app_developer.title"),
       icon: Code,
       color: "from-blue-500 to-cyan-500",
-      skills: ["程式魔法", "介面雕塑", "邏輯工程", "系統煉金術"],
+      skills: t("careers.app_developer.skills", { returnObjects: true }) as string[],
     },
     game_designer: {
-      title: "夢境織夢師 - 遊戲設計師",
+      title: t("careers.game_designer.title"),
       icon: Box,
       color: "from-indigo-500 to-purple-500",
-      skills: ["夢境編織", "情感調律", "平衡法則", "心理煉金術"],
+      skills: t("careers.game_designer.skills", { returnObjects: true }) as string[],
     },
     tech_entrepreneur: {
-      title: "時空商業旅行者 - 科技創業家",
+      title: t("careers.tech_entrepreneur.title"),
       icon: Rocket,
       color: "from-yellow-500 to-red-500",
-      skills: ["時空商業洞察", "跨維度技術整合", "團隊召喚術", "創新預言術"],
+      skills: t("careers.tech_entrepreneur.skills", { returnObjects: true }) as string[],
     },
     startup_founder: {
-      title: "商業冒險家 - 創業家",
+      title: t("careers.startup_founder.title"),
       icon: Briefcase,
       color: "from-green-500 to-teal-500",
-      skills: ["商業嗅覺", "市場探勘", "資源煉金術", "風險航海術"],
+      skills: t("careers.startup_founder.skills", { returnObjects: true }) as string[],
     },
     data_analyst: {
-      title: "數位考古學家 - 數據分析師",
+      title: t("careers.data_analyst.title"),
       icon: BarChart,
       color: "from-teal-500 to-blue-500",
-      skills: ["數位考古術", "模式識別術", "視覺化魔法", "洞察預言術"],
+      skills: t("careers.data_analyst.skills", { returnObjects: true }) as string[],
     },
     ux_designer: {
-      title: "体驗建築師 - UX 設計師",
+      title: t("careers.ux_designer.title"),
       icon: Sparkles,
       color: "from-pink-500 to-purple-500",
-      skills: ["用户心理学", "体験魔法", "原型雕塑", "沟通艺术"],
+      skills: t("careers.ux_designer.skills", { returnObjects: true }) as string[],
     },
     product_manager: {
-      title: "產品指揮官 - 產品經理",
+      title: t("careers.product_manager.title"),
       icon: Users,
       color: "from-orange-500 to-yellow-500",
-      skills: ["策略视野", "需求洞察", "資源配置", "團隊协調"],
+      skills: t("careers.product_manager.skills", { returnObjects: true }) as string[],
     },
     ai_developer: {
-      title: "機器靈魂鍛造師 - AI 開發者",
+      title: t("careers.ai_developer.title"),
       icon: Cpu,
       color: "from-violet-500 to-purple-500",
-      skills: ["靈魂編碼術", "神經網絡魔法", "智慧藝術", "未來部署術"],
+      skills: t("careers.ai_developer.skills", { returnObjects: true }) as string[],
     },
   };
 
@@ -247,7 +247,7 @@ export default function ProgramDetailPage({
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>返回職業詳情</span>
+          <span>{t("program.backToScenario")}</span>
         </button>
 
         {/* Career Info Card */}
@@ -283,16 +283,14 @@ export default function ProgramDetailPage({
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                學習歷程
+                {t("programCard.title")}
               </h1>
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-1">
                   <Clock className="w-4 h-4" />
                   <span>
-                    開始於{" "}
-                    {new Date(programData.createdAt).toLocaleDateString(
-                      "zh-TW",
-                    )}
+                    {t("programCard.startedOn")}{" "}
+                    {new Date(programData.createdAt).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -304,12 +302,12 @@ export default function ProgramDetailPage({
 
             {programData.status === "active" && (
               <span className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">
-                進行中
+                {t("programCard.statusActive")}
               </span>
             )}
             {programData.status === "completed" && (
               <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full">
-                已完成
+                {t("programCard.statusCompleted")}
               </span>
             )}
           </div>
@@ -317,7 +315,7 @@ export default function ProgramDetailPage({
           {/* Progress Bar */}
           <div>
             <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-gray-600">整體進度</span>
+              <span className="text-gray-600">{t("programCard.progress")}</span>
               <span className="text-gray-900 font-medium">{progress}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
@@ -327,15 +325,14 @@ export default function ProgramDetailPage({
               />
             </div>
             <p className="mt-2 text-sm text-gray-500">
-              已完成 {programData.completedTasks} / {programData.totalTasks}{" "}
-              個任務
+              {t("programCard.tasksCompleted", { completed: programData.completedTasks, total: programData.totalTasks })}
             </p>
           </div>
         </div>
 
         {/* Tasks List */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">學習任務</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">{t("program.tasks")}</h2>
 
           <div className="space-y-4">
             {programData.tasks.map((task, index) => (
@@ -399,7 +396,7 @@ export default function ProgramDetailPage({
                           ${task.status === "completed" ? "text-gray-600" : "text-gray-900"}
                         `}
                         >
-                          任務 {index + 1}:{" "}
+                          {t("program.taskLabel", { n: index + 1 })}:{" "}
                           {typeof task.title === "object" && task.title !== null
                             ? (task.title as Record<string, string>)[
                                 normalizeLanguageCode(i18n.language)
@@ -441,14 +438,14 @@ export default function ProgramDetailPage({
                               <div className="flex items-center space-x-1">
                                 <span className="text-gray-600">📊</span>
                                 <span className="text-gray-600">
-                                  {task.attempts}次嘗試
+                                  {t("program.attempts", { count: task.attempts })}
                                 </span>
                               </div>
                               {task.passCount && task.passCount > 0 && (
                                 <div className="flex items-center space-x-1">
                                   <span className="text-gray-600">⭐</span>
                                   <span className="text-gray-600">
-                                    {task.passCount}次通過
+                                    {t("program.passes", { count: task.passCount })}
                                   </span>
                                 </div>
                               )}
@@ -457,10 +454,8 @@ export default function ProgramDetailPage({
 
                           {task.completedAt && (
                             <span className="text-green-600">
-                              完成於{" "}
-                              {new Date(task.completedAt).toLocaleDateString(
-                                "zh-TW",
-                              )}
+                              {t("program.completedOn")}{" "}
+                              {new Date(task.completedAt).toLocaleDateString()}
                             </span>
                           )}
                         </div>
@@ -472,13 +467,13 @@ export default function ProgramDetailPage({
                       (task as Task).status === "active") && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <Play className="w-4 h-4" />
-                        <span>開始</span>
+                        <span>{t("program.start")}</span>
                       </button>
                     )}
                     {task.status === "completed" && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                         <CheckCircle className="w-4 h-4" />
-                        <span>檢視</span>
+                        <span>{t("program.view")}</span>
                       </button>
                     )}
                   </div>
@@ -494,11 +489,10 @@ export default function ProgramDetailPage({
             <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-8 text-center">
               <Trophy className="w-16 h-16 text-purple-600 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                恭喜完成所有任務！
+                {t("program.allCompleted")}
               </h3>
               <p className="text-gray-600 mb-6">
-                你已經完成了這個學習歷程的所有任務，獲得了 {programData.totalXP}{" "}
-                XP！
+                {t("program.allCompletedDesc", { xp: programData.totalXP })}
               </p>
               <div className="flex justify-center space-x-4">
                 <button
@@ -510,7 +504,7 @@ export default function ProgramDetailPage({
                   className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
                   <CheckCircle className="w-5 h-5" />
-                  <span>查看完整結果</span>
+                  <span>{t("program.viewFullResults")}</span>
                 </button>
                 <button
                   onClick={() =>
@@ -519,7 +513,7 @@ export default function ProgramDetailPage({
                   className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
                 >
                   <Sparkles className="w-5 h-5" />
-                  <span>開始新的歷程</span>
+                  <span>{t("program.startNew")}</span>
                 </button>
               </div>
             </div>

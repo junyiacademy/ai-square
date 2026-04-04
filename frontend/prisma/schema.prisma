@@ -27,7 +27,7 @@ model User {
   level                  Int          @default(1)
   totalXp                Int          @default(0) @map("total_xp")
   achievements           Json         @default("[]")
-  skills                 Json         @default("[]")
+  skills                 Json         @default("{}")
   lastLoginAt            DateTime?    @map("last_login_at")
   lastActiveDate         DateTime?    @map("last_active_date") @db.Date
   createdAt              DateTime     @default(now()) @map("created_at")
