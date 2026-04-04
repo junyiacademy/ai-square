@@ -814,6 +814,16 @@ export default function TaskDetailPage({
             {showHistory && (
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {taskData.interactions.map((interaction, index) => {
+                  // When feedback state is active, skip the last ai_response to avoid
+                  // showing the same feedback in both the history and the structured feedback card
+                  if (
+                    feedback &&
+                    interaction.type === "ai_response" &&
+                    index ===
+                      taskData.interactions.length - 1
+                  ) {
+                    return null;
+                  }
                   // Calculate passed interaction index for ID
                   const passedInteractionIndex =
                     interaction.type === "ai_response" &&

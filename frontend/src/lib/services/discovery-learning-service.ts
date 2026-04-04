@@ -456,12 +456,27 @@ export class DiscoveryLearningService implements BaseLearningService {
           discoveryData.worldSetting?.description?.[language] ||
           discoveryData.worldSetting?.description?.["en"] ||
           "Welcome to your career journey!",
+        xp: 50,
         career:
           (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.["en"] || "Career Path",
         worldSetting:
           yamlData?.world_setting?.name ||
           discoveryData.worldSetting?.name?.[language] || discoveryData.worldSetting?.name?.["en"] || "Adventure World",
-        objectives: yamlData?.starting_scenario?.initial_tasks || [],
+        objectives: (() => {
+          // Build skill name lookup from skill tree
+          const skillLookup = new Map<string, string>();
+          if (yamlData?.skill_tree) {
+            for (const s of [
+              ...(yamlData.skill_tree.core_skills || []),
+              ...(yamlData.skill_tree.advanced_skills || []),
+            ]) {
+              if (s.id && s.name) skillLookup.set(s.id, s.name);
+            }
+          }
+          return (yamlData?.starting_scenario?.initial_tasks || []).map(
+            (taskId: string) => skillLookup.get(taskId) || taskId,
+          );
+        })(),
       },
       interactions: [],
       interactionCount: 0,
@@ -500,14 +515,14 @@ export class DiscoveryLearningService implements BaseLearningService {
         mode: "discovery",
         taskIndex: i + 1,
         title: {
-          en: `Learn ${skill.name}`,
-          zh: `學習 ${skill.name}`,
-          es: `Aprender ${skill.name}`,
+          [language]: skill.name,
+          en: skill.name,
         },
         type: "creation",
         status: "pending",
         content: {
           instructions: skill.description,
+          xp: 100,
           skillId: skill.id,
           difficulty: "beginner",
           unlocks: skill.unlocks,

@@ -58,9 +58,17 @@ export async function GET(
 
     // Get tasks in the correct order based on program.taskIds
     const taskIds = (program.metadata?.taskIds || []) as string[];
-    const tasks = taskIds
-      .map((id: string) => taskMap.get(id))
-      .filter(Boolean) as unknown as ITask[];
+    let tasks: ITask[];
+    if (taskIds.length > 0) {
+      tasks = taskIds
+        .map((id: string) => taskMap.get(id))
+        .filter(Boolean) as ITask[];
+    } else {
+      // Fallback for old programs without taskIds in metadata
+      tasks = allTasks.sort(
+        (a, b) => (a.scenarioTaskIndex || 0) - (b.scenarioTaskIndex || 0),
+      );
+    }
 
     // Debug logging
     console.log("Program task order:", {
