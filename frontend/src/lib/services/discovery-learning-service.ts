@@ -468,6 +468,9 @@ export class DiscoveryLearningService implements BaseLearningService {
           // Use core skill names as objectives (user-facing)
           return coreSkills.slice(0, 3).map((s: { name: string }) => s.name);
         })(),
+        // Additional context for AI evaluator
+        role: yamlData?.world_setting?.description || "",
+        scenarioTitle: yamlData?.starting_scenario?.title || "",
       },
       interactions: [],
       interactionCount: 0,
