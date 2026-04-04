@@ -7,6 +7,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { learningServiceFactory } from "@/lib/services/learning-service-factory";
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import {
+  checkAndIncrementSession,
+  DAILY_SESSION_LIMIT,
+} from "@/lib/middleware/ai-token-tracker";
 
 export async function POST(
   request: NextRequest,
@@ -91,6 +95,21 @@ export async function POST(
     }
 
     console.log("   User ID:", user.id);
+
+    // Check per-user daily session limit
+    const sessionCheck = await checkAndIncrementSession(user.id);
+    if (!sessionCheck.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `每日探索方案上限已達到（每天最多 ${DAILY_SESSION_LIMIT} 個新方案）。請明天再來繼續學習！`,
+          errorCode: "SESSION_LIMIT_EXCEEDED",
+          sessionsRemaining: 0,
+        },
+        { status: 429 }
+      );
+    }
+
     console.log("   Using Discovery Learning Service to start learning...");
 
     // Use the new service layer

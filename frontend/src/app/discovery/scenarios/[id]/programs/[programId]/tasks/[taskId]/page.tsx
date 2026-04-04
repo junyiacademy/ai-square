@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Sparkles,
   CheckCircle,
@@ -79,6 +79,10 @@ export default function TaskDetailPage({
   const [scenarioId, setScenarioId] = useState<string>("");
   const [programId, setProgramId] = useState<string>("");
   const [taskId, setTaskId] = useState<string>("");
+  const [dailyLimitReached, setDailyLimitReached] = useState(false);
+
+  // Debounce ref: prevent double-click submission
+  const submitDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Unwrap the params Promise
   useEffect(() => {
@@ -160,8 +164,14 @@ export default function TaskDetailPage({
     i18n.language,
   ]);
 
-  const handleSubmit = async () => {
-    if (!userResponse.trim()) return;
+  const handleSubmit = useCallback(async () => {
+    if (!userResponse.trim() || submitting) return;
+
+    // Debounce: ignore calls within 500ms of the last call
+    if (submitDebounceRef.current) return;
+    submitDebounceRef.current = setTimeout(() => {
+      submitDebounceRef.current = null;
+    }, 500);
 
     setSubmitting(true);
     const startTime = Date.now();
@@ -185,6 +195,13 @@ export default function TaskDetailPage({
           }),
         },
       );
+
+      if (res.status === 429) {
+        // Daily token limit or rate limit exceeded
+        setDailyLimitReached(true);
+        setSubmitting(false);
+        return;
+      }
 
       if (!res.ok) {
         throw new Error("Failed to submit task");
@@ -233,7 +250,7 @@ export default function TaskDetailPage({
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [userResponse, submitting, scenarioId, programId, taskId, i18n.language]);
 
   const handleCompleteTask = async () => {
     setCompletingTask(true);
@@ -476,6 +493,22 @@ export default function TaskDetailPage({
             )}
         </div>
 
+        {/* Daily limit reached banner */}
+        {dailyLimitReached && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6 flex items-start space-x-3">
+            <AlertCircle className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-amber-800">
+                今日 AI 使用額度已達上限
+              </p>
+              <p className="text-amber-700 text-sm mt-1">
+                你今天的 AI 互動額度（每日 200,000 tokens）已用完。額度將於明天
+                UTC 午夜重置，請明天再來繼續學習！📚
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Response Section - Only show if task is not completed */}
         {taskData.status !== "completed" && (
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
@@ -513,11 +546,11 @@ export default function TaskDetailPage({
 
               <button
                 onClick={handleSubmit}
-                disabled={!userResponse.trim() || submitting}
+                disabled={!userResponse.trim() || submitting || dailyLimitReached}
                 className={`
                   flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all
                   ${
-                    userResponse.trim() && !submitting
+                    userResponse.trim() && !submitting && !dailyLimitReached
                       ? "bg-purple-600 text-white hover:bg-purple-700"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }
