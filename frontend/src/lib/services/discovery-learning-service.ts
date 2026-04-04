@@ -21,6 +21,7 @@ import type {
   TaskResult,
   CompletionResult,
 } from "./base-learning-service";
+import { DiscoveryYAMLLoader } from "./discovery-yaml-loader";
 
 export interface DiscoveryScenarioData {
   pathId: string;

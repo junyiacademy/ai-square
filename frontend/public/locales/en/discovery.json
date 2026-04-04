@@ -434,6 +434,7 @@
     "loading": "Loading...",
     "notFound": "Scenario not found",
     "backToScenarios": "Back to Scenarios",
+    "backToList": "Back to Career List",
     "myPrograms": "My Programs",
     "startNewProgram": "Start New Program",
     "creating": "Creating...",
@@ -447,7 +448,13 @@
     "salary": "Salary Range",
     "requiredSkills": "Required Skills",
     "technical": "Technical",
-    "soft": "Soft Skills"
+    "soft": "Soft Skills",
+    "loadingPrograms": "Loading programs...",
+    "learningJourney": "Learning Journey #{{n}}",
+    "startedOn": "Started",
+    "completedOn": "Completed",
+    "taskCount": "tasks",
+    "completed": "completed"
   },
 
   "skillTree": {
@@ -485,5 +492,100 @@
     "scaffolding": "Guided Mode",
     "targetSkills": "Target Skills",
     "nextTask": "Generate Next Task"
+  },
+
+  "scenarios": {
+    "heading": "Explore Career Adventures",
+    "subheading": "Choose your career role and begin a unique learning adventure. Each career has carefully designed story scenarios and challenge tasks.",
+    "tabAll": "All",
+    "tabMy": "My Adventures",
+    "labelIndustry": "Industry",
+    "labelJobFunction": "Function",
+    "loadingAll": "Loading career adventures...",
+    "loadingMy": "Loading my learning journeys...",
+    "emptyMyTitle": "No learning journeys started yet",
+    "emptyMySubtitle": "Choose a career path and start your exploration journey",
+    "browseAll": "Browse All Careers",
+    "emptyFiltered": "No career adventures found matching your criteria",
+    "filters": {
+      "all": "All",
+      "technology": "Tech / AI",
+      "arts": "Creative / Media",
+      "business": "Business / Startup",
+      "hardware": "Semiconductor / Hardware",
+      "science": "Science / Biotech",
+      "green": "Energy / Sustainability",
+      "automation": "Automation / Transport",
+      "engineer": "Engineer",
+      "designer": "Designer",
+      "researcher": "Researcher",
+      "creator": "Creator",
+      "pm": "PM / Management",
+      "businessFunc": "Business / Startup"
+    }
+  },
+
+  "program": {
+    "notFound": "Learning journey not found",
+    "backToScenario": "Back to Career Detail",
+    "tasks": "Learning Tasks",
+    "taskLabel": "Task {{n}}",
+    "attempts": "{{count}} attempts",
+    "passes": "{{count}} passes",
+    "completedOn": "Completed on",
+    "start": "Start",
+    "view": "View",
+    "allCompleted": "Congratulations, all tasks completed!",
+    "allCompletedDesc": "You have completed all tasks in this learning journey and earned {{xp}} XP!",
+    "viewFullResults": "View Full Results",
+    "startNew": "Start New Journey"
+  },
+
+  "dailyLimit": {
+    "title": "Daily AI usage limit reached",
+    "description": "Your daily AI interaction quota (200,000 tokens per day) has been used up. The quota resets at UTC midnight tomorrow. Come back tomorrow to continue learning!"
+  },
+
+  "careers": {
+    "content_creator": {
+      "title": "Digital Magician - Content Creator",
+      "skills": ["Content Magic", "Visual Spells", "Text Alchemy", "Community Summoning"]
+    },
+    "youtuber": {
+      "title": "Stellar Broadcaster - YouTuber",
+      "skills": ["Stellar Editing", "Audience Psychology", "Cosmic Trend Prediction", "Cross-Galaxy Broadcasting"]
+    },
+    "app_developer": {
+      "title": "Digital Architect - App Developer",
+      "skills": ["Code Magic", "Interface Sculpting", "Logic Engineering", "System Alchemy"]
+    },
+    "game_designer": {
+      "title": "Dream Weaver - Game Designer",
+      "skills": ["Dream Weaving", "Emotional Tuning", "Balance Laws", "Psychological Alchemy"]
+    },
+    "tech_entrepreneur": {
+      "title": "Spacetime Business Traveler - Tech Entrepreneur",
+      "skills": ["Spacetime Business Insight", "Cross-Dimensional Tech Integration", "Team Summoning", "Innovation Prophecy"]
+    },
+    "startup_founder": {
+      "title": "Business Adventurer - Startup Founder",
+      "skills": ["Business Intuition", "Market Exploration", "Resource Alchemy", "Risk Navigation"]
+    },
+    "data_analyst": {
+      "title": "Digital Archaeologist - Data Analyst",
+      "skills": ["Digital Archaeology", "Pattern Recognition", "Visualization Magic", "Insight Prophecy"]
+    },
+    "ux_designer": {
+      "title": "Experience Architect - UX Designer",
+      "skills": ["User Psychology", "Experience Magic", "Prototype Sculpting", "Communication Art"]
+    },
+    "product_manager": {
+      "title": "Product Commander - Product Manager",
+      "skills": ["Strategic Vision", "Needs Insight", "Resource Allocation", "Team Coordination"]
+    },
+    "ai_developer": {
+      "title": "Machine Soul Forger - AI Developer",
+      "skills": ["Soul Coding", "Neural Network Magic", "Intelligence Art", "Future Deployment"]
+    }
   }
 }

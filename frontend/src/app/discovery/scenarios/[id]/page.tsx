@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import {
   Sparkles,
   Rocket,
@@ -78,6 +79,7 @@ interface ScenarioData {
   mode: string;
   difficulty: string;
   estimatedMinutes: number;
+  sourceId?: string;
   discoveryData?: {
     pathId?: string;
     category?: string;
@@ -190,8 +192,9 @@ export default function DiscoveryScenarioDetailPage({
         // Get session token from localStorage for API calls
         const sessionToken = localStorage.getItem("ai_square_session");
 
+        const lang = normalizeLanguageCode(i18n.language);
         const response = await authenticatedFetch(
-          `/api/discovery/scenarios/${scenarioId}`,
+          `/api/discovery/scenarios/${scenarioId}?lang=${lang}`,
           {
             credentials: "include",
             headers: {
@@ -250,7 +253,7 @@ export default function DiscoveryScenarioDetailPage({
       const lang = normalizeLanguageCode(i18n.language);
 
       const response = await authenticatedFetch(
-        `/api/discovery/scenarios/${scenarioId}/programs`,
+        `/api/discovery/scenarios/${scenarioId}/start`,
         {
           method: "POST",
           headers: {
@@ -329,6 +332,7 @@ export default function DiscoveryScenarioDetailPage({
     careerColors[careerType as keyof typeof careerColors] ||
     "from-gray-500 to-gray-600";
   const skills = (scenarioData.metadata?.skillFocus || []) as string[];
+  const bannerImage = `/images/discovery-banners/${scenarioData.sourceId || careerType}.webp`;
 
   return (
     <DiscoveryPageLayout>
@@ -344,8 +348,20 @@ export default function DiscoveryScenarioDetailPage({
 
         {/* Career Header */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-          <div className={`h-48 bg-gradient-to-br ${color} relative`}>
-            <div className="absolute inset-0 bg-black/10"></div>
+          <div className={`h-48 bg-gradient-to-br ${color} relative overflow-hidden`}>
+            <Image
+              src={bannerImage}
+              alt={scenarioData.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 800px"
+              onError={(e) => {
+                // Fallback to gradient + icon if image not found
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+            {/* Fallback icon (visible when image fails to load) */}
+            <div className="absolute inset-0 bg-black/10" />
             <div className="absolute inset-0 flex items-center justify-center">
               <Icon className="w-24 h-24 text-white/90" />
             </div>
@@ -409,7 +425,7 @@ export default function DiscoveryScenarioDetailPage({
           {loadingPrograms ? (
             <div className="text-center py-8">
               <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto"></div>
-              <p className="mt-2 text-gray-600">Loading programs...</p>
+              <p className="mt-2 text-gray-600">{t("discovery:scenarioDetail.loadingPrograms")}</p>
             </div>
           ) : programs.length > 0 ? (
             <div className="grid gap-4 mt-6">
@@ -428,7 +444,7 @@ export default function DiscoveryScenarioDetailPage({
                       <div className="flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-gray-900">
                           {program.status === "completed" ? "✅ " : "🚀 "}
-                          Learning Journey #{programs.indexOf(program) + 1}
+                          {t("discovery:scenarioDetail.learningJourney", { n: programs.indexOf(program) + 1 })}
                         </h3>
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${
@@ -437,20 +453,22 @@ export default function DiscoveryScenarioDetailPage({
                               : "bg-blue-100 text-blue-700"
                           }`}
                         >
-                          {program.status}
+                          {program.status === "completed"
+                            ? t("discovery:programCard.statusCompleted")
+                            : t("discovery:programCard.statusActive")}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
-                        Started{" "}
+                        {t("discovery:scenarioDetail.startedOn")}{" "}
                         {new Date(program.createdAt).toLocaleDateString()}
                         {program.completedAt &&
-                          ` • Completed ${new Date(program.completedAt).toLocaleDateString()}`}
+                          ` • ${t("discovery:scenarioDetail.completedOn")} ${new Date(program.completedAt).toLocaleDateString()}`}
                       </p>
                       <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                         <span>💎 {program.metadata?.totalXP || 0} XP</span>
                         <span>
                           📊 {program.metadata?.completedTasks || 0}/
-                          {program.metadata?.totalTasks || 6} 個任務
+                          {program.metadata?.totalTasks || 6} {t("discovery:scenarioDetail.taskCount")}
                         </span>
                         {program.metadata?.completedTasks &&
                           program.metadata?.totalTasks && (
@@ -461,7 +479,7 @@ export default function DiscoveryScenarioDetailPage({
                                   program.metadata.totalTasks) *
                                   100,
                               )}
-                              % 完成)
+                              % {t("discovery:scenarioDetail.completed")})
                             </span>
                           )}
                       </div>

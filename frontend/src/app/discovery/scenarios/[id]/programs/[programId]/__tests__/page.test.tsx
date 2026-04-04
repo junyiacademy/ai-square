@@ -25,7 +25,21 @@ jest.mock("@/contexts/AuthContext", () => ({
 }));
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string, opts?: Record<string, unknown>) => {
+      // Return arrays for skills keys so .map() works
+      if (opts?.returnObjects && key.endsWith(".skills")) {
+        return ["skill1", "skill2"];
+      }
+      // Return interpolated keys for templates
+      if (opts && typeof opts === "object") {
+        let result = key;
+        for (const [k, v] of Object.entries(opts)) {
+          if (k !== "returnObjects") result += ` ${v}`;
+        }
+        return result.trim();
+      }
+      return key;
+    },
     i18n: {
       language: "en",
       changeLanguage: jest.fn(),
@@ -137,7 +151,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -150,7 +164,7 @@ describe("ProgramDetailPage", () => {
 
     it("should show loading state initially", async () => {
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
-      expect(screen.getByText("載入中...")).toBeInTheDocument();
+      expect(screen.getByText("scenarioDetail.loading")).toBeInTheDocument();
     });
 
     it("should redirect to login when not authenticated", async () => {
@@ -182,7 +196,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          const element = screen.queryByText("找不到此學習歷程");
+          const element = screen.queryByText("program.notFound");
           if (element) expect(element).toBeInTheDocument();
         },
         { timeout: 1000 },
@@ -197,19 +211,17 @@ describe("ProgramDetailPage", () => {
       // Wait for loading to finish
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
 
-      // Check all career-related content
+      // Check career title (i18n mock returns key)
       await waitFor(
         () => {
-          expect(screen.getByText("數位魔法師 - 內容創作者")).toBeInTheDocument();
-          expect(screen.getByText("內容魔法")).toBeInTheDocument();
-          expect(screen.getByText("視覺咒語")).toBeInTheDocument();
-          expect(screen.getByText("文字煉金術")).toBeInTheDocument();
-          expect(screen.getByText("社群召喚術")).toBeInTheDocument();
+          expect(screen.getByText("careers.content_creator.title")).toBeInTheDocument();
+          // Skills are returned as ["skill1", "skill2"] by the mock
+          expect(screen.getAllByText("skill1").length).toBeGreaterThan(0);
         },
         { timeout: 2000 },
       );
@@ -231,7 +243,7 @@ describe("ProgramDetailPage", () => {
       // Wait for loading to finish
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -239,9 +251,7 @@ describe("ProgramDetailPage", () => {
       // Check all YouTuber career content
       await waitFor(
         () => {
-          expect(screen.getByText("星際廣播員 - YouTuber")).toBeInTheDocument();
-          expect(screen.getByText("星際剪輯術")).toBeInTheDocument();
-          expect(screen.getByText("觀眾心理學")).toBeInTheDocument();
+          expect(screen.getByText("careers.youtuber.title")).toBeInTheDocument();
         },
         { timeout: 2000 },
       );
@@ -274,24 +284,21 @@ describe("ProgramDetailPage", () => {
     it("should render all tasks with correct status", async () => {
       renderWithProviders(<ProgramDetailPage params={createMockParams()} />);
 
-      // Wait for loading to finish
+      // Wait for data to load and tasks to appear
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
         },
-        { timeout: 3000 },
+        { timeout: 5000 },
       );
 
       // Check all tasks and XP values
+      expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
+      expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
+
+      // Check XP values
       await waitFor(
         () => {
-          // Tasks are rendered as "任務 1: <title>", "任務 2: <title>", etc.
-          expect(screen.getByText(/任務 1:/)).toBeInTheDocument();
-          expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
-          expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
-          expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
-
-          // Check XP values - use getAllByText for multiple occurrences
           expect(screen.getAllByText("95 XP")[0]).toBeInTheDocument();
           expect(screen.getByText("100 XP")).toBeInTheDocument();
           expect(screen.getByText("120 XP")).toBeInTheDocument();
@@ -305,7 +312,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -319,7 +326,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          const element = screen.queryByText(/完成於/);
+          const element = screen.queryByText(/program.completedOn/);
           if (element) expect(element).toBeInTheDocument();
         },
         { timeout: 1000 },
@@ -347,7 +354,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -363,7 +370,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -377,7 +384,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -391,7 +398,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -409,7 +416,7 @@ describe("ProgramDetailPage", () => {
         expect(screen.getByText("33%")).toBeInTheDocument(); // 1/3 = 33%
       });
 
-      expect(screen.getByText(/1 \/ 3/)).toBeInTheDocument();
+      expect(screen.getByText(/programCard\.tasksCompleted/)).toBeInTheDocument();
     });
 
     it("should handle zero progress", async () => {
@@ -428,7 +435,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -459,7 +466,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -492,7 +499,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -521,7 +528,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -537,7 +544,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+          expect(screen.queryByText("scenarioDetail.loading")).not.toBeInTheDocument();
         },
         { timeout: 3000 },
       );
@@ -553,7 +560,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          const element = screen.queryByText("進行中");
+          const element = screen.queryByText("programCard.statusActive");
           if (element) expect(element).toBeInTheDocument();
         },
         { timeout: 1000 },
@@ -575,7 +582,7 @@ describe("ProgramDetailPage", () => {
 
       await waitFor(
         () => {
-          const element = screen.queryByText("已完成");
+          const element = screen.queryByText("programCard.statusCompleted");
           if (element) expect(element).toBeInTheDocument();
         },
         { timeout: 1000 },

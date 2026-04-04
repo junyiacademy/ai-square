@@ -6,7 +6,8 @@ import {
 } from "@/lib/auth/unified-auth";
 import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
 import { Task, Evaluation } from "@/lib/repositories/interfaces";
-import { rateLimit, checkTokenBudget, recordTokenUsage } from "@/lib/api/optimization-utils";
+import { rateLimit, checkTokenBudget } from "@/lib/api/optimization-utils";
+import { recordTokenUsage as recordTokenUsageDB } from "@/lib/middleware/ai-token-tracker";
 
 const generateFeedbackRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
 
@@ -566,7 +567,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     const usage = response.usageMetadata;
     if (usage) {
       const totalTokens = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
-      recordTokenUsage(totalTokens, user.id);
+      await recordTokenUsageDB(user.id, totalTokens);
     }
 
     const feedbackText =

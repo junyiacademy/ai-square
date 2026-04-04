@@ -459,7 +459,13 @@
     "salary": "薪資範圍",
     "requiredSkills": "所需技能",
     "technical": "技術技能",
-    "soft": "軟技能"
+    "soft": "軟技能",
+    "loadingPrograms": "載入學習歷程中...",
+    "learningJourney": "學習歷程 #{{n}}",
+    "startedOn": "開始於",
+    "completedOn": "完成於",
+    "taskCount": "個任務",
+    "completed": "完成"
   },
 
   "skillTree": {
@@ -497,5 +503,102 @@
     "scaffolding": "引導模式",
     "targetSkills": "目標技能",
     "nextTask": "生成下一個任務"
+  },
+
+  "scenarios": {
+    "heading": "探索職業冒險",
+    "subheading": "選擇你的職業角色，開始獨特的學習冒險。每個職業都有精心設計的故事情境和挑戰任務。",
+    "tabAll": "全部",
+    "tabMy": "我的冒險",
+    "labelIndustry": "產業",
+    "labelJobFunction": "職能",
+    "loadingAll": "載入職業冒險中...",
+    "loadingMy": "載入我的學習歷程...",
+    "emptyMyTitle": "還沒有開始任何學習歷程",
+    "emptyMySubtitle": "選擇一個職業路徑，開始你的探索之旅",
+    "browseAll": "瀏覽所有職業",
+    "emptyFiltered": "沒有找到符合條件的職業冒險",
+    "filters": {
+      "all": "全部",
+      "technology": "科技 / AI",
+      "arts": "創意 / 媒體",
+      "business": "商業 / 創業",
+      "hardware": "半導體 / 硬體",
+      "science": "科學 / 生技",
+      "green": "能源 / 永續",
+      "automation": "自動化 / 交通",
+      "engineer": "工程師",
+      "designer": "設計師",
+      "researcher": "研究員",
+      "creator": "創作者",
+      "pm": "PM / 管理",
+      "businessFunc": "商業 / 創業"
+    }
+  },
+
+
+
+  "program": {
+    "notFound": "找不到此學習歷程",
+    "backToScenario": "返回職業詳情",
+    "tasks": "學習任務",
+    "taskLabel": "任務 {{n}}",
+    "attempts": "{{count}}次嘗試",
+    "passes": "{{count}}次通過",
+    "completedOn": "完成於",
+    "start": "開始",
+    "view": "檢視",
+    "allCompleted": "恭喜完成所有任務！",
+    "allCompletedDesc": "你已經完成了這個學習歷程的所有任務，獲得了 {{xp}} XP！",
+    "viewFullResults": "查看完整結果",
+    "startNew": "開始新的歷程"
+  },
+
+  "dailyLimit": {
+    "title": "今日 AI 使用額度已達上限",
+    "description": "你今天的 AI 互動額度（每日 200,000 tokens）已用完。額度將於明天 UTC 午夜重置，請明天再來繼續學習！📚"
+  },
+
+  "careers": {
+    "content_creator": {
+      "title": "數位魔法師 - 內容創作者",
+      "skills": ["內容魔法", "視覺咒語", "文字煉金術", "社群召喚術"]
+    },
+    "youtuber": {
+      "title": "星際廣播員 - YouTuber",
+      "skills": ["星際剪輯術", "觀眾心理學", "宇宙趨勢預測", "跨星系傳播"]
+    },
+    "app_developer": {
+      "title": "數碼建築師 - 應用程式開發者",
+      "skills": ["程式魔法", "介面雕塑", "邏輯工程", "系統煉金術"]
+    },
+    "game_designer": {
+      "title": "夢境織夢師 - 遊戲設計師",
+      "skills": ["夢境編織", "情感調律", "平衡法則", "心理煉金術"]
+    },
+    "tech_entrepreneur": {
+      "title": "時空商業旅行者 - 科技創業家",
+      "skills": ["時空商業洞察", "跨維度技術整合", "團隊召喚術", "創新預言術"]
+    },
+    "startup_founder": {
+      "title": "商業冒險家 - 創業家",
+      "skills": ["商業嗅覺", "市場探勘", "資源煉金術", "風險航海術"]
+    },
+    "data_analyst": {
+      "title": "數位考古學家 - 數據分析師",
+      "skills": ["數位考古術", "模式識別術", "視覺化魔法", "洞察預言術"]
+    },
+    "ux_designer": {
+      "title": "体驗建築師 - UX 設計師",
+      "skills": ["用户心理学", "体験魔法", "原型雕塑", "沟通艺术"]
+    },
+    "product_manager": {
+      "title": "產品指揮官 - 產品經理",
+      "skills": ["策略视野", "需求洞察", "資源配置", "團隊协調"]
+    },
+    "ai_developer": {
+      "title": "機器靈魂鍛造師 - AI 開發者",
+      "skills": ["靈魂編碼術", "神經網絡魔法", "智慧藝術", "未來部署術"]
+    }
   }
 }

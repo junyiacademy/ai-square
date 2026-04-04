@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 import { getUnifiedAuth, createUnauthorizedResponse } from "@/lib/auth/unified-auth";
 import { AdaptiveTaskGenerator } from "@/lib/services/discovery/adaptive-task-generator";
+import { hasTokenBudget, recordTokenUsage } from "@/lib/middleware/ai-token-tracker";
 
 export async function POST(
   request: NextRequest,
@@ -46,10 +47,22 @@ export async function POST(
       );
     }
 
+    // Check daily token budget before calling AI
+    const budgetOk = await hasTokenBudget(user.id);
+    if (!budgetOk) {
+      return NextResponse.json(
+        { error: "您今日的 AI 使用額度已用完，請明天再試" },
+        { status: 429, headers: { "Retry-After": "3600" } },
+      );
+    }
+
     // Generate adaptive task
     const generator = new AdaptiveTaskGenerator();
     const targetSkillId = await generator.selectTargetSkill(user.id, careerId, language);
     const generatedTask = await generator.generateTask(user.id, careerId, targetSkillId, language);
+
+    // Record estimated token usage (~2000 tokens per task generation)
+    await recordTokenUsage(user.id, 2000);
 
     // Create the task in DB
     const taskRepo = repositoryFactory.getTaskRepository();
