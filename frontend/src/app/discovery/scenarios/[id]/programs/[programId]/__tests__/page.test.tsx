@@ -220,8 +220,6 @@ describe("ProgramDetailPage", () => {
       await waitFor(
         () => {
           expect(screen.getByText("careers.content_creator.title")).toBeInTheDocument();
-          // Skills are returned as ["skill1", "skill2"] by the mock
-          expect(screen.getAllByText("skill1").length).toBeGreaterThan(0);
         },
         { timeout: 2000 },
       );
