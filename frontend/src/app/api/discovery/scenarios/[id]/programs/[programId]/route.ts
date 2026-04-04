@@ -79,7 +79,10 @@ export async function GET(
     let totalXP = 0;
 
     const tasksSummary = tasks.map((task, index) => {
-      const xp = ((task.content as Record<string, unknown>)?.xp as number) || 0;
+      const xp =
+        ((task.content as Record<string, unknown>)?.xp as number) ||
+        ((task.discoveryData as Record<string, unknown>)?.xpReward as number) ||
+        0;
 
       // Calculate statistics from interactions
       let actualXP = 0;
@@ -212,11 +215,13 @@ export async function GET(
       completedTasks: completedCount,
       totalXP: totalXP,
       metadata: program.metadata,
-      // Add career info from scenario
+      // Add career info from scenario - check multiple sources
       careerType:
         (scenario?.sourceMetadata &&
           ((scenario.sourceMetadata as Record<string, unknown>)
             ?.careerType as string)) ||
+        (scenario?.sourceId as string) ||
+        ((scenario?.discoveryData as Record<string, unknown>)?.pathId as string) ||
         "unknown",
       scenarioTitle: scenario?.title
         ? typeof scenario.title === "object" && scenario.title !== null
