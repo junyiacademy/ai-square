@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { DiscoveryYAMLLoader } from "@/lib/services/discovery-yaml-loader";
 
 export async function GET(
   request: NextRequest,
@@ -35,6 +36,15 @@ export async function GET(
         { status: 404 },
       );
     }
+
+    // Load YAML data for richer content
+    const yamlLoader = new DiscoveryYAMLLoader();
+    const discoveryDataObj = scenario.discoveryData as Record<string, unknown>;
+    const careerType =
+      (discoveryDataObj?.pathId as string) ||
+      scenario.sourceId ||
+      "unknown";
+    const yamlData = await yamlLoader.loadPath(careerType, language);
 
     // Process multilingual fields
     const titleObj = scenario.title as Record<string, string>;
@@ -71,6 +81,17 @@ export async function GET(
             })(),
           }
         : {},
+      // YAML-enriched data for world_setting, skill_tree, starting_scenario
+      yamlData: yamlData
+        ? {
+            worldSetting: yamlData.world_setting,
+            skillTree: yamlData.skill_tree,
+            startingScenario: yamlData.starting_scenario,
+            metadata: yamlData.metadata,
+            milestoneQuests: yamlData.milestone_quests,
+            achievements: yamlData.achievements,
+          }
+        : null,
     };
 
     // Return scenario data

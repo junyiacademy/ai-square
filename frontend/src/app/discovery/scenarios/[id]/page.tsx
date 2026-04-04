@@ -105,6 +105,40 @@ interface ScenarioData {
       description?: Record<string, string>;
     };
   };
+  yamlData?: {
+    worldSetting?: {
+      name?: string;
+      description?: string;
+      atmosphere?: string;
+      visual_theme?: string;
+    };
+    skillTree?: {
+      core_skills?: Array<{
+        id: string;
+        name: string;
+        description: string;
+        max_level: number;
+      }>;
+      advanced_skills?: Array<{
+        id: string;
+        name: string;
+        description: string;
+        max_level: number;
+      }>;
+    };
+    startingScenario?: {
+      title?: string;
+      description?: string;
+      initial_tasks?: string[];
+    };
+    metadata?: {
+      title?: string;
+      short_description?: string;
+      long_description?: string;
+      estimated_hours?: number;
+      skill_focus?: string[];
+    };
+  } | null;
   metadata?: Record<string, unknown>;
   taskTemplates?: Array<Record<string, unknown>>;
   careerType?: string; // For backward compatibility
@@ -391,8 +425,86 @@ export default function DiscoveryScenarioDetailPage({
                 ))}
               </div>
             )}
+
+            {/* Estimated hours from YAML */}
+            {scenarioData.yamlData?.metadata?.estimated_hours && (
+              <div className="flex items-center space-x-2 mt-4 text-sm text-gray-600">
+                <Clock className="w-4 h-4" />
+                <span>
+                  {t("discovery:scenarioDetail.estimatedHours", {
+                    hours: scenarioData.yamlData.metadata.estimated_hours,
+                  })}
+                </span>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* World Setting from YAML */}
+        {scenarioData.yamlData?.worldSetting && (
+          <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+              <span>{scenarioData.yamlData.worldSetting.name || t("discovery:scenarioDetail.worldSetting")}</span>
+            </h2>
+            {scenarioData.yamlData.worldSetting.description && (
+              <p className="text-gray-700 mb-3">{scenarioData.yamlData.worldSetting.description}</p>
+            )}
+            {scenarioData.yamlData.worldSetting.atmosphere && (
+              <p className="text-sm text-gray-500 italic">{scenarioData.yamlData.worldSetting.atmosphere}</p>
+            )}
+          </div>
+        )}
+
+        {/* Starting Scenario from YAML */}
+        {scenarioData.yamlData?.startingScenario && (
+          <div className="bg-purple-50 rounded-2xl p-6 mb-6 border border-purple-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center space-x-2">
+              <Rocket className="w-5 h-5 text-purple-600" />
+              <span>{scenarioData.yamlData.startingScenario.title || t("discovery:scenarioDetail.firstMission")}</span>
+            </h2>
+            {scenarioData.yamlData.startingScenario.description && (
+              <p className="text-gray-700 mb-4">{scenarioData.yamlData.startingScenario.description}</p>
+            )}
+            {scenarioData.yamlData.startingScenario.initial_tasks &&
+              scenarioData.yamlData.startingScenario.initial_tasks.length > 0 && (
+                <ul className="space-y-2">
+                  {scenarioData.yamlData.startingScenario.initial_tasks.map((task, idx) => (
+                    <li key={idx} className="flex items-start space-x-2">
+                      <span className="flex-shrink-0 w-5 h-5 bg-purple-200 text-purple-700 rounded-full flex items-center justify-center text-xs font-medium mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span className="text-gray-700 text-sm">{task}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+          </div>
+        )}
+
+        {/* Core Skills from YAML */}
+        {scenarioData.yamlData?.skillTree?.core_skills &&
+          scenarioData.yamlData.skillTree.core_skills.length > 0 && (
+            <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <GraduationCap className="w-5 h-5 text-purple-600" />
+                <span>{t("discovery:scenarioDetail.coreSkills")}</span>
+              </h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {scenarioData.yamlData.skillTree.core_skills.slice(0, 6).map((skill, idx) => (
+                  <div key={idx} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                      <span className="text-purple-700 text-xs font-bold">{idx + 1}</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{skill.name}</p>
+                      <p className="text-gray-600 text-xs mt-0.5">{skill.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
         {/* Error State */}
         {error && (
