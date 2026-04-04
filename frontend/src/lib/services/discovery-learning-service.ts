@@ -155,9 +155,17 @@ export class DiscoveryLearningService implements BaseLearningService {
       options?.language || "en",
     );
 
-    // 更新總任務數
+    // 更新總任務數和 taskIds
+    const taskIds = initialTasks.map((t) => t.id);
     await this.programRepo.update?.(program.id, {
       totalTaskCount: initialTasks.length,
+      metadata: {
+        ...program.metadata,
+        taskIds,
+        currentTaskId: taskIds[0],
+        careerType: (scenario.discoveryData as Record<string, unknown>)?.pathId ||
+          scenario.sourceId || "unknown",
+      },
     });
 
     return program;
