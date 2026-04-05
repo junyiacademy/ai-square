@@ -47,6 +47,9 @@ describe("/api/discovery/scenarios/[id]/programs", () => {
       create: jest.fn(),
     };
 
+    mockRepositoryFactory.getUserRepository.mockReturnValue({
+      findByEmail: jest.fn().mockResolvedValue({ id: "u1", email: "u1@test.com" }),
+    } as any);
     mockRepositoryFactory.getProgramRepository.mockReturnValue(programRepo);
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(scenarioRepo);
     mockRepositoryFactory.getTaskRepository.mockReturnValue(taskRepo);
@@ -63,7 +66,7 @@ describe("/api/discovery/scenarios/[id]/programs", () => {
     });
 
     it("returns 404 when scenario not found", async () => {
-      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1" } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1", email: "u1@test.com" } } as any);
       scenarioRepo.findById.mockResolvedValue(null);
 
       const req = new NextRequest(
@@ -74,7 +77,7 @@ describe("/api/discovery/scenarios/[id]/programs", () => {
     });
 
     it("returns user programs with progress and sorted by createdAt desc", async () => {
-      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1" } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1", email: "u1@test.com" } } as any);
       scenarioRepo.findById.mockResolvedValue({
         id: "abc",
         title: { en: "Title" },
@@ -151,7 +154,7 @@ describe("/api/discovery/scenarios/[id]/programs", () => {
     });
 
     it("returns 500 when repository throws", async () => {
-      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1" } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "u1", email: "u1@test.com" } } as any);
       scenarioRepo.findById.mockResolvedValue({ id: "abc" });
       programRepo.findByUser.mockRejectedValue(new Error("db error"));
 

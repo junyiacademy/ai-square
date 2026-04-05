@@ -47,6 +47,9 @@ describe("/api/discovery/scenarios/my", () => {
       findById: jest.fn(),
     };
 
+    mockRepositoryFactory.getUserRepository.mockReturnValue({
+      findByEmail: jest.fn().mockResolvedValue({ id: "user-123", email: "test@example.com" }),
+    } as any);
     mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(
       mockScenarioRepo,
@@ -117,9 +120,7 @@ describe("/api/discovery/scenarios/my", () => {
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      expect(mockProgramRepo.findByUser).toHaveBeenCalledWith(
-        "test@example.com",
-      );
+      expect(mockProgramRepo.findByUser).toHaveBeenCalledWith("user-123");
     });
   });
 

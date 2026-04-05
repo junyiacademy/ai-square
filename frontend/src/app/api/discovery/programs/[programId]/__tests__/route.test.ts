@@ -44,6 +44,14 @@ describe("/api/discovery/programs/[programId]", () => {
     jest.clearAllMocks();
 
     // Setup repository factory mocks
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue({
+      findByEmail: jest.fn().mockImplementation((email: string) =>
+        Promise.resolve({
+          id: email === "user@example.com" ? "user-789" : "other-user",
+          email,
+        }),
+      ),
+    });
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(
       mockProgramRepo,
     );

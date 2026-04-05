@@ -45,6 +45,9 @@ describe("/api/discovery/scenarios/[id]/programs/[programId]", () => {
       findById: jest.fn(),
     };
 
+    mockRepositoryFactory.getUserRepository.mockReturnValue({
+      findByEmail: jest.fn().mockResolvedValue({ id: "u1", email: "u@test.com" }),
+    } as any);
     mockRepositoryFactory.getProgramRepository.mockReturnValue(programRepo);
     mockRepositoryFactory.getTaskRepository.mockReturnValue(taskRepo);
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(scenarioRepo);
