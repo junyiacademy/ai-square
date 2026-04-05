@@ -22,17 +22,23 @@ export async function GET(
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
 
-    // Check if scenario exists — support both UUID and slug (sourceId) lookup
-    const isUUID =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    // Check if scenario exists — try findById first, fallback to slug (sourceId)
+    let scenario = await scenarioRepo.findById(scenarioId).catch((err) => {
+      // Only swallow invalid UUID errors, rethrow others
+      if (
+        err?.message?.includes("invalid input syntax for type uuid") ||
+        err?.code === "22P02"
+      ) {
+        return null;
+      }
+      throw err;
+    });
+    if (!scenario) {
+      // Slug lookup: find by sourceId (e.g., "cybersecurity_specialist")
+      const results = await scenarioRepo.findBySource(
+        "discovery",
         scenarioId,
       );
-    let scenario;
-    if (isUUID) {
-      scenario = await scenarioRepo.findById(scenarioId);
-    } else {
-      // Slug lookup: find by sourceId
-      const results = await scenarioRepo.findBySource("discovery", scenarioId);
       scenario = results[0] || null;
     }
 

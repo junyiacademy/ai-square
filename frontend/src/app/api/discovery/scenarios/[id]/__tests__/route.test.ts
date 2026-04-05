@@ -23,6 +23,7 @@ describe("/api/discovery/scenarios/[id]", () => {
     // Setup mock repository
     mockScenarioRepo = {
       findById: jest.fn(),
+      findBySource: jest.fn().mockResolvedValue([]),
     };
 
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(
@@ -429,6 +430,9 @@ describe("/api/discovery/scenarios/[id]", () => {
   describe("Error Handling", () => {
     it("should handle repository errors gracefully", async () => {
       mockScenarioRepo.findById.mockRejectedValue(
+        new Error("Database connection failed"),
+      );
+      mockScenarioRepo.findBySource.mockRejectedValue(
         new Error("Database connection failed"),
       );
 
