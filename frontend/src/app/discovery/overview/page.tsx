@@ -15,6 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   Compass,
+  Swords,
+  Medal,
 } from "lucide-react";
 import DiscoveryPageLayout from "@/components/discovery/DiscoveryPageLayout";
 import StreakBadge from "@/components/discovery/StreakBadge";
@@ -64,6 +66,27 @@ interface SkillTreeData {
   careerId: string;
   careerName?: string;
   nodes: SkillTreeNode[];
+}
+
+// ── Daily Challenge types ─────────────────────────────────────────────────────
+interface DailyChallenge {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  xpReward: number;
+  skillsImproved: string[];
+  careerId: string;
+}
+
+// ── Leaderboard types ─────────────────────────────────────────────────────────
+interface LeaderboardEntry {
+  rank: number;
+  userId: string;
+  name: string;
+  totalXp: number;
+  level: number;
+  isCurrentUser: boolean;
 }
 
 // ── Badge colour helper ───────────────────────────────────────────────────────
@@ -133,6 +156,13 @@ export default function OverviewPage() {
   const [skillTrees, setSkillTrees] = useState<Record<string, SkillTreeData>>({});
   const [expandedCareer, setExpandedCareer] = useState<string | null>(null);
 
+  // Daily challenges
+  const [dailyChallenges, setDailyChallenges] = useState<DailyChallenge[]>([]);
+
+  // Leaderboard
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
+
   // Careers the user has any skill progress in
   const careerIds = Object.keys(profile.skillProgress);
 
@@ -157,6 +187,38 @@ export default function OverviewPage() {
       }
     });
   }, [careerIds.join(","), i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch daily challenges
+  useEffect(() => {
+    if (loading) return;
+    const lang = i18n.language || "en";
+    fetch(`/api/discovery/user/daily-challenges?lang=${lang}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.challenges)) {
+          setDailyChallenges(json.challenges);
+        }
+      })
+      .catch(() => {
+        // ignore
+      });
+  }, [loading, i18n.language]);
+
+  // Fetch leaderboard
+  useEffect(() => {
+    if (loading) return;
+    fetch("/api/discovery/leaderboard")
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.leaderboard)) {
+          setLeaderboard(json.leaderboard);
+          setCurrentUserRank(json.currentUserRank ?? null);
+        }
+      })
+      .catch(() => {
+        // ignore
+      });
+  }, [loading]);
 
   const levelName = getLevelName(profile.level, i18n.language);
   const progressPercent = xpProgressPercent(profile.totalXp);
@@ -384,6 +446,124 @@ export default function OverviewPage() {
             </div>
           )}
         </section>
+
+        {/* ── Daily challenges + Leaderboard (side by side on md+) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Daily Challenges */}
+          <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+            <div className="flex items-center gap-2 mb-1">
+              <Swords className="w-5 h-5 text-orange-500" />
+              <h3 className="text-base font-bold text-gray-900">
+                {t("gamification.overview.dailyChallenges")}
+              </h3>
+            </div>
+            <p className="text-xs text-gray-500 mb-4">
+              {t("gamification.overview.dailyChallengesSubtitle")}
+            </p>
+
+            {dailyChallenges.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">
+                {t("gamification.overview.noChallenges")}
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {dailyChallenges.map((ch, idx) => (
+                  <motion.div
+                    key={ch.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.07 }}
+                    className="flex items-start gap-3 p-3 rounded-xl bg-orange-50 border border-orange-100"
+                  >
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                      <Swords className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 truncate">
+                        {ch.title}
+                      </p>
+                      <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
+                        {ch.description}
+                      </p>
+                    </div>
+                    <span className="flex-shrink-0 text-xs font-bold text-orange-600 bg-orange-100 rounded-full px-2 py-0.5 whitespace-nowrap">
+                      {t("gamification.overview.challengeXp", { xp: ch.xpReward })}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Leaderboard */}
+          <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+            <div className="flex items-center gap-2 mb-1">
+              <Medal className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-base font-bold text-gray-900">
+                {t("gamification.overview.leaderboard")}
+              </h3>
+            </div>
+            {currentUserRank !== null && (
+              <p className="text-xs text-purple-600 font-medium mb-4">
+                {t("gamification.overview.leaderboardRank", { rank: currentUserRank })}
+              </p>
+            )}
+
+            {leaderboard.length === 0 ? (
+              <div className="text-sm text-gray-400 text-center py-4">
+                {t("status.loading")}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {leaderboard.map((entry, idx) => (
+                  <motion.div
+                    key={entry.userId}
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.06 }}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${
+                      entry.isCurrentUser
+                        ? "bg-purple-50 border border-purple-200"
+                        : "bg-gray-50"
+                    }`}
+                  >
+                    <span
+                      className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
+                        entry.rank === 1
+                          ? "bg-yellow-400 text-white"
+                          : entry.rank === 2
+                          ? "bg-gray-300 text-gray-800"
+                          : entry.rank === 3
+                          ? "bg-amber-600 text-white"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {entry.rank}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {entry.name}
+                        {entry.isCurrentUser && (
+                          <span className="ml-1 text-xs text-purple-600 font-semibold">
+                            ({t("gamification.overview.leaderboardYou")})
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {t("gamification.overview.leaderboardLevel", { level: entry.level })}
+                      </p>
+                    </div>
+                    <span className="flex-shrink-0 text-xs font-bold text-gray-700">
+                      {t("gamification.overview.leaderboardXp", {
+                        xp: entry.totalXp.toLocaleString(),
+                      })}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
 
         {/* ── Recent achievements ── */}
         <section>
