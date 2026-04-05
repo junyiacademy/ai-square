@@ -4,10 +4,10 @@ category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "矽盾鍛造師 - IC設計工程師"
-  short_description: "在矽盾鍛造所打造驅動現代世界的微小晶片"
+  title: "晶片設計師 - IC設計工程師"
+  short_description: "在 ChipWorks 晶片設計中心打造驅動現代世界的微小晶片"
   long_description: |
-    你是「矽盾鍛造所」的見習鍛造師，擁有設計肉眼看不見的微小電路的天賦。
+    你是「ChipWorks 晶片設計中心」的見習工程師，擁有設計肉眼看不見的微小電路的天賦。
     在這裡，每一顆晶片都像一座微型城市——有道路（導線）、建築物（邏輯閘）
     和交通規則（時序），全部擠在比你指甲還小的空間裡。台灣製造了全球超過90%
     的頂尖晶片，你也可以成為這個故事的一部分！
@@ -20,19 +20,19 @@ metadata:
     - physical_layout
 
 world_setting:
-  name: "矽盾鍛造所"
+  name: "ChipWorks 晶片設計中心"
   description: |
-    矽盾鍛造所是台灣半導體產業的核心訓練基地，這裡的工程師和見習生合力
-    設計用於醫療設備、太空衛星和日常手機的晶片。鍛造所的精神是：精準、
+    ChipWorks 晶片設計中心是台灣半導體產業的核心研發機構，這裡的工程師合力
+    設計用於醫療設備、太空衛星和日常手機的晶片。中心的精神是：精準、
     創意與團隊合作——一個微小的設計錯誤，可能影響全球數百萬台裝置。
 
   atmosphere: "high_tech_collaborative"
   visual_theme: "futuristic_foundry"
 
 starting_scenario:
-  title: "鍛造所的第一天"
+  title: "中心的第一天"
   description: |
-    你是「矽盾鍛造所」的見習工程師，今天是你進入鍛造所的第一天。
+    你是「ChipWorks 晶片設計中心」的見習工程師，今天是你入職的第一天。
     首席工程師林師傅把你叫到測試台旁，嚴肅地說：
     「市面上有一顆晶片出問題了——它過熱導致多款手機起火，我們需要搞清楚設計哪裡出了錯。」
 

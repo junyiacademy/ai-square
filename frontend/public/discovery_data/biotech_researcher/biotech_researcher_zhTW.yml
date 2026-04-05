@@ -7,9 +7,9 @@ metadata:
   title: "生命密碼建築師 - 生技研究員"
   short_description: "透過 AI 和生物科技解開生命的秘密"
   long_description: |
-    你是「生物合成研究院」的初級研究員，這裡是生物學與人工智慧界限模糊
+    你是「BioNext 生技研究中心」的初級研究員，這裡是生物學與人工智慧深度融合
     的地方。配備 AI 工具和基因工程技術，你將探索生命的基本密碼，創造
-    可能革新醫學、農業和人類增強的解決方案。
+    可能革新醫學、農業和人類健康的解決方案。
 
   estimated_hours: 70
   skill_focus:
@@ -20,11 +20,11 @@ metadata:
     - data_driven_discovery
 
 world_setting:
-  name: "生物合成研究院"
+  name: "BioNext 生技研究中心"
   description: |
-    生物合成研究院是一個尖端研究設施，生物學在此與人工智慧相遇。研究員
-    使用 AI 解碼基因謎團、設計新生物，在應對深刻倫理問題的同時，推動
-    生物科技可能性的界限。
+    BioNext 生技研究中心是一個尖端研究機構，生物學在此與人工智慧深度融合。研究員
+    使用 AI 解碼基因謎題、設計新型生物療法，在應對深刻倫理問題的同時，推動
+    生物科技可能性的邊界。
 
   atmosphere: "scientific_innovative"
   visual_theme: "biotech_laboratory"
@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "活體演算法"
   description: |
-    你是「生物合成研究院」的新進研究員，剛完成第一週的實驗室安全培訓。
+    你是「BioNext 生技研究中心」的新進研究員，剛完成第一週的實驗室安全培訓。
     你的導師——林慧琳博士（中研院生醫所兼任研究員）——神情凝重地把你叫進她的辦公室：
     「我們發現了一段神秘的基因序列，它似乎對 AI 演算法有異常反應——而競爭對手 BioCorp 也在追這份數據。這份數據和全球基因體計畫的資料庫高度重疊，WHO 的生物倫理委員會也已介入關注。」
 

@@ -7,9 +7,9 @@ metadata:
   title: "體驗建築師 - UX 設計師"
   short_description: "在數位空間中建造完美的體驗世界"
   long_description: |
-    你是「體驗設計學院」的見習建築師，擅長在數位世界中建造讓人難忘的體驗
-    空間。每一次點擊、每一次滑動都是一段精心設計的旅程，而你的使命就是讓
-    用戶在這些空間中感到快樂和滿足。
+    你是「UXStudio 體驗設計工作室」的見習設計師，擅長在數位世界中創造讓人難忘的使用體驗。
+    每一次點擊、每一次滑動都是一段精心設計的旅程，而你的使命就是讓
+    用戶在這些介面中感到直覺和滿足。
 
   estimated_hours: 55
   skill_focus:
@@ -19,10 +19,10 @@ metadata:
     - communication_arts
 
 world_setting:
-  name: "體驗設計學院"
+  name: "UXStudio 體驗設計工作室"
   description: |
-    體驗設計學院是一個專門研究人類體驗的神秘學院。設計師在此學習平衡美學
-    與功能性、情感與效率，創造能夠治癒和啟發人心的數位空間。
+    UXStudio 體驗設計工作室是一間專注於人本設計的頂尖設計公司。設計師在此學習平衡美學
+    與功能性、情感與效率，創造能夠讓人感到直覺、愉悅的數位產品。
 
   atmosphere: "harmonious_innovative"
   visual_theme: "minimalist_magic"
@@ -30,7 +30,7 @@ world_setting:
 starting_scenario:
   title: "冷漠危機"
   description: |
-    你是「體驗設計學院」的新生設計師，剛完成了第一個學期的基礎課程。
+    你是「UXStudio 體驗設計工作室」的新進設計師，剛完成了三個月的試用期基礎課程。
     你的指導教授——設計智者 Maya——把你叫進工作室，眼前是一大疊用戶投訴信：
     「這個專為台灣長輩設計的 App，用戶說他們感覺『被當成機器人在用』，但設計團隊說他們完全照規範設計。問題出在哪？」
 

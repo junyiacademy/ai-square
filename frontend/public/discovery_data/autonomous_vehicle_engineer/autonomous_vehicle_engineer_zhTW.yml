@@ -7,8 +7,8 @@ metadata:
   title: "無人駕駛者 - 自駕車工程師"
   short_description: "教會車子自己看路、思考、做決定"
   long_description: |
-    你是「自駕領航塔」的見習領航員，擁有讓車輛自主行駛的天賦
-    在這個結合 AI、感測器、地圖的高科技基地中，每一毫秒的判斷
+    你是「AutoDrive 自駕測試中心」的見習工程師，擁有讓車輛自主行駛的天賦
+    在這個結合 AI、感測器、地圖的高科技測試場中，每一毫秒的判斷
     都關乎乘客的安全，而你的使命是打造零事故的移動未來
 
   estimated_hours: 55
@@ -19,11 +19,11 @@ metadata:
     - safety_engineering
 
 world_setting:
-  name: "自駕領航塔"
+  name: "AutoDrive 自駕測試中心"
   description: |
-    自駕領航塔是全球自駕技術的研發中心，從感測器融合到決策引擎
+    AutoDrive 自駕測試中心是台灣自駕技術的核心研發基地，從感測器融合到決策引擎
     從高精地圖到車聯網，工程師們在此打造下一代智慧交通系統
-    台灣的自駕巴士和物流車都從這裡出發
+    台灣的自駕巴士和物流車都從這裡完成測試驗證
 
   atmosphere: "high_tech_precision"
   visual_theme: "autonomous_tower"
@@ -31,7 +31,7 @@ world_setting:
 starting_scenario:
   title: "第一次自動駕駛"
   description: |
-    你是「自駕領航塔」的新進工程師，今天是你上崗的第一天。
+    你是「AutoDrive 自駕測試中心」的新進工程師，今天是你上崗的第一天。
     你的指導員——首席工程師 Navigator——帶你進入測試場控制室，
     螢幕上突然出現異常：一台自駕測試車的感測器偵測到一個根本不存在的「幽靈障礙物」！
 
