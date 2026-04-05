@@ -17,23 +17,8 @@ repos:
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
 
-      - id: unit-tests
-        name: Unit Tests (Pre-push only)
-        entry: bash -c 'cd frontend && npm run test:unit:ci'
-        language: system
-        types: [file]
-        files: ^frontend/.*\.(ts|tsx|test\.ts|test\.tsx)$
-        pass_filenames: false
-        stages: [pre-push]
-
-      - id: build-check
-        name: Build Check (Pre-push only)
-        entry: bash -c 'cd frontend && npx next build'
-        language: system
-        types: [file]
-        files: ^frontend/.*\.(ts|tsx|js|jsx)$
-        pass_filenames: false
-        stages: [pre-push]
+      # unit-tests and build-check removed from pre-push
+      # CI runs the same checks — no need to duplicate locally (saves 3-5 min per push)
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0

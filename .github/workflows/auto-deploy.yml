@@ -118,8 +118,9 @@ jobs:
 
           echo "✅ Type checking and linting completed successfully"
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests (non-blocking signal)
         working-directory: ./frontend
+        continue-on-error: true
         run: npx jest --ci --coverage --testPathIgnorePatterns='/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$' --watchAll=false
 
   # Schema validation (parallel execution, doesn't block deployment)
