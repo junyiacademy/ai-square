@@ -6,6 +6,54 @@
 
 ---
 
+## 差異化定位：Discovery vs PBL
+
+> Related: [Issue #109 — feat: Discovery 差異化設計](https://github.com/junyiacademy/ai-square/issues/109)
+
+**Discovery 的核心定位：「一日職場體驗」**
+
+Discovery 不是 PBL 的縮小版。它是一個讓學生在 30-60 分鐘內體驗一個職業的沉浸式平台。
+
+| 面向 | PBL（專案式學習） | Discovery（職涯探索） |
+|------|-----------------|---------------------|
+| 目標 | 做出一個作品 | 認識一個職業 |
+| 時間 | 數週（長期） | 30-60 分鐘（一次體驗） |
+| 評估 | 作品品質 | 思考深度 + 職涯認知 |
+| 體驗 | 像做 side project | 像一日職場體驗 |
+| AI 角色 | 教練（教你怎麼做） | 同事/導師（帶你看、帶你想） |
+| 產出 | 具體作品（報告/設計/程式） | 職涯認知（我適不適合這個？） |
+| 深度 | 深入某領域技能 | 廣泛認識多個領域 |
+| 回訪 | 持續完善作品 | 嘗試不同職業 |
+
+### Discovery 核心用戶旅程（唯一標準）
+
+```
+選擇職業 → 進入情境 → 完成挑戰 → 職涯反思 → 探索下一個
+```
+
+### DO — Discovery 真正需要的功能
+
+1. 沉浸式職場情境（世界觀 + NPC + 任務）
+2. 4 維度 AI 評估（思考深度 + 職涯認知）
+3. 技能樹視覺化（探索廣度，非深度）
+4. 職涯 Reality Check（薪資、日常、所需技能、市場需求）
+5. AI 導師深度對話（做完任務後的職涯問答）
+6. 職涯適性反思（「你覺得自己適合嗎？為什麼？」）
+7. Milestone Quests（更深的職涯挑戰）
+8. 多職業比較（「你已探索 3 個職業，差異是...」）
+
+### DON'T — 不屬於 Discovery 的功能
+
+| 功能 | 原因 | 應移至 |
+|------|------|--------|
+| Leaderboard | 探索不是競爭 | PBL 或移除 |
+| Portfolio | PBL 的作品產出概念 | PBL |
+| Peer Review | 探索是個人體驗 | PBL |
+| Daily Challenges | 探索不需要每日任務機制 | 移除 |
+| 複雜 XP 經濟 | 簡單進度指示即可 | 簡化 |
+
+---
+
 ## Problem Statement
 
 Discovery 模組是 AI Square 的核心學習體驗——讓 15-18 歲學生沉浸式體驗 18 種職涯路徑，透過 AI 導師引導、自適應任務、遊戲化系統來探索未來方向。模組已有大量實作但缺乏完整規格文件，導致功能邊界不清、驗收標準模糊、部分功能只有前端殼沒有後端串接
@@ -128,15 +176,21 @@ As a **15-18 歲的學生**, I want to **在遊戲化的沉浸式環境中探索
 **現況**: Chat API 每次呼叫只帶當前 context，不帶之前的對話紀錄
 **缺失**: 學生重新開啟對話時 AI 無法記得先前討論過的內容
 
-### GAP-4: Portfolio / 作品集功能未實作
+### GAP-4: Portfolio / 作品集功能未實作 — DEFERRED (belongs to PBL, not Discovery)
+
+> **決策（Issue #109）**: Portfolio 是 PBL 的核心產出概念，Discovery 的產出是「職涯認知」而非「作品」。此功能應移至 PBL 模組，Discovery 中不實作。
 
 **現況**: `IPortfolioItem` 型別已定義，`IDiscoveryRepository` 有 CRUD 方法簽章
 **缺失**: 無任何 API endpoint、無 UI、repository 方法未實作
+**決定**: 不在 Discovery 實作。型別定義可保留供未來 PBL 移植參考
 
-### GAP-5: 同儕評價（Peer Review）未實作
+### GAP-5: 同儕評價（Peer Review）未實作 — DEFERRED (belongs to PBL, not Discovery)
+
+> **決策（Issue #109）**: Peer Review 屬於協作學習機制，適合 PBL 的長期作品評審，不適合 Discovery 的個人探索體驗。此功能應移至 PBL 模組。
 
 **現況**: `IPeerReview` 型別已定義
 **缺失**: 無 API、無 UI、無任何實作
+**決定**: 不在 Discovery 實作
 
 ### GAP-6: Career Recommendation API 未串接
 
@@ -172,6 +226,14 @@ As a **15-18 歲的學生**, I want to **在遊戲化的沉浸式環境中探索
 
 **現況**: 有 unit tests 但以 mock 為主
 **缺失**: 無 E2E test 覆蓋完整用戶旅程；無 AI response 的 contract test
+
+### GAP-13: Leaderboard — DEFERRED (belongs to PBL, not Discovery)
+
+> **決策（Issue #109）**: Leaderboard 是競爭排名機制，與 Discovery「個人職涯探索」的定位相違背。探索不是競爭，不應以排名評比學生的探索歷程。此功能若有需要應移至 PBL。
+
+**現況**: `/api/discovery/leaderboard` 目錄存在（未完整實作）
+**缺失**: 無前端 UI 串接
+**決定**: 不在 Discovery 實作。相關 API route 可移除或封存
 
 ---
 
