@@ -11,7 +11,7 @@ import { getPool } from "@/lib/db/get-pool";
 
 // Daily limits
 export const DAILY_TOKEN_LIMIT = 200_000;
-export const DAILY_SESSION_LIMIT = 5;
+export const DAILY_SESSION_LIMIT = 50;
 
 export interface UserAiUsage {
   date: string;
