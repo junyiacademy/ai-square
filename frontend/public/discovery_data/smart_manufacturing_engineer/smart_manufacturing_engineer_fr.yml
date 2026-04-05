@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "L'Éveil de l'Usine"
   description: |
-    Le Directeur d'Usine Titan annonce une mission audacieuse : transformer l'ancienne ligne d'assemblage en une usine intelligente entièrement automatisée en un an. Les concurrents utilisent déjà des robots pilotés par IA et un contrôle qualité en temps réel. Tu dois apprendre à connecter les machines avec des capteurs, construire des jumeaux numériques de la ligne de production et utiliser les données pour éliminer les gaspillages et les défauts. L'avenir de la fabrication commence maintenant.
+    Le Directeur d'Usine Mike annonce une mission audacieuse : transformer l'ancienne ligne d'assemblage en une usine intelligente entièrement automatisée en un an. Les concurrents utilisent déjà des robots pilotés par IA et un contrôle qualité en temps réel. Tu dois apprendre à connecter les machines avec des capteurs, construire des jumeaux numériques de la ligne de production et utiliser les données pour éliminer les gaspillages et les défauts. L'avenir de la fabrication commence maintenant.
 
   initial_tasks:
     - connect_first_sensor

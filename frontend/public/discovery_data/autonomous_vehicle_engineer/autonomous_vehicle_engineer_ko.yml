@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "첫 번째 자율주행"
   description: |
-    수석 엔지니어 Navigator가 자율주행차의 인식 세계를 안내합니다:
+    수석 엔지니어 David가 자율주행차의 인식 세계를 안내합니다:
     LiDAR 포인트 클라우드, 카메라 영상, 레이더 에코. 그런데 테스트 트랙에
     Ghost Signal — 가짜 장애물 감지 — 이 나타났습니다. 센서 데이터를
     분석해서 유령 신호의 출처를 찾아내야 합니다.

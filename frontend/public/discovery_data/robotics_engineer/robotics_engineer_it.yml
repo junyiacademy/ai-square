@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Risveglio del Primo Mech"
   description: |
-    L'Anziano dell'Officina, Servo, ti presenta i tre pilastri della robotica: sensing,
+    Tony ti presenta i tre pilastri della robotica: sensing,
     decision-making e attuazione. Ma un prototipo fuori controllo chiamato Haywire sta
     seminando il caos nell'officina. Devi capire i dati dei suoi sensori per fermarlo
     in sicurezza.

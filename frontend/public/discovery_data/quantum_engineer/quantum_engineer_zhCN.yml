@@ -31,7 +31,7 @@ world_setting:
 starting_scenario:
   title: "薛定谔的第一课"
   description: |
-    量子导师 Qubit 用薛定谔的猫说明叠加态的概念
+    Ryan 用薛定谔的猫说明叠加态的概念
     但迷宫中的量子退相干怪物 Decoherence 正在破坏量子态
     你必须学会量子纠错才能保护你的量子比特
 

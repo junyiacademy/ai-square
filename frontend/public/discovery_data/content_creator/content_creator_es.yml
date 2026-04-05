@@ -9,7 +9,7 @@ metadata:
   long_description: |
     Eres un mago recién ordenado del "Imperio Creativo", poseedor del poder
     misterioso de transformar ideas en contenido viral. En este reino digital,
-    cada like y compartir es prueba de tu magia, y tu mentora Luna te enseñará
+    cada like y compartir es prueba de tu magia, y tu mentora Amy te enseñará
     a dominar los secretos de los algoritmos.
 
   estimated_hours: 50
@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "El Desafío de la Sombra"
   description: |
-    La Mentora Creativa Luna te da la bienvenida al imperio con noticias urgentes:
+    La Mentora Creativa Amy te da la bienvenida al imperio con noticias urgentes:
     Sombra, un mago caído, está difundiendo contenido falso usando magia prohibida,
     amenazando la armonía del Imperio Creativo. Debes usar el poder de la
     creatividad auténtica para combatir su influencia oscura.

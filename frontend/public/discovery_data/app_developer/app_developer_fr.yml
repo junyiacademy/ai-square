@@ -28,7 +28,7 @@ world_setting:
 starting_scenario:
   title: Rejoindre l'Alliance
   description: |
-    Maître Code vous accueille dans l'alliance, mais vous avertit d'une menace constante : Bug,
+    Eric vous accueille dans l'alliance, mais vous avertit d'une menace constante : Bug,
     le démon du chaos, répand des erreurs et des vulnérabilités dans le code. Pendant ce temps,
     Design et Code entrent souvent en conflit sur les priorités. Vous devez utiliser la sagesse
     pour équilibrer la technologie avec l'esthétique tout en maintenant les applications stables.

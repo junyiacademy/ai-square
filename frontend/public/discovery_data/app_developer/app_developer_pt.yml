@@ -28,7 +28,7 @@ world_setting:
 starting_scenario:
   title: Ingressando na Aliança
   description: |
-    Mestre Código dá as boas-vindas à aliança, mas avisa sobre uma ameaça constante: Bug,
+    Eric dá as boas-vindas à aliança, mas avisa sobre uma ameaça constante: Bug,
     o demônio do caos, espalha erros e vulnerabilidades no código. Enquanto isso, Design
     e Código frequentemente entram em conflito sobre prioridades. Você deve usar sabedoria
     para equilibrar tecnologia com estética enquanto mantém as aplicações estáveis.

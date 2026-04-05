@@ -28,7 +28,7 @@ world_setting:
 starting_scenario:
   title: Unirsi all'Alleanza
   description: |
-    Il Maestro Codice ti dà il benvenuto nell'alleanza, ma ti avverte di una minaccia costante:
+    Eric ti dà il benvenuto nell'alleanza, ma ti avverte di una minaccia costante:
     Bug, il demone del caos, diffonde errori e vulnerabilità nel codice. Nel frattempo, Design
     e Codice spesso entrano in conflitto sulle priorità. Devi usare la saggezza per bilanciare
     la tecnologia con l'estetica mantenendo le applicazioni stabili.

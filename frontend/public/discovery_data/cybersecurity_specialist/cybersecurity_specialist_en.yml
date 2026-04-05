@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "The Dark Web Rising"
   description: |
-    Commander Firewall briefs you on an urgent situation: the notorious hacker
+    Alex briefs you on an urgent situation: the notorious hacker
     collective "Shadow Byte" led by the mysterious Zero Day is planning a massive
     attack on global infrastructure. You must master cybersecurity skills quickly
     to join the defense force and prevent digital apocalypse.
@@ -80,7 +80,7 @@ skill_tree:
 
   advanced_skills:
     - id: zero_day_hunting
-      name: "Vulnerability Oracle"
+      name: "Vulnerability Research"
       description: "Discover unknown vulnerabilities"
       max_level: 15
       requires: [ethical_hacking, security_analysis]

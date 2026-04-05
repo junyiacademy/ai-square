@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "The Factory Awakens"
   description: |
-    Factory Director Titan announces a bold mission: transform the old assembly line into a fully automated smart factory within one year. Competitors are already using AI-powered robots and real-time quality control. You must learn how to connect machines with sensors, build digital twins of the production line, and use data to eliminate waste and defects. The future of manufacturing starts now.
+    Factory Director Mike announces a bold mission: transform the old assembly line into a fully automated smart factory within one year. Competitors are already using AI-powered robots and real-time quality control. You must learn how to connect machines with sensors, build digital twins of the production line, and use data to eliminate waste and defects. The future of manufacturing starts now.
 
   initial_tasks:
     - connect_first_sensor

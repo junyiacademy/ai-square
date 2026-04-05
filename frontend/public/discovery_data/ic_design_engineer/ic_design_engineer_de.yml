@@ -37,7 +37,7 @@ world_setting:
 starting_scenario:
   title: "Erster Tag in der Schmiede"
   description: |
-    Chefingenieur Lin begrüßt dich in der Schmiede. Deine erste Herausforderung:
+    Chefingenieur Mark begrüßt dich in der Schmiede. Deine erste Herausforderung:
     Eine Konkurrenzwerkstatt hat einen Chip mit einem versteckten Fehler veröffentlicht,
     der Telefone zum Überhitzen bringt. Du musst die Grundlagen des Chip-Designs lernen,
     um eine sicherere Alternative zu entwickeln.

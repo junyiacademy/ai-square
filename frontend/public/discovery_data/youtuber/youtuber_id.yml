@@ -29,7 +29,7 @@ world_setting:
 starting_scenario:
   title: "Pergeseran Algoritma"
   description: |
-    Direktur Kreatif menyambut Anda dengan berita mengkhawatirkan: Algoritma, sang raja
+    Danny menyambut Anda dengan berita mengkhawatirkan: Algoritma, sang raja
     yang berubah-ubah, tiba-tiba mengubah preferensinya, mengubur karya banyak kreator.
     Anda harus menemukan keseimbangan antara mempertahankan integritas kreatif dan
     beradaptasi dengan tuntutan algoritma.
@@ -209,7 +209,7 @@ career_outcomes:
   - "YouTuber Penuh Waktu"
   - "Kreator Konten"
   - "Produser Video"
-  - "Direktur Kreatif"
+  - "Danny"
   - "Manajer Media Sosial"
   - "Manajer Kemitraan Merek"
   - "Pendiri Perusahaan Media"

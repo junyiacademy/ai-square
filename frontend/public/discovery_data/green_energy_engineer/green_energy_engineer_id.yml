@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "Alarm Krisis Energi"
   description: |
-    Insinyur Kepala Aurora membunyikan alarm: jaringan listrik kota gagal karena ketergantungan berlebihan pada bahan bakar fosil. Kamu harus merancang sistem energi terbarukan baru untuk menggantikan pembangkit listrik batu bara yang sudah tua. Perjalananmu dimulai dengan memahami bagaimana sinar matahari dan angin dapat menyuplai listrik ke seluruh kota secara bersih dan efisien.
+    Insinyur Kepala Sean membunyikan alarm: jaringan listrik kota gagal karena ketergantungan berlebihan pada bahan bakar fosil. Kamu harus merancang sistem energi terbarukan baru untuk menggantikan pembangkit listrik batu bara yang sudah tua. Perjalananmu dimulai dengan memahami bagaimana sinar matahari dan angin dapat menyuplai listrik ke seluruh kota secara bersih dan efisien.
 
   initial_tasks:
     - learn_solar_basics

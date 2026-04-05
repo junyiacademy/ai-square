@@ -26,7 +26,7 @@ world_setting:
 starting_scenario:
   title: "维度传送门激活"
   description: |
-    商业导师阿特拉斯在维度中枢迎接你，解释你新获得的在宇宙间旅行的能力。
+    James在维度中枢迎接你，解释你新获得的在宇宙间旅行的能力。
     但Monopoly Corp的CEO贪婪正在使用不公正手段摧毁所有维度的创业公司。
     你必须运用创新和合作来对抗他的垄断计划。
   initial_tasks:

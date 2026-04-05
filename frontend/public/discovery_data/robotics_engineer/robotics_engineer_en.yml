@@ -36,7 +36,7 @@ world_setting:
 starting_scenario:
   title: "The Workshop Awakens"
   description: |
-    Chief Engineer Chen gives you your first assignment: a factory robot on the
+    Tony gives you your first assignment: a factory robot on the
     assembly line keeps bumping into workers because it can't sense them properly.
     Fix the robot's sensor system and re-program its movement to avoid people —
     your introduction to the two most important skills in robotics: sensing the

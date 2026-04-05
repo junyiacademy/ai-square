@@ -7,17 +7,17 @@ metadata:
   title: "Digital Craftsman - App Developer"
   short_description: "Craft life-changing applications in the world of code"
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving
+    You are a new member of the "Digital Craftsmen Alliance," skilled at building
     practical and beautiful applications with code. In this workshop filled with logic
-    and creativity, every line of code is a spell, and your goal is to create digital
-    tools that make people's lives more convenient and better.
+    and creativity, every line of code is a building block, and your goal is to create
+    digital tools that make people's lives more convenient and better.
 
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
-    - user_experience_magic
+    - user_experience_design
 
 world_setting:
   name: "Digital Craftsmen Alliance"
@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Joining the Alliance"
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug,
+    Eric welcomes you to the alliance, but warns of a constant threat: Bug,
     the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design
     and Code often conflict over priorities. You must use wisdom to balance technology
     with aesthetics while keeping applications stable.
@@ -58,7 +58,7 @@ skill_tree:
       max_level: 10
       unlocks:
         - responsive_design
-        - animation_magic
+        - animation_effects
 
     - id: backend_architecture
       name: "Logic Engineering"
@@ -69,7 +69,7 @@ skill_tree:
         - database_mastery
 
     - id: mobile_development
-      name: "Mobile Sorcery"
+      name: "Mobile Development"
       description: "Create native mobile experiences"
       max_level: 10
       unlocks:
@@ -78,13 +78,13 @@ skill_tree:
 
   advanced_skills:
     - id: performance_optimization
-      name: "Speed Magic"
+      name: "Performance Optimization"
       description: "Optimize apps for peak performance"
       max_level: 15
       requires: [programming_fundamentals, backend_architecture]
 
     - id: security_mastery
-      name: "Protection Spells"
+      name: "Security Hardening"
       description: "Secure applications against threats"
       max_level: 15
       requires: [backend_architecture, mobile_development]
@@ -107,7 +107,7 @@ milestone_quests:
       - user_feedback_access
 
   - id: bug_hunter
-    name: "Bug Slayer"
+    name: "Zero Bug Release"
     description: "Create a bug-free app with perfect stability"
     required_level: 10
     skills_tested: [security_mastery, performance_optimization]
@@ -128,7 +128,7 @@ milestone_quests:
 
 achievements:
   - id: hello_world
-    name: "First Spell"
+    name: "Hello World"
     description: "Write your first working app"
     xp_reward: 100
     badge_type: bronze
@@ -177,7 +177,7 @@ example_tasks:
 
     - id: game_app
       type: creation
-      title: "Entertainment Spell"
+      title: "Mobile Game Project"
       description: "Create an engaging mobile game"
       skills_improved: [ui_development, performance_optimization]
       xp_reward: 220

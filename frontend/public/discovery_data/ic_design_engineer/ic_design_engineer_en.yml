@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "The First Blueprint"
   description: |
-    Master Forger Titan hands you a blank circuit diagram and says: "Every great chip
+    Mark hands you a blank circuit diagram and says: "Every great chip
     starts with a single gate." A crisis looms — a rival company is releasing a faster
     processor next month. You must design a smarter, more efficient chip. Your journey
     begins with understanding how simple ON/OFF switches combine to create intelligent

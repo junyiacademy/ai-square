@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Erste autonome Fahrt"
   description: |
-    Chefingenieur Navigator führt dich durch die Wahrnehmungswelt des autonomen Fahrzeugs:
+    Chefingenieur David führt dich durch die Wahrnehmungswelt des autonomen Fahrzeugs:
     LiDAR-Punktwolken, Kamerabilder, Radarechos. Doch auf der Teststrecke erscheint ein
     Ghost Signal — eine falsche Hinderniserkennung. Du musst die Sensordaten analysieren,
     um die Quelle des Phantoms zu finden.

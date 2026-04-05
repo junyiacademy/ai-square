@@ -31,7 +31,7 @@ world_setting:
 starting_scenario:
   title: "男爵的封锁"
   description: |
-    你的探险伙伴斯卡特带来了糟糕的消息：贪婪男爵控制了大部分资源，
+    你的探险伙伴Claire带来了糟糕的消息：贪婪男爵控制了大部分资源，
     正在打压新商人。与此同时，供应商莉莉在关键时刻撤退了。
     你必须找到创造性的方法突破封锁，建立你的贸易站。
   initial_tasks:

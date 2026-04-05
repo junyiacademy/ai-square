@@ -8,7 +8,7 @@ metadata:
   short_description: "Create infinite possibilities in virtual worlds"
   long_description: |
     You are a talented designer at the "Dream Architecture Academy," possessing the
-    magic to transform imagination into interactive experiences. In this academy filled
+    skill to transform imagination into interactive experiences. In this academy filled
     with creativity and fun, every game mechanic is a door to new worlds, and your
     mission is to create immersive digital dreams that captivate players.
 
@@ -17,12 +17,12 @@ metadata:
     - world_building
     - mechanics_design
     - emotional_manipulation
-    - fun_summoning
+    - engagement_design
 
 world_setting:
   name: "Dream Architecture Academy"
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game
+    The Dream Architecture Academy is a premier institution dedicated to training game
     designers. Here, students learn to balance creativity with technical constraints,
     fun with challenge, and create experiences that resonate with players worldwide.
 
@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "The Grind Invasion"
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom,
+    Leo welcomes you with troubling news: Grind, the King of Boredom,
     is turning all games into mindless number farms, pursuing efficiency over fun.
     You must use creativity and joy to combat the mechanization of gaming experiences.
 
@@ -163,13 +163,13 @@ example_tasks:
       type: creation
       title: "Fun Formula"
       description: "Design the core game loop"
-      skills_improved: [game_mechanics, fun_summoning]
+      skills_improved: [game_mechanics, engagement_design]
       xp_reward: 80
 
   intermediate:
     - id: mechanics_design
       type: creation
-      title: "Joy Mechanics Forge"
+      title: "Core Mechanics Design"
       description: "Design core game mechanics"
       skills_improved: [mechanics_design, player_experience]
       xp_reward: 180

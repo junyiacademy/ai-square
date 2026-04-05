@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "O Alarme da Crise Energética"
   description: |
-    A Engenheira Chefe Aurora soa o alarme: a rede elétrica da cidade está a falhar devido à dependência excessiva de combustíveis fósseis. Tens de desenhar um novo sistema de energia renovável para substituir as antigas centrais a carvão. A tua jornada começa com perceber como a luz solar e o vento podem alimentar uma cidade inteira — de forma limpa e eficiente.
+    A Engenheira Chefe Sean soa o alarme: a rede elétrica da cidade está a falhar devido à dependência excessiva de combustíveis fósseis. Tens de desenhar um novo sistema de energia renovável para substituir as antigas centrais a carvão. A tua jornada começa com perceber como a luz solar e o vento podem alimentar uma cidade inteira — de forma limpa e eficiente.
 
   initial_tasks:
     - learn_solar_basics

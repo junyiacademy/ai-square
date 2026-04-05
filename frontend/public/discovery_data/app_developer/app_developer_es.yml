@@ -28,7 +28,7 @@ world_setting:
 starting_scenario:
   title: Unirse a la Alianza
   description: |
-    El Maestro Código te da la bienvenida a la alianza, pero advierte de una amenaza constante:
+    Eric te da la bienvenida a la alianza, pero advierte de una amenaza constante:
     Bug, el demonio del caos, esparce errores y vulnerabilidades en el código. Mientras tanto,
     Diseño y Código a menudo entran en conflicto sobre las prioridades. Debes usar sabiduría
     para equilibrar la tecnología con la estética mientras mantienes las aplicaciones estables.

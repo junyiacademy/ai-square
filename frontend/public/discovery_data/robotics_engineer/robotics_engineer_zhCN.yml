@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "工坊苏醒"
   description: |
-    首席工程师陈师傅交给你第一个任务：生产线上的工厂机器人一直撞到工人，
+    Tony交给你第一个任务：生产线上的工厂机器人一直撞到工人，
     因为它无法正确感知人的存在。修复感测系统并重新设计动作程序让它能避开人。
 
   initial_tasks:

@@ -29,7 +29,7 @@ world_setting:
 starting_scenario:
   title: "Le Changement d'Algorithme"
   description: |
-    Le Directeur Créatif vous accueille avec des nouvelles préoccupantes : Algorithme,
+    Danny vous accueille avec des nouvelles préoccupantes : Algorithme,
     le roi capricieux, a soudainement changé ses préférences, enterrant le travail
     de nombreux créateurs. Vous devez trouver l'équilibre entre maintenir l'intégrité
     créative et s'adapter aux demandes algorithmiques.
@@ -209,7 +209,7 @@ career_outcomes:
   - "YouTuber à Temps Plein"
   - "Créateur de Contenu"
   - "Producteur Vidéo"
-  - "Directeur Créatif"
+  - "Danny"
   - "Gestionnaire Réseaux Sociaux"
   - "Gestionnaire Partenariats de Marque"
   - "Fondateur Compagnie Médias"

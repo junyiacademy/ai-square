@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Despertando o Primeiro Mech"
   description: |
-    O Ancião da Oficina, Servo, apresenta-lhe os três pilares da robótica: sensoriamento,
+    Tony apresenta-lhe os três pilares da robótica: sensoriamento,
     tomada de decisão e atuação. Mas um protótipo descontrolado chamado Haywire está
     colidindo pela oficina. Você deve entender seus dados de sensores para pará-lo
     com segurança.

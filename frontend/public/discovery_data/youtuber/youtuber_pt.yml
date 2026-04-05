@@ -28,7 +28,7 @@ world_setting:
 starting_scenario:
   title: "A Mudança do Algoritmo"
   description: |
-    O Diretor Criativo te recebe com notícias preocupantes: Algoritmo, o rei caprichoso,
+    Danny te recebe com notícias preocupantes: Algoritmo, o rei caprichoso,
     mudou repentinamente suas preferências, enterrando o trabalho de muitos criadores.
     Você deve encontrar o equilíbrio entre manter a integridade criativa e se adaptar
     às demandas algorítmicas.
@@ -208,7 +208,7 @@ career_outcomes:
   - "YouTuber em Tempo Integral"
   - "Criador de Conteúdo"
   - "Produtor de Vídeo"
-  - "Diretor Criativo"
+  - "Danny"
   - "Gerente de Mídias Sociais"
   - "Gerente de Parcerias de Marca"
   - "Fundador de Empresa de Mídia"

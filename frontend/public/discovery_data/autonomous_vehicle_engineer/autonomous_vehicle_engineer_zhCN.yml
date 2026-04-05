@@ -31,7 +31,7 @@ world_setting:
 starting_scenario:
   title: "第一次自动驾驶"
   description: |
-    首席工程师 Navigator 带你体验自动驾驶车的感知世界：激光雷达点云、摄像头图像、雷达回波
+    首席工程师 David 带你体验自动驾驶车的感知世界：激光雷达点云、摄像头图像、雷达回波
     但测试场上出现了一个 Ghost Signal — 虚假的障碍物探测
     你必须分析传感器数据找出幻影的来源
 

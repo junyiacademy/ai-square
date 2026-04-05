@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "Il Risveglio della Fabbrica"
   description: |
-    Il Direttore di Fabbrica Titan annuncia una missione audace: trasformare la vecchia linea di assemblaggio in una smart factory completamente automatizzata in un anno. I concorrenti utilizzano già robot guidati dall'IA e controllo qualità in tempo reale. Devi imparare a connettere macchine con sensori, costruire gemelli digitali della linea di produzione e usare i dati per eliminare sprechi e difetti. Il futuro della produzione inizia ora.
+    Il Direttore di Fabbrica Mike annuncia una missione audace: trasformare la vecchia linea di assemblaggio in una smart factory completamente automatizzata in un anno. I concorrenti utilizzano già robot guidati dall'IA e controllo qualità in tempo reale. Devi imparare a connettere macchine con sensori, costruire gemelli digitali della linea di produzione e usare i dati per eliminare sprechi e difetti. Il futuro della produzione inizia ora.
 
   initial_tasks:
     - connect_first_sensor

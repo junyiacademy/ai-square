@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "L'Allarme della Crisi Energetica"
   description: |
-    L'Ingegnera Capo Aurora suona l'allarme: la rete elettrica della città sta cedendo a causa della dipendenza eccessiva dai combustibili fossili. Devi progettare un nuovo sistema di energia rinnovabile per sostituire le vecchie centrali a carbone. Il tuo viaggio inizia con la comprensione di come la luce solare e il vento possano alimentare un'intera città in modo pulito ed efficiente.
+    L'Ingegnera Capo Sean suona l'allarme: la rete elettrica della città sta cedendo a causa della dipendenza eccessiva dai combustibili fossili. Devi progettare un nuovo sistema di energia rinnovabile per sostituire le vecchie centrali a carbone. Il tuo viaggio inizia con la comprensione di come la luce solare e il vento possano alimentare un'intera città in modo pulito ed efficiente.
 
   initial_tasks:
     - learn_solar_basics

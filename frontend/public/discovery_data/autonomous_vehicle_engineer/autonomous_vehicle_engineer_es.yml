@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "Primera Conducción Autónoma"
   description: |
-    El Ingeniero Jefe Navigator te guía por el mundo perceptivo del vehículo autónomo:
+    El Ingeniero Jefe David te guía por el mundo perceptivo del vehículo autónomo:
     nubes de puntos LiDAR, imágenes de cámara, ecos de radar. Pero aparece una
     Ghost Signal en la pista de pruebas — una detección falsa de obstáculo. Debes
     analizar los datos de los sensores para encontrar el origen del fantasma.

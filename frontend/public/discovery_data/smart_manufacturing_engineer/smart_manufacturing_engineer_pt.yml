@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "O Despertar da Fábrica"
   description: |
-    O Diretor de Fábrica Titan anuncia uma missão ousada: transformar a antiga linha de montagem numa fábrica inteligente totalmente automatizada em um ano. Os concorrentes já usam robôs com IA e controlo de qualidade em tempo real. Tens de aprender a conectar máquinas com sensores, construir gémeos digitais da linha de produção e usar dados para eliminar desperdício e defeitos. O futuro da manufatura começa agora.
+    O Diretor de Fábrica Mike anuncia uma missão ousada: transformar a antiga linha de montagem numa fábrica inteligente totalmente automatizada em um ano. Os concorrentes já usam robôs com IA e controlo de qualidade em tempo real. Tens de aprender a conectar máquinas com sensores, construir gémeos digitais da linha de produção e usar dados para eliminar desperdício e defeitos. O futuro da manufatura começa agora.
 
   initial_tasks:
     - connect_first_sensor

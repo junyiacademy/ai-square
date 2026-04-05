@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "Pelajaran Pertama Schrödinger"
   description: |
-    Mentor kuantum Qubit menggunakan kucing Schrödinger untuk menjelaskan konsep superposisi.
+    Ryan menggunakan kucing Schrödinger untuk menjelaskan konsep superposisi.
     Namun monster dekoherensi kuantum yang mengintai di labirin sedang menghancurkan keadaan kuantum.
     Kamu harus mempelajari koreksi kesalahan kuantum untuk melindungi qubit-mu.
 

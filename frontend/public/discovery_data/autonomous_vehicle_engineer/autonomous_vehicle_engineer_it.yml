@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "Prima Guida Autonoma"
   description: |
-    L'Ingegnere Capo Navigator ti guida nel mondo percettivo del veicolo autonomo:
+    L'Ingegnere Capo David ti guida nel mondo percettivo del veicolo autonomo:
     nuvole di punti LiDAR, immagini della telecamera, echi radar. Ma sulla pista di
     prova appare un Ghost Signal — un falso rilevamento di ostacolo. Devi analizzare
     i dati dei sensori per trovare l'origine del fantasma.

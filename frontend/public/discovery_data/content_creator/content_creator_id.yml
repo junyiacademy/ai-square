@@ -9,7 +9,7 @@ metadata:
   long_description: |
     Anda adalah penyihir yang baru ditahbiskan dari "Kerajaan Kreatif", memiliki
     kekuatan misterius untuk mengubah ide menjadi konten viral. Di kerajaan digital
-    ini, setiap like dan share adalah bukti sihir Anda, dan mentor Luna akan
+    ini, setiap like dan share adalah bukti sihir Anda, dan mentor Amy akan
     mengajarkan Anda menguasai rahasia algoritma.
 
   estimated_hours: 50
@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "Tantangan Bayangan"
   description: |
-    Mentor Kreatif Luna menyambut Anda di kerajaan dengan berita mendesak: Bayangan,
+    Mentor Kreatif Amy menyambut Anda di kerajaan dengan berita mendesak: Bayangan,
     seorang penyihir yang jatuh, menyebarkan konten palsu menggunakan sihir terlarang,
     mengancam keharmonisan Kerajaan Kreatif. Anda harus menggunakan kekuatan
     kreativitas autentik untuk melawan pengaruh gelapnya.

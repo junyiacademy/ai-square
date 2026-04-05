@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "La Première Leçon de Schrödinger"
   description: |
-    Le mentor quantique Qubit utilise le chat de Schrödinger pour expliquer le concept de superposition.
+    Ryan utilise le chat de Schrödinger pour expliquer le concept de superposition.
     Mais le monstre de la décohérence quantique qui rôde dans le labyrinthe détruit les états quantiques.
     Vous devez apprendre la correction d'erreurs quantiques pour protéger vos qubits.
 

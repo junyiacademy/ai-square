@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "Der Energiekrise-Alarm"
   description: |
-    Chefingenieurin Aurora schlägt Alarm: Das Stromnetz der Stadt versagt aufgrund übermäßiger Abhängigkeit von fossilen Brennstoffen. Du musst ein neues erneuerbares Energiesystem entwerfen, um alte Kohlekraftwerke zu ersetzen. Deine Reise beginnt damit zu verstehen, wie Sonnenlicht und Wind eine ganze Stadt sauber und effizient versorgen können.
+    Chefingenieurin Sean schlägt Alarm: Das Stromnetz der Stadt versagt aufgrund übermäßiger Abhängigkeit von fossilen Brennstoffen. Du musst ein neues erneuerbares Energiesystem entwerfen, um alte Kohlekraftwerke zu ersetzen. Deine Reise beginnt damit zu verstehen, wie Sonnenlicht und Wind eine ganze Stadt sauber und effizient versorgen können.
 
   initial_tasks:
     - learn_solar_basics

@@ -37,7 +37,7 @@ world_setting:
 starting_scenario:
   title: "Primeiro Dia na Forja"
   description: |
-    O Engenheiro Chefe Lin dá as boas-vindas à forja. Seu primeiro desafio: uma
+    O Engenheiro Chefe Mark dá as boas-vindas à forja. Seu primeiro desafio: uma
     oficina rival lançou um chip com um defeito oculto que faz telefones superaqueceram.
     Você deve aprender o básico do design de chips para ajudar a criar uma alternativa
     mais segura — entendendo como interruptores lógicos se combinam em funções maiores.

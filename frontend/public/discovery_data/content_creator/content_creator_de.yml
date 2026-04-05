@@ -10,7 +10,7 @@ metadata:
     Du bist ein neu ordinierter Zauberer des "Kreativen Imperiums" und besitzt die
     geheimnisvolle Kraft, Ideen in viralen Content zu verwandeln. In diesem digitalen
     Königreich ist jeder Like und jede Teilung ein Beweis deiner Magie, und deine
-    Mentorin Luna wird dir die Geheimnisse der Algorithmen lehren.
+    Mentorin Amy wird dir die Geheimnisse der Algorithmen lehren.
 
   estimated_hours: 50
   skill_focus:
@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "Die Herausforderung des Schattens"
   description: |
-    Kreativ-Mentorin Luna begrüßt dich im Imperium mit dringenden Neuigkeiten:
+    Kreativ-Mentorin Amy begrüßt dich im Imperium mit dringenden Neuigkeiten:
     Schatten, ein gefallener Zauberer, verbreitet falsche Inhalte mit verbotener
     Magie und bedroht die Harmonie des Kreativen Imperiums. Du musst die Kraft
     authentischer Kreativität nutzen, um seinen dunklen Einfluss zu bekämpfen.

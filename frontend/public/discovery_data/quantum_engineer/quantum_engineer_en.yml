@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "Schrödinger's First Lesson"
   description: |
-    Quantum mentor Qubit uses Schrödinger's cat to explain the concept of superposition.
+    Ryan uses Schrödinger's cat to explain the concept of superposition.
     But the decoherence monster lurking in the labyrinth is destroying quantum states.
     You must learn quantum error correction to protect your qubits.
 

@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "L'Atelier s'Éveille"
   description: |
-    L'Ingénieur en Chef Chen vous confie votre première mission : un robot d'usine sur
+    Tony vous confie votre première mission : un robot d'usine sur
     la chaîne de montage percute sans cesse les ouvriers car il ne les détecte pas
     correctement. Réparez son système de capteurs et reprogrammez ses mouvements pour
     éviter les personnes.

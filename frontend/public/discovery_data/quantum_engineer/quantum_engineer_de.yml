@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "Schrödingers erste Lektion"
   description: |
-    Der Quanten-Mentor Qubit nutzt Schrödingers Katze, um das Konzept der Superposition zu erklären.
+    Ryan nutzt Schrödingers Katze, um das Konzept der Superposition zu erklären.
     Doch das Quantendekohärenz-Monster, das im Labyrinth lauert, zerstört Quantenzustände.
     Du musst Quantenfehlerkorrektur erlernen, um deine Qubits zu schützen.
 

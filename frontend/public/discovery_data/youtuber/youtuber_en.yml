@@ -5,7 +5,7 @@ difficulty_range: beginner_to_expert
 
 metadata:
   title: "Video Bard - YouTuber"
-  short_description: "Perform captivating video stories on digital stages"
+  short_description: "Create captivating video content and build streaming audiences"
   long_description: |
     You are a new member of the "Video Bard Guild," gifted with telling stories through
     lenses and entertaining audiences. In this digital kingdom of creativity and technology,
@@ -15,7 +15,7 @@ metadata:
   estimated_hours: 55
   skill_focus:
     - storytelling_arts
-    - video_magic
+    - video_production
     - audience_resonance
     - algorithm_studies
 
@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "The Algorithm Shift"
   description: |
-    Creative Director welcomes you with concerning news: Algorithm, the capricious
+    Danny welcomes you with concerning news: Algorithm, the capricious
     king, has suddenly changed preferences, burying many creators' work. You must
     find balance between maintaining creative integrity and adapting to algorithmic
     demands.
@@ -45,7 +45,7 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: content_planning
-      name: "Story Weaving"
+      name: "Scriptwriting"
       description: "Plan engaging video content"
       max_level: 10
       unlocks:
@@ -58,15 +58,15 @@ skill_tree:
       max_level: 10
       unlocks:
         - camera_mastery
-        - lighting_magic
+        - lighting_techniques
 
     - id: video_editing
-      name: "Time Sculpting"
+      name: "Post-Production Editing"
       description: "Edit compelling videos"
       max_level: 10
       unlocks:
         - pacing_rhythm
-        - effects_wizardry
+        - visual_effects
 
     - id: audience_growth
       name: "Community Building"
@@ -78,7 +78,7 @@ skill_tree:
 
   advanced_skills:
     - id: algorithm_optimization
-      name: "Algorithm Whispering"
+      name: "Algorithm Optimization"
       description: "Master YouTube's algorithm"
       max_level: 15
       requires: [content_planning, audience_growth]
@@ -90,7 +90,7 @@ skill_tree:
       requires: [audience_growth, video_production]
 
     - id: brand_partnerships
-      name: "Alliance Forging"
+      name: "Brand Partnerships"
       description: "Build strategic partnerships"
       max_level: 15
       requires: [algorithm_optimization, audience_growth]
@@ -164,20 +164,20 @@ example_tasks:
       type: creation
       title: "First Recording"
       description: "Film your first video"
-      skills_improved: [video_production, video_magic]
+      skills_improved: [video_production, video_production]
       xp_reward: 75
 
   intermediate:
     - id: video_production
       type: creation
-      title: "Video Magic Production"
+      title: "Video Production Workshop"
       description: "Film and edit video"
       skills_improved: [video_editing, audience_resonance]
       xp_reward: 185
 
     - id: thumbnail_design
       type: creation
-      title: "Click Magic"
+      title: "Thumbnail Design"
       description: "Design compelling thumbnails"
       skills_improved: [visual_craft, algorithm_studies]
       xp_reward: 160
@@ -211,7 +211,7 @@ career_outcomes:
   - "Full-time YouTuber"
   - "Content Creator"
   - "Video Producer"
-  - "Creative Director"
+  - "Danny"
   - "Social Media Manager"
   - "Brand Partnership Manager"
   - "Media Company Founder"

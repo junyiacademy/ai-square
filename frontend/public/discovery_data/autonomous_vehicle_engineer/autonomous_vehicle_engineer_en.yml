@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "First Autonomous Drive"
   description: |
-    Chief Engineer Navigator walks you through the perception world of autonomous
+    Chief Engineer David walks you through the perception world of autonomous
     vehicles: LiDAR point clouds, camera feeds, radar echoes. But a Ghost Signal
     appears on the test track — a false obstacle detection. You must analyze sensor
     data to find the source of the phantom.

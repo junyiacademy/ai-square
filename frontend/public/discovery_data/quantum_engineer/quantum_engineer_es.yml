@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "La Primera Lección de Schrödinger"
   description: |
-    El mentor cuántico Qubit usa el gato de Schrödinger para explicar el concepto de superposición.
+    Ryan usa el gato de Schrödinger para explicar el concepto de superposición.
     Pero el monstruo de la decoherencia cuántica que acecha en el laberinto está destruyendo estados cuánticos.
     Debes aprender corrección de errores cuánticos para proteger tus cúbits.
 

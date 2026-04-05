@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Membangunkan Meka Pertama"
   description: |
-    Tetua Bengkel, Servo, memperkenalkanmu pada tiga pilar robotika: sensing,
+    Tony memperkenalkanmu pada tiga pilar robotika: sensing,
     pengambilan keputusan, dan aktuasi. Tapi sebuah prototipe liar bernama Haywire
     sedang menghantam ke mana-mana di bengkel. Kamu harus memahami data sensornya
     untuk menghentikannya dengan aman.

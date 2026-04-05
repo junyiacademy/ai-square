@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "L'Alarme de Crise Énergétique"
   description: |
-    L'ingénieure en chef Aurora sonne l'alarme : le réseau électrique de la ville est en train de défaillir en raison d'une dépendance excessive aux combustibles fossiles. Tu dois concevoir un nouveau système d'énergie renouvelable pour remplacer les vieilles centrales à charbon. Ton voyage commence par comprendre comment la lumière solaire et le vent peuvent alimenter une ville entière — proprement et efficacement.
+    L'ingénieure en chef Sean sonne l'alarme : le réseau électrique de la ville est en train de défaillir en raison d'une dépendance excessive aux combustibles fossiles. Tu dois concevoir un nouveau système d'énergie renouvelable pour remplacer les vieilles centrales à charbon. Ton voyage commence par comprendre comment la lumière solaire et le vent peuvent alimenter une ville entière — proprement et efficacement.
 
   initial_tasks:
     - learn_solar_basics

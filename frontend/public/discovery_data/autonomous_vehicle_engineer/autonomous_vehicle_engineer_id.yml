@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Mengemudi Otonom Pertama"
   description: |
-    Insinyur Kepala Navigator memandu kamu melalui dunia persepsi kendaraan otonom:
+    Insinyur Kepala David memandu kamu melalui dunia persepsi kendaraan otonom:
     awan titik LiDAR, gambar kamera, gema radar. Tapi sebuah Ghost Signal muncul di
     lintasan uji — deteksi rintangan palsu. Kamu harus menganalisis data sensor
     untuk menemukan sumber hantu itu.

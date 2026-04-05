@@ -31,7 +31,7 @@ world_setting:
 starting_scenario:
   title: "枯燥入侵"
   description: |
-    创意之神梦想带着令人担忧的消息迎接你：无聊之王Grind正在将所有游戏
+    Leo带着令人担忧的消息迎接你：无聊之王Grind正在将所有游戏
     变成无脑的数值农场，追求效率而非乐趣。你必须用创意和欢乐
     来对抗游戏体验的机械化。
   initial_tasks:

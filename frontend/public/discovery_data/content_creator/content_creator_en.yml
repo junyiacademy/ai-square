@@ -4,43 +4,43 @@ category: arts
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Digital Wizard - Content Creator"
-  short_description: "Weave captivating stories in the virtual kingdom"
+  title: "Digital Storyteller - Content Creator"
+  short_description: "Build engaged audiences through compelling text, graphics, and social media"
   long_description: |
-    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious
-    power to transform ideas into viral content. In this digital kingdom, every like
-    and share is proof of your magic, and your mentor Luna will teach you to master
-    the secrets of algorithms.
+    You are a new member of the "Creative Studio," possessing the ability to transform
+    ideas into viral content through writing, graphics, and social media. In this digital
+    landscape, every like and share reflects your creative impact, and your mentor Amy
+    will teach you to master content strategy and platform algorithms.
 
   estimated_hours: 50
   skill_focus:
-    - content_magic
-    - visual_spells
-    - word_alchemy
-    - community_summoning
+    - content_strategy
+    - visual_design
+    - copywriting
+    - community_building
 
 world_setting:
-  name: "Creative Empire"
+  name: "Creative Studio"
   description: |
-    The Creative Empire is a digital kingdom powered by creative energy. Content creators
-    here learn to harness the mysterious forces of algorithms, engagement, and viral
-    mechanics to build their influence and impact millions of lives.
+    The Creative Studio is a digital workspace powered by creative energy. Content creators
+    here learn to leverage algorithms, engagement strategies, and viral mechanics to
+    build their influence and impact millions of lives.
 
-  atmosphere: "vibrant_magical"
-  visual_theme: "digital_fantasy"
+  atmosphere: "vibrant_creative"
+  visual_theme: "digital_studio"
 
 starting_scenario:
-  title: "The Shadow's Challenge"
+  title: "The Misinformation Challenge"
   description: |
-    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen
-    wizard, is spreading false content using forbidden magic, threatening the harmony
-    of the Creative Empire. You must use the power of authentic creativity to combat
-    his dark influence.
+    Creative Mentor Amy welcomes you to the studio with urgent news: a rival creator
+    is spreading false content using clickbait tactics, threatening the credibility
+    of the creative community. You must use the power of authentic creativity to combat
+    misinformation and build trust with your audience.
 
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
-    - create_first_spell
+    - create_first_post
 
 skill_tree:
   core_skills:
@@ -53,12 +53,12 @@ skill_tree:
         - audience_targeting
 
     - id: visual_creation
-      name: "Visual Sorcery"
+      name: "Visual Design"
       description: "Create compelling visual content"
       max_level: 10
       unlocks:
-        - photo_magic
-        - video_enchantment
+        - photo_editing
+        - graphic_design
 
     - id: storytelling
       name: "Narrative Weaving"
@@ -69,28 +69,28 @@ skill_tree:
         - viral_mechanics
 
     - id: community_building
-      name: "Tribe Summoning"
+      name: "Community Building"
       description: "Build and engage communities"
       max_level: 10
       unlocks:
-        - engagement_rituals
-        - loyalty_spells
+        - engagement_strategies
+        - audience_retention
 
   advanced_skills:
     - id: algorithm_mastery
-      name: "Algorithm Whisperer"
+      name: "SEO & Algorithm Strategy"
       description: "Understand and work with platform algorithms"
       max_level: 15
       requires: [content_strategy, community_building]
 
     - id: monetization_magic
-      name: "Revenue Alchemy"
+      name: "Content Monetization"
       description: "Transform content into income"
       max_level: 15
       requires: [community_building, visual_creation]
 
     - id: brand_building
-      name: "Empire Construction"
+      name: "Brand Building"
       description: "Build a powerful personal brand"
       max_level: 15
       requires: [storytelling, content_strategy]
@@ -108,7 +108,7 @@ milestone_quests:
 
   - id: shadow_confrontation
     name: "Truth vs Deception"
-    description: "Defeat Shadow's misinformation campaign"
+    description: "Counter a misinformation campaign with authentic content"
     required_level: 10
     skills_tested: [storytelling, community_building]
     xp_reward: 1000
@@ -128,7 +128,7 @@ milestone_quests:
 
 achievements:
   - id: first_post
-    name: "First Spell"
+    name: "First Post"
     description: "Create your first piece of content"
     xp_reward: 50
     badge_type: bronze
@@ -140,7 +140,7 @@ achievements:
     badge_type: silver
 
   - id: consistency_king
-    name: "Daily Wizard"
+    name: "Consistency Champion"
     description: "Post consistently for 30 days"
     xp_reward: 400
     badge_type: gold
@@ -155,29 +155,29 @@ example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: "Magic Recipe Development"
+      title: "Content Planning Workshop"
       description: "Develop content formulas that touch hearts"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
 
     - id: visual_basics
       type: creation
-      title: "Visual Spell Practice"
+      title: "Visual Content Basics"
       description: "Create your first visual content"
-      skills_improved: [visual_creation, content_magic]
+      skills_improved: [visual_creation, visual_design]
       xp_reward: 60
 
   intermediate:
     - id: engagement_analysis
       type: analysis
-      title: "Oracle's Trial"
+      title: "Analytics Deep Dive"
       description: "Analyze content performance and audience behavior"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
 
     - id: series_creation
       type: creation
-      title: "Saga Weaving"
+      title: "Content Series Creation"
       description: "Create a content series"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
@@ -185,14 +185,14 @@ example_tasks:
   advanced:
     - id: viral_campaign
       type: creation
-      title: "Empire Expansion"
+      title: "Viral Campaign Launch"
       description: "Launch a viral content campaign"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
 
     - id: monetization_setup
       type: creation
-      title: "Gold Transmutation"
+      title: "Revenue Stream Setup"
       description: "Set up multiple revenue streams"
       skills_improved: [monetization_magic, brand_building]
       xp_reward: 400

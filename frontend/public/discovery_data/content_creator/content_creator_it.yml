@@ -9,7 +9,7 @@ metadata:
   long_description: |
     Sei un mago appena ordinato dell'"Impero Creativo", che possiede il potere
     misterioso di trasformare le idee in contenuti virali. In questo regno digitale,
-    ogni like e condivisione è prova della tua magia, e la tua mentore Luna ti
+    ogni like e condivisione è prova della tua magia, e la tua mentore Amy ti
     insegnerà a padroneggiare i segreti degli algoritmi.
 
   estimated_hours: 50
@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "La Sfida dell'Ombra"
   description: |
-    La Mentore Creativa Luna ti accoglie nell'impero con notizie urgenti: Ombra,
+    La Mentore Creativa Amy ti accoglie nell'impero con notizie urgenti: Ombra,
     un mago caduto, sta diffondendo contenuti falsi usando magia proibita, minacciando
     l'armonia dell'Impero Creativo. Devi usare il potere della creatività autentica
     per combattere la sua influenza oscura.

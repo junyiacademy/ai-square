@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Primeira Direção Autônoma"
   description: |
-    O Engenheiro-Chefe Navigator guia você pelo mundo perceptivo do veículo autônomo:
+    O Engenheiro-Chefe David guia você pelo mundo perceptivo do veículo autônomo:
     nuvens de pontos LiDAR, imagens de câmera, ecos de radar. Mas um Ghost Signal
     aparece na pista de testes — uma detecção falsa de obstáculo. Você deve analisar
     os dados dos sensores para encontrar a origem do fantasma.

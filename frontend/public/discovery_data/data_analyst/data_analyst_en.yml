@@ -4,38 +4,38 @@ category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "Data Oracle - Data Analyst"
+  title: "Data Strategist - Data Analyst"
   short_description: "Discover hidden truths in the ocean of data"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical
-    ability to see future trends in chaotic data. In this temple filled with numbers
-    and charts, every data point contains important messages, and your mission is to
-    decipher the secrets behind these numbers.
+    You are a junior analyst at the "Data Analytics Center," possessing the analytical
+    ability to identify future trends in complex datasets. In this center filled with
+    numbers and charts, every data point contains important messages, and your mission
+    is to uncover the insights behind these numbers.
 
   estimated_hours: 50
   skill_focus:
-    - data_alchemy
+    - data_wrangling
     - predictive_statistics
-    - visualization_magic
-    - insight_summoning
+    - data_visualization
+    - insight_generation
 
 world_setting:
-  name: "Data Oracle Temple"
+  name: "Data Analytics Center"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over
-    the world. Here, data analysts are trained as oracles who can interpret the language
-    of numbers and reveal truths that shape decisions across realms.
+    The Data Analytics Center is a modern facility that collects data from all over
+    the world. Here, data analysts are trained as experts who can interpret the language
+    of numbers and reveal truths that shape business decisions.
 
-  atmosphere: "mystical_analytical"
-  visual_theme: "digital_temple"
+  atmosphere: "analytical_focused"
+  visual_theme: "data_center"
 
 starting_scenario:
-  title: "Initiation at the Temple"
+  title: "First Day at the Center"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources
-    and spreading misleading analyses. You must use pure statistical methods to find
-    the truth amidst the confusion.
+    Jason welcomes you to the analytics center, explaining the challenges of
+    data-driven decision making. But a threat looms: data quality issues are polluting
+    data sources and spreading misleading analyses. You must use rigorous statistical
+    methods to find the truth amidst the confusion.
 
   initial_tasks:
     - learn_data_basics
@@ -53,15 +53,15 @@ skill_tree:
         - api_mastery
 
     - id: statistical_analysis
-      name: "Statistical Sorcery"
-      description: "Wield statistical methods to reveal patterns"
+      name: "Statistical Analysis"
+      description: "Apply statistical methods to reveal patterns"
       max_level: 10
       unlocks:
         - hypothesis_testing
-        - regression_magic
+        - regression_analysis
 
     - id: data_visualization
-      name: "Visual Prophecy"
+      name: "Data Visualization"
       description: "Transform data into compelling visual stories"
       max_level: 10
       unlocks:
@@ -78,7 +78,7 @@ skill_tree:
 
   advanced_skills:
     - id: machine_learning
-      name: "Predictive Arts"
+      name: "Predictive Modeling"
       description: "Use ML to predict future outcomes"
       max_level: 15
       requires: [statistical_analysis, data_collection]
@@ -90,7 +90,7 @@ skill_tree:
       requires: [data_collection, business_intelligence]
 
     - id: real_time_analytics
-      name: "Instant Oracle"
+      name: "Real-Time Analytics"
       description: "Perform real-time data analysis"
       max_level: 15
       requires: [data_visualization, statistical_analysis]
@@ -117,14 +117,14 @@ milestone_quests:
       - advanced_access
 
   - id: oracle_ascension
-    name: "Master Oracle"
+    name: "Senior Analyst"
     description: "Predict a major trend before it happens"
     required_level: 20
     skills_tested: [machine_learning, real_time_analytics]
     xp_reward: 2500
     unlocks:
-      - oracle_master_title
-      - temple_leadership
+      - senior_analyst_title
+      - team_leadership
 
 achievements:
   - id: first_dashboard
@@ -146,7 +146,7 @@ achievements:
     badge_type: gold
 
   - id: oracle_legend
-    name: "Oracle of Legend"
+    name: "Analytics Legend"
     description: "Complete all data challenges"
     xp_reward: 1000
     badge_type: platinum
@@ -155,9 +155,9 @@ example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: "Oracle Data Collection"
+      title: "Data Collection & Cleaning"
       description: "Collect and clean a messy dataset"
-      skills_improved: [data_collection, data_alchemy]
+      skills_improved: [data_collection, data_wrangling]
       xp_reward: 60
 
     - id: basic_stats
@@ -170,7 +170,7 @@ example_tasks:
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: "Truth Analysis Spell"
+      title: "Trend Analysis Deep Dive"
       description: "Conduct deep trend analysis"
       skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
@@ -179,20 +179,20 @@ example_tasks:
       type: creation
       title: "Vision Dashboard"
       description: "Create an interactive business dashboard"
-      skills_improved: [data_visualization, visualization_magic]
+      skills_improved: [data_visualization, data_visualization]
       xp_reward: 200
 
   advanced:
     - id: predictive_model
       type: creation
-      title: "Future Sight"
+      title: "Predictive Model"
       description: "Build a predictive model"
       skills_improved: [machine_learning, predictive_statistics]
       xp_reward: 350
 
     - id: real_time_system
       type: creation
-      title: "Instant Oracle System"
+      title: "Real-Time Analytics System"
       description: "Create real-time analytics system"
       skills_improved: [real_time_analytics, big_data_mastery]
       xp_reward: 400

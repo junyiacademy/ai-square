@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "Das Erwachen der Fabrik"
   description: |
-    Fabrikdirektor Titan kündigt eine mutige Mission an: die alte Montageanlage innerhalb eines Jahres in eine vollautomatisierte Smart Factory zu verwandeln. Wettbewerber setzen bereits KI-gesteuerte Roboter und Echtzeit-Qualitätskontrolle ein. Du musst lernen, Maschinen mit Sensoren zu verbinden, Digitale Zwillinge der Produktionslinie zu bauen und Daten zu nutzen, um Verschwendung und Defekte zu eliminieren. Die Zukunft der Fertigung beginnt jetzt.
+    Fabrikdirektor Mike kündigt eine mutige Mission an: die alte Montageanlage innerhalb eines Jahres in eine vollautomatisierte Smart Factory zu verwandeln. Wettbewerber setzen bereits KI-gesteuerte Roboter und Echtzeit-Qualitätskontrolle ein. Du musst lernen, Maschinen mit Sensoren zu verbinden, Digitale Zwillinge der Produktionslinie zu bauen und Daten zu nutzen, um Verschwendung und Defekte zu eliminieren. Die Zukunft der Fertigung beginnt jetzt.
 
   initial_tasks:
     - connect_first_sensor

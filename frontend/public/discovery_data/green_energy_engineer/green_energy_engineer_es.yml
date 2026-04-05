@@ -27,7 +27,7 @@ world_setting:
 starting_scenario:
   title: "La Alarma de Crisis Energética"
   description: |
-    La Ingeniera Jefa Aurora hace sonar la alarma: la red eléctrica de la ciudad está fallando por la dependencia excesiva de los combustibles fósiles. Debes diseñar un nuevo sistema de energía renovable para reemplazar las viejas plantas de carbón. Tu viaje comienza con entender cómo la luz solar y el viento pueden alimentar una ciudad entera de forma limpia y eficiente.
+    La Ingeniera Jefa Sean hace sonar la alarma: la red eléctrica de la ciudad está fallando por la dependencia excesiva de los combustibles fósiles. Debes diseñar un nuevo sistema de energía renovable para reemplazar las viejas plantas de carbón. Tu viaje comienza con entender cómo la luz solar y el viento pueden alimentar una ciudad entera de forma limpia y eficiente.
 
   initial_tasks:
     - learn_solar_basics

@@ -34,7 +34,7 @@ world_setting:
 starting_scenario:
   title: "Première Conduite Autonome"
   description: |
-    L'Ingénieur en Chef Navigator te fait découvrir le monde perceptif du véhicule
+    L'Ingénieur en Chef David te fait découvrir le monde perceptif du véhicule
     autonome : nuages de points LiDAR, images caméra, échos radar. Mais un Ghost
     Signal apparaît sur la piste d'essai — une fausse détection d'obstacle. Tu dois
     analyser les données des capteurs pour trouver l'origine du fantôme.

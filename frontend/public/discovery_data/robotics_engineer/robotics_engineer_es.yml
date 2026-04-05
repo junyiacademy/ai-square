@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "El Taller Despierta"
   description: |
-    El Ingeniero Jefe Chen te da tu primera tarea: un robot de fábrica en la línea de
+    Tony te da tu primera tarea: un robot de fábrica en la línea de
     ensamblaje sigue chocando con los trabajadores porque no los detecta correctamente.
     Repara su sistema de sensores y reprograma su movimiento para evitar personas.
 

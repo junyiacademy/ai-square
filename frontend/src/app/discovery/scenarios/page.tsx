@@ -29,7 +29,6 @@ import { useUserData } from "@/hooks/useUserData";
 import { useAuth } from "@/contexts/AuthContext";
 import { normalizeLanguageCode } from "@/lib/utils/language";
 import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
-import InterestAssessment from "@/components/discovery/InterestAssessment";
 // Icon mapping for career types
 const careerIcons: Record<
   string,
@@ -178,58 +177,6 @@ export default function ScenariosPage() {
   const [myScenarios, setMyScenarios] = useState<Scenario[]>([]);
   const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
   const [isLoadingMyScenarios, setIsLoadingMyScenarios] = useState(false);
-
-  // Interest quiz state
-  const [showInterestQuiz, setShowInterestQuiz] = useState(false);
-  const [interestScores, setInterestScores] = useState<{
-    tech: number;
-    creative: number;
-    business: number;
-  } | null>(null);
-
-  // Load persisted interest quiz results from server
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    const loadPreferences = async () => {
-      try {
-        const res = await authenticatedFetch("/api/discovery/user/preferences");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.preferences?.interestQuizCompleted) {
-            setInterestScores(data.preferences.interestScores || null);
-          } else {
-            // First visit — show the quiz
-            setShowInterestQuiz(true);
-          }
-        }
-      } catch {
-        // Non-critical — silently ignore
-      }
-    };
-    loadPreferences();
-  }, [isLoggedIn]);
-
-  const handleInterestQuizComplete = async (
-    results: { tech: number; creative: number; business: number },
-    answers?: Record<string, string[]>,
-  ) => {
-    setInterestScores(results);
-    setShowInterestQuiz(false);
-    // Persist to server
-    try {
-      await authenticatedFetch("/api/discovery/user/preferences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          interestQuizCompleted: true,
-          interestScores: results,
-          interestAnswers: answers,
-        }),
-      });
-    } catch {
-      // Non-critical — results are already in state
-    }
-  };
 
   // Load scenarios from API
   useEffect(() => {
@@ -443,58 +390,6 @@ export default function ScenariosPage() {
   return (
     <DiscoveryPageLayout>
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Interest Quiz Modal */}
-        {showInterestQuiz && isLoggedIn && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    {t("discovery:scenarios.interestQuizTitle", "探索興趣測驗")}
-                  </h2>
-                  <button
-                    onClick={() => setShowInterestQuiz(false)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors text-2xl leading-none"
-                    aria-label="Close"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <p className="text-sm text-gray-500 mb-6">
-                  {t("discovery:scenarios.interestQuizDesc", "完成測驗後我們會根據你的興趣推薦最適合的職涯探索方向")}
-                </p>
-                <InterestAssessment onComplete={handleInterestQuizComplete} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Interest Scores Banner (shown after quiz is done) */}
-        {interestScores && !showInterestQuiz && (
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 rounded-2xl p-4 mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Sparkles className="w-5 h-5 text-purple-600 shrink-0" />
-              <div className="flex gap-3 text-sm">
-                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
-                  {t("discovery:scenarios.scoreTech", "科技")} {interestScores.tech}%
-                </span>
-                <span className="px-2 py-1 bg-pink-100 text-pink-700 rounded-full font-medium">
-                  {t("discovery:scenarios.scoreCreative", "創意")} {interestScores.creative}%
-                </span>
-                <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">
-                  {t("discovery:scenarios.scoreBusiness", "商業")} {interestScores.business}%
-                </span>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowInterestQuiz(true)}
-              className="text-xs text-purple-600 hover:text-purple-800 underline shrink-0"
-            >
-              {t("discovery:scenarios.retakeQuiz", "重新測驗")}
-            </button>
-          </div>
-        )}
-
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">

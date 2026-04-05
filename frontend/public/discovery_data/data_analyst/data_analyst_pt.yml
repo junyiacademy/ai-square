@@ -29,7 +29,7 @@ world_setting:
 starting_scenario:
   title: "Iniciação no Templo"
   description: |
-    O Sábio Mentor Oráculo dá as boas-vindas ao templo, falando em enigmas sobre
+    Jason dá as boas-vindas ao templo, falando em enigmas sobre
     os segredos dos dados. Mas uma ameaça paira: Chaos, o destruidor de dados, está
     poluindo fontes de dados e espalhando análises enganosas. Você deve usar métodos
     estatísticos puros para encontrar a verdade em meio à confusão.

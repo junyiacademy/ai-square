@@ -32,7 +32,7 @@ world_setting:
 starting_scenario:
   title: "Den ersten Mech erwecken"
   description: |
-    Werkstatt-Ältester Servo stellt dir die drei Säulen der Robotik vor: Sensorik,
+    Tony stellt dir die drei Säulen der Robotik vor: Sensorik,
     Entscheidungsfindung und Aktorik. Doch ein außer Kontrolle geratener Prototyp namens
     Haywire rast durch die Werkstatt. Du musst seine Sensordaten verstehen, um ihn
     sicher zum Stehen zu bringen.

@@ -33,7 +33,7 @@ world_setting:
 starting_scenario:
   title: "슈뢰딩거의 첫 번째 수업"
   description: |
-    양자 멘토 Qubit은 슈뢰딩거의 고양이를 이용해 중첩의 개념을 설명합니다.
+    Ryan은 슈뢰딩거의 고양이를 이용해 중첩의 개념을 설명합니다.
     그러나 미궁 속에 숨어 있는 양자 결어긋남 괴물 Decoherence가 양자 상태를 파괴하고 있습니다.
     큐비트를 보호하기 위해 양자 오류 수정을 배워야만 합니다.
 

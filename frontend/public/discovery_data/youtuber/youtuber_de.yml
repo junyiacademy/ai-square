@@ -29,7 +29,7 @@ world_setting:
 starting_scenario:
   title: "Der Algorithmus-Wandel"
   description: |
-    Der Kreativdirektor begrüßt dich mit besorgniserregenden Nachrichten: Algorithmus,
+    Danny begrüßt dich mit besorgniserregenden Nachrichten: Algorithmus,
     der launische König, hat plötzlich seine Vorlieben geändert und vergräbt die Arbeit
     vieler Creator. Du musst ein Gleichgewicht finden zwischen der Wahrung deiner
     kreativen Integrität und der Anpassung an algorithmische Anforderungen.
@@ -209,7 +209,7 @@ career_outcomes:
   - "Vollzeit-YouTuber"
   - "Content Creator"
   - "Videoproduzent"
-  - "Kreativdirektor"
+  - "Danny"
   - "Social Media Manager"
   - "Brand Partnership Manager"
   - "Medienunternehmen-Gründer"

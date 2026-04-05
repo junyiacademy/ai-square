@@ -37,7 +37,7 @@ world_setting:
 starting_scenario:
   title: "Primer Día en la Forja"
   description: |
-    El Ingeniero Principal Lin te da la bienvenida a la forja. Tu primer desafío:
+    El Ingeniero Principal Mark te da la bienvenida a la forja. Tu primer desafío:
     un taller rival lanzó un chip con un defecto oculto que hace que los teléfonos
     se sobrecalienten. Debes aprender los fundamentos del diseño de chips para ayudar
     a crear una alternativa más segura — entendiendo cómo los interruptores lógicos
