@@ -96,6 +96,17 @@ export interface DiscoveryPath {
       xp_reward: number;
     }>;
   };
+  example_tasks?: Record<
+    string,
+    Array<{
+      id: string;
+      type?: string;
+      title: string;
+      description: string;
+      skills_improved: string[];
+      xp_reward: number;
+    }>
+  >;
   learning_objectives?: string[];
   career_outcomes?: string[];
 }

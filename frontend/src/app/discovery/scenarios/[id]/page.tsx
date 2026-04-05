@@ -20,6 +20,9 @@ import {
   ArrowLeft,
   Plus,
   Play,
+  Lock,
+  Star,
+  CheckCircle2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -28,6 +31,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import { normalizeLanguageCode } from "@/lib/utils/language";
 import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+import { useGamificationProfile } from "@/hooks/useGamificationProfile";
 
 // Icon mapping for career types
 const careerIcons: Record<
@@ -138,6 +142,27 @@ interface ScenarioData {
       estimated_hours?: number;
       skill_focus?: string[];
     };
+    milestoneQuests?: Array<{
+      id: string;
+      name: string;
+      description: string;
+      required_level: number;
+      skills_tested: string[];
+      xp_reward: number;
+      unlocks?: string[];
+    }>;
+    careerInsights?: {
+      job_market?: {
+        demand?: string;
+        growth_rate?: string;
+        salary_range?: string;
+        job_titles?: string[];
+      };
+      required_skills?: {
+        technical?: string[];
+        soft?: string[];
+      };
+    } | null;
   } | null;
   metadata?: Record<string, unknown>;
   taskTemplates?: Array<Record<string, unknown>>;
@@ -165,6 +190,7 @@ export default function DiscoveryScenarioDetailPage({
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
+  const { profile: gamificationProfile } = useGamificationProfile();
 
   const [loading, setLoading] = useState(true);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
@@ -502,6 +528,111 @@ export default function DiscoveryScenarioDetailPage({
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+        {/* Milestone Quests from YAML */}
+        {scenarioData.yamlData?.milestoneQuests &&
+          scenarioData.yamlData.milestoneQuests.length > 0 && (
+            <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <Trophy className="w-5 h-5 text-purple-600" />
+                <span>{t("discovery:scenarioDetail.milestoneQuests", "里程碑任務")}</span>
+              </h2>
+              <div className="space-y-4">
+                {scenarioData.yamlData.milestoneQuests.map((quest) => {
+                  const userLevel = gamificationProfile.level;
+                  const isCompleted = false; // No per-quest completion tracking yet
+                  const isAvailable = userLevel >= quest.required_level;
+                  const isLocked = !isAvailable;
+
+                  return (
+                    <div
+                      key={quest.id}
+                      className={`rounded-xl border-2 p-4 transition-colors ${
+                        isLocked
+                          ? "border-gray-200 bg-gray-50 opacity-60"
+                          : isCompleted
+                            ? "border-green-300 bg-green-50"
+                            : "border-purple-200 bg-purple-50"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-3 flex-1">
+                          <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                            isLocked
+                              ? "bg-gray-200"
+                              : isCompleted
+                                ? "bg-green-200"
+                                : "bg-purple-200"
+                          }`}>
+                            {isLocked ? (
+                              <Lock className="w-5 h-5 text-gray-500" />
+                            ) : isCompleted ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            ) : (
+                              <Star className="w-5 h-5 text-purple-600" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center flex-wrap gap-2 mb-1">
+                              <h3 className={`font-semibold text-sm ${
+                                isLocked ? "text-gray-500" : isCompleted ? "text-green-800" : "text-purple-900"
+                              }`}>
+                                {quest.name}
+                              </h3>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                isLocked
+                                  ? "bg-gray-200 text-gray-500"
+                                  : isCompleted
+                                    ? "bg-green-200 text-green-700"
+                                    : "bg-purple-200 text-purple-700"
+                              }`}>
+                                {isCompleted
+                                  ? t("discovery:scenarioDetail.questCompleted", "已完成")
+                                  : isAvailable
+                                    ? t("discovery:scenarioDetail.questAvailable", "可挑戰")
+                                    : t("discovery:scenarioDetail.questLocked", "未解鎖")}
+                              </span>
+                            </div>
+                            <p className={`text-xs mb-2 ${isLocked ? "text-gray-400" : "text-gray-600"}`}>
+                              {quest.description}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                              <span className="flex items-center space-x-1">
+                                <GraduationCap className="w-3.5 h-3.5" />
+                                <span>
+                                  {t("discovery:scenarioDetail.requiredLevel", "需要等級")} {quest.required_level}
+                                </span>
+                              </span>
+                              <span className="flex items-center space-x-1">
+                                <Star className="w-3.5 h-3.5 text-yellow-500" />
+                                <span>{quest.xp_reward} XP</span>
+                              </span>
+                            </div>
+                            {quest.skills_tested && quest.skills_tested.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {quest.skills_tested.map((skill) => (
+                                  <span
+                                    key={skill}
+                                    className={`px-2 py-0.5 rounded-full text-xs ${
+                                      isLocked
+                                        ? "bg-gray-100 text-gray-400"
+                                        : "bg-white text-purple-600 border border-purple-200"
+                                    }`}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

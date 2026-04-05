@@ -16,10 +16,29 @@ const DISCOVERY_CHAT_RATE_LIMIT = {
     "你發送訊息太頻繁了，請稍等 1 分鐘後再試。(Rate limit: 10 requests/min)",
 };
 
+interface ConversationMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { message, context } = body;
+    const { message, context, conversationHistory } = body as {
+      message: string;
+      context: {
+        aiRole: string;
+        pathTitle: string;
+        currentTask: string;
+        taskIndex: number;
+        totalTasks: number;
+        currentTaskDescription: string;
+        taskProgress: number;
+        completedTasks: number;
+        skills: string[];
+      };
+      conversationHistory?: ConversationMessage[];
+    };
 
     if (!message || !context) {
       return NextResponse.json(
@@ -131,6 +150,22 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
       },
     });
 
+    // Build conversation contents with history (last 10 interactions)
+    const historyContents: Array<{
+      role: "user" | "model";
+      parts: Array<{ text: string }>;
+    }> = [];
+
+    if (conversationHistory && conversationHistory.length > 0) {
+      const recentHistory = conversationHistory.slice(-10);
+      for (const msg of recentHistory) {
+        historyContents.push({
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }],
+        });
+      }
+    }
+
     // Generate response using Vertex AI
     const result = await model.generateContent({
       contents: [
@@ -143,6 +178,7 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
             },
           ],
         },
+        ...historyContents,
         { role: "user", parts: [{ text: userPrompt }] },
       ],
     });
