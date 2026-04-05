@@ -468,19 +468,15 @@ export async function PATCH(
         ?.split(",")[0];
       const userLanguage = acceptLanguage || language;
 
-      // Use AI to evaluate the response
+      // Use AI to evaluate the response with 4-dimension rubrics
       const aiService = new VertexAIService({
         systemPrompt:
-          userLanguage === "zhTW"
-            ? "你是嚴格的學習評估助手。請根據任務要求客觀評估學習者是否真正完成了任務。如果回答與任務無關或未完成要求，必須給予誠實的評估。"
-            : "You are a strict learning evaluator. Objectively assess if the learner actually completed the task based on requirements. If response is unrelated or incomplete, provide honest assessment.",
+          "You are an expert educational evaluator specializing in career exploration for students aged 15-18. Evaluate responses using structured rubrics and provide constructive mentor-style feedback.",
         temperature: 0.7,
         model: "gemini-2.5-flash",
       });
 
       // Prepare evaluation prompt with clear task context
-      const taskInstructions =
-        (task.metadata as Record<string, unknown>)?.instructions || "";
       const maxXP =
         ((task.content as Record<string, unknown>)?.xp as number) || 100;
       const taskContent = (task.content as Record<string, unknown>) || {};
@@ -499,58 +495,32 @@ export async function PATCH(
         return String(obj);
       };
 
-      const evaluationPrompt =
-        userLanguage === "zhTW"
-          ? `嚴格評估學習者是否完成了指定任務：
+      const taskTitle = getLocalizedValue(task.title);
+      const taskInstructions = getLocalizedValue(
+        (task.metadata as Record<string, unknown>)?.instructions || "",
+      );
+      const localizedContent: Record<string, unknown> = {
+        ...taskContent,
+        description: taskContent.description
+          ? getLocalizedValue(taskContent.description)
+          : undefined,
+        instructions: taskContent.instructions
+          ? getLocalizedValue(taskContent.instructions)
+          : undefined,
+      };
 
-任務標題：${getLocalizedValue(task.title)}
-任務說明：${getLocalizedValue(taskInstructions)}
-${taskContent.description ? `任務描述：${getLocalizedValue(taskContent.description)}` : ""}
-${taskContent.instructions ? `任務指示：${getLocalizedValue(taskContent.instructions)}` : ""}
-${taskContent.requirements ? `具體要求：${JSON.stringify(taskContent.requirements)}` : ""}
-
-學習者回答：
-${content.response}
-
-請仔細判斷：
-1. 回答是否真的針對任務要求？
-2. 是否實際完成了要求的內容？
-3. 如果回答與任務無關，completed 必須為 false
-
-請用繁體中文以 JSON 格式回覆：
-{
-  "feedback": "具體說明是否完成任務及原因",
-  "strengths": ["優點（如果有）"],
-  "improvements": ["必須改進的地方"],
-  "completed": true/false（嚴格判斷）,
-  "xpEarned": number (0-${maxXP}，未完成任務應該很低),
-  "skillsImproved": ["實際展現的相關技能"]
-}`
-          : `Strictly evaluate if the learner completed the assigned task:
-
-Task Title: ${getLocalizedValue(task.title)}
-Instructions: ${getLocalizedValue(taskInstructions)}
-${taskContent.description ? `Description: ${getLocalizedValue(taskContent.description)}` : ""}
-${taskContent.instructions ? `Task Instructions: ${getLocalizedValue(taskContent.instructions)}` : ""}
-${taskContent.requirements ? `Requirements: ${JSON.stringify(taskContent.requirements)}` : ""}
-
-Learner's Response:
-${content.response}
-
-Carefully judge:
-1. Does the response address the task requirements?
-2. Did they actually complete what was asked?
-3. If response is unrelated to task, completed MUST be false
-
-Return JSON:
-{
-  "feedback": "Specific feedback on task completion",
-  "strengths": ["Strengths if any"],
-  "improvements": ["What needs improvement"],
-  "completed": true/false (strict judgment),
-  "xpEarned": number (0-${maxXP}, should be low if not completed),
-  "skillsImproved": ["Actually demonstrated relevant skills"]
-}`;
+      // Import rubrics prompt builder from TaskEvaluationService
+      const { TaskEvaluationService } = await import(
+        "@/lib/services/discovery/task-evaluation-service"
+      );
+      const evaluationPrompt = TaskEvaluationService.buildRubricsEvaluationPrompt(
+        taskTitle,
+        taskInstructions,
+        localizedContent,
+        content.response as string,
+        maxXP,
+        userLanguage,
+      );
 
       try {
         const aiResponse = await aiService.sendMessage(evaluationPrompt, {
@@ -560,12 +530,34 @@ Return JSON:
         });
 
         // Parse JSON from AI response
-        let evaluationResult;
+        let evaluationResult: {
+          score?: number;
+          feedback: string;
+          strengths: string[];
+          improvements: string[];
+          completed: boolean;
+          xpEarned: number;
+          skillsImproved: string[];
+          dimensions?: {
+            understanding: { score: number; comment: string };
+            analysis: { score: number; comment: string };
+            practice: { score: number; comment: string };
+            expression: { score: number; comment: string };
+          };
+        };
         try {
           // Extract JSON from the response (AI might include markdown code blocks)
           const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             evaluationResult = JSON.parse(jsonMatch[0]);
+            // Ensure score is set (sum dimensions if missing)
+            if (!evaluationResult.score && evaluationResult.dimensions) {
+              evaluationResult.score =
+                (evaluationResult.dimensions.understanding?.score || 0) +
+                (evaluationResult.dimensions.analysis?.score || 0) +
+                (evaluationResult.dimensions.practice?.score || 0) +
+                (evaluationResult.dimensions.expression?.score || 0);
+            }
           } else {
             throw new Error("No JSON found in AI response");
           }
@@ -573,10 +565,10 @@ Return JSON:
           console.error("Failed to parse AI response as JSON:", parseError);
           // Fallback evaluation
           evaluationResult = {
+            score: maxXP,
             feedback: aiResponse.content,
             completed: true,
-            xpEarned:
-              ((task.content as Record<string, unknown>)?.xp as number) || 100,
+            xpEarned: maxXP,
             strengths: [],
             improvements: [],
             skillsImproved: [],
@@ -616,11 +608,13 @@ Return JSON:
         // Just return the result
         return NextResponse.json({
           success: true,
+          score: evaluationResult.score || 0,
           completed: evaluationResult.completed,
           feedback: evaluationResult.feedback,
           strengths: evaluationResult.strengths || [],
           improvements: evaluationResult.improvements || [],
           xpEarned: evaluationResult.xpEarned || 0,
+          dimensions: evaluationResult.dimensions || null,
           canComplete: evaluationResult.completed, // Indicate task can be completed
         });
       } catch (aiError) {

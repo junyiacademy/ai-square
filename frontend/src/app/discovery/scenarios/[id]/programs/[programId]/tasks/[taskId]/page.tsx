@@ -71,8 +71,15 @@ export default function TaskDetailPage({
     completed: boolean;
     feedback: string;
     xpEarned: number;
+    score?: number;
     strengths: string[];
     improvements: string[];
+    dimensions?: {
+      understanding: { score: number; comment: string };
+      analysis: { score: number; comment: string };
+      practice: { score: number; comment: string };
+      expression: { score: number; comment: string };
+    };
   } | null>(null);
   const [showHistory, setShowHistory] = useState(true);
   const [completingTask, setCompletingTask] = useState(false);
@@ -223,8 +230,10 @@ export default function TaskDetailPage({
           completed: result.completed,
           feedback: result.feedback,
           xpEarned: result.xpEarned,
+          score: result.score,
           strengths: result.strengths || [],
           improvements: result.improvements || [],
+          dimensions: result.dimensions || null,
         });
       }, 100);
 
@@ -1250,6 +1259,51 @@ export default function TaskDetailPage({
             </div>
 
             <div className="space-y-4">
+              {/* Total Score */}
+              {feedback.score !== undefined && feedback.score > 0 && (
+                <div className="flex items-center justify-between bg-white/70 rounded-lg px-4 py-2">
+                  <span className="text-sm font-medium text-gray-600">{t("task.totalScore")}</span>
+                  <span className="text-2xl font-bold text-purple-700">{feedback.score}<span className="text-sm font-normal text-gray-500"> / 100</span></span>
+                </div>
+              )}
+
+              {/* 4-Dimension Scores */}
+              {feedback.dimensions && (
+                <div className="bg-white/70 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">{t("task.dimensionScores")}</h4>
+                  <div className="space-y-2">
+                    {(
+                      [
+                        { key: "understanding", labelKey: "task.dimUnderstanding" },
+                        { key: "analysis", labelKey: "task.dimAnalysis" },
+                        { key: "practice", labelKey: "task.dimPractice" },
+                        { key: "expression", labelKey: "task.dimExpression" },
+                      ] as const
+                    ).map(({ key, labelKey }) => {
+                      const dim = feedback.dimensions![key];
+                      const pct = Math.round((dim.score / 25) * 100);
+                      return (
+                        <div key={key}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs text-gray-600">{t(labelKey)}</span>
+                            <span className="text-xs font-semibold text-gray-800">{dim.score}<span className="text-gray-400">/25</span></span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1">
+                            <div
+                              className={`h-1.5 rounded-full ${pct >= 80 ? "bg-green-500" : pct >= 60 ? "bg-yellow-500" : "bg-orange-500"}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          {dim.comment && (
+                            <p className="text-xs text-gray-500">{dim.comment}</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Main Feedback */}
               <div>
                 <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900 prose-p:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700">
