@@ -14,7 +14,13 @@ export async function GET(request: NextRequest) {
       return createUnauthorizedResponse();
     }
 
-    const userId = session.user.id || session.user.email;
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(session.user.email);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();

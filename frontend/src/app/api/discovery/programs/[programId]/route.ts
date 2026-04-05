@@ -13,12 +13,20 @@ export async function GET(
     // Get authentication
     const session = await getUnifiedAuth(request);
 
-    if (!session?.user.id) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 
     // Await params before using
     const { programId } = await params;
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(session.user.email);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
@@ -31,7 +39,6 @@ export async function GET(
     }
 
     // Verify ownership
-    const userId = session.user.id;
     if (program.userId !== userId) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }

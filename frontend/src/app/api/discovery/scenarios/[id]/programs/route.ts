@@ -13,12 +13,19 @@ export async function GET(
 ) {
   try {
     const session = await getUnifiedAuth(request);
-    if (!session?.user.id) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 
     const { id: scenarioId } = await params;
-    const userId = session.user.id;
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(session.user.email);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
@@ -105,7 +112,15 @@ export async function POST(
 
     const { id: scenarioId } = await params;
     const userEmail = session.user.email;
-    const userId = session.user.id.toString(); // Ensure it's a string
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(userEmail);
+    if (!dbUser) {
+      console.log("❌ User not found in DB for email:", userEmail);
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     console.log("🎯 Target scenario ID:", scenarioId);
     console.log("👤 User ID:", userId, "Email:", userEmail);

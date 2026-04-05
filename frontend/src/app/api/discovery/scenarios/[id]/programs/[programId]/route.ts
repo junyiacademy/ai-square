@@ -23,7 +23,14 @@ export async function GET(
     }
 
     const { id: scenarioId, programId } = await params;
-    const userId = session.user.id; // Get user ID
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(session.user.email);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     // Get language from query param
     const { searchParams } = new URL(request.url);

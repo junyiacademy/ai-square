@@ -355,6 +355,7 @@ When errors occur, evaluate in order:
 - **Deployment**: `docs/deployment/CICD.md`
 - **Frontend Guide**: `frontend/FRONTEND-GUIDE.md`
 - **Documentation Standards**: `docs/DOCUMENTATION-GUIDE.md`
+- **Discovery Rubrics**: `docs/discovery/DISCOVERY-RUBRICS.md` — 職業 YAML 品質標準、任務設計原則、AI 批改準則。新增或修改 Discovery 職業時必須遵循
 
 ## 🔑 Technical Specs
 

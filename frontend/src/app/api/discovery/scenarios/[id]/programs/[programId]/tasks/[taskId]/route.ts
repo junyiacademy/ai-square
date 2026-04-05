@@ -104,7 +104,14 @@ export async function GET(
     }
 
     const { programId, taskId } = await params;
-    const userId = session.user.id; // Use user ID not email
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepo = repositoryFactory.getUserRepository();
+    const dbUser = await userRepo.findByEmail(session.user.email);
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUser.id;
 
     // Get language from query params
     const url = new URL(request.url);
@@ -398,8 +405,14 @@ export async function PATCH(
     }
 
     const { programId, taskId } = await params;
-    const userId = session.user.id; // Use user ID not email
-    // Keep for evaluation records
+
+    // Look up DB user by email to get the correct DB user ID
+    const userRepoP = repositoryFactory.getUserRepository();
+    const dbUserP = await userRepoP.findByEmail(session.user.email);
+    if (!dbUserP) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const userId = dbUserP.id;
 
     const body = await request.json();
     const { action, content } = body;
