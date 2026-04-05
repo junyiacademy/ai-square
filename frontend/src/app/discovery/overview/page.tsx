@@ -156,12 +156,12 @@ export default function OverviewPage() {
   const [skillTrees, setSkillTrees] = useState<Record<string, SkillTreeData>>({});
   const [expandedCareer, setExpandedCareer] = useState<string | null>(null);
 
-  // Daily challenges
-  const [dailyChallenges, setDailyChallenges] = useState<DailyChallenge[]>([]);
+  // Daily challenges (removed in Issue #109 — Discovery ≠ PBL)
+  const dailyChallenges: DailyChallenge[] = [];
 
-  // Leaderboard
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
+  // Leaderboard (removed in Issue #109 — Discovery ≠ PBL)
+  const leaderboard: LeaderboardEntry[] = [];
+  const currentUserRank: number | null = null;
 
   // Careers the user has any skill progress in
   const careerIds = Object.keys(profile.skillProgress);
@@ -188,37 +188,7 @@ export default function OverviewPage() {
     });
   }, [careerIds.join(","), i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Fetch daily challenges
-  useEffect(() => {
-    if (loading) return;
-    const lang = i18n.language || "en";
-    fetch(`/api/discovery/user/daily-challenges?lang=${lang}`)
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.challenges)) {
-          setDailyChallenges(json.challenges);
-        }
-      })
-      .catch(() => {
-        // ignore
-      });
-  }, [loading, i18n.language]);
-
-  // Fetch leaderboard
-  useEffect(() => {
-    if (loading) return;
-    fetch("/api/discovery/leaderboard")
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.leaderboard)) {
-          setLeaderboard(json.leaderboard);
-          setCurrentUserRank(json.currentUserRank ?? null);
-        }
-      })
-      .catch(() => {
-        // ignore
-      });
-  }, [loading]);
+  // Daily challenges & leaderboard removed (Issue #109 — Discovery ≠ PBL)
 
   const levelName = getLevelName(profile.level, i18n.language);
   const progressPercent = xpProgressPercent(profile.totalXp);

@@ -22,8 +22,19 @@ export async function GET(
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
 
-    // Check if scenario exists
-    const scenario = await scenarioRepo.findById(scenarioId);
+    // Check if scenario exists — support both UUID and slug (sourceId) lookup
+    const isUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        scenarioId,
+      );
+    let scenario;
+    if (isUUID) {
+      scenario = await scenarioRepo.findById(scenarioId);
+    } else {
+      // Slug lookup: find by sourceId
+      const results = await scenarioRepo.findBySource("discovery", scenarioId);
+      scenario = results[0] || null;
+    }
 
     if (!scenario || scenario.mode !== "discovery") {
       return NextResponse.json(

@@ -16,7 +16,7 @@ metadata:
     - code_weaving
     - interface_sculpting
     - logic_architecture
-    - user_experience_magic
+    - user_experience
 
 world_setting:
   name: "CodeLab 開發工作室"
@@ -32,8 +32,8 @@ starting_scenario:
   title: "加入工作室"
   description: |
     你是「CodeLab 開發工作室」的新進工程師，剛通過技術面試拿到 offer。
-    技術長 Code 親自來迎接你，卻帶來一個壞消息：
-    聯盟為台灣最大電商平台開發的 App 被惡名昭彰的 Bug 惡魔入侵，使用者反映畫面崩潰又當機。
+    資深全端工程師 Eric（前 Line 台灣技術主管）親自來迎接你，卻帶來一個壞消息：
+    團隊為台灣最大電商平台開發的 App 出了嚴重 bug，使用者反映畫面崩潰又當機。
 
     【你的任務】分析這次 App 崩潰的可能原因，並提出你的修復思路。
     你需要思考：程式邏輯錯誤、UI 設計衝突、還是資料流出了問題？
@@ -55,12 +55,12 @@ skill_tree:
         - clean_code
 
     - id: ui_development
-      name: "介面雕琢"
-      description: "建造美觀的使用者介面"
+      name: "介面開發"
+      description: "建造美觀的使用者介面——把設計稿變成用戶真正能點、能滑的畫面"
       max_level: 10
       unlocks:
         - responsive_design
-        - animation_magic
+        - animation_effects
 
     - id: backend_architecture
       name: "邏輯工程"
@@ -71,8 +71,8 @@ skill_tree:
         - database_mastery
 
     - id: mobile_development
-      name: "行動巫術"
-      description: "創造原生行動體驗"
+      name: "行動開發"
+      description: "創造原生行動體驗——就像為不同尺寸的螢幕量身訂做西裝"
       max_level: 10
       unlocks:
         - cross_platform
@@ -80,14 +80,14 @@ skill_tree:
 
   advanced_skills:
     - id: performance_optimization
-      name: "速度魔法"
-      description: "優化應用達到最佳效能"
+      name: "效能調校"
+      description: "優化應用達到最佳效能——像調校引擎，讓 App 跑得又快又穩"
       max_level: 15
       requires: [programming_fundamentals, backend_architecture]
 
     - id: security_mastery
-      name: "防護咒語"
-      description: "保護應用免受威脅"
+      name: "資安防護"
+      description: "保護應用免受威脅——像幫房子裝鎖、監視器和防火牆"
       max_level: 15
       requires: [backend_architecture, mobile_development]
 
@@ -126,11 +126,11 @@ milestone_quests:
     xp_reward: 3000
     unlocks:
       - legendary_developer_title
-      - alliance_hall_of_fame
+      - industry_hall_of_fame
 
 achievements:
   - id: hello_world
-    name: "第一個咒語"
+    name: "Hello World"
     description: "寫出你的第一個運作應用"
     xp_reward: 100
     badge_type: bronze
@@ -148,7 +148,7 @@ achievements:
     badge_type: gold
 
   - id: app_legend
-    name: "傳奇工匠"
+    name: "資深架構師"
     description: "完成所有開發挑戰"
     xp_reward: 1200
     badge_type: platinum
@@ -179,7 +179,7 @@ example_tasks:
 
     - id: game_app
       type: creation
-      title: "娛樂咒語"
+      title: "手機遊戲開發"
       description: "創造引人入勝的手機遊戲"
       skills_improved: [ui_development, performance_optimization]
       xp_reward: 220

@@ -4,8 +4,8 @@ category: arts
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "影像吟遊詩人 - YouTuber"
-  short_description: "在數位舞台上演繹精彩的影像故事"
+  title: "影音創作者 - YouTuber"
+  short_description: "用影片和直播打造自己的頻道——拍攝、剪輯、縮圖、直播全都來"
   long_description: |
     你是「CreatorHub 創作者基地」的新進創作者，擁有透過鏡頭說故事、娛樂觀眾的天賦。
     在這個充滿創意與技術的內容創作空間中，每一支影片都是一次表達機會，每一個訂閱者
@@ -14,7 +14,7 @@ metadata:
   estimated_hours: 55
   skill_focus:
     - storytelling_arts
-    - video_magic
+    - video_production
     - audience_resonance
     - algorithm_studies
 
@@ -31,7 +31,7 @@ starting_scenario:
   title: "演算法變遷"
   description: |
     你是「CreatorHub 創作者基地」的新進創作者，頻道剛起步，第一批影片才剛上線。
-    基地的創意導演把你叫進剪輯室說：「演算法剛做了一次大更新，連台灣幾位百萬訂閱 YouTuber 的頻道流量都暴跌——你要在這個時間點起步，你的策略是什麼？全球創作者經濟規模已突破千億美金，MrBeast 模式證明優質內容可以跨越語言和文化。」
+    百萬訂閱 YouTuber Danny（曾任三立電視導播，專攻知識型內容）把你叫進剪輯室說：「演算法剛做了一次大更新，連台灣幾位百萬訂閱 YouTuber 的頻道流量都暴跌——你要在這個時間點起步，你的策略是什麼？全球創作者經濟規模已突破千億美金，MrBeast 模式證明優質內容可以跨越語言和文化。」
 
     【你的任務】分析這次演算法變遷對不同類型內容的影響，說明你會如何在保持創作初心的同時，讓你的內容被更多人看見。
     你需要思考：什麼樣的內容有長久的生命力？如何在真實性和演算法友好之間取得平衡？
@@ -45,28 +45,28 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: content_planning
-      name: "故事編織"
-      description: "規劃引人入勝的影片內容"
+      name: "腳本企劃"
+      description: "規劃引人入勝的影片內容——就像導演拿到劇本，先想好要拍什麼、怎麼拍"
       max_level: 10
       unlocks:
         - series_planning
         - content_calendar
 
     - id: video_production
-      name: "視覺工藝"
-      description: "精通影片拍攝技巧"
+      name: "攝影技術"
+      description: "精通影片拍攝技巧——鏡頭語言、構圖、打光，用畫面說故事"
       max_level: 10
       unlocks:
         - camera_mastery
-        - lighting_magic
+        - lighting_techniques
 
     - id: video_editing
-      name: "時間雕塑"
-      description: "剪輯引人入勝的影片"
+      name: "後製剪輯"
+      description: "剪輯引人入勝的影片——像廚師擺盤，把素材剪成觀眾捨不得跳過的節奏"
       max_level: 10
       unlocks:
         - pacing_rhythm
-        - effects_wizardry
+        - effects_mastery
 
     - id: audience_growth
       name: "社群建設"
@@ -78,20 +78,20 @@ skill_tree:
 
   advanced_skills:
     - id: algorithm_optimization
-      name: "演算法低語"
-      description: "掌握 YouTube 演算法"
+      name: "演算法經營"
+      description: "掌握 YouTube 演算法——搞懂推薦機制，讓影片自己找到觀眾"
       max_level: 15
       requires: [content_planning, audience_growth]
 
     - id: monetization_mastery
-      name: "收益流程"
-      description: "多元化收入來源"
+      name: "頻道變現"
+      description: "多元化收入來源——廣告分潤、會員、Super Chat、品牌合作"
       max_level: 15
       requires: [audience_growth, video_production]
 
     - id: brand_partnerships
-      name: "聯盟鍛造"
-      description: "建立策略合作夥伴關係"
+      name: "品牌合作"
+      description: "建立策略合作夥伴關係——讓品牌主動找上門的業配談判術"
       max_level: 15
       requires: [algorithm_optimization, audience_growth]
 
@@ -117,7 +117,7 @@ milestone_quests:
       - stable_growth
 
   - id: channel_empire
-    name: "數位帝國"
+    name: "百萬訂閱頻道"
     description: "建立擁有百萬訂閱的頻道"
     required_level: 20
     skills_tested: [brand_partnerships, monetization_mastery]
@@ -140,13 +140,13 @@ achievements:
     badge_type: silver
 
   - id: consistency_master
-    name: "可靠詩人"
+    name: "穩定產出王"
     description: "連續 6 個月每週上傳"
     xp_reward: 480
     badge_type: gold
 
   - id: youtube_sage
-    name: "內容賢者"
+    name: "頻道經營大師"
     description: "完成所有創作者挑戰"
     xp_reward: 960
     badge_type: platinum
@@ -164,28 +164,28 @@ example_tasks:
       type: creation
       title: "首次錄製"
       description: "拍攝你的第一支影片"
-      skills_improved: [video_production, video_magic]
+      skills_improved: [video_production, video_editing]
       xp_reward: 75
 
   intermediate:
     - id: video_production
       type: creation
-      title: "影像魔法製作"
+      title: "影片製作實戰"
       description: "拍攝和剪輯影片"
       skills_improved: [video_editing, audience_resonance]
       xp_reward: 185
 
     - id: thumbnail_design
       type: creation
-      title: "點擊魔法"
-      description: "設計吸引人的縮圖"
+      title: "縮圖設計"
+      description: "設計吸引人的縮圖——決定觀眾會不會點進來的關鍵 3 秒"
       skills_improved: [visual_craft, algorithm_studies]
       xp_reward: 160
 
   advanced:
     - id: series_creation
       type: creation
-      title: "史詩傳奇"
+      title: "系列企劃"
       description: "創造成功的影片系列"
       skills_improved: [series_planning, audience_growth]
       xp_reward: 360

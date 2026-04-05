@@ -4,18 +4,18 @@ category: business
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "商業冒險家 - 創業家"
-  short_description: "在商業荒野中開拓新的貿易路線"
+  title: "新創創辦人 - 創業家"
+  short_description: "在資源有限的情況下打造使用者真正需要的產品"
   long_description: |
     你是「Launchpad 創業加速器」的新進創業者，肩負著在競爭激烈的市場中建立自己事業的使命。
     在這個充滿機會與挑戰的加速器中，每個決策都可能改變你的命運，而導師和夥伴們
-    將與你共同面對挑戰。
+    將與你共同面對挑戰
 
   estimated_hours: 60
   skill_focus:
     - business_intuition
     - market_exploration
-    - resource_alchemy
+    - resource_management
     - risk_navigation
 
 world_setting:
@@ -23,21 +23,27 @@ world_setting:
   description: |
     Launchpad 創業加速器是台灣頂尖的新創育成機構，創業者在此獲得資金、導師和資源支持。
     成功需要洞察市場的眼光、快速驗證假設的能力，以及在資源有限下創造最大價值的
-    執行力。
+    執行力
 
-  atmosphere: "adventurous_challenging"
-  visual_theme: "frontier_exploration"
+  atmosphere: "startup_hustle"
+  visual_theme: "modern_coworking"
 
 starting_scenario:
-  title: "男爵的封鎖"
+  title: "加速器的第一週"
   description: |
-    你是「Launchpad 創業加速器」的新進創業者，帶著你的第一個創業點子和滿腔熱血準備建立自己的事業。
-    你的探險夥伴 Scout 從情報線人那裡帶回一個警告：「Baron Greed 已經封鎖了最主要的資源補給路線，你的計畫可能在啟動前就死掉。就連 AppWorks 加速器的人脈網絡也開始觀望，YC 加速器的矽谷校友說這種局面他們也曾遇過。」
+    你是「Launchpad 創業加速器」的新進創業者，帶著你的第一個創業點子和三個月的跑道準備建立自己的事業。
+    資深導師 Claire（AppWorks 加速器資深導師，連續創業家，曾創辦電商公司被收購）把你拉到白板前，
+    打開一份市場報告：「我先給你看兩個數字——你的目標市場過去一年縮了 15%，然後你最直接的
+    競爭對手上週剛宣布完成一千萬美金的 A 輪。」她看著你的表情，繼續說：
+    「別慌。市場在變，代表舊的解法不管用了，這正是新創的機會。但你得快——
+    用三個月證明你的假設，不然錢燒完就沒了。」
 
-    【你的任務】分析你的創業計畫面臨的主要障礙，說明你會如何找到替代資源和突破封鎖的策略。
-    你需要思考：在資源受限的情況下，創業者最重要的核心能力是什麼？台灣新創生態圈有哪些資源可以善用？
+    【你的任務】面對萎縮的市場和資金充裕的競爭對手，重新評估你的創業策略。
+    你需要思考：目標市場真的在萎縮，還是在轉移？你的產品能解決什麼競爭對手忽略的痛點？
+    在資源有限的情況下，創業者最重要的核心能力是什麼？
 
-    【成功標準】提出一個「資源受限創業計畫」，說明你的核心價值主張、最小可行產品，以及你如何在有限條件下驗證商業模式。
+    【成功標準】提出一個三個月行動計畫，包含你要驗證的核心假設、最小可行產品的定義，
+    以及你如何用最少資源跑完第一輪使用者驗證
   initial_tasks:
     - survey_market
     - find_resources
@@ -47,31 +53,31 @@ skill_tree:
   core_skills:
     - id: market_analysis
       name: "市場感知"
-      description: "偵測商業機會"
+      description: "從數據和使用者訪談中找出真正的市場機會——不是你覺得有需求，而是使用者願意掏錢的需求"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
 
     - id: resource_management
-      name: "資源煉金術"
-      description: "將有限資源轉化為價值"
+      name: "資源管理"
+      description: "用最少的錢做最大的事——創業初期每一塊錢都要花在刀口上，學會分辨什麼該花什麼該省"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
 
     - id: team_building
-      name: "盟友召喚"
-      description: "建立強大的創始團隊"
+      name: "團隊組建"
+      description: "找到願意跟你一起冒險的共同創辦人和早期員工——能力互補比全明星陣容更重要"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
 
     - id: product_development
-      name: "創新鍛造"
-      description: "創造市場致勝產品"
+      name: "產品開發"
+      description: "從使用者痛點出發，快速做出最小可行產品驗證假設——先求有人用，再求做得好"
       max_level: 10
       unlocks:
         - mvp_design
@@ -79,52 +85,52 @@ skill_tree:
 
   advanced_skills:
     - id: fundraising
-      name: "資本魔法"
-      description: "精通募資藝術"
+      name: "募資策略"
+      description: "用數據和故事說服投資人——不只是簡報技巧，更是讓人相信你能把錢變成十倍回報"
       max_level: 15
       requires: [market_analysis, resource_management]
 
     - id: scaling_operations
-      name: "帝國建設"
-      description: "有效擴展業務規模"
+      name: "規模擴展"
+      description: "從 10 個客戶到 10,000 個客戶——流程、系統和團隊都要跟著長大"
       max_level: 15
       requires: [team_building, product_development]
 
     - id: strategic_pivoting
-      name: "適應藝術"
-      description: "需要時策略性轉型"
+      name: "策略轉型"
+      description: "當數據告訴你方向錯了，有勇氣轉彎——Slack 原本是遊戲公司，YouTube 原本是交友網站"
       max_level: 15
       requires: [market_analysis, product_development]
 
 milestone_quests:
   - id: first_customer
     name: "第一桶金"
-    description: "獲得你的第一個付費客戶"
+    description: "獲得你的第一個付費客戶——有人願意掏錢，代表你的產品真的解決了問題"
     required_level: 5
     skills_tested: [market_analysis, product_development]
     xp_reward: 650
     unlocks:
-      - merchant_badge
+      - validated_founder_badge
       - market_credibility
 
   - id: baron_challenge
-    name: "打破壟斷"
-    description: "克服 Baron Greed 的市場控制"
+    name: "產品市場契合"
+    description: "達到 Product-Market Fit——使用者自發推薦、留存率穩定成長、你知道下一步該做什麼"
     required_level: 10
     skills_tested: [resource_management, strategic_pivoting]
     xp_reward: 1300
     unlocks:
-      - freedom_trader_title
-      - supplier_network
+      - pmf_title
+      - growth_ready
 
   - id: empire_established
-    name: "貿易帝國"
-    description: "建立永續的商業帝國"
+    name: "永續經營"
+    description: "公司開始自己賺錢養自己——不再只靠投資人的錢活著"
     required_level: 20
     skills_tested: [scaling_operations, fundraising]
     xp_reward: 2600
     unlocks:
-      - empire_builder_title
+      - sustainable_founder_title
       - legacy_founder
 
 achievements:
@@ -136,13 +142,13 @@ achievements:
 
   - id: team_assembled
     name: "團隊成立"
-    description: "建立 5 人以上的團隊"
+    description: "建立 5 人以上的核心團隊"
     xp_reward: 300
     badge_type: silver
 
   - id: profitable_quarter
-    name: "黃金流動"
-    description: "達成首個獲利季度"
+    name: "首季獲利"
+    description: "達成首個獲利季度，證明商業模式可行"
     xp_reward: 550
     badge_type: gold
 
@@ -156,57 +162,57 @@ example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: "荒野市場探勘"
-      description: "深入了解目標市場需求"
+      title: "市場調查"
+      description: "深入了解目標市場的規模、成長趨勢和使用者痛點——用數據取代直覺"
       skills_improved: [market_analysis, business_intuition]
       xp_reward: 65
 
     - id: prototype_creation
       type: creation
-      title: "首個貿易站"
-      description: "建立最小可行產品"
-      skills_improved: [product_development, resource_alchemy]
+      title: "MVP 打造"
+      description: "用最少功能做出能讓使用者試用的產品原型——重點是驗證假設，不是做完美產品"
+      skills_improved: [product_development, resource_management]
       xp_reward: 75
 
   intermediate:
     - id: customer_interviews
       type: chat
-      title: "商人談判"
-      description: "驗證產品市場契合度"
+      title: "客戶訪談"
+      description: "跟 20 個潛在使用者深度對談，找出他們真正的痛點和願意付費的功能"
       skills_improved: [market_exploration, business_intuition]
       xp_reward: 175
 
     - id: growth_planning
       type: creation
-      title: "帝國擴張計畫"
-      description: "制定成長策略"
+      title: "成長策略"
+      description: "制定從 100 到 10,000 個使用者的成長計畫——哪些管道有效、怎麼降低獲客成本"
       skills_improved: [scaling_operations, risk_navigation]
       xp_reward: 195
 
   advanced:
     - id: series_a_prep
       type: creation
-      title: "資本任務"
-      description: "準備大型募資"
-      skills_improved: [fundraising, resource_alchemy]
+      title: "A輪準備"
+      description: "準備 A 輪募資——整理關鍵指標、撰寫投資簡報、排定投資人會議"
+      skills_improved: [fundraising, resource_management]
       xp_reward: 370
 
     - id: market_expansion
       type: creation
-      title: "大陸征服"
-      description: "擴展到新市場"
+      title: "海外拓展"
+      description: "評估並進入第一個海外市場——在地化策略、合作夥伴選擇、法規合規"
       skills_improved: [strategic_pivoting, market_exploration]
       xp_reward: 410
 
 learning_objectives:
-  - "識別並驗證商業機會"
-  - "建立客戶喜愛的產品"
-  - "精通精實創業方法"
-  - "發展領導技能"
-  - "駕馭不確定性和風險"
-  - "建立強大的公司文化"
-  - "獲得資金並管理財務"
-  - "永續地擴展業務規模"
+  - "識別並用數據驗證商業機會"
+  - "用精實創業方法快速打造使用者喜愛的產品"
+  - "在資源有限下做出最佳資源分配決策"
+  - "建立互補的創業團隊和健康的公司文化"
+  - "掌握從種子輪到 A 輪的募資策略"
+  - "從使用者回饋中判斷何時該堅持、何時該轉型"
+  - "設計可重複、可規模化的成長引擎"
+  - "管理現金流，邁向永續經營"
 
 career_outcomes:
   - "新創創辦人/執行長"

@@ -1,154 +1,160 @@
-# 科技創業家探索路徑 - 繁體中文
+# 深科技創業家探索路徑 - 繁體中文
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "科技創業家 - 科技創業家"
-  short_description: "在競爭激烈的科技市場中建立下一個獨角獸"
+  title: "深科技創業家 - 科技創業家"
+  short_description: "把實驗室裡的技術突破變成改變產業的產品"
   long_description: |
-    你是「TechVenture 科技創投」的新進創業者，擁有在不同市場中建立科技企業的眼光。
-    每個市場都有獨特的競爭格局，你必須洞察趨勢、整合資源來建立成功的
-    科技公司。
+    你是「DeepVenture 深科技加速器」的新進創業者，專注於將硬科技——半導體、AI、
+    生技——從實驗室帶進市場。在這裡，創業不只是寫 app，而是把論文裡的技術變成
+    客戶願意付錢的產品，同時搞定專利、供應鏈和產學合作
 
   estimated_hours: 65
   skill_focus:
-    - dimensional_business_insight
-    - cross_tech_integration
-    - team_summoning
-    - innovation_prophecy
+    - tech_trend_analysis
+    - tech_integration
+    - business_model_design
+    - industry_networking
 
 world_setting:
-  name: "TechVenture 科技創投"
+  name: "DeepVenture 深科技加速器"
   description: |
-    TechVenture 科技創投是一間同時投資與孵化科技新創的機構，連結台灣半導體供應鏈與全球市場。
-    科技創業家在此獲得資金、人才和市場資源，將技術創新轉化為可規模化的商業模式，
-    同時對抗試圖主導市場的大型競爭者。
+    DeepVenture 深科技加速器專注孵化半導體、AI、生技等硬科技新創，連結台灣的
+    研究機構、科學園區和全球供應鏈。創業者在此獲得技術驗證資源、產業導師和
+    早期資金，把實驗室成果轉化為可規模化的商業模式
 
-  atmosphere: "futuristic_dynamic"
-  visual_theme: "interdimensional_tech"
+  atmosphere: "deep_tech_professional"
+  visual_theme: "research_to_market"
 
 starting_scenario:
-  title: "市場進入第一關"
+  title: "技術商業化的第一步"
   description: |
-    你是「TechVenture 科技創投」的新晉科技創業家，剛完成 Seed Round 融資。
-    你的商業導師 Atlas 在創投辦公室迎接你，語氣嚴肅：「歡迎加入。但先告訴你壞消息——已有大型競爭對手在你要進入的市場佈下了重重障礙，就連借助台灣半導體供應鏈優勢出海東南亞的計畫也受到波及。全球科技獨角獸都在搶佔這個市場，矽谷巨頭的陰影無所不在。」
+    你是「DeepVenture 深科技加速器」的新晉創業者。你的團隊剛從大學實驗室帶出一項
+    新型 AI 晶片架構——運算效率是現有方案的三倍，但目前只有論文和原型，離量產還很遠。
+    技術顧問 James 博士（前台積電研發副總，現任創投技術合夥人）在會議室翻著你的技術報告，
+    語氣直接：「技術數據很漂亮，但離產品還有十萬八千里。你的晶片要走台積電還是聯電的製程？
+    IP 授權談了嗎？第一個目標客戶是誰——車用、邊緣運算、還是資料中心？
+    光有好技術不夠，你得告訴我怎麼把它變成生意。」
 
-    【你的任務】分析你的科技新創公司進入市場時可能面臨的壟斷障礙，並說明你的差異化策略和破局點。
-    你需要思考：科技創業者如何用創新和合作，在強大競爭者主導的市場裡找到自己的位置？
+    【你的任務】為這顆 AI 晶片擬定技術商業化策略：選定目標應用場景、初步的製程合作方向，
+    以及從原型到工程樣品的關鍵里程碑。你需要思考：深科技創業和一般軟體創業最大的不同是什麼？
+    台灣半導體生態系能提供哪些獨特優勢？
 
-    【成功標準】提出一個市場進入策略，說明你的核心技術優勢、目標利基市場，以及如何用合作聯盟對抗壟斷。
+    【成功標準】提出一份技術商業化計畫，包含目標市場、技術護城河、專利策略，
+    以及你打算如何運用台灣供應鏈優勢在 18 個月內做出工程樣品
   initial_tasks:
-    - understand_multiverse
-    - identify_opportunity
-    - assemble_team
+    - analyze_tech_landscape
+    - identify_application
+    - map_supply_chain
 
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: "機會雷達"
-      description: "偵測跨次元的商業機會"
+      name: "技術趨勢分析"
+      description: "追蹤論文、專利、產業報告，找出可商業化的技術突破——像在礦山裡辨認哪塊石頭裡有金子"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
 
     - id: tech_fusion
-      name: "科技融合"
-      description: "結合不同現實的技術"
+      name: "技術整合"
+      description: "把不同領域的技術組合成新產品——像把 AI 晶片、感測器、軟體整合成自駕車方案"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
 
     - id: venture_building
-      name: "創業架構"
-      description: "建立可擴展的科技企業"
+      name: "商業模式設計"
+      description: "把技術優勢轉成客戶願意付錢的產品——授權、賣晶片、還是賣整套解決方案？"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
 
     - id: dimensional_networking
-      name: "多元宇宙連結"
-      description: "建立跨次元網絡"
+      name: "產業網絡"
+      description: "連結供應鏈、研究機構、創投——台灣深科技創業靠的是生態系，不是單打獨鬥"
       max_level: 10
       unlocks:
-        - investor_portals
-        - talent_summoning
+        - investor_connections
+        - talent_recruitment
 
   advanced_skills:
     - id: disruption_mastery
-      name: "顛覆工程"
-      description: "創造改變產業的創新"
+      name: "技術護城河"
+      description: "透過專利佈局、獨家製程和技術壁壘，建立競爭對手短期內無法複製的優勢"
       max_level: 15
       requires: [opportunity_sensing, tech_fusion]
 
     - id: unicorn_creation
-      name: "獨角獸召喚"
-      description: "建立十億美元科技公司"
+      name: "規模化營運"
+      description: "從工程樣品到量產出貨，建立供應鏈管理、品質控制和客戶支援體系"
       max_level: 15
       requires: [venture_building, dimensional_networking]
 
     - id: ecosystem_architecture
-      name: "生態系建構"
-      description: "創造繁榮的科技生態系"
+      name: "平台策略"
+      description: "讓你的技術成為產業標準——像 ARM 的 IP 授權模式，讓整個生態系圍繞你運轉"
       max_level: 15
       requires: [dimensional_networking, tech_fusion]
 
 milestone_quests:
   - id: first_startup
-    name: "次元首秀"
-    description: "啟動你的第一個跨次元新創"
+    name: "技術驗證"
+    description: "完成概念驗證，用數據證明你的技術在實際應用中可行"
     required_level: 5
     skills_tested: [opportunity_sensing, venture_building]
     xp_reward: 700
     unlocks:
-      - dimension_traveler_badge
+      - validated_tech_badge
       - investor_interest
 
   - id: monopoly_breaker
-    name: "壟斷破壞者"
-    description: "在一個次元顛覆 Greed 的壟斷"
+    name: "首個企業客戶"
+    description: "簽下第一個願意付費試用你技術的企業客戶"
     required_level: 10
     skills_tested: [disruption_mastery, tech_fusion]
     xp_reward: 1500
     unlocks:
-      - freedom_fighter_title
-      - resistance_network
+      - market_entry_title
+      - customer_reference
 
   - id: multiverse_empire
-    name: "多元宇宙帝國"
-    description: "在 5 個次元建立成功企業"
+    name: "B輪募資"
+    description: "完成 B 輪募資，資金到位準備大規模量產和海外拓展"
     required_level: 20
     skills_tested: [unicorn_creation, ecosystem_architecture]
     xp_reward: 3500
     unlocks:
-      - dimension_master_title
-      - alliance_leadership
+      - scale_up_title
+      - global_expansion
 
 achievements:
   - id: first_funding
-    name: "種子水晶"
-    description: "籌集你的第一筆投資"
+    name: "種子輪完成"
+    description: "成功募集第一筆種子輪資金，讓技術開發可以繼續"
     xp_reward: 150
     badge_type: bronze
 
   - id: tech_innovator
-    name: "創新催化劑"
-    description: "創造 5 項突破性技術"
+    name: "專利佈局完成"
+    description: "取得 5 項關鍵技術專利，建立初步的智財護城河"
     xp_reward: 400
     badge_type: silver
 
   - id: exit_success
-    name: "次元退場"
-    description: "成功退出一家新創公司"
+    name: "成功出場"
+    description: "透過 IPO 或併購成功退出，為投資人和團隊創造回報"
     xp_reward: 800
     badge_type: gold
 
   - id: serial_legend
-    name: "連續次元跳躍者"
-    description: "完成所有創業挑戰"
+    name: "連續創業家"
+    description: "完成所有深科技創業挑戰，成為產業裡的標竿人物"
     xp_reward: 1500
     badge_type: platinum
 
@@ -156,64 +162,64 @@ example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: "次元市場掃描"
-      description: "跨次元驗證商業想法"
-      skills_improved: [opportunity_sensing, dimensional_business_insight]
+      title: "技術可行性評估"
+      description: "分析一項實驗室技術的商業潛力——市場有多大、競爭對手在哪、技術成熟度到幾級"
+      skills_improved: [opportunity_sensing, tech_trend_analysis]
       xp_reward: 80
 
     - id: mvp_launch
       type: creation
-      title: "原型傳送門"
-      description: "建立並推出 MVP"
+      title: "概念驗證原型"
+      description: "用最少資源做出能展示核心技術的原型，讓潛在客戶和投資人看到可能性"
       skills_improved: [venture_building, tech_fusion]
       xp_reward: 90
 
   intermediate:
     - id: team_assembly
       type: chat
-      title: "多元宇宙團隊建立"
-      description: "從不同次元招募人才"
-      skills_improved: [dimensional_networking, team_summoning]
+      title: "產學合作洽談"
+      description: "與大學教授談技術授權，與業界前輩談顧問合作——深科技團隊需要學術和產業兩邊的人"
+      skills_improved: [dimensional_networking, industry_networking]
       xp_reward: 200
 
     - id: product_scaling
       type: creation
-      title: "次元擴展"
-      description: "將產品擴展到多個宇宙"
-      skills_improved: [growth_hacking, venture_building]
+      title: "工程樣品開發"
+      description: "從實驗室原型到工程樣品——解決良率、可靠度和量產性的問題"
+      skills_improved: [tech_fusion, venture_building]
       xp_reward: 250
 
   advanced:
     - id: industry_disruption
       type: creation
-      title: "現實重塑者"
-      description: "創造改變產業的技術"
-      skills_improved: [disruption_mastery, innovation_prophecy]
+      title: "專利攻防戰"
+      description: "規劃完整的智財策略——哪些要申請專利、哪些要當營業秘密、如何應對大廠的專利壁壘"
+      skills_improved: [disruption_mastery, tech_trend_analysis]
       xp_reward: 450
 
     - id: ecosystem_creation
       type: creation
-      title: "次元生態系"
-      description: "建立繁榮的科技生態系"
+      title: "供應鏈出海"
+      description: "帶著台灣供應鏈優勢進軍海外市場——設計在台灣、製造在台灣、客戶在全球"
       skills_improved: [ecosystem_architecture, dimensional_networking]
       xp_reward: 500
 
 learning_objectives:
-  - "識別不同市場和次元的機會"
-  - "從想法到退出建立並擴展科技公司"
-  - "精通募資和投資者關係"
-  - "創造解決真實問題的創新產品"
-  - "建立並領導高績效分散式團隊"
-  - "應對法規和文化差異"
-  - "發展可持續的競爭優勢"
-  - "培育創新生態系統"
+  - "評估實驗室技術的商業化潛力和市場規模"
+  - "從技術原型到量產產品的完整流程"
+  - "專利佈局和智慧財產權策略"
+  - "深科技募資——如何讓投資人理解硬科技的價值"
+  - "建立跨領域團隊——結合研發、工程和商業人才"
+  - "台灣科技供應鏈的獨特優勢和國際佈局"
+  - "產學合作和技術轉移的實務操作"
+  - "從技術護城河到平台策略的競爭優勢建構"
 
 career_outcomes:
-  - "科技新創創辦人"
+  - "深科技新創創辦人"
   - "連續創業家"
-  - "創投合夥人"
-  - "創新總監"
-  - "新創生態系建構者"
-  - "科技策略師"
+  - "創投技術合夥人"
+  - "技術長（CTO）"
+  - "技術商業化顧問"
+  - "產學合作經理"
   - "企業創新主管"
   - "天使投資人"

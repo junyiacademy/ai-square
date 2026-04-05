@@ -14,9 +14,9 @@ metadata:
   estimated_hours: 55
   skill_focus:
     - user_psychology
-    - experience_magic
-    - prototype_sculpting
-    - communication_arts
+    - interaction_design
+    - prototyping
+    - design_communication
 
 world_setting:
   name: "UXStudio 體驗設計工作室"
@@ -25,13 +25,13 @@ world_setting:
     與功能性、情感與效率，創造能夠讓人感到直覺、愉悅的數位產品。
 
   atmosphere: "harmonious_innovative"
-  visual_theme: "minimalist_magic"
+  visual_theme: "minimalist_studio"
 
 starting_scenario:
   title: "冷漠危機"
   description: |
     你是「UXStudio 體驗設計工作室」的新進設計師，剛完成了三個月的試用期基礎課程。
-    設計總監 Maya 把你叫進工作室，眼前是一大疊用戶投訴信：
+    設計總監 Maya（前 Gogoro 用戶體驗負責人）把你叫進工作室，眼前是一大疊用戶投訴信：
     「這個專為台灣長輩設計的 App，用戶說他們感覺『被當成機器人在用』，但設計團隊說他們完全照規範設計。問題出在哪？」
 
     【你的任務】分析這個 App 讓用戶感覺「缺乏人性」的可能原因，說明你會從哪些設計面向開始評估。
@@ -46,32 +46,32 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: "心靈讀取"
-      description: "深入理解用戶需求"
+      name: "用戶洞察"
+      description: "深入理解用戶需求——像心理學家一樣，觀察用戶怎麼用、在哪卡住"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
 
     - id: interaction_design
-      name: "觸碰魔法"
-      description: "設計直觀的互動"
+      name: "互動設計"
+      description: "設計直觀的互動——讓用戶不用看說明書就知道怎麼操作"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
 
     - id: visual_design
-      name: "美學煉金"
-      description: "創造美麗的介面"
+      name: "視覺設計"
+      description: "創造美麗的介面——配色、字型、間距，每個細節都影響用戶感受"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
 
     - id: prototyping
-      name: "現實塑造"
-      description: "建立互動原型"
+      name: "原型製作"
+      description: "建立互動原型——用 Figma 快速做出可點擊的 demo，省去寫 code 的時間"
       max_level: 10
       unlocks:
         - rapid_prototyping
@@ -79,26 +79,26 @@ skill_tree:
 
   advanced_skills:
     - id: design_systems
-      name: "系統和諧"
-      description: "創造可擴展的設計系統"
+      name: "設計系統"
+      description: "創造可擴展的設計系統——像樂高積木，統一元件讓團隊快速拼出一致的畫面"
       max_level: 15
       requires: [visual_design, interaction_design]
 
     - id: accessibility_design
-      name: "通用魔法"
-      description: "為所有用戶設計"
+      name: "無障礙設計"
+      description: "為所有用戶設計——讓視障、聽障、行動不便的人都能順暢使用"
       max_level: 15
       requires: [user_research, interaction_design]
 
     - id: strategic_design
-      name: "商業同理心"
-      description: "將設計與商業目標對齊"
+      name: "商業設計思維"
+      description: "將設計與商業目標對齊——好設計不只好看，還要幫公司賺錢"
       max_level: 15
       requires: [user_research, prototyping]
 
 milestone_quests:
   - id: first_design
-    name: "心靈觸動"
+    name: "首個好評設計"
     description: "創造你的第一個用戶喜愛的設計"
     required_level: 5
     skills_tested: [user_research, visual_design]
@@ -147,7 +147,7 @@ achievements:
     badge_type: gold
 
   - id: design_master
-    name: "體驗賢者"
+    name: "資深設計師"
     description: "完成所有設計挑戰"
     xp_reward: 900
     badge_type: platinum
@@ -156,14 +156,14 @@ example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: "心靈挖掘任務"
+      title: "用戶訪談"
       description: "了解用戶需求和痛點"
       skills_improved: [user_research, user_psychology]
       xp_reward: 60
 
     - id: wireframe_creation
       type: creation
-      title: "藍圖魔法"
+      title: "線框圖繪製"
       description: "創造你的第一個線框圖"
       skills_improved: [interaction_design, prototype_sculpting]
       xp_reward: 70
@@ -171,14 +171,14 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: "溫暖原型建造"
+      title: "互動原型設計"
       description: "設計互動原型"
-      skills_improved: [prototyping, experience_magic]
+      skills_improved: [prototyping, interaction_design]
       xp_reward: 170
 
     - id: design_system
       type: creation
-      title: "和諧框架"
+      title: "設計系統建立"
       description: "創造一致的設計系統"
       skills_improved: [design_systems, visual_design]
       xp_reward: 190
@@ -186,14 +186,14 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: "通用門戶"
+      title: "無障礙稽核"
       description: "確保設計適合所有人"
       skills_improved: [accessibility_design, user_psychology]
       xp_reward: 340
 
     - id: strategic_redesign
       type: creation
-      title: "商業心靈融合"
+      title: "商業導向重設計"
       description: "重新設計以實現用戶和商業成功"
       skills_improved: [strategic_design, communication_arts]
       xp_reward: 380

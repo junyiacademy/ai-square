@@ -4,8 +4,8 @@ category: technology
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "數據預言家 - 數據分析師"
-  short_description: "在數據海洋中發現隱藏的真理"
+  title: "數據偵探 - 數據分析師"
+  short_description: "從數據中挖出商業洞察，用數字說服決策者"
   long_description: |
     你是「DataLab 數據實驗室」的新進分析師，擁有從混亂數據中洞察未來趨勢的
     能力。在這個充滿數字與圖表的實驗室中，每一個數據點都蘊含著重要的訊息，
@@ -13,10 +13,10 @@ metadata:
 
   estimated_hours: 50
   skill_focus:
-    - data_alchemy
-    - predictive_statistics
-    - visualization_magic
-    - insight_summoning
+    - data_wrangling
+    - statistical_methods
+    - data_visualization
+    - business_insight
 
 world_setting:
   name: "DataLab 數據實驗室"
@@ -24,14 +24,14 @@ world_setting:
     DataLab 數據實驗室是一間收集並分析各領域數據的專業機構。在這裡，數據分析師被訓練
     成能夠解讀數字語言、揭示影響各領域決策真相的頂尖分析人才。
 
-  atmosphere: "mystical_analytical"
-  visual_theme: "digital_temple"
+  atmosphere: "data_driven"
+  visual_theme: "analytics_lab"
 
 starting_scenario:
   title: "數據危機第一課"
   description: |
     你是「DataLab 數據實驗室」的新進分析師，剛通過了三輪嚴格的技術面試。
-    你的首席分析師 Oracle 語氣嚴肅地對你說：
+    首席數據科學家 Jason（前 Google 台灣資料工程師）語氣嚴肅地對你說：
     「實驗室出現危機。有人在數據源頭注入了汙染的資料，讓一份參考台灣健保資料庫、影響百萬人決策的分析報告出現嚴重偏差。這跟全球資料科學界近年討論的 data poisoning 問題一模一樣——Google 和 Meta 的數據團隊也在研究防禦方法。」
 
     【你的任務】找出這份分析報告裡數據汙染的跡象，並說明你會用什麼統計方法驗證數據的可信度。
@@ -54,16 +54,16 @@ skill_tree:
         - api_mastery
 
     - id: statistical_analysis
-      name: "統計巫術"
-      description: "運用統計方法揭示模式"
+      name: "統計分析"
+      description: "運用統計方法揭示模式——像偵探找線索，用數字說出數據背後的故事"
       max_level: 10
       unlocks:
         - hypothesis_testing
-        - regression_magic
+        - regression_analysis
 
     - id: data_visualization
-      name: "視覺預言"
-      description: "將數據轉化為引人入勝的視覺故事"
+      name: "資料視覺化"
+      description: "將數據轉化為引人入勝的視覺故事——一張好圖表抵過一千行數字"
       max_level: 10
       unlocks:
         - dashboard_creation
@@ -79,8 +79,8 @@ skill_tree:
 
   advanced_skills:
     - id: machine_learning
-      name: "預測藝術"
-      description: "使用機器學習預測未來結果"
+      name: "預測模型"
+      description: "使用機器學習預測未來結果——教電腦從歷史資料學會預測下一步"
       max_level: 15
       requires: [statistical_analysis, data_collection]
 
@@ -91,8 +91,8 @@ skill_tree:
       requires: [data_collection, business_intelligence]
 
     - id: real_time_analytics
-      name: "即時預言"
-      description: "執行即時數據分析"
+      name: "即時分析"
+      description: "執行即時數據分析——像股票看盤，數據一進來就能立刻反應"
       max_level: 15
       requires: [data_visualization, statistical_analysis]
 
@@ -105,7 +105,7 @@ milestone_quests:
     xp_reward: 500
     unlocks:
       - insight_badge
-      - temple_recognition
+      - team_recognition
 
   - id: chaos_detection
     name: "混沌獵人"
@@ -118,14 +118,14 @@ milestone_quests:
       - advanced_access
 
   - id: oracle_ascension
-    name: "預言大師"
+    name: "趨勢預測專家"
     description: "在趨勢發生前預測重大趨勢"
     required_level: 20
     skills_tested: [machine_learning, real_time_analytics]
     xp_reward: 2500
     unlocks:
-      - oracle_master_title
-      - temple_leadership
+      - senior_analyst_title
+      - team_leadership
 
 achievements:
   - id: first_dashboard
@@ -147,7 +147,7 @@ achievements:
     badge_type: gold
 
   - id: oracle_legend
-    name: "傳奇預言家"
+    name: "資深數據科學家"
     description: "完成所有數據挑戰"
     xp_reward: 1000
     badge_type: platinum
@@ -156,8 +156,8 @@ example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: "神諭數據收集"
-      description: "收集並清理混亂的數據集"
+      title: "資料清洗"
+      description: "收集並清理混亂的數據集——垃圾進垃圾出，好分析從乾淨資料開始"
       skills_improved: [data_collection, data_alchemy]
       xp_reward: 60
 
@@ -171,7 +171,7 @@ example_tasks:
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: "真理分析咒語"
+      title: "趨勢深度分析"
       description: "進行深度趨勢分析"
       skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
@@ -180,7 +180,7 @@ example_tasks:
       type: creation
       title: "視覺儀表板"
       description: "創建互動式商業儀表板"
-      skills_improved: [data_visualization, visualization_magic]
+      skills_improved: [data_visualization, business_intelligence]
       xp_reward: 200
 
   advanced:
@@ -193,7 +193,7 @@ example_tasks:
 
     - id: real_time_system
       type: creation
-      title: "即時預言系統"
+      title: "即時監控儀表板"
       description: "創建即時分析系統"
       skills_improved: [real_time_analytics, big_data_mastery]
       xp_reward: 400

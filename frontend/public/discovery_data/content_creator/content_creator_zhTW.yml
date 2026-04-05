@@ -4,19 +4,19 @@ category: arts
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "數位魔法師 - 內容創作者"
-  short_description: "在虛擬王國中編織引人入勝的故事"
+  title: "圖文創作者 - 內容創作者"
+  short_description: "用文字與圖文打造深入人心的內容——部落格、電子報、社群圖文、文案"
   long_description: |
-    你是「Pulse 創意工作室」的新進創作者，擁有將想法轉化為病毒式內容的能力。
-    在這個充滿活力的數位媒體公司中，每個讚數和分享都是創意影響力的證明，而你的導師 Luna 將
-    教你掌握內容策略與演算法的技巧。
+    你是「Pulse 創意工作室」的新進創作者，擅長用文字和圖文將想法轉化為吸引人的內容。
+    在這個充滿活力的數位媒體公司中，每個讚數和分享都是創意影響力的證明，而你的導師
+    Amy（數位行銷總監，前 TVBS 新媒體主編，經營 50 萬粉絲自媒體）將教你掌握內容策略與演算法的技巧。
 
   estimated_hours: 50
   skill_focus:
-    - content_magic
-    - visual_spells
-    - word_alchemy
-    - community_summoning
+    - content_strategy
+    - visual_design
+    - copywriting
+    - community_management
 
 world_setting:
   name: "Pulse 創意工作室"
@@ -24,14 +24,14 @@ world_setting:
     Pulse 創意工作室是一間由創意驅動的數位媒體公司。內容創作者在此學習掌控演算法、
     社群互動和病毒式傳播的核心策略，建立自己的影響力並觸動數百萬人的生活。
 
-  atmosphere: "vibrant_magical"
-  visual_theme: "digital_fantasy"
+  atmosphere: "vibrant_creative"
+  visual_theme: "digital_studio"
 
 starting_scenario:
   title: "信任危機"
   description: |
     你是「Pulse 創意工作室」的新進創作者，剛通過試用期進入正式團隊。
-    你的創意總監 Luna 一見到你就皺起眉頭：
+    數位行銷總監 Amy一見到你就皺起眉頭：
     「工作室出事了。有人在散布偽裝成真實內容的假訊息，我們的信譽正在崩塌——連台灣 YouTube 和 Instagram 上的粉絲也開始質疑我們。這不只是台灣的問題，全球內容創作者都面臨假訊息的侵蝕，YouTube Shorts 和 Netflix 都在強化真實性審查機制。」
 
     【你的任務】分析這些假內容是如何在平台上病毒式擴散的，並提出應對策略。
@@ -41,7 +41,7 @@ starting_scenario:
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
-    - create_first_spell
+    - create_first_content
 
 skill_tree:
   core_skills:
@@ -54,12 +54,12 @@ skill_tree:
         - audience_targeting
 
     - id: visual_creation
-      name: "視覺魔法"
-      description: "創造引人注目的視覺內容"
+      name: "圖文設計"
+      description: "創造引人注目的圖文內容——用 Canva、Figma 把想法變成一張張會說話的圖"
       max_level: 10
       unlocks:
-        - photo_magic
-        - video_enchantment
+        - photo_editing
+        - graphic_design
 
     - id: storytelling
       name: "敘事編織"
@@ -70,29 +70,29 @@ skill_tree:
         - viral_mechanics
 
     - id: community_building
-      name: "部落召喚"
-      description: "建立並經營社群"
+      name: "社群經營"
+      description: "建立並經營社群——像經營一家街角咖啡店，讓人想一來再來"
       max_level: 10
       unlocks:
-        - engagement_rituals
-        - loyalty_spells
+        - engagement_tactics
+        - loyalty_building
 
   advanced_skills:
     - id: algorithm_mastery
-      name: "演算法低語者"
-      description: "理解並駕馭平台演算法"
+      name: "SEO 與演算法"
+      description: "理解並駕馭平台演算法——搞懂平台的遊戲規則，讓好內容被更多人看見"
       max_level: 15
       requires: [content_strategy, community_building]
 
     - id: monetization_magic
-      name: "收益煉金術"
-      description: "將內容轉化為收入"
+      name: "內容變現"
+      description: "將內容轉化為收入——業配、聯盟行銷、付費訂閱，把流量變成現金流"
       max_level: 15
       requires: [community_building, visual_creation]
 
     - id: brand_building
-      name: "帝國建設"
-      description: "建立強大的個人品牌"
+      name: "品牌建立"
+      description: "建立強大的個人品牌——讓別人一看到你的風格就知道是你"
       max_level: 15
       requires: [storytelling, content_strategy]
 
@@ -118,18 +118,18 @@ milestone_quests:
       - authentic_voice
 
   - id: empire_builder
-    name: "創意帝國"
-    description: "建立擁有百萬追蹤者的內容帝國"
+    name: "百萬粉絲品牌"
+    description: "建立擁有百萬追蹤者的內容品牌"
     required_level: 20
     skills_tested: [algorithm_mastery, brand_building]
     xp_reward: 2000
     unlocks:
-      - empire_ruler_title
+      - top_creator_title
       - legacy_creator
 
 achievements:
   - id: first_post
-    name: "第一個咒語"
+    name: "首篇發布"
     description: "創造你的第一個內容"
     xp_reward: 50
     badge_type: bronze
@@ -141,7 +141,7 @@ achievements:
     badge_type: silver
 
   - id: consistency_king
-    name: "每日魔法師"
+    name: "日更達人"
     description: "連續 30 天發布內容"
     xp_reward: 400
     badge_type: gold
@@ -156,44 +156,44 @@ example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: "魔法配方研發"
-      description: "研發能夠觸動人心的內容魔法配方"
+      title: "內容企劃"
+      description: "規劃能觸動人心的內容主題與排程"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
 
     - id: visual_basics
       type: creation
-      title: "視覺咒語練習"
-      description: "創造你的第一個視覺內容"
-      skills_improved: [visual_creation, content_magic]
+      title: "圖文創作入門"
+      description: "創造你的第一個圖文內容"
+      skills_improved: [visual_creation, content_strategy]
       xp_reward: 60
 
   intermediate:
     - id: engagement_analysis
       type: analysis
-      title: "預言家的試煉"
+      title: "成效分析"
       description: "分析內容表現和觀眾行為"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
 
     - id: series_creation
       type: creation
-      title: "傳奇編織"
-      description: "創造內容系列"
+      title: "系列專欄"
+      description: "創造主題式的內容系列"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
 
   advanced:
     - id: viral_campaign
       type: creation
-      title: "帝國擴張"
+      title: "病毒式行銷企劃"
       description: "發起病毒式內容活動"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
 
     - id: monetization_setup
       type: creation
-      title: "黃金轉化"
+      title: "多元變現佈局"
       description: "建立多重收入來源"
       skills_improved: [monetization_magic, brand_building]
       xp_reward: 400

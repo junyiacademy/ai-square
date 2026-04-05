@@ -4,8 +4,8 @@ category: business
 difficulty_range: beginner_to_expert
 
 metadata:
-  title: "產品煉金術師 - 產品經理"
-  short_description: "在市場熔爐中鍛造完美產品"
+  title: "產品領航者 - 產品經理"
+  short_description: "在用戶需求、技術限制和商業目標之間找到最佳路線"
   long_description: |
     你是「LaunchPad 產品實驗室」的新進產品經理，擅長將用戶需求、技術能力和商業
     目標融合成強大的產品。在這個充滿創新活力的新創公司中，每一次迭代都是一
@@ -13,10 +13,10 @@ metadata:
 
   estimated_hours: 55
   skill_focus:
-    - requirement_alchemy
-    - roadmap_prophecy
-    - team_coordination_magic
-    - user_resonance
+    - requirement_analysis
+    - roadmap_planning
+    - cross_team_coordination
+    - user_empathy
 
 world_setting:
   name: "LaunchPad 產品實驗室"
@@ -32,7 +32,7 @@ starting_scenario:
   title: "產品管理的第一課"
   description: |
     你是「LaunchPad 產品實驗室」的新進產品經理，剛加入一個正在開發中的產品團隊。
-    產品總監 Kevin 一把拉住你說：「你來得正是時候。這款服務台灣數百萬用戶的產品——工程師說功能要三個月，業務說下週就要上線，用戶說兩個版本前的問題還沒修。矽谷的產品團隊也天天面對這種三方拉扯——我需要你告訴我，怎麼辦。」
+    產品總監 Kevin（前 Shopee 台灣產品負責人）一把拉住你說：「你來得正是時候。這款服務台灣數百萬用戶的產品——工程師說功能要三個月，業務說下週就要上線，用戶說兩個版本前的問題還沒修。矽谷的產品團隊也天天面對這種三方拉扯——我需要你告訴我，怎麼辦。」
 
     【你的任務】分析這個三方衝突的核心矛盾，說明你會如何釐清優先順序，並提出你的溝通和決策策略。
     你需要思考：產品管理者在這種情況下，最重要的職責是什麼？
@@ -46,8 +46,8 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: "用戶心靈讀取"
-      description: "深入理解用戶需求和行為"
+      name: "用戶研究"
+      description: "深入理解用戶需求和行為——像人類學家一樣觀察用戶，找出他們嘴上沒說的痛點"
       max_level: 10
       unlocks:
         - persona_creation
@@ -62,16 +62,16 @@ skill_tree:
         - positioning_mastery
 
     - id: feature_prioritization
-      name: "優先順序煉金術"
-      description: "掌握功能優先排序的藝術"
+      name: "優先級排序"
+      description: "掌握功能優先排序的藝術——100 件事只能做 3 件，怎麼選最重要"
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
 
     - id: stakeholder_management
-      name: "和諧指揮"
-      description: "協調不同利害關係人的利益"
+      name: "跨部門協調"
+      description: "協調不同利害關係人的利益——像交通指揮，讓工程、設計、業務同步前進"
       max_level: 10
       unlocks:
         - executive_communication
@@ -79,26 +79,26 @@ skill_tree:
 
   advanced_skills:
     - id: growth_hacking
-      name: "成長魔法"
-      description: "推動產品指數級成長"
+      name: "成長策略"
+      description: "推動產品指數級成長——用最小成本驗證最大成長機會"
       max_level: 15
       requires: [product_strategy, user_research]
 
     - id: data_driven_decisions
-      name: "指標精通"
-      description: "基於數據洞察做決策"
+      name: "數據驅動決策"
+      description: "基於數據洞察做決策——用 A/B 測試和指標取代拍腦袋"
       max_level: 15
       requires: [feature_prioritization, user_research]
 
     - id: platform_thinking
-      name: "生態系架構"
-      description: "建立產品平台和生態系統"
+      name: "產品生態系"
+      description: "建立產品平台和生態系統——從單一產品擴展成互相加值的產品網絡"
       max_level: 15
       requires: [product_strategy, stakeholder_management]
 
 milestone_quests:
   - id: first_launch
-    name: "產品創世"
+    name: "首次上線"
     description: "成功推出你的第一個產品"
     required_level: 5
     skills_tested: [user_research, feature_prioritization]
@@ -141,13 +141,13 @@ achievements:
     badge_type: silver
 
   - id: revenue_generator
-    name: "營收煉金師"
+    name: "營收推手"
     description: "推動產品創造 100 萬美元營收"
     xp_reward: 600
     badge_type: gold
 
   - id: pm_legend
-    name: "產品賢者"
+    name: "資深產品人"
     description: "完成所有產品挑戰"
     xp_reward: 1200
     badge_type: platinum
@@ -178,7 +178,7 @@ example_tasks:
 
     - id: feature_launch
       type: creation
-      title: "功能煉金"
+      title: "功能上線"
       description: "推出主要產品功能"
       skills_improved: [feature_prioritization, stakeholder_management]
       xp_reward: 200
