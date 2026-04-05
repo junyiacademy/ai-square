@@ -780,108 +780,120 @@ export default function DiscoveryScenarioDetailPage({
             </div>
           )}
 
-          {/* Career Insights */}
-          {scenarioData.discoveryData?.careerInsights && (
-            <div className="grid md:grid-cols-2 gap-6 mt-8">
-              {/* Job Market */}
-              {scenarioData.discoveryData.careerInsights.job_market && (
-                <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <BarChart className="w-5 h-5 mr-2 text-purple-600" />
-                    {t("discovery:scenarioDetail.jobMarket")}
-                  </h3>
-                  <div className="space-y-2 text-sm">
-                    {scenarioData.discoveryData.careerInsights.job_market
-                      .demand && (
-                      <p>
-                        <span className="font-medium">
-                          {t("discovery:scenarioDetail.demand")}:
-                        </span>{" "}
-                        {
-                          scenarioData.discoveryData.careerInsights.job_market
-                            .demand
-                        }
-                      </p>
-                    )}
-                    {scenarioData.discoveryData.careerInsights.job_market
-                      .growth_rate && (
-                      <p>
-                        <span className="font-medium">
-                          {t("discovery:scenarioDetail.growth")}:
-                        </span>{" "}
-                        {
-                          scenarioData.discoveryData.careerInsights.job_market
-                            .growth_rate
-                        }
-                      </p>
-                    )}
-                    {scenarioData.discoveryData.careerInsights.job_market
-                      .salary_range && (
-                      <p>
-                        <span className="font-medium">
-                          {t("discovery:scenarioDetail.salary")}:
-                        </span>{" "}
-                        {
-                          scenarioData.discoveryData.careerInsights.job_market
-                            .salary_range
-                        }
-                      </p>
-                    )}
+          {/* Career Insights from YAML data */}
+          {scenarioData.yamlData?.careerInsights && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <Briefcase className="w-6 h-6 text-purple-600" />
+                <span>{t("discovery:scenarioDetail.careerInfo")}</span>
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Job Market */}
+                {scenarioData.yamlData.careerInsights.job_market && (
+                  <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center">
+                      <BarChart className="w-5 h-5 mr-2 text-purple-600" />
+                      {t("discovery:scenarioDetail.jobMarket")}
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      {scenarioData.yamlData.careerInsights.job_market.demand && (
+                        <p>
+                          <span className="font-medium">
+                            {t("discovery:scenarioDetail.demand")}:
+                          </span>{" "}
+                          {scenarioData.yamlData.careerInsights.job_market.demand}
+                        </p>
+                      )}
+                      {scenarioData.yamlData.careerInsights.job_market.growth_rate && (
+                        <p>
+                          <span className="font-medium">
+                            {t("discovery:scenarioDetail.growth")}:
+                          </span>{" "}
+                          {scenarioData.yamlData.careerInsights.job_market.growth_rate}
+                        </p>
+                      )}
+                      {scenarioData.yamlData.careerInsights.job_market.salary_range && (
+                        <p>
+                          <span className="font-medium">
+                            {t("discovery:scenarioDetail.salary")}:
+                          </span>{" "}
+                          {scenarioData.yamlData.careerInsights.job_market.salary_range}
+                        </p>
+                      )}
+                      {scenarioData.yamlData.careerInsights.job_market.job_titles &&
+                        scenarioData.yamlData.careerInsights.job_market.job_titles.length > 0 && (
+                          <div>
+                            <p className="font-medium mb-1">
+                              {t("discovery:scenarioDetail.jobTitles")}:
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {scenarioData.yamlData.careerInsights.job_market.job_titles.map(
+                                (title, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full"
+                                  >
+                                    {title}
+                                  </span>
+                                ),
+                              )}
+                            </div>
+                          </div>
+                        )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Required Skills */}
-              {scenarioData.discoveryData.careerInsights.required_skills && (
-                <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <GraduationCap className="w-5 h-5 mr-2 text-purple-600" />
-                    {t("discovery:scenarioDetail.requiredSkills")}
-                  </h3>
-                  <div className="space-y-3">
-                    {scenarioData.discoveryData.careerInsights.required_skills
-                      .technical && (
-                      <div>
-                        <p className="font-medium text-sm mb-1">
-                          {t("discovery:scenarioDetail.technical")}:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {scenarioData.discoveryData.careerInsights.required_skills.technical.map(
-                            (skill, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
-                              >
-                                {skill}
-                              </span>
-                            ),
-                          )}
+                {/* Required Skills */}
+                {scenarioData.yamlData.careerInsights.required_skills && (
+                  <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center">
+                      <GraduationCap className="w-5 h-5 mr-2 text-purple-600" />
+                      {t("discovery:scenarioDetail.requiredSkills")}
+                    </h3>
+                    <div className="space-y-3">
+                      {scenarioData.yamlData.careerInsights.required_skills.technical && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">
+                            {t("discovery:scenarioDetail.technical")}:
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {scenarioData.yamlData.careerInsights.required_skills.technical.map(
+                              (skill, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
+                                >
+                                  {skill}
+                                </span>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {scenarioData.discoveryData.careerInsights.required_skills
-                      .soft && (
-                      <div>
-                        <p className="font-medium text-sm mb-1">
-                          {t("discovery:scenarioDetail.soft")}:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {scenarioData.discoveryData.careerInsights.required_skills.soft.map(
-                            (skill, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                              >
-                                {skill}
-                              </span>
-                            ),
-                          )}
+                      )}
+                      {scenarioData.yamlData.careerInsights.required_skills.soft && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">
+                            {t("discovery:scenarioDetail.soft")}:
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {scenarioData.yamlData.careerInsights.required_skills.soft.map(
+                              (skill, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                                >
+                                  {skill}
+                                </span>
+                              ),
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 

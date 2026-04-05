@@ -3,7 +3,6 @@
   "subtitle": "Explore AI-powered paths through immersive experiences",
   "getStarted": "Get Started",
   "backToHome": "Back to Home",
-
   "welcomeScreen": {
     "title": "Discovery World",
     "subtitle": "🎮 Adventure Your Future Like Playing a Game • AI-Powered Immersive Experience",
@@ -33,7 +32,6 @@
       }
     }
   },
-
   "interestAssessment": {
     "title": "Interest Assessment",
     "subtitle": "Let's discover your interests",
@@ -50,22 +48,38 @@
           {
             "id": "create_content",
             "text": "Creating videos or digital content",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "solve_problems",
             "text": "Solving complex problems with code",
-            "weight": { "tech": 3, "creative": 1, "business": 2 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 2
+            }
           },
           {
             "id": "plan_strategies",
             "text": "Planning business strategies",
-            "weight": { "tech": 1, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "design_visuals",
             "text": "Designing visual experiences",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           }
         ]
       },
@@ -76,22 +90,38 @@
           {
             "id": "independent",
             "text": "Independently with creative freedom",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "team_tech",
             "text": "In tech teams building products",
-            "weight": { "tech": 3, "creative": 1, "business": 2 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 2
+            }
           },
           {
             "id": "leading",
             "text": "Leading projects and teams",
-            "weight": { "tech": 1, "creative": 2, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 2,
+              "business": 3
+            }
           },
           {
             "id": "collaborative",
             "text": "Collaborating on creative projects",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           }
         ]
       },
@@ -102,22 +132,38 @@
           {
             "id": "technology",
             "text": "Latest technology and programming",
-            "weight": { "tech": 3, "creative": 1, "business": 1 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 1
+            }
           },
           {
             "id": "art_media",
             "text": "Art, media, and storytelling",
-            "weight": { "tech": 1, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 1,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "business_trends",
             "text": "Business trends and markets",
-            "weight": { "tech": 1, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "digital_innovation",
             "text": "Digital innovation and design",
-            "weight": { "tech": 2, "creative": 2, "business": 2 }
+            "weight": {
+              "tech": 2,
+              "creative": 2,
+              "business": 2
+            }
           }
         ]
       },
@@ -128,28 +174,43 @@
           {
             "id": "build_apps",
             "text": "Build amazing apps and games",
-            "weight": { "tech": 3, "creative": 2, "business": 1 }
+            "weight": {
+              "tech": 3,
+              "creative": 2,
+              "business": 1
+            }
           },
           {
             "id": "create_content",
             "text": "Create content that inspires others",
-            "weight": { "tech": 1, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 1,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "start_business",
             "text": "Start my own business",
-            "weight": { "tech": 2, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 2,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "make_impact",
             "text": "Make a positive impact through work",
-            "weight": { "tech": 2, "creative": 2, "business": 2 }
+            "weight": {
+              "tech": 2,
+              "creative": 2,
+              "business": 2
+            }
           }
         ]
       }
     ]
   },
-
   "results": {
     "title": "Your Path Recommendations",
     "subtitle": "Based on your interests, here are the best paths to explore:",
@@ -158,7 +219,6 @@
     "personalityType": "Your Personality Type",
     "matchPercentage": "{{percentage}}% Match"
   },
-
   "paths": {
     "youtuber": {
       "title": "YouTuber / Content Creator",
@@ -245,7 +305,11 @@
         "Marketing",
         "Financial Planning"
       ],
-      "aiAssistants": ["Business Mentor", "Market Analyst", "Pitch Coach"],
+      "aiAssistants": [
+        "Business Mentor",
+        "Market Analyst",
+        "Pitch Coach"
+      ],
       "tasks": [
         {
           "id": "idea_validation",
@@ -268,7 +332,6 @@
       ]
     }
   },
-
   "evaluation": {
     "completedTitle": "Assessment Complete!",
     "completedDescription": "Here are your interest profile results",
@@ -278,7 +341,6 @@
     "viewScenarios": "Explore Career Scenarios",
     "retakeAssessment": "Retake Assessment"
   },
-
   "navigation": {
     "back": "Back",
     "next": "Next",
@@ -289,20 +351,17 @@
     "evaluation": "Assessment",
     "scenarios": "Career Adventures"
   },
-
   "status": {
     "loading": "Loading...",
     "saving": "Saving...",
     "error": "Something went wrong",
     "success": "Success!"
   },
-
   "errors": {
     "loadingFailed": "Failed to load content",
     "savingFailed": "Failed to save progress",
     "networkError": "Network error, please try again"
   },
-
   "complete": {
     "congratulations": "Congratulations! 🎉",
     "completedProgram": "You've completed {{title}}",
@@ -336,14 +395,12 @@
     "errorLoading": "Error Loading Results",
     "noData": "No completion data found"
   },
-
   "taskTypes": {
     "question": "Question",
     "chat": "AI Chat",
     "creation": "Creation",
     "analysis": "Analysis"
   },
-
   "programCard": {
     "title": "Learning Journey",
     "statusActive": "In Progress",
@@ -354,7 +411,6 @@
     "continue": "Continue",
     "viewResults": "View Results"
   },
-
   "task": {
     "backToProgram": "Back to Learning Journey",
     "notFound": "Task not found",
@@ -418,7 +474,6 @@
     "openAiChat": "Open AI Chat",
     "completeFailed": "Failed to complete task, please try again later"
   },
-
   "card": {
     "statusMastered": "Mastered",
     "statusInProgress": "In Progress",
@@ -433,7 +488,6 @@
     "actionStart": "Start Adventure",
     "countTimes": "{{count}} times"
   },
-
   "scenarioDetail": {
     "loading": "Loading...",
     "notFound": "Scenario not found",
@@ -462,9 +516,10 @@
     "estimatedHours": "Estimated {{hours}} hours",
     "worldSetting": "World Setting",
     "firstMission": "Your First Mission",
-    "coreSkills": "Core Skills You'll Learn"
+    "coreSkills": "Core Skills You'll Learn",
+    "careerInfo": "Career Market Info",
+    "jobTitles": "Common Job Titles"
   },
-
   "skillTree": {
     "coreSkills": "Core Skills",
     "advancedSkills": "Advanced Skills",
@@ -473,7 +528,6 @@
     "requires": "Requires",
     "noData": "No skill tree available for this career"
   },
-
   "questLog": {
     "noQuests": "No quests available yet",
     "keepLearning": "Keep learning to unlock quests",
@@ -482,13 +536,11 @@
     "available": "Available",
     "skills": "Skills"
   },
-
   "world": {
     "tabWorld": "World",
     "tabSkills": "Skills",
     "tabQuests": "Quests"
   },
-
   "gamification": {
     "levelUp": "Level Up!",
     "achievementUnlocked": "Achievement Unlocked",
@@ -543,13 +595,21 @@
       "questReward": "+{{xp}} XP",
       "noCareerStarted": "You haven't started any career yet",
       "goExplore": "Explore Careers",
-      "completionPercent": "{{pct}}% complete"
+      "completionPercent": "{{pct}}% complete",
+      "dailyChallenges": "Today's Challenges",
+      "dailyChallengesSubtitle": "Complete these to earn XP",
+      "noChallenges": "No challenges available — start a career first",
+      "challengeXp": "+{{xp}} XP",
+      "leaderboard": "Leaderboard",
+      "leaderboardRank": "Rank #{{rank}}",
+      "leaderboardYou": "You",
+      "leaderboardXp": "{{xp}} XP",
+      "leaderboardLevel": "Lv.{{level}}"
     },
     "firstWin": {
       "bonusXp": "+500 Bonus XP — First Task Completed!"
     }
   },
-
   "scenarios": {
     "heading": "Explore Career Adventures",
     "subheading": "Choose your career role and begin a unique learning adventure. Each career has carefully designed story scenarios and challenge tasks.",
@@ -580,7 +640,6 @@
       "businessFunc": "Business / Startup"
     }
   },
-
   "program": {
     "notFound": "Learning journey not found",
     "backToScenario": "Back to Career Detail",
@@ -596,52 +655,100 @@
     "viewFullResults": "View Full Results",
     "startNew": "Start New Journey"
   },
-
   "dailyLimit": {
     "title": "Daily AI usage limit reached",
     "description": "Your daily AI interaction quota (200,000 tokens per day) has been used up. The quota resets at UTC midnight tomorrow. Come back tomorrow to continue learning!"
   },
-
   "careers": {
     "content_creator": {
       "title": "Digital Magician - Content Creator",
-      "skills": ["Content Magic", "Visual Spells", "Text Alchemy", "Community Summoning"]
+      "skills": [
+        "Content Magic",
+        "Visual Spells",
+        "Text Alchemy",
+        "Community Summoning"
+      ]
     },
     "youtuber": {
       "title": "Stellar Broadcaster - YouTuber",
-      "skills": ["Stellar Editing", "Audience Psychology", "Cosmic Trend Prediction", "Cross-Galaxy Broadcasting"]
+      "skills": [
+        "Stellar Editing",
+        "Audience Psychology",
+        "Cosmic Trend Prediction",
+        "Cross-Galaxy Broadcasting"
+      ]
     },
     "app_developer": {
       "title": "Digital Architect - App Developer",
-      "skills": ["Code Magic", "Interface Sculpting", "Logic Engineering", "System Alchemy"]
+      "skills": [
+        "Code Magic",
+        "Interface Sculpting",
+        "Logic Engineering",
+        "System Alchemy"
+      ]
     },
     "game_designer": {
       "title": "Dream Weaver - Game Designer",
-      "skills": ["Dream Weaving", "Emotional Tuning", "Balance Laws", "Psychological Alchemy"]
+      "skills": [
+        "Dream Weaving",
+        "Emotional Tuning",
+        "Balance Laws",
+        "Psychological Alchemy"
+      ]
     },
     "tech_entrepreneur": {
       "title": "Spacetime Business Traveler - Tech Entrepreneur",
-      "skills": ["Spacetime Business Insight", "Cross-Dimensional Tech Integration", "Team Summoning", "Innovation Prophecy"]
+      "skills": [
+        "Spacetime Business Insight",
+        "Cross-Dimensional Tech Integration",
+        "Team Summoning",
+        "Innovation Prophecy"
+      ]
     },
     "startup_founder": {
       "title": "Business Adventurer - Startup Founder",
-      "skills": ["Business Intuition", "Market Exploration", "Resource Alchemy", "Risk Navigation"]
+      "skills": [
+        "Business Intuition",
+        "Market Exploration",
+        "Resource Alchemy",
+        "Risk Navigation"
+      ]
     },
     "data_analyst": {
       "title": "Digital Archaeologist - Data Analyst",
-      "skills": ["Digital Archaeology", "Pattern Recognition", "Visualization Magic", "Insight Prophecy"]
+      "skills": [
+        "Digital Archaeology",
+        "Pattern Recognition",
+        "Visualization Magic",
+        "Insight Prophecy"
+      ]
     },
     "ux_designer": {
       "title": "Experience Architect - UX Designer",
-      "skills": ["User Psychology", "Experience Magic", "Prototype Sculpting", "Communication Art"]
+      "skills": [
+        "User Psychology",
+        "Experience Magic",
+        "Prototype Sculpting",
+        "Communication Art"
+      ]
     },
     "product_manager": {
       "title": "Product Commander - Product Manager",
-      "skills": ["Strategic Vision", "Needs Insight", "Resource Allocation", "Team Coordination"]
+      "skills": [
+        "Strategic Vision",
+        "Needs Insight",
+        "Resource Allocation",
+        "Team Coordination"
+      ]
     },
     "ai_developer": {
       "title": "Machine Soul Forger - AI Developer",
-      "skills": ["Soul Coding", "Neural Network Magic", "Intelligence Art", "Future Deployment"]
+      "skills": [
+        "Soul Coding",
+        "Neural Network Magic",
+        "Intelligence Art",
+        "Future Deployment"
+      ]
     }
   }
 }

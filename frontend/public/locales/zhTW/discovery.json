@@ -3,7 +3,6 @@
   "subtitle": "透過沉浸式體驗，探索 AI 驅動的路徑",
   "getStarted": "開始探索",
   "backToHome": "返回首頁",
-
   "welcomeScreen": {
     "title": "歡迎來到探索世界",
     "subtitle": "透過 AI 驅動的體驗，發現你的未來之路",
@@ -24,7 +23,6 @@
       }
     }
   },
-
   "interestAssessment": {
     "title": "興趣評估",
     "subtitle": "讓我們發現你的興趣",
@@ -41,22 +39,38 @@
           {
             "id": "create_content",
             "text": "創作影片或數位內容",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "solve_problems",
             "text": "用程式碼解決複雜問題",
-            "weight": { "tech": 3, "creative": 1, "business": 2 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 2
+            }
           },
           {
             "id": "plan_strategies",
             "text": "規劃商業策略",
-            "weight": { "tech": 1, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "design_visuals",
             "text": "設計視覺體驗",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           }
         ]
       },
@@ -67,22 +81,38 @@
           {
             "id": "independent",
             "text": "獨立工作，享有創作自由",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "team_tech",
             "text": "在技術團隊中開發產品",
-            "weight": { "tech": 3, "creative": 1, "business": 2 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 2
+            }
           },
           {
             "id": "leading",
             "text": "領導專案和團隊",
-            "weight": { "tech": 1, "creative": 2, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 2,
+              "business": 3
+            }
           },
           {
             "id": "collaborative",
             "text": "在創意專案中協作",
-            "weight": { "tech": 2, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 2,
+              "creative": 3,
+              "business": 1
+            }
           }
         ]
       },
@@ -93,22 +123,38 @@
           {
             "id": "technology",
             "text": "最新科技和程式設計",
-            "weight": { "tech": 3, "creative": 1, "business": 1 }
+            "weight": {
+              "tech": 3,
+              "creative": 1,
+              "business": 1
+            }
           },
           {
             "id": "art_media",
             "text": "藝術、媒體和故事敘述",
-            "weight": { "tech": 1, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 1,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "business_trends",
             "text": "商業趨勢和市場",
-            "weight": { "tech": 1, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 1,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "digital_innovation",
             "text": "數位創新和設計",
-            "weight": { "tech": 2, "creative": 2, "business": 2 }
+            "weight": {
+              "tech": 2,
+              "creative": 2,
+              "business": 2
+            }
           }
         ]
       },
@@ -119,28 +165,43 @@
           {
             "id": "build_apps",
             "text": "開發出色的應用程式和遊戲",
-            "weight": { "tech": 3, "creative": 2, "business": 1 }
+            "weight": {
+              "tech": 3,
+              "creative": 2,
+              "business": 1
+            }
           },
           {
             "id": "create_content",
             "text": "創作能激勵他人的內容",
-            "weight": { "tech": 1, "creative": 3, "business": 1 }
+            "weight": {
+              "tech": 1,
+              "creative": 3,
+              "business": 1
+            }
           },
           {
             "id": "start_business",
             "text": "創立自己的事業",
-            "weight": { "tech": 2, "creative": 1, "business": 3 }
+            "weight": {
+              "tech": 2,
+              "creative": 1,
+              "business": 3
+            }
           },
           {
             "id": "make_impact",
             "text": "透過工作產生正面影響",
-            "weight": { "tech": 2, "creative": 2, "business": 2 }
+            "weight": {
+              "tech": 2,
+              "creative": 2,
+              "business": 2
+            }
           }
         ]
       }
     ]
   },
-
   "results": {
     "title": "你的路徑推薦",
     "subtitle": "根據你的興趣，以下是最適合探索的路徑：",
@@ -149,15 +210,23 @@
     "personalityType": "你的性格類型",
     "matchPercentage": "{{percentage}}% 符合度"
   },
-
   "paths": {
     "youtuber": {
       "title": "YouTuber / 內容創作者",
       "subtitle": "創作吸引人的影片內容並建立觀眾群",
       "description": "學習創作、編輯和推廣影片內容，同時建立個人品牌並與觀眾互動。",
       "category": "創意類",
-      "skills": ["影片製作", "內容策略", "觀眾互動", "個人品牌"],
-      "aiAssistants": ["創意總監", "數據分析專家", "社群經理"],
+      "skills": [
+        "影片製作",
+        "內容策略",
+        "觀眾互動",
+        "個人品牌"
+      ],
+      "aiAssistants": [
+        "創意總監",
+        "數據分析專家",
+        "社群經理"
+      ],
       "tasks": [
         {
           "id": "script_writing",
@@ -184,8 +253,17 @@
       "subtitle": "設計沉浸式的遊戲體驗和機制",
       "description": "使用現代 AI 輔助工具創造遊戲概念、設計角色並開發遊戲玩法。",
       "category": "科技類",
-      "skills": ["遊戲設計", "創意思維", "使用者體驗", "技術設計"],
-      "aiAssistants": ["設計夥伴", "技術顧問", "玩家心理專家"],
+      "skills": [
+        "遊戲設計",
+        "創意思維",
+        "使用者體驗",
+        "技術設計"
+      ],
+      "aiAssistants": [
+        "設計夥伴",
+        "技術顧問",
+        "玩家心理專家"
+      ],
       "tasks": [
         {
           "id": "character_design",
@@ -212,8 +290,17 @@
       "subtitle": "開發解決實際問題的行動應用程式",
       "description": "學習使用 AI 驅動的開發工具設計、開發和發布行動應用程式。",
       "category": "科技類",
-      "skills": ["程式設計", "問題解決", "使用者介面設計", "專案管理"],
-      "aiAssistants": ["程式導師", "UI 設計師", "測試專家"],
+      "skills": [
+        "程式設計",
+        "問題解決",
+        "使用者介面設計",
+        "專案管理"
+      ],
+      "aiAssistants": [
+        "程式導師",
+        "UI 設計師",
+        "測試專家"
+      ],
       "tasks": [
         {
           "id": "app_concept",
@@ -236,7 +323,6 @@
       ]
     }
   },
-
   "workspace": {
     "title": "{{path}} 課程",
     "aiAssistant": "AI 助手",
@@ -252,7 +338,6 @@
     "skillsGained": "獲得技能：",
     "experiencePoints": "+{{points}} 經驗值"
   },
-
   "aiAssistant": {
     "greeting": "嗨！我是你的 AI {{role}}。我在這裡幫助你在 {{path}} 旅程中取得成功。",
     "taskIntro": "讓我們一起完成這個任務。我會引導你完成每個步驟。",
@@ -266,7 +351,6 @@
     "typeMessage": "輸入你的訊息...",
     "send": "傳送"
   },
-
   "achievements": {
     "title": "你的成就",
     "totalXp": "總經驗值：{{xp}} XP",
@@ -294,7 +378,6 @@
       }
     }
   },
-
   "evaluation": {
     "completedTitle": "評估完成！",
     "completedDescription": "以下是你的興趣概況結果",
@@ -304,7 +387,6 @@
     "viewScenarios": "探索職業情境",
     "retakeAssessment": "重新評估"
   },
-
   "navigation": {
     "overview": "總覽",
     "evaluation": "評估",
@@ -313,7 +395,6 @@
     "program": "課程",
     "achievements": "成就"
   },
-
   "complete": {
     "congratulations": "恭喜你！🎉",
     "completedProgram": "你已完成 {{title}}",
@@ -346,14 +427,12 @@
     "errorLoading": "載入結果時發生錯誤",
     "noData": "找不到完成資料"
   },
-
   "taskTypes": {
     "question": "問答",
     "chat": "AI 對話",
     "creation": "創作",
     "analysis": "分析"
   },
-
   "programCard": {
     "title": "學習歷程",
     "statusActive": "進行中",
@@ -364,7 +443,6 @@
     "continue": "繼續",
     "viewResults": "查看結果"
   },
-
   "task": {
     "backToProgram": "返回學習歷程",
     "notFound": "找不到此任務",
@@ -428,7 +506,6 @@
     "openAiChat": "開啟 AI 對話 →",
     "completeFailed": "任務完成失敗，請稍後再試"
   },
-
   "card": {
     "statusMastered": "已達成",
     "statusInProgress": "學習中",
@@ -443,7 +520,6 @@
     "actionStart": "開始冒險",
     "countTimes": "{{count}} 次"
   },
-
   "scenarioDetail": {
     "backToList": "返回職業列表",
     "myPrograms": "我的學習歷程",
@@ -473,9 +549,10 @@
     "estimatedHours": "預計 {{hours}} 小時",
     "worldSetting": "世界設定",
     "firstMission": "你的第一個任務",
-    "coreSkills": "你將學習的核心技能"
+    "coreSkills": "你將學習的核心技能",
+    "careerInfo": "職涯市場資訊",
+    "jobTitles": "常見職位名稱"
   },
-
   "skillTree": {
     "coreSkills": "核心技能",
     "advancedSkills": "進階技能",
@@ -484,7 +561,6 @@
     "requires": "需要",
     "noData": "此職涯尚無技能樹"
   },
-
   "questLog": {
     "noQuests": "目前沒有可用任務",
     "keepLearning": "繼續學習以解鎖任務",
@@ -493,13 +569,11 @@
     "available": "可開始",
     "skills": "技能"
   },
-
   "world": {
     "tabWorld": "世界觀",
     "tabSkills": "技能樹",
     "tabQuests": "任務書"
   },
-
   "gamification": {
     "levelUp": "升級了！",
     "achievementUnlocked": "成就解鎖",
@@ -554,13 +628,21 @@
       "questReward": "+{{xp}} XP",
       "noCareerStarted": "你還沒有開始任何職涯探索",
       "goExplore": "探索職涯",
-      "completionPercent": "完成 {{pct}}%"
+      "completionPercent": "完成 {{pct}}%",
+      "dailyChallenges": "今日挑戰",
+      "dailyChallengesSubtitle": "完成以下挑戰來獲得 XP",
+      "noChallenges": "目前沒有挑戰 — 先開始一個職涯探索",
+      "challengeXp": "+{{xp}} XP",
+      "leaderboard": "排行榜",
+      "leaderboardRank": "第 {{rank}} 名",
+      "leaderboardYou": "你",
+      "leaderboardXp": "{{xp}} XP",
+      "leaderboardLevel": "Lv.{{level}}"
     },
     "firstWin": {
       "bonusXp": "+500 獎勵 XP — 完成第一個任務！"
     }
   },
-
   "scenarios": {
     "heading": "探索職業冒險",
     "subheading": "選擇你的職業角色，開始獨特的學習冒險。每個職業都有精心設計的故事情境和挑戰任務。",
@@ -591,9 +673,6 @@
       "businessFunc": "商業 / 創業"
     }
   },
-
-
-
   "program": {
     "notFound": "找不到此學習歷程",
     "backToScenario": "返回職業詳情",
@@ -609,52 +688,100 @@
     "viewFullResults": "查看完整結果",
     "startNew": "開始新的歷程"
   },
-
   "dailyLimit": {
     "title": "今日 AI 使用額度已達上限",
     "description": "你今天的 AI 互動額度（每日 200,000 tokens）已用完。額度將於明天 UTC 午夜重置，請明天再來繼續學習！📚"
   },
-
   "careers": {
     "content_creator": {
       "title": "數位魔法師 - 內容創作者",
-      "skills": ["內容魔法", "視覺咒語", "文字煉金術", "社群召喚術"]
+      "skills": [
+        "內容魔法",
+        "視覺咒語",
+        "文字煉金術",
+        "社群召喚術"
+      ]
     },
     "youtuber": {
       "title": "星際廣播員 - YouTuber",
-      "skills": ["星際剪輯術", "觀眾心理學", "宇宙趨勢預測", "跨星系傳播"]
+      "skills": [
+        "星際剪輯術",
+        "觀眾心理學",
+        "宇宙趨勢預測",
+        "跨星系傳播"
+      ]
     },
     "app_developer": {
       "title": "數碼建築師 - 應用程式開發者",
-      "skills": ["程式魔法", "介面雕塑", "邏輯工程", "系統煉金術"]
+      "skills": [
+        "程式魔法",
+        "介面雕塑",
+        "邏輯工程",
+        "系統煉金術"
+      ]
     },
     "game_designer": {
       "title": "夢境織夢師 - 遊戲設計師",
-      "skills": ["夢境編織", "情感調律", "平衡法則", "心理煉金術"]
+      "skills": [
+        "夢境編織",
+        "情感調律",
+        "平衡法則",
+        "心理煉金術"
+      ]
     },
     "tech_entrepreneur": {
       "title": "時空商業旅行者 - 科技創業家",
-      "skills": ["時空商業洞察", "跨維度技術整合", "團隊召喚術", "創新預言術"]
+      "skills": [
+        "時空商業洞察",
+        "跨維度技術整合",
+        "團隊召喚術",
+        "創新預言術"
+      ]
     },
     "startup_founder": {
       "title": "商業冒險家 - 創業家",
-      "skills": ["商業嗅覺", "市場探勘", "資源煉金術", "風險航海術"]
+      "skills": [
+        "商業嗅覺",
+        "市場探勘",
+        "資源煉金術",
+        "風險航海術"
+      ]
     },
     "data_analyst": {
       "title": "數位考古學家 - 數據分析師",
-      "skills": ["數位考古術", "模式識別術", "視覺化魔法", "洞察預言術"]
+      "skills": [
+        "數位考古術",
+        "模式識別術",
+        "視覺化魔法",
+        "洞察預言術"
+      ]
     },
     "ux_designer": {
       "title": "体驗建築師 - UX 設計師",
-      "skills": ["用户心理学", "体験魔法", "原型雕塑", "沟通艺术"]
+      "skills": [
+        "用户心理学",
+        "体験魔法",
+        "原型雕塑",
+        "沟通艺术"
+      ]
     },
     "product_manager": {
       "title": "產品指揮官 - 產品經理",
-      "skills": ["策略视野", "需求洞察", "資源配置", "團隊协調"]
+      "skills": [
+        "策略视野",
+        "需求洞察",
+        "資源配置",
+        "團隊协調"
+      ]
     },
     "ai_developer": {
       "title": "機器靈魂鍛造師 - AI 開發者",
-      "skills": ["靈魂編碼術", "神經網絡魔法", "智慧藝術", "未來部署術"]
+      "skills": [
+        "靈魂編碼術",
+        "神經網絡魔法",
+        "智慧藝術",
+        "未來部署術"
+      ]
     }
   }
 }

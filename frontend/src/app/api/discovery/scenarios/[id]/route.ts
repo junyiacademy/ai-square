@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 import { DiscoveryYAMLLoader } from "@/lib/services/discovery-yaml-loader";
+import { getCareerInsights } from "@/lib/data/career-insights-data";
 
 export async function GET(
   request: NextRequest,
@@ -81,7 +82,7 @@ export async function GET(
             })(),
           }
         : {},
-      // YAML-enriched data for world_setting, skill_tree, starting_scenario
+      // YAML-enriched data for world_setting, skill_tree, starting_scenario, career_insights
       yamlData: yamlData
         ? {
             worldSetting: yamlData.world_setting,
@@ -90,6 +91,7 @@ export async function GET(
             metadata: yamlData.metadata,
             milestoneQuests: yamlData.milestone_quests,
             achievements: yamlData.achievements,
+            careerInsights: getCareerInsights(careerType),
           }
         : null,
     };
