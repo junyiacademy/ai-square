@@ -2,7 +2,7 @@
 # This fixes the /api/health 404 issue
 
 # 1. Build stage
-FROM node:20-alpine AS builder
+FROM node:24.22.1-alpine AS builder
 WORKDIR /app
 
 # Install dependencies
@@ -19,7 +19,7 @@ ENV ENVIRONMENT=staging
 RUN npm run build
 
 # 2. Production stage
-FROM node:20-alpine AS runner
+FROM node:24.22.1-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
