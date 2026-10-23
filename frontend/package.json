@@ -129,7 +129,7 @@
     "jspdf": "^3.0.3",
     "lucide-react": "^0.525.0",
     "modern-screenshot": "^4.6.6",
-    "next": "15.3.3",
+    "next": "15.5.28",
     "next-i18next": "^15.4.2",
     "nodemailer": "^7.0.5",
     "ora": "^8.1.1",
@@ -143,6 +143,7 @@
     "react-resizable-panels": "^3.0.3",
     "recharts": "^3.0.0",
     "remark-gfm": "^4.0.1",
+    "sharp": "0.35.5",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0",
@@ -172,7 +173,7 @@
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",
     "eslint": "^9",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "15.5.28",
     "glob": "^11.0.3",
     "husky": "^9.1.7",
     "ioredis": "^5.7.0",
@@ -187,5 +188,8 @@
     "tsx": "^4.20.3",
     "typescript": "^5",
     "wait-on": "^8.0.4"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
   }
 }
